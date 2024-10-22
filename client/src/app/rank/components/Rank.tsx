@@ -1,7 +1,7 @@
 "use client"
-import React, { useState } from 'react';
+import React from 'react';
 import { RankInfo } from '@/types/rankInfo';
-import { useSwipeable } from 'react-swipeable';
+// import { useSwipeable } from 'react-swipeable';
 import { getRank } from '@/apis/rankAPi';
 import { useQuery } from '@tanstack/react-query';
 
@@ -27,7 +27,7 @@ import { useQuery } from '@tanstack/react-query';
 // ];
 
 export default function Rank() {
-    const [currentRankIndex, setCurrentRankIndex] = useState(0);
+    // const [currentRankIndex, setCurrentRankIndex] = useState(0);
     // const [ranks, setRanks] = useState<RankInfo[][]>([]);
     // const ranks = [userData, additionalUserData];
 
@@ -37,17 +37,16 @@ export default function Rank() {
     });
     
 
-    const handlers = useSwipeable({
-        onSwipedLeft: () => {
-            setCurrentRankIndex((prevIndex) => (prevIndex + 1) % ranks.length);
-        },
-        onSwipedRight: () => {
-            setCurrentRankIndex((prevIndex) => (prevIndex - 1 + ranks.length) % ranks.length);
-        },
-        preventScrollOnSwipe: true,
-        // preventDefaultTouchmoveEvent: true,
-        trackMouse: true,
-    });
+    // const handlers = useSwipeable({
+    //     onSwipedLeft: () => {
+    //         setCurrentRankIndex((prevIndex) => (prevIndex + 1) % ranks.length);
+    //     },
+    //     onSwipedRight: () => {
+    //         setCurrentRankIndex((prevIndex) => (prevIndex - 1 + ranks.length) % ranks.length);
+    //     },
+    //     preventScrollOnSwipe: true,
+    //     trackMouse: true,
+    // });
 
     // 로딩 상태 처리
     if (isLoading) return <div>Loading...</div>;
@@ -58,7 +57,8 @@ export default function Rank() {
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 py-10">
             <h1 className="text-3xl font-bold mb-6">현재 랭킹</h1>
-            <div {...handlers} className="bg-white rounded-lg shadow-md w-full max-w-2xl">
+            <div className="bg-white rounded-lg shadow-md w-full max-w-2xl">
+            {/* <div {...handlers} className="bg-white rounded-lg shadow-md w-full max-w-2xl"> */}
                 <table className="min-w-full">
                     <thead className="bg-gray-200">
                         <tr>
@@ -68,7 +68,7 @@ export default function Rank() {
                         </tr>
                     </thead>
                     <tbody>
-                        {ranks[currentRankIndex].map((user) => (
+                        {ranks.map((user) => (
                             <tr key={user.rank} className="hover:bg-gray-100">
                                 <td className="py-4 px-4 border-b border-t">{user.rank}</td>
                                 <td className="py-4 px-4 border-b border-t">{user.username}</td>

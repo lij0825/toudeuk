@@ -1,7 +1,7 @@
 "use client";
 import { UserInfo } from '@/types/userInfo';
 import { useState } from 'react'
-import { useMutation } from 'react-query'
+import { useMutation } from '@tanstack/react-query';
 import { signupUser } from '@/apis/userApi';
 
 
@@ -15,17 +15,21 @@ export default function Signup() {
         recommender: ''
     });
 
-    const mutation = useMutation(signupUser, {
-      onSuccess: (data) => {
-        console.log('Signup successful', data);
-        // 성공 시 리다이렉트 또는 메시지 출력
-        alert('회원가입이 완료되었습니다.');
-      },
-      onError: (error) => {
-        console.error('Signup failed', error);
-        alert('회원가입에 실패했습니다.');
-      },
-    });
+    const mutation = useMutation({
+        mutationFn: signupUser
+    })
+
+    // const mutation = useMutation(signupUser, {
+    //   onSuccess: (data) => {
+    //     console.log('Signup successful', data);
+    //     // 성공 시 리다이렉트 또는 메시지 출력
+    //     alert('회원가입이 완료되었습니다.');
+    //   },
+    //   onError: (error) => {
+    //     console.error('Signup failed', error);
+    //     alert('회원가입에 실패했습니다.');
+    //   },
+    // });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
