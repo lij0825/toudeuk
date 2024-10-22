@@ -19,12 +19,6 @@ export const metadata: Metadata = {
   },
   description: APP_DESCRIPTION,
   manifest: "/manifest.json",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default",
-    title: APP_DEFAULT_TITLE,
-    // startUpImage: [],
-  },
   formatDetection: {
     telephone: true,
   },
@@ -32,14 +26,6 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: APP_NAME,
-    title: {
-      default: APP_DEFAULT_TITLE,
-      template: APP_TITLE_TEMPLATE,
-    },
-    description: APP_DESCRIPTION,
-  },
-  twitter: {
-    card: "summary",
     title: {
       default: APP_DEFAULT_TITLE,
       template: APP_TITLE_TEMPLATE,
@@ -60,9 +46,28 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="kor">
+      <head>
+        <title>{APP_DEFAULT_TITLE}</title>
+        <meta name="description" content={APP_DESCRIPTION} />
+        <meta name="application-name" content={APP_NAME} />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="manifest" href="/manifest.json" />
+        {/* OpenGraph */}
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content={APP_NAME} />
+        <meta property="og:title" content={APP_DEFAULT_TITLE} />
+        <meta property="og:description" content={APP_DESCRIPTION} />
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content={APP_DEFAULT_TITLE} />
+        <meta name="twitter:description" content={APP_DESCRIPTION} />
+      </head>
       <body>
-        <ClientWrapper>{children}</ClientWrapper>
+        <ClientWrapper>
+          <main>{children}</main>
+        </ClientWrapper>
       </body>
     </html>
   );
