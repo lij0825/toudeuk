@@ -3,9 +3,9 @@ import CurrentRank from "./components/CurrentRank";
 
 export default function Toudeuk() {
   return (
-    <>
-      <CurrentRank></CurrentRank>
-      <Button></Button>
-    </>
+    <div className="flex flex-col justify-center items-center min-h-screen">
+      <CurrentRank rank = {7}/>
+      <Button/>
+    </div>
   );
 }
