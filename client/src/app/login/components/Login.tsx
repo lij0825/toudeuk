@@ -2,8 +2,9 @@
 
 import { LoginInfo } from "@/types/userInfo";
 import { useState } from "react";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { loginUser } from "@/apis/userApi";
+import { BaseResponse } from "@/types/Base";
 
 export default function Login() {
   const [formData, setFormData] = useState<LoginInfo>({
@@ -11,7 +12,7 @@ export default function Login() {
     password: "",
   });
 
-  const mutation = useMutation(loginUser, {
+  const mutation = useMutation<BaseResponse<null>, Error, LoginInfo>(loginUser, {
     onSuccess: (data) => {
       // 로그인 성공 시 처리할 로직
       console.log("로그인 성공:", data);
