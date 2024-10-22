@@ -1,0 +1,27 @@
+{
+  "name": "TouDeuk",
+  "short_name": "TouDeuk App",
+  "icons": [
+    {
+      "src": "/icons/128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#FFFFFF",
+  "background_color": "#FFFFFF",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait"
+}
