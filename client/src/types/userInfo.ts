@@ -1,7 +1,13 @@
-export interface userInfo {
+export interface UserInfo {
     email: string;
     password: string;
-    passwordConfirm: string;
+    confirmPassword: string;
     phoneNumber: string;
-    recommender: string | null;
+    nickName: string;
+    recommender: string | '';
+}
+
+export interface LoginInfo {
+    email: string;
+    password: string;
 }
