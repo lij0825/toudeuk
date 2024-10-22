@@ -8,4 +8,5 @@ const withPWA = withPWAInit({
 
 export default withPWA({
   // Your Next.js config
+  productionBrowserSourceMaps: false, // 프로덕션에서 소스 맵 비활성화
 });
