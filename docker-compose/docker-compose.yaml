@@ -1,0 +1,29 @@
+version: "3.3"
+
+services:
+  database:
+    image: mysql:8.0
+    container_name: toudeuk-database
+    environment:
+      MYSQL_ROOT_PASSWORD: toudeuk
+      MYSQL_DATABASE: toudeuk
+      MYSQL_USER: toudeuk
+      MYSQL_PASSWORD: toudeuk
+      TZ: Asia/Seoul
+    ports:
+      - "3306:3306"
+    volumes:
+      - toudeuk-db:/var/lib/mysql
+
+  db-admin:
+    container_name: db-admin
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "5000:80"
+    environment:
+      PMA_HOST: database
+      MYSQL_ROOT_PASSWORD: toudeuk
+    restart: always
+
+volumes:
+  toudeuk-db:

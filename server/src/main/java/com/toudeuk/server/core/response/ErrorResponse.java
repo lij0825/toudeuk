@@ -2,11 +2,10 @@ package com.toudeuk.server.core.response;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.Gson;
 import com.toudeuk.server.core.exception.ErrorCode;
 import lombok.Getter;
-import net.minidev.json.annotate.JsonIgnore;
-
 
 public class ErrorResponse extends BaseResponse<Void> {
     private final static ErrorResponse EMPTY = new ErrorResponse();
