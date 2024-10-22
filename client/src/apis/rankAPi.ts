@@ -1,14 +1,15 @@
 // import { RankInfo } from "@/types/rankInfo"
 
-export const getRank = async () => {
-    const response = await fetch('/api/rank',{
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    })
-    if (!response.ok) {
-        throw new Error('랭크 조회에 실패했습니다.');
+import { BaseResponse } from "@/types/Base"
+import instance from "./clientApi"
+import { RankInfo } from "@/types/rankInfo";
+
+export const getRank = async (): Promise<RankInfo[]> => {
+
+    const response = await instance.get<BaseResponse<RankInfo[]>>("api/v1/rank");
+    if (!response.data.success) {
+        throw new Error(response.data.message)
     }
-    return response.json();
+
+    return response.data.data || [];
 }

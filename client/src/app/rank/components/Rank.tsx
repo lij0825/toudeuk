@@ -44,7 +44,8 @@ export default function Rank() {
         onSwipedRight: () => {
             setCurrentRankIndex((prevIndex) => (prevIndex - 1 + ranks.length) % ranks.length);
         },
-        preventDefaultTouchmoveEvent: true,
+        preventScrollOnSwipe: true,
+        // preventDefaultTouchmoveEvent: true,
         trackMouse: true,
     });
 
