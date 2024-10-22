@@ -1,6 +1,10 @@
+import dynamic from "next/dynamic";
 import type { Metadata, Viewport } from "next";
-import ReactQueryProvider from "@/providers/ReacQueryProvider";
 import "./globals.css";
+
+const ClientWrapper = dynamic(() => import("@/providers/ReacQueryProvider"), {
+  ssr: false,
+});
 
 const APP_NAME = "TouDeuk";
 const APP_DEFAULT_TITLE = "TouDeuk App";
@@ -57,9 +61,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <ReactQueryProvider>
-        <body>{children}</body>
-      </ReactQueryProvider>
+      <body>
+        <ClientWrapper>{children}</ClientWrapper>
+      </body>
     </html>
   );
 }
