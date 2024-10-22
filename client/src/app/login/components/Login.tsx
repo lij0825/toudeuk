@@ -4,7 +4,6 @@ import { LoginInfo } from "@/types/userInfo";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { loginUser } from "@/apis/userApi";
-import { BaseResponse } from "@/types/Base";
 
 export default function Login() {
   const [formData, setFormData] = useState<LoginInfo>({
@@ -12,17 +11,21 @@ export default function Login() {
     password: "",
   });
 
-  const mutation = useMutation<BaseResponse<null>, Error, LoginInfo>(loginUser, {
-    onSuccess: (data) => {
-      // 로그인 성공 시 처리할 로직
-      console.log("로그인 성공:", data);
-      // 예: 리다이렉션 또는 사용자 데이터 저장
-    },
-    onError: (error) => {
-      // 로그인 실패 시 처리할 로직
-      alert(error);
-    },
-  });
+  const mutation = useMutation({
+    mutationFn: loginUser,
+  })
+
+//   const mutation = useMutation(loginUser, {
+//     onSuccess: (data) => {
+//       // 로그인 성공 시 처리할 로직
+//       console.log("로그인 성공:", data);
+//       // 예: 리다이렉션 또는 사용자 데이터 저장
+//     },
+//     onError: (error) => {
+//       // 로그인 실패 시 처리할 로직
+//       alert(error);
+//     },
+//   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
