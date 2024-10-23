@@ -6,10 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="9b842f81-2595-4bac-a2da-938dcaaea3e6" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/public/sw.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/public/sw.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/public/workbox-7144475a.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/public/workbox-7144475a.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/toudeuk/server/core/config/oauth/OAuth2SuccessHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/toudeuk/server/core/config/oauth/OAuth2SuccessHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/toudeuk/server/core/annotation/CurrentUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/toudeuk/server/core/annotation/CurrentUser.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,7 +73,7 @@
     "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "Spring Boot.ServerApplication.executor": "Run",
-    "git-widget-placeholder": "develop",
+    "git-widget-placeholder": "back/feat/oauth2",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/SSAFY/Desktop/S11P31C202/server/src/main/java/com/toudeuk/server/core/config",
     "node.js.detected.package.eslint": "true",
