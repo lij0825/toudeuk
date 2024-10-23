@@ -1,10 +1,10 @@
 import React from 'react'
-import Gifticon from './components/Gifticon'
+import Detail from './components/Detail'
 
 const page = () => {
   return (
     <div>
-      <Gifticon/>
+        <Detail/>
     </div>
   )
 }
