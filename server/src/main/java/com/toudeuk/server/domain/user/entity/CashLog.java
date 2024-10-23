@@ -45,4 +45,14 @@ public class CashLog extends TimeEntity {
 	@Enumerated(EnumType.STRING)
 	private CashLogType cashLogType;
 
+	public static CashLog create(User user, int changeCash, int resultCash, String name, CashLogType cashLogType) {
+		CashLog cashLog = new CashLog();
+		cashLog.user = user;
+		cashLog.changeCash = changeCash;
+		cashLog.resultCash = resultCash;
+		cashLog.name = name;
+		cashLog.cashLogType = cashLogType;
+		return cashLog;
+	}
+
 }

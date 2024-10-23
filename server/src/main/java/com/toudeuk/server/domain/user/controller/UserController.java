@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.toudeuk.server.core.response.SuccessResponse;
 import com.toudeuk.server.domain.user.dto.UserData;
-import com.toudeuk.server.domain.user.service.CashLogService;
 import com.toudeuk.server.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 public class UserController {
 
 	private final UserService userService;
-	private final CashLogService cashLogService;
 
 	/**
 	 * 유저 정보 조회
@@ -46,5 +44,17 @@ public class UserController {
 	public SuccessResponse<List<UserData.UserCashLog>> getUserCashLogs(@RequestParam Long userId) {
 		// FIXME : CurrentUser 나오면 수정
 		return SuccessResponse.of(userService.getUserCashLogs(userId));
+	}
+
+	/**
+	 * 유저 아이템 조회
+	 *
+	 * @param userId
+	 * @return {@link SuccessResponse<List<UserData.UserItemInfo>}
+	 */
+	@GetMapping(value = "/items")
+	public SuccessResponse<List<UserData.UserItemInfo>> getUserItems(@RequestParam Long userId) {
+		// FIXME : CurrentUser 나오면 수정
+		return SuccessResponse.of(userService.getUserItems(userId));
 	}
 }

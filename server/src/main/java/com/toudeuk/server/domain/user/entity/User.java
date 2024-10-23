@@ -76,4 +76,8 @@ public class User extends TimeEntity {
 	@LastModifiedDate
 	private LocalDateTime updatedAt;
 
+	public void updateCash(int cash) {
+		this.cash = cash;
+	}
+
 }

@@ -13,10 +13,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "user_items")
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserItem extends BaseEntity {
 
@@ -35,4 +37,12 @@ public class UserItem extends BaseEntity {
 
 	@Column(name = "is_used", nullable = false)
 	private boolean isUsed;
+
+	public static UserItem create(User user, Item item) {
+		UserItem userItem = new UserItem();
+		userItem.user = user;
+		userItem.item = item;
+		userItem.isUsed = false;
+		return userItem;
+	}
 }

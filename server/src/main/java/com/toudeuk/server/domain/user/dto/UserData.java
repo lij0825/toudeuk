@@ -1,5 +1,6 @@
 package com.toudeuk.server.domain.user.dto;
 
+import com.toudeuk.server.domain.item.entity.Item;
 import com.toudeuk.server.domain.user.entity.CashLog;
 import com.toudeuk.server.domain.user.entity.CashLogType;
 import com.toudeuk.server.domain.user.entity.User;
@@ -37,6 +38,27 @@ public class UserData {
 			log.resultCash = cashLog.getResultCash();
 			log.createdAt = cashLog.getCreatedAt().toString();
 			return log;
+		}
+	}
+
+	@Data
+	public static class UserItemInfo {
+		//item
+		private String itemName;
+		private String itemImage;
+		private int itemPrice;
+		// userItem
+		private boolean isUsed;
+		private String createdAt;
+
+		public static UserItemInfo of(Item item, boolean isUsed, String createdAt) {
+			UserItemInfo userItemInfo = new UserItemInfo();
+			userItemInfo.itemName = item.getName();
+			userItemInfo.itemImage = item.getImage();
+			userItemInfo.itemPrice = item.getPrice();
+			userItemInfo.isUsed = isUsed;
+			userItemInfo.createdAt = createdAt;
+			return userItemInfo;
 		}
 	}
 }
