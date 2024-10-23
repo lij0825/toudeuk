@@ -12,6 +12,8 @@ import com.toudeuk.server.core.response.SuccessResponse;
 import com.toudeuk.server.domain.item.dto.ItemData;
 import com.toudeuk.server.domain.item.service.ItemService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping(value = "/api/v1/item")
 @RequiredArgsConstructor
+@Tag(name = "아이템", description = "아이템 관련 API")
 public class ItemController {
 
 	private final ItemService itemService;
@@ -30,6 +33,7 @@ public class ItemController {
 	 * @return {@link SuccessResponse<List<ItemData.ItemInfo>}
 	 */
 	@GetMapping(value = "/list")
+	@Operation(summary = "전체 아이템 정보 조회", description = "전체 아이템 정보를 조회합니다.")
 	public SuccessResponse<List<ItemData.ItemInfo>> getItemList(@RequestParam Long userId) {
 		// FIXME : CurrentUser 나오면 수정
 		return SuccessResponse.of(itemService.getItemList());
@@ -42,6 +46,7 @@ public class ItemController {
 	 * @return {@link SuccessResponse<Void>}
 	 */
 	@PostMapping(value = "/buy")
+	@Operation(summary = "아이템 구매", description = "아이템을 구매합니다.")
 	public SuccessResponse<Void> buyItem(@RequestParam Long userId, @RequestParam Long itemId) {
 		// FIXME : CurrentUser 나오면 수정
 		itemService.buyItem(userId, itemId);
