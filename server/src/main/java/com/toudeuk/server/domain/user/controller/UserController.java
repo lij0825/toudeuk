@@ -40,7 +40,7 @@ public class UserController {
 	 * 유저 캐쉬 로그 조회
 	 *
 	 * @param userId
-	 * @return
+	 * @return {@link SuccessResponse<List<UserData.UserCashLog>>}
 	 */
 	@GetMapping(value = "/cash-logs")
 	public SuccessResponse<List<UserData.UserCashLog>> getUserCashLogs(@RequestParam Long userId) {

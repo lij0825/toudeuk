@@ -30,7 +30,9 @@ public class UserService {
 	}
 
 	public List<UserData.UserCashLog> getUserCashLogs(Long userId) {
-		return cashLogRepository.findByUserId(userId).stream()
+		return cashLogRepository.findByUserId(userId).orElseThrow(
+				() -> new BaseException(USER_CASH_LOG_NOT_FOUND)
+			).stream()
 			.map(UserData.UserCashLog::of)
 			.collect(Collectors.toList());
 	}
