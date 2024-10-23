@@ -8,6 +8,7 @@ import com.toudeuk.server.core.entity.BaseEntity;
 import com.toudeuk.server.core.entity.TimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -28,7 +29,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User extends BaseEntity {
+public class User extends TimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,16 +39,16 @@ public class User extends BaseEntity {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "password", nullable = false)
+    @Column(name = "password")
     private String password;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     private String name;
 
-    @Column(name = "nick_name", nullable = false)
-    private String nickName;
+    @Column(name = "nickname", nullable = false)
+    private String nickname;
 
-    @Column(name = "phone_number", nullable = false)
+    @Column(name = "phone_number")
     private String phoneNumber;
 
     @Column(name = "profile_img")
@@ -60,4 +61,34 @@ public class User extends BaseEntity {
     @Column(name = "role_type", nullable = false)
     @Enumerated(EnumType.STRING)
     private RoleType roleType = RoleType.USER;
+
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @Column(name = "updated_at")
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
+
+    @Enumerated(EnumType.STRING)
+    private UserStatus userStatus;
+
+    public User update(String name) {
+        this.name = name;
+        return this;
+    }
+
+
+    @Builder
+    public User(Long id, String email, String password, String name, String nickname, String phoneNumber, String profileImg, int cash, RoleType roleType, LocalDateTime updatedAt, UserStatus userStatus) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.nickname = nickname;
+        this.phoneNumber = phoneNumber;
+        this.profileImg = profileImg;
+        this.cash = cash;
+        this.roleType = roleType;
+        this.updatedAt = updatedAt;
+        this.userStatus = userStatus;
+    }
 }
