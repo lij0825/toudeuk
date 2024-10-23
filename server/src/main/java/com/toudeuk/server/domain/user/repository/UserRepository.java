@@ -1,5 +1,7 @@
 package com.toudeuk.server.domain.user.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+
 import com.toudeuk.server.domain.user.entity.User;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,8 +15,8 @@ public interface UserRepository extends JpaRepository<User,Long>, UserRepository
 //    @Query("select u from users u where u.email =:email")
     Optional<User> findByEmail(String email);
 
-    Optional<User> findByName(String name);
 
+    Optional<User> findByName(String name);
     List<User> findByNicknameContaining(String nickname);
 
     @Override
