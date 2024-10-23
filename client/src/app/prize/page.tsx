@@ -1,9 +1,12 @@
-import React from 'react'
+import React from "react";
+import Prize from "./components/Prize";
 
 const page = () => {
   return (
-    <div>page</div>
-  )
-}
+    <div>
+      <Prize />
+    </div>
+  );
+};
 
-export default page
+export default page;
