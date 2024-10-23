@@ -21,6 +21,8 @@ public class QClickGame extends EntityPathBase<ClickGame> {
 
     public final com.toudeuk.server.core.entity.QTimeEntity _super = new com.toudeuk.server.core.entity.QTimeEntity(this);
 
+    public final NumberPath<Integer> clickCount = createNumber("clickCount", Integer.class);
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 

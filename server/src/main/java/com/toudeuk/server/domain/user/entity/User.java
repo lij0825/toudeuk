@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import com.toudeuk.server.core.entity.BaseEntity;
 import com.toudeuk.server.core.entity.TimeEntity;
 
 import jakarta.persistence.Column;
@@ -55,7 +54,7 @@ public class User extends TimeEntity {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "nickname", nullable = false)
+    @Column(name = "nickname")
     private String nickname;
 
     @Column(name = "phone_number")

@@ -4,6 +4,7 @@ import com.toudeuk.server.core.entity.TimeEntity;
 import com.toudeuk.server.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -27,4 +28,11 @@ public class ClickGameLog extends TimeEntity {
     @JoinColumn(name = "click_game_id", nullable = false)
     private ClickGame clickGame;
 
+    @Builder
+    public ClickGameLog(Long id, User user, Integer order, ClickGame clickGame) {
+        this.id = id;
+        this.user = user;
+        this.order = order;
+        this.clickGame = clickGame;
+    }
 }

@@ -3,8 +3,9 @@ package com.toudeuk.server.domain.user.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.toudeuk.server.domain.user.entity.User;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
+
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
@@ -22,4 +23,10 @@ public interface UserRepository extends JpaRepository<User,Long>, UserRepository
     @Override
 //    @Query("SELECT DISTINCT u FROM users u left join u.toFollowList f on f.toUser.id=u.id WHERE u.nickname = :nickname")
     Optional<User> findByNickname(@Param("nickname") String nickname);
+
+
+
+    @Modifying
+    @Query("update User u set u.cash = u.cash - :cash where u.id = :userId")
+    void useCash(Long userId, int cash);
 }
