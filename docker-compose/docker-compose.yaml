@@ -25,5 +25,14 @@ services:
       MYSQL_ROOT_PASSWORD: toudeuk
     restart: always
 
+  cache-database:
+    image: redis
+    container_name: toudeuk-cache-database
+    ports:
+      - "6379:6379"
+    entrypoint: redis-server --requirepass toudeuk --maxmemory 1gb
+
+
+
 volumes:
   toudeuk-db:

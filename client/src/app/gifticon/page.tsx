@@ -1,8 +1,11 @@
 import React from 'react'
+import Gifticon from './components/Gifticon'
 
 const page = () => {
   return (
-    <div>page</div>
+    <div>
+      <Gifticon/>
+    </div>
   )
 }
 
