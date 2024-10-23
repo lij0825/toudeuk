@@ -43,6 +43,7 @@ public class UserData {
 
 	@Data
 	public static class UserItemInfo {
+		private Long userItemId;
 		//item
 		private String itemName;
 		private String itemImage;
@@ -51,8 +52,9 @@ public class UserData {
 		private boolean isUsed;
 		private String createdAt;
 
-		public static UserItemInfo of(Item item, boolean isUsed, String createdAt) {
+		public static UserItemInfo of(Long userItemId, Item item, boolean isUsed, String createdAt) {
 			UserItemInfo userItemInfo = new UserItemInfo();
+			userItemInfo.userItemId = userItemId;
 			userItemInfo.itemName = item.getName();
 			userItemInfo.itemImage = item.getImage();
 			userItemInfo.itemPrice = item.getPrice();

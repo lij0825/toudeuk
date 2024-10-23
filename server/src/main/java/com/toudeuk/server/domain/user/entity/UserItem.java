@@ -45,4 +45,8 @@ public class UserItem extends BaseEntity {
 		userItem.isUsed = false;
 		return userItem;
 	}
+
+	public void useItem() {
+		this.isUsed = true;
+	}
 }

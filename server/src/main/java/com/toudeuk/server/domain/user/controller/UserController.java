@@ -3,6 +3,7 @@ package com.toudeuk.server.domain.user.controller;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,5 +57,18 @@ public class UserController {
 	public SuccessResponse<List<UserData.UserItemInfo>> getUserItems(@RequestParam Long userId) {
 		// FIXME : CurrentUser 나오면 수정
 		return SuccessResponse.of(userService.getUserItems(userId));
+	}
+
+	/**
+	 * 유저 아이템 사용 처리
+	 *
+	 * @param userId, userItemId
+	 * @return {@link SuccessResponse<Void>}
+	 */
+	@PostMapping(value = "/items/use")
+	public SuccessResponse<Void> useUserItem(@RequestParam Long userId, @RequestParam Long userItemId) {
+		// FIXME : CurrentUser 나오면 수정
+		userService.useUserItem(userItemId);
+		return SuccessResponse.empty();
 	}
 }

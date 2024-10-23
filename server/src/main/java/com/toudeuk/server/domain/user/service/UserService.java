@@ -44,9 +44,15 @@ public class UserService {
 				() -> new BaseException(USER_ITEM_NOT_FOUND)
 			).stream()
 			.map(userItem -> UserData.UserItemInfo.of(
+				userItem.getId(),
 				userItem.getItem(),
 				userItem.isUsed(),
 				userItem.getCreatedAt().toString()))
 			.collect(Collectors.toList());
+	}
+
+	public void useUserItem(Long userItemId) {
+		userItemRepository.findById(userItemId).orElseThrow(() -> new BaseException(USER_ITEM_NOT_FOUND))
+			.useItem();
 	}
 }
