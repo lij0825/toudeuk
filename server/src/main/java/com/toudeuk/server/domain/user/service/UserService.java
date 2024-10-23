@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.toudeuk.server.core.exception.BaseException;
 import com.toudeuk.server.domain.user.dto.UserData;
+import com.toudeuk.server.domain.user.entity.UserItem;
 import com.toudeuk.server.domain.user.repository.CashLogRepository;
 import com.toudeuk.server.domain.user.repository.UserItemRepository;
 import com.toudeuk.server.domain.user.repository.UserRepository;
@@ -51,8 +52,18 @@ public class UserService {
 			.collect(Collectors.toList());
 	}
 
-	public void useUserItem(Long userItemId) {
-		userItemRepository.findById(userItemId).orElseThrow(() -> new BaseException(USER_ITEM_NOT_FOUND))
-			.useItem();
+	@Transactional
+	public void useUserItem(Long userId, Long userItemId) {
+
+		UserItem userItem = userItemRepository.findById(userItemId)
+			.filter(item -> item.getUser().getId().equals(userId))
+			.orElseThrow(() -> new BaseException(USER_ITEM_NOT_FOUND));
+
+		if (userItem.isUsed()) {
+			throw new BaseException(USER_ITEM_ALREADY_USED);
+		}
+
+		userItem.useItem();
+
 	}
 }

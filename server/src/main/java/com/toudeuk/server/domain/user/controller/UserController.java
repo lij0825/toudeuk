@@ -68,7 +68,7 @@ public class UserController {
 	@PostMapping(value = "/items/use")
 	public SuccessResponse<Void> useUserItem(@RequestParam Long userId, @RequestParam Long userItemId) {
 		// FIXME : CurrentUser 나오면 수정
-		userService.useUserItem(userItemId);
+		userService.useUserItem(userId, userItemId);
 		return SuccessResponse.empty();
 	}
 }
