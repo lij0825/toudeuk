@@ -1,4 +1,4 @@
-package com.toudeuk.server.core.config;
+package com.toudeuk.server.core.configuration;
 
 import com.toudeuk.server.core.jwt.TokenProvider;
 import jakarta.servlet.FilterChain;

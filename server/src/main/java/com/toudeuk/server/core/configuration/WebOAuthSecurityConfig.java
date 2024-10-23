@@ -1,9 +1,9 @@
-package com.toudeuk.server.core.config;
+package com.toudeuk.server.core.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.toudeuk.server.core.config.oauth.OAuth2AuthorizationRequestBasedOnCookieRepository;
-import com.toudeuk.server.core.config.oauth.OAuth2SuccessHandler;
-import com.toudeuk.server.core.config.oauth.OAuth2UserCustomService;
+import com.toudeuk.server.core.configuration.oauth.OAuth2AuthorizationRequestBasedOnCookieRepository;
+import com.toudeuk.server.core.configuration.oauth.OAuth2SuccessHandler;
+import com.toudeuk.server.core.configuration.oauth.OAuth2UserCustomService;
 import com.toudeuk.server.core.jwt.TokenProvider;
 import com.toudeuk.server.core.listener.SessionListener;
 import com.toudeuk.server.domain.user.repository.RefreshTokenRepository;

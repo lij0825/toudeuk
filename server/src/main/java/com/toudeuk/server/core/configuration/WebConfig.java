@@ -1,4 +1,4 @@
-package com.toudeuk.server.core.config;
+package com.toudeuk.server.core.configuration;
 
 import com.toudeuk.server.core.interceptor.AdminAuthorizationInterceptor;
 import com.toudeuk.server.core.interceptor.AuthenticationInterceptor;
