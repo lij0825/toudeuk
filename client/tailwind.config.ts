@@ -9,11 +9,12 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        background: "#FFFFFF", // 검정 배경으로 고정
+        foreground: "#202020", // 흰색 텍스트 색상으로 고정
       },
     },
   },
   plugins: [],
 };
+
 export default config;

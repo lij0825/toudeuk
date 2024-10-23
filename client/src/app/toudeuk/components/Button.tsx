@@ -4,21 +4,20 @@
 import { useState } from "react";
 
 export default function Button() {
-  const [isClicked, setIsClicked] = useState(false);
+  const [isCount, setIsCount] = useState<number>(0);
 
   const handleClick = () => {
-    setIsClicked(!isClicked);
+    setIsCount(isCount+1);
   };
   return (
     <>
       <button
-        onClick={handleClick}
-        className={`h-12 w-12 bg-[#dde1e7] rounded-md ${
-          isClicked
-            ? "shadow-[inset_-3px_-3px_7px_#ffffff73,inset_3px_3px_5px_rgba(94,104,121,0.288)]"
-            : "shadow-[-3px_-3px_7px_#ffffff73,3px_3px_5px_rgba(94,104,121,0.288)]"
-        }`}
-      ></button>
+      data-cy = "button"
+      onClick={handleClick}
+      className="flex items-center justify-center w-16 h-16 rounded-full border-2 border-[#00ff88] hover:border-[#ff00ff] text-[#00ff88] hover:text-[#ff00ff] transition-colors duration-300"
+    >
+      {isCount}
+    </button>
     </>
   );
 }
