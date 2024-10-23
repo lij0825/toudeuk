@@ -1,5 +1,7 @@
 package com.toudeuk.server.domain.user.controller;
 
+import java.util.List;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -7,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.toudeuk.server.core.response.SuccessResponse;
 import com.toudeuk.server.domain.user.dto.UserData;
+import com.toudeuk.server.domain.user.service.CashLogService;
 import com.toudeuk.server.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -19,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UserController {
 
 	private final UserService userService;
+	private final CashLogService cashLogService;
 
 	/**
 	 * 유저 정보 조회
@@ -38,5 +42,9 @@ public class UserController {
 	 * @param userId
 	 * @return
 	 */
-
+	@GetMapping(value = "/cash-logs")
+	public SuccessResponse<List<UserData.UserCashLog>> getUserCashLogs(@RequestParam Long userId) {
+		// FIXME : CurrentUser 나오면 수정
+		return SuccessResponse.of(userService.getUserCashLogs(userId));
+	}
 }
