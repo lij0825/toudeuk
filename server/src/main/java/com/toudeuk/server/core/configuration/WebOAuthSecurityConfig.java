@@ -39,7 +39,7 @@ public class WebOAuthSecurityConfig {
     private final UserService userService;
     private final ObjectMapper objectMapper;
     private final SessionListener sessionListener;
-    private final RedisTemplate redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     // 스프링 시큐리티 기능 비활성화
     @Bean

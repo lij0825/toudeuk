@@ -1,5 +1,17 @@
 package com.toudeuk.server.core.configuration.oauth;
 
+import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
+
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toudeuk.server.core.jwt.TokenProvider;
 import com.toudeuk.server.core.jwt.constant.TokenType;
@@ -11,22 +23,12 @@ import com.toudeuk.server.domain.user.entity.RefreshToken;
 import com.toudeuk.server.domain.user.entity.User;
 import com.toudeuk.server.domain.user.repository.RefreshTokenRepository;
 import com.toudeuk.server.domain.user.service.UserService;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
-import org.springframework.stereotype.Component;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import java.io.IOException;
-import java.time.Duration;
-import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @Component
@@ -50,7 +52,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private final UserService userService;
     private final ObjectMapper objectMapper;
     private final SessionListener sessionListener;
-    private final RedisTemplate redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     // 성공적으로 로그인 하는 경우에 토큰과 관련된 작업을 추가로 처리하기 위해 오버라이드함
 //    @Override
