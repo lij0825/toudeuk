@@ -1,4 +1,4 @@
-package com.toudeuk.server.core.config.oauth;
+package com.toudeuk.server.core.configuration.oauth;
 
 import com.toudeuk.server.core.util.CookieUtil;
 import jakarta.servlet.http.Cookie;

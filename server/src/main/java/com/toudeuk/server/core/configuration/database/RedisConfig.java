@@ -1,4 +1,4 @@
-package com.toudeuk.server.core.config.database;
+package com.toudeuk.server.core.configuration.database;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;

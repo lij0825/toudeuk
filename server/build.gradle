@@ -73,7 +73,6 @@ dependencies {
 	// Json 데이터 파싱
 	implementation 'org.json:json:20210307'
 
-
 	// Security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	testImplementation 'org.springframework.security:spring-security-test'
