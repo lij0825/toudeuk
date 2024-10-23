@@ -24,7 +24,7 @@ public class GameService {
 	@Transactional
 	public void click(Long userId, Long gameId) {
 
-		ClickGame clickGame = clickGameRepository.findById(gameId).orElseThrow();
+		ClickGame clickGame = clickGameRepository.findByIdWithPessimisticLock(gameId).orElseThrow();
 
 		if(clickGame.getClickCount() >= 1000) {
 			throw new IllegalArgumentException("게임 클릭 수 초과");
@@ -33,14 +33,19 @@ public class GameService {
 		// 게임 클릭 수 증가
 		clickGame.click();
 
-		// 캐시 차감
-		userRepository.useCash(userId, 10);
+		// 변경된 엔티티를 저장하여 트리거를 작동시킵니다.
+		clickGameRepository.save(clickGame);
 
-		// 게임 로그 저장
-		clickGameLogRepository.save(ClickGameLog.builder()
-			.user(User.builder().id(userId).build())
-			.order(clickGame.getClickCount())
-			.clickGame(clickGame)
-			.build());
+		// 트리거로 동작
+
+		// // 캐시 차감
+		// userRepository.useCash(userId, 10);
+		//
+		// // 게임 로그 저장
+		// clickGameLogRepository.save(ClickGameLog.builder()
+		// 	.user(User.builder().id(userId).build())
+		// 	.order(clickGame.getClickCount())
+		// 	.clickGame(clickGame)
+		// 	.build());
 	}
 }

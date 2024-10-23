@@ -17,8 +17,6 @@ import com.toudeuk.server.domain.user.entity.RoleType;
 import com.toudeuk.server.domain.user.entity.User;
 import com.toudeuk.server.domain.user.repository.UserRepository;
 
-import jakarta.persistence.EntityManager;
-
 @SpringBootTest
 class GameServiceTest {
 
@@ -61,9 +59,9 @@ class GameServiceTest {
 			.build();
 		clickGameRepository.save(clickGame);
 
-		int threadCount = 1000;
+		int threadCount = 1500;
 
-		ExecutorService executorService = Executors.newFixedThreadPool(32);
+		ExecutorService executorService = Executors.newFixedThreadPool(100);
 		CountDownLatch latch = new CountDownLatch(threadCount);
 
 		for (int i = 0 ; i < threadCount ; i++) {
