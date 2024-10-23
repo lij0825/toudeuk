@@ -32,7 +32,7 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath name = createString("name");
 
-    public final StringPath nickName = createString("nickName");
+    public final StringPath nickname = createString("nickname");
 
     public final StringPath password = createString("password");
 
@@ -43,6 +43,8 @@ public class QUser extends EntityPathBase<User> {
     public final EnumPath<RoleType> roleType = createEnum("roleType", RoleType.class);
 
     public final DateTimePath<java.time.LocalDateTime> updatedAt = createDateTime("updatedAt", java.time.LocalDateTime.class);
+
+    public final EnumPath<UserStatus> userStatus = createEnum("userStatus", UserStatus.class);
 
     public QUser(String variable) {
         super(User.class, forVariable(variable));

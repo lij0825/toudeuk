@@ -36,6 +36,9 @@ public class QUserItem extends EntityPathBase<UserItem> {
 
     public final com.toudeuk.server.domain.item.entity.QItem item;
 
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
+
     public final QUser user;
 
     public QUserItem(String variable) {

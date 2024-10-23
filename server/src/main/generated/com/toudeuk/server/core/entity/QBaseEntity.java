@@ -26,6 +26,8 @@ public class QBaseEntity extends EntityPathBase<BaseEntity> {
 
     public final BooleanPath isDeleted = createBoolean("isDeleted");
 
+    public final DateTimePath<java.time.LocalDateTime> updatedAt = createDateTime("updatedAt", java.time.LocalDateTime.class);
+
     public QBaseEntity(String variable) {
         super(BaseEntity.class, forVariable(variable));
     }

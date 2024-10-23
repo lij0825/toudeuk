@@ -17,7 +17,7 @@ public class UserData {
 
 		public static Info of(User user) {
 			Info info = new Info();
-			info.nickName = user.getNickName();
+			info.nickName = user.getNickname();
 			info.profileImg = user.getProfileImg();
 			info.cash = user.getCash();
 			return info;
