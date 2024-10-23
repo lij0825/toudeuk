@@ -1,4 +1,4 @@
-package com.toudeuk.server.core.config;
+package com.toudeuk.server.core.configuration;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;

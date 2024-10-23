@@ -1,4 +1,4 @@
-package com.toudeuk.server.core.config.oauth;
+package com.toudeuk.server.core.configuration.oauth;
 import com.toudeuk.server.domain.user.dto.oauth.*;
 import com.toudeuk.server.domain.user.entity.User;
 import com.toudeuk.server.domain.user.entity.UserStatus;

@@ -1,4 +1,4 @@
-package com.toudeuk.server.core.config.oauth;
+package com.toudeuk.server.core.configuration.oauth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toudeuk.server.core.jwt.TokenProvider;
