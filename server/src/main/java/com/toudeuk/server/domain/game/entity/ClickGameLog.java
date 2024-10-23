@@ -3,11 +3,12 @@ package com.toudeuk.server.domain.game.entity;
 import com.toudeuk.server.core.entity.TimeEntity;
 import com.toudeuk.server.domain.user.entity.User;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "click_game_log")
+@Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ClickGameLog extends TimeEntity {
 
