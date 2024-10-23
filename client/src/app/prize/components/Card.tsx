@@ -12,7 +12,7 @@ export default function Card({ prizeInfo }: { prizeInfo: PrizeInfo }) {
           {/* Custom Card */}
           <div className="w-full relative overflow-hidden rounded-xl bg-white shadow-md">
             {/* Card content */}
-            <div className="relative z-10 flex flex-col justify-between h-full border border-gray-200 rounded-xl p-4">
+            <div className="relative flex flex-col justify-between h-full border border-gray-200 rounded-xl p-4">
               {/* Top Row with Round ID and Nickname */}
               <div className="flex justify-between w-full items-center">
                 {/* Round ID and Points */}

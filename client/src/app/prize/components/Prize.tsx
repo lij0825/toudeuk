@@ -69,8 +69,8 @@ export default function Prize() {
 
   return (
     <>
-      <section className="fixed top-0 bg-color-black">
-        <h1 className="text-3xl z-50">당첨내역</h1>
+      <section className="fixed top-0 bg-color-white z-50">
+        <h1 className="text-3xl ">당첨내역</h1>
       </section>
       <Suspense fallback={<Loading />}>
         <section className="overflow-auto">
