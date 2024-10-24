@@ -38,10 +38,8 @@ import static com.toudeuk.server.domain.game.entity.RewardType.*;
 @Transactional(readOnly = true)
 public class ClickGameService {
 
-    private final ClickCacheRepository clickCacheRepository;
-    private final GameCacheRepository gameCacheRepository;
+    private final ClickGameCacheRepository clickCacheRepository;
     private final ClickGameRepository clickGameRepository;
-    private final UserService userService;
     private final UserRepository userRepository;
     private final ClickGameLogRepository clickGameLogRepository;
     private final ClickGameRewardLogRepository clickGameRewardLogRepository;
@@ -50,26 +48,29 @@ public class ClickGameService {
     // 클릭 로그 저장
     @Transactional
     public void saveClickGame() {
-        List<Object> clickLogs = clickCacheRepository.getClickLog();
+        List<Long> clickLogs = clickCacheRepository.getClickLog();
 
-        Long gameId = gameCacheRepository.getGameId();
+        Long gameId = clickCacheRepository.getGameId();
         ClickGame clickGame = findById(gameId);
 
         // 저장 하기
         AtomicInteger order = new AtomicInteger(1);
-        for (Object userId : clickLogs) {
-            User user = userService.findById((Long) userId);
+        for (Long userId : clickLogs) {
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+
 
             ClickGameLog clickGameLog = ClickGameLog.create(user, order.getAndIncrement(), clickGame);
             clickGameLogRepository.save(clickGameLog);
 
             if (order.get() == 12000) {
-                int count = clickCacheRepository.getUserClick((Long) userId);
+                int count = clickCacheRepository.getUserClick(userId);
                 ClickGameRewardLog rewardLog = ClickGameRewardLog.create(user, clickGame, 10000, count, WINNER);
+                clickGameRewardLogRepository.save(rewardLog);
                 continue;
             }
             if (order.get() % 1000 == 0) {
-                int count = clickCacheRepository.getUserClick((Long) userId);
+                int count = clickCacheRepository.getUserClick(userId);
 
                 ClickGameRewardLog rewardLog = ClickGameRewardLog.create(user, clickGame, 100, count, SECTION);
                 clickGameRewardLogRepository.save(rewardLog);
@@ -77,26 +78,32 @@ public class ClickGameService {
         }
 
         Long maxClickerId = clickCacheRepository.getMaxClicker();
-        int maxCount = clickCacheRepository.getUserClick((Long) maxClickerId);
-        User MaxClicker = userService.findById(maxClickerId);
+        int maxCount = clickCacheRepository.getUserClick(maxClickerId);
+        User MaxClicker = userRepository.findById(maxClickerId)
+                .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+
         ClickGameRewardLog rewardLog = ClickGameRewardLog.create(MaxClicker, clickGame, 10000, maxCount, MAX_CLICKER);
 
         // Redis의 클릭 정보를 삭제
         clickCacheRepository.deleteAllClickInfo();
     }
 
-
+    @Transactional
     public void clickButton(Long userId) {
-        clickCacheRepository.addUserClick(userId);
+        synchronized (userId) {
+            clickCacheRepository.addUserClick(userId);
 
-        User user = userService.findById(userId);
-        int changeCash = -1;
-        int resultCash = user.getCash() - 1;
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
 
-        applicationEventPublisher.publishEvent(
-                new CashLogEvent(user, changeCash, resultCash, "clickGame", CashLogType.GAME));
+            int changeCash = -1;
+            int resultCash = user.getCash() - 1;
 
-        user.updateCash(resultCash);
+            applicationEventPublisher.publishEvent(
+                    new CashLogEvent(user, changeCash, resultCash, "clickGame", CashLogType.GAME));
+
+            user.updateCash(resultCash);
+        }
     }
 
     public ClickGame findById(Long id) {
