@@ -7,12 +7,6 @@
 describe("더미데이터를 사용한 사용자 정보 반환", () => {
   // 각 테스트마다 페이지를 방문
   beforeEach(() => {
-    cy.visit('/mypage'); // mypage 방문
-  });
-
-  // 사용자 정보를 성공적으로 가져오는 테스트
-  it('사용자 정보를 성공적으로 fetch', () => {
-    // API 요청을 가로채고 mock 데이터 반환
     cy.intercept('GET', `${Cypress.env('API_BASE_URL')}/user/info`, {
       statusCode: 200,
       body: {
@@ -25,6 +19,13 @@ describe("더미데이터를 사용한 사용자 정보 반환", () => {
         },
       },
     }).as('getUserInfo');
+    
+    cy.visit('/mypage'); // mypage 방문
+  });
+
+  // 사용자 정보를 성공적으로 가져오는 테스트
+  it('사용자 정보를 성공적으로 fetch', () => {
+    // API 요청을 가로채고 mock 데이터 반환
 
     // API 요청이 완료될 때까지 대기
     cy.wait('@getUserInfo');
