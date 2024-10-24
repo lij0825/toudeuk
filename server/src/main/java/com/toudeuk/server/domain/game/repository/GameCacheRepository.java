@@ -17,21 +17,19 @@ public class GameCacheRepository {
     private final ClickGameService clickGameService;
 
     // 게임 회차
-    public void setGameRound(Long round) {
-        redisTemplate.opsForValue().set(GAME_KEY + "round", round);
+    public void setGameId(Long gameId) {
+        redisTemplate.opsForValue().set(GAME_KEY + "id", gameId);
     }
-    public Long getGameRound() {
-        return (Long) redisTemplate.opsForValue().get(GAME_KEY + "round");
+    public Long getGameId() {
+        return (Long) redisTemplate.opsForValue().get(GAME_KEY + "id");
     }
 
     // 게임 쿨타임
     public void setGameCooltime() {
         redisTemplate.opsForValue().set(GAME_KEY + "cooltime", true);
-        redisTemplate.expire(GAME_KEY + "cooltime", 30, TimeUnit.MINUTES); // 일단 30분으로 해둠
+        redisTemplate.expire(GAME_KEY + "cooltime", 5, TimeUnit.MINUTES);
 
-        clickGameService.saveClickGame(getGameRound());
-
-        clickCacheRepository.initTotalClick();
+        clickGameService.saveClickGame();
     }
 
     public boolean isGameInCooltime() {

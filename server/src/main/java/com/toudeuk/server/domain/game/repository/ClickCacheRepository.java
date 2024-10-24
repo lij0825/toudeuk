@@ -2,7 +2,6 @@ package com.toudeuk.server.domain.game.repository;
 
 
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
@@ -34,11 +33,6 @@ public class ClickCacheRepository {
 
 
     // 유저 클릭
-//    public void addUserClick(Long userId) {
-//        addTotalClick(); // 유적 클릭시 총 클릭도 증가한다.
-//        redisTemplate.opsForZSet().incrementScore(Click_KEY + "order", userId, 1);
-//    }
-    // 쿨타임 적용
     public String addUserClick(Long userId) {
         // 게임 쿨타임
         if (gameCacheRepository.isGameInCooltime()) {
@@ -60,7 +54,7 @@ public class ClickCacheRepository {
 
         // 유저 쿨타임 시작
         redisTemplate.opsForValue().set(Click_KEY + "cooltime:" + userId, true);
-        redisTemplate.expire(Click_KEY + "cooltime:" + userId, 5, TimeUnit.SECONDS); //  일단 5초
+        redisTemplate.expire(Click_KEY + "cooltime:" + userId, 500, TimeUnit.MILLISECONDS); //
 
         return "SUCCESS"; // 정상 처리
     }
@@ -71,8 +65,11 @@ public class ClickCacheRepository {
         Double userClick = redisTemplate.opsForZSet().score(Click_KEY + "order", userId);
         return userClick == null ? 0 : userClick.intValue();
     }
-
-
+    // 맥시클릭커
+    public Long getMaxClicker() {
+        Set<Object> result = redisTemplate.opsForZSet().reverseRangeByScore(Click_KEY + "order", Integer.MAX_VALUE, -1, 0, 1);
+        return result == null ? null : (Long) result.toArray()[0];
+    }
 
     // 유저 순위
     public Integer getUserOrder(Long userId) {
@@ -81,18 +78,19 @@ public class ClickCacheRepository {
     }
 
     // 내 앞순위 유저
-    public Set<Object> getPreviousOrderUser(Long userId){
+    public Long getPreviousOrderUser(Long userId){
         Integer clickCount = getUserClick(userId);
-        return redisTemplate.opsForZSet().rangeByScore(Click_KEY + "order", clickCount + 1, Integer.MAX_VALUE, 0, 1);
+        Set<Object> result = redisTemplate.opsForZSet().rangeByScore(Click_KEY + "order", clickCount + 1, Integer.MAX_VALUE, 0, 1);
+        return result == null ? null : (Long) result.toArray()[0];
     }
 
     // 로그
     public void saveClickLog(Long userId) {
-        redisTemplate.opsForList().leftPush(Click_KEY + "log", userId);
+        redisTemplate.opsForList().rightPush(Click_KEY + "log", userId);
     }
 
     public List<Object> getClickLog() {
-        return redisTemplate.opsForList().range(Click_KEY + "log", 0, -1);
+        return redisTemplate.opsForList().range(Click_KEY + "log", 0, 12000);
     }
 
 
