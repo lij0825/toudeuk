@@ -15,7 +15,6 @@ import com.toudeuk.server.domain.item.service.ItemService;
 import com.toudeuk.server.domain.user.entity.User;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +48,6 @@ public class ItemController {
 	 */
 	@PostMapping(value = "/buy")
 	@Operation(summary = "아이템 구매", description = "아이템을 구매합니다.")
-	@Parameter(name = "itemId", description = "아이템 ID", required = true)
 	public SuccessResponse<Void> buyItem(@CurrentUser User user, @RequestBody ItemData.Buy buy) {
 		itemService.buyItem(user.getId(), buy.getItemId());
 		return SuccessResponse.empty();

@@ -22,6 +22,12 @@ public enum ErrorCode {
 	USER_ITEM_NOT_FOUND(3001, HttpStatus.NOT_FOUND, "사용자의 아이템을 찾을 수 없습니다."),
 	USER_ITEM_ALREADY_USED(3002, HttpStatus.BAD_REQUEST, "이미 사용한 아이템입니다."),
 
+	// Game
+	WINNER_NOT_FOUND(4000, HttpStatus.NOT_FOUND, "우승자를 찾을 수 없습니다."),
+	MAX_CLICKER_NOT_FOUND(4001, HttpStatus.NOT_FOUND, "최대 클릭자를 찾을 수 없습니다."),
+	CLICK_GAME_REWARD_LOG_NOT_FOUND(4002, HttpStatus.NOT_FOUND, "클릭 게임 보상 로그를 찾을 수 없습니다."),
+	MIDDLE_NOT_FOUND(4003, HttpStatus.NOT_FOUND, "중간 순위를 찾을 수 없습니다."),
+	// ---
 	USER_NOT_EXISTS(1002, HttpStatus.NOT_FOUND, "해당 회원은 존재하지 않습니다."),
 
 	NOT_VALID_BEARER_GRANT_TYPE(401, HttpStatus.UNAUTHORIZED, "인증 타입이 Bearer 타입이 아닙니다."),

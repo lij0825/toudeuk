@@ -72,7 +72,6 @@ public class UserController {
 	 */
 	@PostMapping(value = "/items/use")
 	@Operation(summary = "유저 아이템 사용 처리", description = "유저 아이템을 사용 처리합니다.")
-	@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "유저 아이템 ID", required = true)
 	public SuccessResponse<Void> useUserItem(@CurrentUser User user, @RequestBody UserData.UserItemUse use) {
 		userService.useUserItem(user.getId(), use.getUserItemId());
 		return SuccessResponse.empty();
