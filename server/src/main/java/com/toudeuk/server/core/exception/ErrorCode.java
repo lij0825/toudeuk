@@ -23,6 +23,9 @@ public enum ErrorCode {
 
     USER_NOT_EXISTS(1002, HttpStatus.NOT_FOUND, "해당 회원은 존재하지 않습니다."),
 
+	// ClickGame
+	ClickGame_NOT_FOUND(4000, HttpStatus.NOT_FOUND, "클릭 게임을 찾을 수 없습니다."),
+
     NOT_VALID_BEARER_GRANT_TYPE(401, HttpStatus.UNAUTHORIZED, "인증 타입이 Bearer 타입이 아닙니다."),
     NOT_EXISTS_AUTHORIZATION(401, HttpStatus.UNAUTHORIZED, "Authorization Header가 빈값입니다."),
     NOT_ACCESS_TOKEN_TYPE(1003, HttpStatus.UNAUTHORIZED, "해당 토큰은 access token이 아닙니다."),
