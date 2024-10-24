@@ -13,3 +13,17 @@ export const fetchRank = async (): Promise<RankInfo[]> => {
 
     return response.data.data || [];
 }
+
+// export const fetchRank = async (): Promise<RankInfo[]> => {
+//     const response = await fetch('http://localhost:8080/rank',{
+//         method: 'GET',
+//         headers: {
+//             'Content-Type': 'application/json',
+//         },
+//     }); // 실제 API 엔드포인트 사용
+//     console.log(response)
+//     if (!response.ok) {
+//         throw new Error('Failed to fetch ranks');
+//     }
+//     return response.json();
+// };

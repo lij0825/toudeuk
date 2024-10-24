@@ -1,3 +1,4 @@
+import Myprofile from "./components/Myprofile";
 import Mypoint from "./components/Mypoint"
 import NeonList from "./components/NeonList";
 import { ListItemInfo } from "@/types/mypageInfo";
@@ -16,6 +17,7 @@ export default function Mypage() {
     <div className="flex flex-col items-center min-h-screen">
       <section>
       <Mypoint/>
+      <Myprofile/>
       </section>
       <section>
 
