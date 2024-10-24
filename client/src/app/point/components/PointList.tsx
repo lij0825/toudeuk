@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { useQuery } from '@tanstack/react-query';
 import { PointInfo } from '@/types/point';
 import { fetchPoints } from '@/apis/pointApi';
+import { useAuthStore } from '@/store/userAuthStore';
 
 const pointHistory: PointInfo[] = [
   { id: 1, type: 'charge', amount: 5000, date: '2024-10-21', description: '포인트 충전' },
@@ -12,9 +13,12 @@ const pointHistory: PointInfo[] = [
   { id: 4, type: 'use', amount: -3000, date: '2024-10-23', description: '이벤트 참가' },
 ];
 
-export default function PointList () {
+export default function PointList() {
   const [filter, setFilter] = useState<'all' | 'charge' | 'use'>('all');
 
+  const { accessToken } = useAuthStore((state) => ({
+    accessToken: state.accessToken,
+  }))
   // react-query로 데이터 fetching
   // const { data: pointHistory = [], isLoading, error } = useQuery<PointInfo[]>({
   //   queryKey: ['points'],
@@ -31,6 +35,7 @@ export default function PointList () {
 
   return (
     <div className="max-w-xl mx-auto p-4">
+      <p>{accessToken}</p>
       <h1 className="text-2xl font-bold mb-4">포인트 내역</h1>
 
       {/* 필터 버튼들 */}
@@ -60,9 +65,8 @@ export default function PointList () {
         {filteredHistory?.map((transaction) => (
           <li
             key={transaction.id}
-            className={`p-4 border rounded-lg ${
-              transaction.type === 'charge' ? 'border-green-500' : 'border-red-500'
-            }`}
+            className={`p-4 border rounded-lg ${transaction.type === 'charge' ? 'border-green-500' : 'border-red-500'
+              }`}
           >
             <div className="flex justify-between">
               <span>{transaction.description}</span>

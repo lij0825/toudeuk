@@ -47,4 +47,14 @@ public class ClickGameRewardLog extends TimeEntity {
 	@Enumerated(EnumType.STRING)
 	private RewardType rewardType;
 
+	public static ClickGameRewardLog create(User user, ClickGame clickGame, int reward, int clickCount, RewardType rewardType) {
+		ClickGameRewardLog clickGameRewardLog = new ClickGameRewardLog();
+		clickGameRewardLog.user = user;
+		clickGameRewardLog.clickGame = clickGame;
+		clickGameRewardLog.reward = reward;
+		clickGameRewardLog.clickCount = clickCount;
+		clickGameRewardLog.rewardType = rewardType;
+		return clickGameRewardLog;
+	}
+
 }

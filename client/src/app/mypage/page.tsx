@@ -1,6 +1,5 @@
-"use client";
-
-import Mypoint from "./components/Mypoint";
+import Myprofile from "./components/Myprofile";
+import Mypoint from "./components/Mypoint"
 import NeonList from "./components/NeonList";
 import { ListItemInfo } from "@/types/mypageInfo";
 import { UserGifticonInfo } from "@/types/gifticon";
@@ -67,7 +66,8 @@ export default function Mypage() {
   return (
     <div className="flex flex-col items-center min-h-screen">
       <section>
-        <Mypoint />
+      <Mypoint/>
+      <Myprofile/>
       </section>
       <section>
         기프티콘 페이지 이동 버튼

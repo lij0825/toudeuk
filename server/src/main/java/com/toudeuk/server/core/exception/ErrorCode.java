@@ -27,6 +27,7 @@ public enum ErrorCode {
 	MAX_CLICKER_NOT_FOUND(4001, HttpStatus.NOT_FOUND, "최대 클릭자를 찾을 수 없습니다."),
 	CLICK_GAME_REWARD_LOG_NOT_FOUND(4002, HttpStatus.NOT_FOUND, "클릭 게임 보상 로그를 찾을 수 없습니다."),
 	MIDDLE_NOT_FOUND(4003, HttpStatus.NOT_FOUND, "중간 순위를 찾을 수 없습니다."),
+	ClickGame_NOT_FOUND(4004, HttpStatus.NOT_FOUND, "클릭 게임을 찾을 수 없습니다."),
 	// ---
 	USER_NOT_EXISTS(1002, HttpStatus.NOT_FOUND, "해당 회원은 존재하지 않습니다."),
 

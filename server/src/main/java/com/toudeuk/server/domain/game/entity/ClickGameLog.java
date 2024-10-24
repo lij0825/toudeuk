@@ -1,13 +1,16 @@
 package com.toudeuk.server.domain.game.entity;
 
 import com.toudeuk.server.core.entity.TimeEntity;
+import com.toudeuk.server.domain.item.entity.Item;
 import com.toudeuk.server.domain.user.entity.User;
+import com.toudeuk.server.domain.user.entity.UserItem;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "click_game_log")
+@Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ClickGameLog extends TimeEntity {
 
@@ -26,5 +29,13 @@ public class ClickGameLog extends TimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "click_game_id", nullable = false)
     private ClickGame clickGame;
+
+    public static ClickGameLog create(User user, int order, ClickGame clickGame) {
+        ClickGameLog clickGameLog = new ClickGameLog();
+        clickGameLog.user = user;
+        clickGameLog.order = order;
+        clickGameLog.clickGame = clickGame;
+        return clickGameLog;
+    }
 
 }
