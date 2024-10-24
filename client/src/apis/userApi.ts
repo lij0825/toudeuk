@@ -1,4 +1,4 @@
-import { LoginInfo, UserInfo } from "@/types/userInfo";
+import { LoginInfo, SignupInfo } from "@/types/auth";
 import instance from "./clientApi";
 import { BaseResponse } from "@/types/Base";
 
@@ -12,13 +12,15 @@ export const signupUser = async (data: UserInfo): Promise<void> => {
     }
 };
 
-export const loginUser = async (data: LoginInfo): Promise<BaseResponse<null>> => {
-    const response = await instance.post<BaseResponse<null>>("/auth/login", data);
-    if (!response.data.success) {
-        throw new Error(response.data.message)
-    }
-    return response.data;
-}
+export const loginUser = async (
+  data: LoginInfo
+): Promise<BaseResponse<null>> => {
+  const response = await instance.post<BaseResponse<null>>("/auth/login", data);
+  if (!response.data.success) {
+    throw new Error(response.data.message);
+  }
+  return response.data;
+};
 
 export const fetchProfile = async (userId): Promise<UserInfo> => {
     const response = await instance.get<BaseResponse<UserInfo>>(`/user/info?userId=${userId}`); 
@@ -59,5 +61,3 @@ export const fetchProfile = async (userId): Promise<UserInfo> => {
 //   }
 //   return response.json();
 // };
-
-

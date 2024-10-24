@@ -25,5 +25,31 @@ services:
       MYSQL_ROOT_PASSWORD: toudeuk
     restart: always
 
+  cache-database:
+    image: redis
+    container_name: toudeuk-cache-database
+    ports:
+      - "6379:6379"
+    entrypoint: redis-server --requirepass toudeuk --maxmemory 1gb
+
+
+  # !! Ngrinder 설정 나중에 서버를 분리하면 스프링 서버가 돌아가지 않는 다른 서버에서 해야함 !!
+  controller:
+    container_name: ngrinder-controller
+    image: ngrinder/controller:3.5.5
+    restart: always
+    ports:
+      - "9000:80"
+      - "16001:16001"
+      - "12000-12009:12000-12009"
+    volumes:
+      - ./ngrinder-controller:/opt/ngrinder-controller
+  agent:
+    container_name: ngrinder-agent
+    image: ngrinder/agent:3.5.5
+    restart: always
+    links:
+      - controller
+
 volumes:
   toudeuk-db:
