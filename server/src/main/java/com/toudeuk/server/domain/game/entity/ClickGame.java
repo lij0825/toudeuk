@@ -24,13 +24,23 @@ public class ClickGame extends TimeEntity {
 
     @Column(name = "click_count", nullable = false)
     private Integer clickCount;
+    //
+    // @Version // 낙관적 락을 위한 필드
+    // private Long version;
 
-    @Builder
+    public ClickGame(Long round, Integer clickCount) {
+        this.round = round;
+        this.clickCount = clickCount;
+    }
+
+
     public ClickGame(Long id, Long round, Integer clickCount) {
         this.id = id;
         this.round = round;
         this.clickCount = clickCount;
     }
+
+
 
     public void click() {
         this.clickCount++;

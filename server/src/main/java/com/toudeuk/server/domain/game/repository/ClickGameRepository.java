@@ -16,4 +16,12 @@ public interface ClickGameRepository extends JpaRepository<ClickGame, Long> {
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	@Query("SELECT cg FROM ClickGame cg WHERE cg.id = :gameId")
 	Optional<ClickGame> findByIdWithPessimisticLock(Long gameId);
+
+
+
+
+
+	@Lock(LockModeType.OPTIMISTIC)
+	@Query(value = "SELECT cg FROM ClickGame cg WHERE cg.id = :gameId")
+	Optional<ClickGame> findByIdWithOptimisticLock(Long gameId);
 }
