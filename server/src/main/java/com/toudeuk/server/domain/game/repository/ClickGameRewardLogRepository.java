@@ -1,5 +1,6 @@
 package com.toudeuk.server.domain.game.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,7 +23,13 @@ public interface ClickGameRewardLogRepository extends JpaRepository<ClickGameRew
 	@Query("SELECT c.user FROM ClickGameRewardLog c WHERE c.clickGame.id = ?1 AND c.rewardType = 'MAX_CLICKER'")
 	Optional<User> findMaxClickerByClickGameId(Long clickGameId);
 
-	// @Query("SELECT c.user FROM ClickGameRewardLog c WHERE c.clickGame.id = ?1 AND c.rewardType != 'MAX_CLICKER' AND c.rewardType != 'WINNER'")
-	// Optional<List<User>> findMiddleByClickGameId(Long clickGameId);
+	@Query("SELECT c.user FROM ClickGameRewardLog c WHERE c.clickGame.id = ?1 AND c.rewardType = 'SECTION'")
+	Optional<List<User>> findMiddleByClickGameId(Long clickGameId);
+
+	// @Query(
+	// 	"""
+	// 		SELECT
+	// 	"""
+	// )
 
 }

@@ -10,6 +10,27 @@ import lombok.Data;
 public class HistoryData {
 
 	@Data
+	public static class RewardLogInfo {
+		private User winner;
+		private Integer winnerClickCount;
+		private User maxClicker;
+		private Integer maxClickerClickCount;
+		private List<User> middleUsers;
+
+		public static RewardLogInfo of(User winner, Integer winnerClickCount, User maxClicker,
+			Integer maxClickerClickCount,
+			List<User> middleUsers) {
+			RewardLogInfo rewardLogInfo = new RewardLogInfo();
+			rewardLogInfo.winner = winner;
+			rewardLogInfo.winnerClickCount = winnerClickCount;
+			rewardLogInfo.maxClicker = maxClicker;
+			rewardLogInfo.maxClickerClickCount = maxClickerClickCount;
+			rewardLogInfo.middleUsers = middleUsers;
+			return rewardLogInfo;
+		}
+	}
+
+	@Data
 	public static class RewardUser {
 		private String nickname;
 		private String profileImg;
@@ -68,8 +89,8 @@ public class HistoryData {
 			int winnerClickCount,
 			User maxClicker,
 			int maxClickerClickCount,
-			List<RewardUser> middleRewardUsers,
-			List<RewardUser> allUsers
+			List<User> middleRewardUsers,
+			List<User> allUsers
 		) {
 			DetailInfo detailInfo = new DetailInfo();
 			detailInfo.click_game_id = clickGame.getId();
@@ -77,8 +98,12 @@ public class HistoryData {
 			detailInfo.createdAt = clickGame.getCreatedAt().toString();
 			detailInfo.winner = RewardUser.of(winner, winnerClickCount);
 			detailInfo.maxClicker = RewardUser.of(maxClicker, maxClickerClickCount);
-			detailInfo.middleRewardUsers = middleRewardUsers;
-			detailInfo.allUsers = allUsers;
+			detailInfo.middleRewardUsers = middleRewardUsers.stream().map(
+				user -> RewardUser.of(user, 0)
+			).toList();
+			detailInfo.allUsers = allUsers.stream().map(
+				user -> RewardUser.of(user, 0)
+			).toList();
 			return detailInfo;
 		}
 	}
