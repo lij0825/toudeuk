@@ -34,6 +34,9 @@ export default function Rank() {
     const { data: ranks = [], isLoading, isError, error } = useQuery<RankInfo[]>({
         queryKey: ['ranks'], // 캐싱 키 설정
         queryFn: fetchRank,     // 데이터를 가져오는 함수
+        // onSuccess: (data) => {
+        //     console.log(data); // 성공적으로 데이터를 가져오면 콘솔에 출력
+        // },
     });
     
 
