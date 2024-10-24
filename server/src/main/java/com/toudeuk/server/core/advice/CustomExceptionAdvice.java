@@ -2,6 +2,7 @@ package com.toudeuk.server.core.advice;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -24,15 +25,14 @@ public class CustomExceptionAdvice {
 		return ErrorResponse.of(ErrorCode.SERVER_ERROR);
 	}
 
-	// FIXME: 인증 예외 처리
-	// @ExceptionHandler({AuthorizationDeniedException.class})
-	// public ResponseEntity<ErrorResponse> authenticateException(Exception e) {
-	// 	log.error("access exception: {}", e.getMessage());
-	// 	ErrorCode errorCode = ErrorCode.ACCESS_DENIED;
-	// 	return ResponseEntity
-	// 		.status(errorCode.getStatus())
-	// 		.body(ErrorResponse.of(errorCode, e.getMessage()));
-	// }
+	@ExceptionHandler({AuthorizationDeniedException.class})
+	public ResponseEntity<ErrorResponse> authenticateException(Exception e) {
+		log.error("access exception: {}", e.getMessage());
+		ErrorCode errorCode = ErrorCode.ACCESS_DENIED;
+		return ResponseEntity
+			.status(errorCode.getStatus())
+			.body(ErrorResponse.of(errorCode, e.getMessage()));
+	}
 
 	@ExceptionHandler(BaseException.class)
 	public ResponseEntity<ErrorResponse> baseException(BaseException e) {
