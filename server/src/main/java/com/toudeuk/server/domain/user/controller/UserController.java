@@ -4,12 +4,14 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.toudeuk.server.core.annotation.CurrentUser;
 import com.toudeuk.server.core.response.SuccessResponse;
 import com.toudeuk.server.domain.user.dto.UserData;
+import com.toudeuk.server.domain.user.entity.User;
 import com.toudeuk.server.domain.user.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,53 +31,50 @@ public class UserController {
 	/**
 	 * 유저 정보 조회
 	 *
-	 * @param userId
+	 * @param user
 	 * @return {@link SuccessResponse<UserData.Info>}
 	 */
 	@GetMapping(value = "/info")
 	@Operation(summary = "유저 정보 조회", description = "유저 정보를 조회합니다.")
-	public SuccessResponse<UserData.Info> getUserInfo(@RequestParam Long userId) {
-		// FIXME : CurrentUser 나오면 수정
-		return SuccessResponse.of(userService.getUserInfo(userId));
+	public SuccessResponse<UserData.Info> getUserInfo(@CurrentUser User user) {
+		return SuccessResponse.of(userService.getUserInfo(user.getId()));
 	}
 
 	/**
 	 * 유저 캐쉬 로그 조회
 	 *
-	 * @param userId
+	 * @param user
 	 * @return {@link SuccessResponse<List<UserData.UserCashLog>>}
 	 */
 	@GetMapping(value = "/cash-logs")
 	@Operation(summary = "유저 캐쉬 로그 조회", description = "유저 캐쉬 로그를 조회합니다.")
-	public SuccessResponse<List<UserData.UserCashLog>> getUserCashLogs(@RequestParam Long userId) {
-		// FIXME : CurrentUser 나오면 수정
-		return SuccessResponse.of(userService.getUserCashLogs(userId));
+	public SuccessResponse<List<UserData.UserCashLog>> getUserCashLogs(@CurrentUser User user) {
+		return SuccessResponse.of(userService.getUserCashLogs(user.getId()));
 	}
 
 	/**
 	 * 유저 아이템 조회
 	 *
-	 * @param userId
+	 * @param user
 	 * @return {@link SuccessResponse<List<UserData.UserItemInfo>}
 	 */
 	@GetMapping(value = "/items")
 	@Operation(summary = "유저 아이템 조회", description = "유저 아이템을 조회합니다.")
-	public SuccessResponse<List<UserData.UserItemInfo>> getUserItems(@RequestParam Long userId) {
-		// FIXME : CurrentUser 나오면 수정
-		return SuccessResponse.of(userService.getUserItems(userId));
+	public SuccessResponse<List<UserData.UserItemInfo>> getUserItems(@CurrentUser User user) {
+		return SuccessResponse.of(userService.getUserItems(user.getId()));
 	}
 
 	/**
 	 * 유저 아이템 사용 처리
 	 *
-	 * @param userId, userItemId
+	 * @param  user, userItemId
 	 * @return {@link SuccessResponse<Void>}
 	 */
 	@PostMapping(value = "/items/use")
 	@Operation(summary = "유저 아이템 사용 처리", description = "유저 아이템을 사용 처리합니다.")
-	public SuccessResponse<Void> useUserItem(@RequestParam Long userId, @RequestParam Long userItemId) {
-		// FIXME : CurrentUser 나오면 수정
-		userService.useUserItem(userId, userItemId);
+	@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "유저 아이템 ID", required = true)
+	public SuccessResponse<Void> useUserItem(@CurrentUser User user, @RequestBody UserData.UserItemUse use) {
+		userService.useUserItem(user.getId(), use.getUserItemId());
 		return SuccessResponse.empty();
 	}
 }
