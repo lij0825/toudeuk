@@ -1,4 +1,7 @@
 "use client"
+import { fetchGifticonList } from '@/apis/gifticonApi';
+import { GifticonInfo } from '@/types/gifticon';
+import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react'
@@ -6,12 +9,12 @@ import { useState } from "react";
 import { useSwipeable } from "react-swipeable";
 
 // 더미 데이터
-const gifticons = [
-  { id: 1, name: "스타벅스 아메리카노", image: "https://bizimg.giftishow.com/Resource/goods/2023/G00002401431/G00002401431.jpg" },
-  { id: 2, name: "N페이 상품권", image: "https://bizimg.giftishow.com/Resource/goods/2023/G00001981040/G00001981040.jpg" },
-  { id: 3, name: "GS25 상품권", image: "https://bizimg.giftishow.com/Resource/goods/G00000750717/G00000750717.jpg" },
-  { id: 4, name: "Burger", image: "https://bizimg.giftishow.com/Resource/goods/G00000750717/G00000750717.jpg" },
-  { id: 5, name: "Cake", image: "https://bizimg.giftishow.com/Resource/goods/G00000750717/G00000750717.jpg" },
+export const gifticons = [
+  { id: 1, name: "스타벅스 아메리카노", image: "https://bizimg.giftishow.com/Resource/goods/2023/G00002401431/G00002401431.jpg", price: "4500" },
+  { id: 2, name: "N페이 상품권", image: "https://bizimg.giftishow.com/Resource/goods/2023/G00001981040/G00001981040.jpg", price: "5000" },
+  { id: 3, name: "GS25 상품권", image: "https://bizimg.giftishow.com/Resource/goods/G00000750717/G00000750717.jpg" , price: "5000"},
+  { id: 4, name: "Burger", image: "https://bizimg.giftishow.com/Resource/goods/G00000750717/G00000750717.jpg", price: "5000" },
+  { id: 5, name: "Cake", image: "https://bizimg.giftishow.com/Resource/goods/G00000750717/G00000750717.jpg", price: "5000" },
 ];
 
 export default function Gifticon() {
@@ -33,6 +36,15 @@ export default function Gifticon() {
     onSwipedLeft: handleNext,
     onSwipedRight: handlePrev,
   });
+
+  // const { data: gifticons = [], isLoading, error } = useQuery<GifticonInfo[]>({
+  //   queryKey: ['gifticons'],
+  //   queryFn: fetchGifticonList,
+  // })
+
+  // if (isLoading) return <div>로딩 중...</div>;
+  // if (error) return <div>데이터를 불러오는 중 오류가 발생했습니다.</div>;
+
 
   return (
     <div className="p-4">
