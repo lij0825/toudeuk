@@ -12,6 +12,8 @@ const config: Config = {
       colors: {
         background: "#17181C", // 검정 배경으로 고정
         foreground: "#FDFDFD", // 흰색 텍스트 색상으로 고정
+        customPink: '#FFADFE',
+        customGray: '#0033FF',
         "color-1": "#17181C",
         "color-2": "#0F9EF1",
         "color-3": "#015796",
