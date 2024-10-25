@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.toudeuk.server.core.annotation.CurrentUser;
 import com.toudeuk.server.core.response.SuccessResponse;
 import com.toudeuk.server.domain.game.dto.HistoryData;
-import com.toudeuk.server.domain.game.repository.ClickCacheRepository;
 import com.toudeuk.server.domain.game.service.ClickGameService;
 import com.toudeuk.server.domain.user.entity.User;
 
@@ -29,7 +28,6 @@ import lombok.extern.slf4j.Slf4j;
 public class ClickGameController {
 
     private final ClickGameService clickGameService;
-    private final ClickCacheRepository clickCacheRepository;
 
 	/**
 	 * 사용자 클릭
