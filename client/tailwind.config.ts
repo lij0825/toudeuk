@@ -9,8 +9,8 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "#FFFFFF", // 검정 배경으로 고정
-        foreground: "#202020", // 흰색 텍스트 색상으로 고정
+        background: "#17181C", // 검정 배경으로 고정
+        foreground: "#FDFDFD", // 흰색 텍스트 색상으로 고정
       },
     },
   },
