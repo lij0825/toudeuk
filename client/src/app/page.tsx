@@ -1,10 +1,12 @@
 export default function Home() {
   return (
     <>
-      <div>
-        <h1 className="text-xl">터득</h1>
-        <h2>ddd</h2>
-        <div>dkdkdk</div>
+      <div className="p-td">
+        <h1 className="typo-title">터득</h1>
+        <h1 className="typo-title">TouchDeuk</h1>
+        <div className="typo-body">typo-body는 18px</div>
+
+        <div className="typo-title">typo-title : title은 40px</div>
       </div>
     </>
   );

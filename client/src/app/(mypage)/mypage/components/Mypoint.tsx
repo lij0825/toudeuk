@@ -10,8 +10,12 @@ import { toast } from "react-toastify";
 export default function Mypoint() {
   const router = useRouter();
 
-  const { data: userInfo, isLoading, isError } = useQuery<UserInfo>({
-    queryKey: ['ranks'], // 캐싱 키 설정
+  const {
+    data: userInfo,
+    isLoading,
+    isError,
+  } = useQuery<UserInfo>({
+    queryKey: ["ranks"], // 캐싱 키 설정
     queryFn: fetchUserInfo,
   });
 
@@ -20,7 +24,7 @@ export default function Mypoint() {
     return <div>Loading...</div>;
   }
 
-   // 에러가 발생했을 때 Toastify로 에러 메시지 표시
+  // 에러가 발생했을 때 Toastify로 에러 메시지 표시
   if (isError) {
     toast.error("Failed to load user information.");
   }
@@ -31,7 +35,7 @@ export default function Mypoint() {
   }
 
   return (
-    <div className="flex items-center justify-center bg-[#202020]">
+    <div className="flex items-center justify-center bg-[#202020] font-gilroy font-extrabold">
       {/* Custom Card */}
       <div className="min-w-[390px] w-full max-w-2xl aspect-video relative overflow-hidden rounded-xl bg-gradient-to-br from-[#202020] to-[#2a2a2a] shadow-xl">
         {/* Neon glow background */}
@@ -41,7 +45,7 @@ export default function Mypoint() {
           <p className="text-[#ffffffcc] text-sm mb-4">{userInfo?.nickName}</p>
           <Image
             //  src={userInfo?.profileImg || '/default-profile.png'}
-             src={userInfo?.profileImg}
+            src={userInfo?.profileImg}
             width={40}
             height={40}
             objectFit="cover"
