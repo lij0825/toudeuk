@@ -3,6 +3,7 @@ package com.toudeuk.server.domain.game.controller;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,7 +20,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-
 @Slf4j
 @RestController
 @RequestMapping(value = "/api/v1/game")
@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @Tag(name = "게임", description = "게임 관련 API")
 public class ClickGameController {
 
-    private final ClickGameService clickGameService;
+	private final ClickGameService clickGameService;
 
 	/**
 	 * 사용자 클릭
@@ -62,7 +62,7 @@ public class ClickGameController {
 	@GetMapping("/history/{gameId}")
 	@Operation(summary = "게임 상세 정보 조회", description = "게임 상세 정보를 조회합니다.")
 	public SuccessResponse<Page<HistoryData.DetailInfo>> getHistoryDetail(@CurrentUser User user,
-		@RequestParam Long gameId,
+		@PathVariable Long gameId,
 		Pageable pageable) {
 		return SuccessResponse.of(clickGameService.getHistoryDetail(gameId, pageable));
 	}
