@@ -4,6 +4,7 @@ import { LoginInfo } from "@/types/auth";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { loginUser } from "@/apis/userApi";
+import Link from "next/link";
 
 export default function Login() {
   const [formData, setFormData] = useState<LoginInfo>({
@@ -45,7 +46,7 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="p-8 rounded shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6">Toudeck</h2>
+        <h2 className="text-4xl font-bold mb-6">Toudeck</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <div>
@@ -61,7 +62,7 @@ export default function Login() {
                 value={formData.email}
                 placeholder="ID"
                 onChange={handleChange}
-                className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                className="mt-1 p-2 w-full border border-gray-300 rounded-md bg-transparent"
                 required
               />
             </div>
@@ -78,7 +79,7 @@ export default function Login() {
                 placeholder="PASSWORD"
                 value={formData.password}
                 onChange={handleChange}
-                className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                className="mt-1 p-2 w-full border border-gray-300 rounded-md bg-transparent"
                 required
               />
             </div>
@@ -87,8 +88,8 @@ export default function Login() {
             <button
               type="submit"
               className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition"
-              //   className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition"
-              //   disabled={mutation.isLoading}
+            //   className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition"
+            //   disabled={mutation.isLoading}
             >
               {/* {mutation.isLoading ? '회원가입 중...' : '회원가입'} */}
               Login
@@ -107,6 +108,13 @@ export default function Login() {
           >
             Login with Kakao
           </button>
+        </div>
+        <div className="flex justify-center mt-4">
+          <Link href="/signup">
+            <span className="text-gray-300 cursor-pointer hover:underline">
+              Signup
+            </span>
+          </Link>
         </div>
       </div>
     </div>

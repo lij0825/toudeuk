@@ -16,8 +16,8 @@ export default function MyPoint() {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center bg-gray-100 py-10">
-            <div className="bg-white p-8 rounded-3xl shadow-md w-full max-w-md">
+        <div className="flex flex-col items-center justify-center py-10" >
+            <div className="p-8 rounded-3xl shadow-md w-full max-w-md" style={{ background: "linear-gradient(180deg, #353A40 17.2%, #16171B 117.2%)", borderColor: "#4A505B", borderWidth: "2px" }}>
                 <h2 className="text-3xl font-bold mb-6">내 포인트</h2>
                 <div className="flex items-center">
                     {/* <div className="bg-gray-200 rounded-lg p-6 w-full text-center">

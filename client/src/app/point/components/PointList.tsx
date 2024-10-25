@@ -16,9 +16,6 @@ const pointHistory: PointInfo[] = [
 export default function PointList() {
   const [filter, setFilter] = useState<'all' | 'charge' | 'use'>('all');
 
-  const { accessToken } = useAuthStore((state) => ({
-    accessToken: state.accessToken,
-  }))
   // react-query로 데이터 fetching
   // const { data: pointHistory = [], isLoading, error } = useQuery<PointInfo[]>({
   //   queryKey: ['points'],
@@ -35,26 +32,25 @@ export default function PointList() {
 
   return (
     <div className="max-w-xl mx-auto p-4">
-      <p>{accessToken}</p>
       <h1 className="text-2xl font-bold mb-4">포인트 내역</h1>
 
       {/* 필터 버튼들 */}
       <div className="mb-4">
         <button
           onClick={() => setFilter('all')}
-          className={`mr-2 px-4 py-2 ${filter === 'all' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+          className={`mr-2 px-4 py-2 ${filter === 'all' ? 'bg-white text-black rounded-md' : 'bg-transparent border rounded-md'}`}
         >
           전체 내역
         </button>
         <button
           onClick={() => setFilter('charge')}
-          className={`mr-2 px-4 py-2 ${filter === 'charge' ? 'bg-green-500 text-white' : 'bg-gray-200'}`}
+          className={`mr-2 px-4 py-2 ${filter === 'charge' ? 'bg-white text-black rounded-md' : 'bg-transparent border rounded-md'}`}
         >
           충전 내역
         </button>
         <button
           onClick={() => setFilter('use')}
-          className={`px-4 py-2 ${filter === 'use' ? 'bg-red-500 text-white' : 'bg-gray-200'}`}
+          className={`px-4 py-2 ${filter === 'use' ? 'bg-white text-black rounded-md' : 'bg-transparent border rounded-md'}`}
         >
           사용 내역
         </button>
@@ -65,13 +61,12 @@ export default function PointList() {
         {filteredHistory?.map((transaction) => (
           <li
             key={transaction.id}
-            className={`p-4 border rounded-lg ${transaction.type === 'charge' ? 'border-green-500' : 'border-red-500'
-              }`}
+            className={`p-4 border rounded-lg `}
           >
-            <div className="flex justify-between">
+            <div className="flex justify-between" >
               <span>{transaction.description}</span>
               <span className={`${transaction.type === 'charge' ? 'text-green-500' : 'text-red-500'}`}>
-                {transaction.amount.toLocaleString()}원
+                {transaction.amount.toLocaleString()}P
               </span>
             </div>
             <div className="text-sm text-gray-500">{transaction.date}</div>
