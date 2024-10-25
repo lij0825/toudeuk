@@ -5,10 +5,10 @@ export interface GifticonInfo {
 }
 
 export interface UserGifticonInfo {
-  userItemId: number | 0;
+  userItemId: number;
   itemName: string;
   itemImage: string;
-  itemPrice: number | 0;
+  itemPrice: number;
   createdAt: string;
   used: boolean;
 }

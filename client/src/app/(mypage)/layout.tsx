@@ -1,9 +1,9 @@
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <div className="min-h-screen max-h-screen">
+      <div className="flex flex-col min-h-screen max-h-screen">
         <div className="p-td"></div>
-        <section>{children}</section>;
+        <section className="flex-grow">{children}</section>
       </div>
     </>
   );
