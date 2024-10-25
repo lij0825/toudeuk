@@ -12,8 +12,8 @@ const config: Config = {
       colors: {
         background: "#17181C", // 검정 배경으로 고정
         foreground: "#FDFDFD", // 흰색 텍스트 색상으로 고정
-        customPink: '#FFADFE',
-        customGray: '#0033FF',
+        customPink: "#FFADFE",
+        customGray: "#0033FF",
         "color-1": "#17181C",
         "color-2": "#0F9EF1",
         "color-3": "#015796",
@@ -22,8 +22,8 @@ const config: Config = {
       },
       spacing: {
         td: "30px",
-        "td-x": "30px",
-        "td-y": "40px",
+        "td-x": "40px",
+        "td-y": "50px",
       },
       fontFamily: {
         gilroy: ["Gilroy"], // 폰트 패밀리명을 정확히 'gilroy'로 수정
@@ -45,13 +45,13 @@ const config: Config = {
           fontFamily: theme("fontFamily.gilroy"),
         },
         ".typo-sub-title": {
-          fontSize: "20px",
+          fontSize: "30px",
           lineHeight: "135%",
           fontWeight: theme("fontWeight.extrabold"),
           fontFamily: theme("fontFamily.gilroy"),
         },
         ".typo-title": {
-          fontSize: "30px",
+          fontSize: "40px",
           lineHeight: "135%",
           fontWeight: theme("fontWeight.extrabold"),
           fontFamily: theme("fontFamily.gilroy"),
@@ -61,14 +61,14 @@ const config: Config = {
       const newComponents = {
         ".bottom-sheet": {
           "background-color": `${theme("colors.color-2")}`,
-          "border-radius": "1rem",
+          "border-top-left-radius": "4rem",
+          "border-top-right-radius": "4rem",
           "padding-top": `${theme("spacing.td-y")}`,
           "padding-bottom": `${theme("spacing.td-y")}`,
           "padding-left": `${theme("spacing.td-x")}`,
           "padding-right": `${theme("spacing.td-x")}`,
-          background: "linear-gradient(180deg, #353A40 0%, #16171B 100%)",
-          "stroke-width": "2px",
-          stroke: "#424750",
+          background: "linear-gradient(180deg, #4b4f58 0%, #16171B 100%)",
+          border: "2px solid #424750",
         },
       };
 
