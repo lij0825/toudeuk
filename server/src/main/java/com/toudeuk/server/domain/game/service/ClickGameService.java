@@ -127,7 +127,10 @@ public class ClickGameService {
 	}
 
 	public Page<HistoryData.DetailInfo> getHistoryDetail(Long gameId, Pageable pageable) {
-		ClickGame clickGame = findById(gameId);
+		
+		ClickGame clickGame = clickGameRepository.findById(gameId).orElseThrow(
+			() -> new BaseException(ClickGame_NOT_FOUND)
+		);
 
 		HistoryData.WinnerAndMaxClickerData winnerAndMaxClickerData = clickGameRewardLogRepository.findWinnerAndMaxClickerByClickGameId(
 			clickGame.getId()).orElseThrow(

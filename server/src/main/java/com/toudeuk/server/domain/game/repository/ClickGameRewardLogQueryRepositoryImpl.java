@@ -84,7 +84,8 @@ public class ClickGameRewardLogQueryRepositoryImpl implements ClickGameRewardLog
 				HistoryData.RewardUser.class,
 				clickGameRewardLog.user.name.as("nickname"),
 				clickGameRewardLog.user.profileImg.as("profileImg"),
-				clickGameRewardLog.clickCount.as("clickCount")
+				clickGameRewardLog.clickCount.as("clickCount"),
+				clickGameRewardLog.rewardType.as("rewardType")
 			))
 			.from(clickGameRewardLog)
 			.where(clickGameRewardLog.clickGame.id.eq(clickGameId)
