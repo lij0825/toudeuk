@@ -1,48 +1,60 @@
-// cypress/e2e/rank.cy.ts
-
-describe('Rank Component Tests', () => {
+// cypress/integration/rank.spec.js
+describe('Rank Component', () => {
     beforeEach(() => {
-        // 테스트할 페이지를 방문합니다.
-        cy.visit('/rank'); // 실제 Rank 컴포넌트가 위치한 경로로 수정
+      // Mocking the API response
+      cy.intercept('GET', `${Cypress.env('API_BASE_URL')}/rank`,{
+        statusCode: 200,
+        body: [
+          { rank: 1, username: 'UserOne', clicks: 150 },
+          { rank: 2, username: 'UserTwo', clicks: 120 },
+          { rank: 3, username: 'UserThree', clicks: 100 },
+        ],
+      }).as('fetchRanks');
+  
+      // Visit the page where the Rank component is rendered
+      cy.visit('/rank'); // Adjust the path based on your routing
     });
-
-    it('should display loading message initially', () => {
-        // 로딩 메시지가 표시되는지 확인합니다.
-        cy.contains('Loading...').should('be.visible');
+  
+    it('displays loading state', () => {
+      // Before the request resolves, you might see a loading state
+      cy.get('div').contains('Loading...').should('exist');
     });
-
-    it('should display ranks after data is loaded', () => {
-        // 랭크 데이터가 로드된 후 올바른 내용을 표시하는지 확인합니다.
-        // mocking API response
-        cy.intercept('GET', 'http://localhost:8080/rank', {
-            statusCode: 200,
-            body: [
-                { rank: 1, username: 'UserOne', clicks: 150 },
-                { rank: 2, username: 'UserTwo', clicks: 120 },
-                { rank: 3, username: 'UserThree', clicks: 100 },
-                // 필요한 만큼 추가...
-            ],
-        }).as('getRanks');
-
-        // API 호출이 완료되기를 기다립니다.
-        cy.wait('@getRanks');
-
-        // 랭킹 테이블이 나타나는지 확인합니다.
-        cy.get('table').should('exist');
-        cy.get('tbody tr').should('have.length', 3); // 데이터 수에 따라 수정
-        cy.get('tbody tr').first().contains('UserOne'); // 첫 번째 사용자가 보이는지 확인
+  
+    it('displays ranks correctly', () => {
+      // Wait for the ranks to be fetched
+      cy.wait('@fetchRanks');
+  
+      // Check if the table headers are displayed
+      cy.get('th').contains('rank').should('exist');
+      cy.get('th').contains('username').should('exist');
+      cy.get('th').contains('clicks').should('exist');
+  
+      // Check if the ranks are displayed correctly
+      cy.get('tbody tr').should('have.length', 3);
+      cy.get('tbody tr').eq(0).within(() => {
+        cy.get('td').eq(0).should('contain', 1);
+        cy.get('td').eq(1).should('contain', 'UserOne');
+        cy.get('td').eq(2).should('contain', 150);
+      });
+      cy.get('tbody tr').eq(1).within(() => {
+        cy.get('td').eq(0).should('contain', 2);
+        cy.get('td').eq(1).should('contain', 'UserTwo');
+        cy.get('td').eq(2).should('contain', 120);
+      });
     });
-
-    it('should handle error state correctly', () => {
-        // 에러 상태를 시뮬레이션합니다.
-        cy.intercept('GET', '/rank', {
-            statusCode: 500,
-            body: { success: false, message: 'Error loading ranks' },
-        }).as('getRanks');
-
-        cy.wait('@getRanks');
-
-        // 에러 메시지가 표시되는지 확인합니다.
-        cy.contains('Error: Error loading ranks').should('be.visible');
+  
+    it('displays error state', () => {
+      // Mocking a failure response
+      cy.intercept('GET', '/api/rank', {
+        statusCode: 500,
+        body: { message: 'Internal Server Error' },
+      }).as('fetchError');
+  
+      cy.visit('/rank'); // Revisit to trigger the error
+      cy.wait('@fetchError');
+  
+      // Check if the error message is displayed
+      cy.get('div').contains('Error: Internal Server Error').should('exist');
     });
-});
+  });
+  

@@ -10,15 +10,13 @@ export default function Toudeuk() {
 
   useEffect(() => {
     const accessToken = urlParams.get('accessToken');
-    const refreshToken = urlParams.get('refreshToken');
 
     console.log(accessToken)
 
-    if (accessToken && refreshToken) {
+    if (accessToken) {
       // Zustand 스토어에 인증 정보 설정
       setAuth(accessToken);
       sessionStorage.setItem('accessToken', accessToken);
-      sessionStorage.setItem('refreshToken', refreshToken);
     }
 
     console.log('accessToken', accessToken)
