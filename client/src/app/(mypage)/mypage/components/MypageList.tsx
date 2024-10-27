@@ -24,7 +24,7 @@ export default function MypageList() {
         <div
           key={index}
           onClick={() => handleClick(item.href)}
-          className="cursor-pointer card typo-sub-title my-5"
+          className="card typo-sub-title my-5"
         >
           {item.label}
         </div>

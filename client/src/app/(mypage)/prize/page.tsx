@@ -3,7 +3,7 @@ import Prize from "./components/Prize";
 
 const page = () => {
   return (
-    <div>
+    <div className="">
       <Prize />
     </div>
   );

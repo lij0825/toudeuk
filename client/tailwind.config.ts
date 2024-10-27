@@ -79,6 +79,7 @@ const config: Config = {
           "padding-left": `${theme("spacing.td-x")}`,
           "padding-right": `${theme("spacing.td-x")}`,
           width: "100%",
+          height:"100%",
           background: "linear-gradient(180deg, #4b4f58 0%, #16171B 100%)",
           border: "2px solid #424750",
         },

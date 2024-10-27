@@ -1,10 +1,8 @@
 "use client";
 
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
 import { fetchUserInfo } from "@/apis/myInfoApi";
 import { UserInfo } from "@/types/mypageInfo";
+import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
 export default function Point() {

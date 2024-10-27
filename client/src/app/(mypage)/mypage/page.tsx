@@ -9,7 +9,7 @@ import { HiInformationCircle } from "react-icons/hi";
 
 export default function Mypage() {
   return (
-    <div className="bottom-sheet h-full flex flex-col">
+    <>
       <section className="typo-title mb-5 flex items-end justify-between">
         <div className="flex items-end">
           <div>
@@ -27,10 +27,9 @@ export default function Mypage() {
         {/*CSR*/}
         <GifticonCarousel />
       </section>
-
       <section>
         <MypageList />
       </section>
-    </div>
+    </>
   );
 }
