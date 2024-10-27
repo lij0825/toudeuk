@@ -1,8 +1,8 @@
 "use client";
 
+import { UserGifticonInfo } from "@/types/gifticon";
 import Image from "next/image";
 import Link from "next/link";
-import { UserGifticonInfo } from "@/types/gifticon";
 // import { fetchUserGifticons } from "./../../../../apis/myInfoApi";
 // import { useQuery } from "@tanstack/react-query";
 
@@ -65,7 +65,7 @@ export default function GifticonCarousel() {
 
   return (
     <>
-      <div className="flex overflow-x-auto max-w-screen">
+      <div className="flex overflow-x-auto tailwind-scrollbar-hide">
         <Link
           href={`/mygifticon`}
           className="p-4 border w-[200px] rounded-lg h-32 backdrop-blur-lg bg-white/30 shadow-lg flex-shrink-0"

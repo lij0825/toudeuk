@@ -6,20 +6,11 @@ import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
 export default function Point() {
-  const {
-    data: userInfo,
-    isLoading,
-    isError,
-  } = useQuery<UserInfo>({
+  const { data: userInfo, isError } = useQuery<UserInfo>({
     queryKey: ["point"], // 캐싱 키 설정
     queryFn: fetchUserInfo,
     refetchOnWindowFocus: true, //페이지에 focus시 데이터 새로고침
   });
-
-  // 로딩 중일 때
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
 
   // 에러가 발생했을 때 Toastify로 에러 메시지 표시
   if (isError) {

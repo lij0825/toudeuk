@@ -1,8 +1,8 @@
 "use client";
 
-import { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { ReactNode } from "react";
 import { ToastContainer, ToastContainerProps } from "react-toastify";
 
 export default function ReactQueryProvider({
@@ -13,7 +13,6 @@ export default function ReactQueryProvider({
   const queryClient = new QueryClient({
     defaultOptions: {},
   });
-
   // toastMessage
   const toastConfig: ToastContainerProps = {
     position: "bottom-right",
