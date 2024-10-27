@@ -20,8 +20,6 @@
   font-style: normal;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-}
+/* * {
+  box-sizing: border-box;
+} */

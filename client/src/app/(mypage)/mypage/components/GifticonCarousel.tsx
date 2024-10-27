@@ -11,7 +11,7 @@ const gifticons: UserGifticonInfo[] = [
     userItemId: 1,
     itemName: "Coffee Coupon",
     itemImage:
-      "http://bizimg.giftishow.com/Storage/BI/2020/8/ES20200812000042.jpg",
+      "https://bizimg.giftishow.com/Resource/goods/G00000750717/G00000750717.jpg",
     itemPrice: 4500,
     createdAt: "2024-10-10",
     used: true,
@@ -20,7 +20,7 @@ const gifticons: UserGifticonInfo[] = [
     userItemId: 2,
     itemName: "Pizza Gift Card",
     itemImage:
-      "http://bizimg.giftishow.com/Storage/BI/2020/8/ES20200812000039.jpg",
+      "https://bizimg.giftishow.com/Resource/goods/G00000750717/G00000750717.jpg",
     itemPrice: 25000,
     createdAt: "2024-09-28",
     used: false,
@@ -29,7 +29,7 @@ const gifticons: UserGifticonInfo[] = [
     userItemId: 3,
     itemName: "Ice Cream Voucher",
     itemImage:
-      "http://bizimg.giftishow.com/Storage/BI/2021/3/ES20210317000026.jpg",
+      "https://bizimg.giftishow.com/Resource/goods/G00000750717/G00000750717.jpg",
     itemPrice: 3000,
     createdAt: "2024-09-15",
     used: true,
@@ -38,7 +38,7 @@ const gifticons: UserGifticonInfo[] = [
     userItemId: 4,
     itemName: "Burger Set Coupon",
     itemImage:
-      "http://bizimg.giftishow.com/Storage/BI/2021/3/ES20210317000028.jpg",
+      "https://bizimg.giftishow.com/Resource/goods/G00000750717/G00000750717.jpg",
     itemPrice: 7000,
     createdAt: "2024-08-30",
     used: false,
@@ -47,7 +47,7 @@ const gifticons: UserGifticonInfo[] = [
     userItemId: 5,
     itemName: "Movie Ticket",
     itemImage:
-      "http://bizimg.giftishow.com/Storage/BI/2020/8/ES20200812000045.jpg",
+      "https://bizimg.giftishow.com/Resource/goods/G00000750717/G00000750717.jpg",
     itemPrice: 10000,
     createdAt: "2024-07-20",
     used: true,
@@ -65,7 +65,7 @@ export default function GifticonCarousel() {
 
   return (
     <>
-      <div className="flex">
+      <div className="flex overflow-x-auto max-w-screen">
         <Link
           href={`/mygifticon`}
           className="p-4 border w-[200px] rounded-lg h-32 backdrop-blur-lg bg-white/30 shadow-lg flex-shrink-0"
