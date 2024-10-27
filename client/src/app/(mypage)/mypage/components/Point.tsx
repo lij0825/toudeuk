@@ -17,14 +17,9 @@ export default function Point() {
     toast.error("유저정보를 다시 불러와주세요");
   }
 
-  // 데이터가 없는 경우 (안전하게 userInfo 존재 여부 확인)
-  if (!userInfo) {
-    return <div>0</div>;
-  }
-
   return (
     <div className="typo-sub-title">
-      <p className="text-[#ffffffcc] text-sm mb-4">{userInfo.cash}</p>
+      <p className="text-[#ffffffcc]">{userInfo ? userInfo.cash : 0}pt</p>
     </div>
   );
 }

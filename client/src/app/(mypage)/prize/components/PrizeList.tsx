@@ -34,7 +34,8 @@ export default function PrizeList() {
   return (
     <div className="h-full">
       <Suspense fallback={<Loading />}>
-        <section className="">
+        <section className="overflow-y-auto h-full">
+          {/* 고정된 높이 및 스크롤 처리 */}
           {prizeInfoDummyData
             .slice()
             .reverse()

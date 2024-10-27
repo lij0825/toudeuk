@@ -15,7 +15,7 @@ export default function ReactQueryProvider({
   });
   // toastMessage
   const toastConfig: ToastContainerProps = {
-    position: "bottom-right",
+    position: "top-left",
     autoClose: 3000,
     hideProgressBar: false,
     newestOnTop: false,
@@ -25,6 +25,7 @@ export default function ReactQueryProvider({
     draggable: true,
     pauseOnHover: true,
     theme: "light",
+    style: { zIndex: 9999 },
   };
   return (
     <QueryClientProvider client={queryClient}>

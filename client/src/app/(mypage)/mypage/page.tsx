@@ -1,8 +1,8 @@
 import Link from "next/link";
-import MypageList from "./components/MypageList";
-import GifticonCarousel from "./components/GifticonCarousel";
-import MyPoint from "./components/Point";
 import { HiInformationCircle } from "react-icons/hi";
+import GifticonSwipe from "./components/GifticonSwipe";
+import MypageList from "./components/MypageList";
+import MyPoint from "./components/Point";
 
 // import { useQuery } from "@tanstack/react-query";
 // import { fetchUserGifticons } from "@/apis/myInfoApi";
@@ -17,7 +17,7 @@ export default function Mypage() {
             <p>Point</p>
           </div>
           <Link href={"/point"}>
-            <HiInformationCircle className="text-gray-500 w-6 h-6 mb-3 ml-2" />
+            <HiInformationCircle className="text-gray-500 w-6 h-6 mb-2 ml-2" />
           </Link>
           {/*CSR*/}
         </div>
@@ -25,7 +25,7 @@ export default function Mypage() {
       </section>
       <section>
         {/*CSR*/}
-        <GifticonCarousel />
+        <GifticonSwipe />
       </section>
       <section>
         <MypageList />
