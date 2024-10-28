@@ -8,7 +8,8 @@ import { useEffect, useState } from "react";
 export default function Toudeuk() {
   const setAuth = useAuthStore((state) => state.setAccessToken);
   const urlParams = new URLSearchParams(window.location.search);
-  const [_, setIsAnimating] = useState(false);
+  // const [isAnimating, setIsAnimating] = useState(false); 원래 코드
+  const [setIsAnimating] = useState(false);
 
   useEffect(() => {
     const accessToken = urlParams.get("accessToken");

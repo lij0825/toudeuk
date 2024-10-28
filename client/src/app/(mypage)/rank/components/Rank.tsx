@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { RankInfo } from "@/types/rankInfo";
-import { useSwipeable } from "react-swipeable";
+// import { useSwipeable } from "react-swipeable";
 // import { fetchRank } from '@/apis/rankAPi';
 // import { useQuery } from '@tanstack/react-query';
 import Image from "next/image";
@@ -102,7 +102,7 @@ const userData: RankInfo[] = [
 const additionalUserData: RankInfo[] = [];
 
 export default function Rank() {
-  const [currentRankIndex, setCurrentRankIndex] = useState(0);
+  //   const [currentRankIndex, setCurrentRankIndex] = useState(0);
   // const [ranks, setRanks] = useState<RankInfo[][]>([]);
   const ranks = [userData, additionalUserData];
 
@@ -127,18 +127,18 @@ export default function Rank() {
   //     // },
   // });
 
-  const handlers = useSwipeable({
-    onSwipedLeft: () => {
-      setCurrentRankIndex((prevIndex) => (prevIndex + 1) % ranks.length);
-    },
-    onSwipedRight: () => {
-      setCurrentRankIndex(
-        (prevIndex) => (prevIndex - 1 + ranks.length) % ranks.length
-      );
-    },
-    preventScrollOnSwipe: true,
-    trackMouse: true,
-  });
+  //   const handlers = useSwipeable({
+  //     onSwipedLeft: () => {
+  //       setCurrentRankIndex((prevIndex) => (prevIndex + 1) % ranks.length);
+  //     },
+  //     onSwipedRight: () => {
+  //       setCurrentRankIndex(
+  //         (prevIndex) => (prevIndex - 1 + ranks.length) % ranks.length
+  //       );
+  //     },
+  //     preventScrollOnSwipe: true,
+  //     trackMouse: true,
+  //   });
 
   // 로딩 상태 처리
   // if (isLoading) return <div>Loading...</div>;
