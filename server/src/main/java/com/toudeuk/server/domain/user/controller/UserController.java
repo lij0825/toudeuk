@@ -31,49 +31,49 @@ public class UserController {
 	/**
 	 * 유저 정보 조회
 	 *
-	 * @param user
+	 * @param userId
 	 * @return {@link SuccessResponse<UserData.Info>}
 	 */
 	@GetMapping(value = "/info")
 	@Operation(summary = "유저 정보 조회", description = "유저 정보를 조회합니다.")
-	public SuccessResponse<UserData.Info> getUserInfo(@CurrentUser User user) {
-		return SuccessResponse.of(userService.getUserInfo(user.getId()));
+	public SuccessResponse<UserData.Info> getUserInfo(@CurrentUser Long userId) {
+		return SuccessResponse.of(userService.getUserInfo(userId));
 	}
 
 	/**
 	 * 유저 캐쉬 로그 조회
 	 *
-	 * @param user
+	 * @param userId
 	 * @return {@link SuccessResponse<List<UserData.UserCashLog>>}
 	 */
 	@GetMapping(value = "/cash-logs")
 	@Operation(summary = "유저 캐쉬 로그 조회", description = "유저 캐쉬 로그를 조회합니다.")
-	public SuccessResponse<List<UserData.UserCashLog>> getUserCashLogs(@CurrentUser User user) {
-		return SuccessResponse.of(userService.getUserCashLogs(user.getId()));
+	public SuccessResponse<List<UserData.UserCashLog>> getUserCashLogs(@CurrentUser Long userId) {
+		return SuccessResponse.of(userService.getUserCashLogs(userId));
 	}
 
 	/**
 	 * 유저 아이템 조회
 	 *
-	 * @param user
+	 * @param userId
 	 * @return {@link SuccessResponse<List<UserData.UserItemInfo>}
 	 */
 	@GetMapping(value = "/items")
 	@Operation(summary = "유저 아이템 조회", description = "유저 아이템을 조회합니다.")
-	public SuccessResponse<List<UserData.UserItemInfo>> getUserItems(@CurrentUser User user) {
-		return SuccessResponse.of(userService.getUserItems(user.getId()));
+	public SuccessResponse<List<UserData.UserItemInfo>> getUserItems(@CurrentUser Long userId) {
+		return SuccessResponse.of(userService.getUserItems(userId));
 	}
 
 	/**
 	 * 유저 아이템 사용 처리
 	 *
-	 * @param  user, userItemId
+	 * @param  userId, userItemId
 	 * @return {@link SuccessResponse<Void>}
 	 */
 	@PostMapping(value = "/items/use")
 	@Operation(summary = "유저 아이템 사용 처리", description = "유저 아이템을 사용 처리합니다.")
-	public SuccessResponse<Void> useUserItem(@CurrentUser User user, @RequestBody UserData.UserItemUse use) {
-		userService.useUserItem(user.getId(), use.getUserItemId());
+	public SuccessResponse<Void> useUserItem(@CurrentUser Long userId, @RequestBody UserData.UserItemUse use) {
+		userService.useUserItem(userId, use.getUserItemId());
 		return SuccessResponse.empty();
 	}
 }
