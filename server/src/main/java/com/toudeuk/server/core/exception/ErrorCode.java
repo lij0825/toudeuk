@@ -25,11 +25,11 @@ public enum ErrorCode {
 	USER_ITEM_ALREADY_USED(3002, HttpStatus.BAD_REQUEST, "이미 사용한 아이템입니다."),
 
 	// Game
-	WINNER_NOT_FOUND(4000, HttpStatus.NOT_FOUND, "우승자를 찾을 수 없습니다."),
-	MAX_CLICKER_NOT_FOUND(4001, HttpStatus.NOT_FOUND, "최대 클릭자를 찾을 수 없습니다."),
-	CLICK_GAME_REWARD_LOG_NOT_FOUND(4002, HttpStatus.NOT_FOUND, "클릭 게임 보상 로그를 찾을 수 없습니다."),
-	MIDDLE_NOT_FOUND(4003, HttpStatus.NOT_FOUND, "중간 순위를 찾을 수 없습니다."),
-	ClickGame_NOT_FOUND(4004, HttpStatus.NOT_FOUND, "클릭 게임을 찾을 수 없습니다."),
+	GAME_ERROR(4000, HttpStatus.BAD_REQUEST, "게임에 에러가 발생하였습니다."),
+	GAME_NOT_FOUND(4001, HttpStatus.NOT_FOUND, "게임을 찾을 수 없습니다."),
+	REWARD_USER_NOT_FOUND(4002, HttpStatus.NOT_FOUND, "보상 받을 유저를 찾을 수 없습니다."),
+	COOL_TIME(4003, HttpStatus.BAD_REQUEST, "쿨타임입니다."),
+	GAME_LOG_NOT_FOUND(4004, HttpStatus.NOT_FOUND, "게임 로그를 찾을 수 없습니다."),
 	// ---
 	USER_NOT_EXISTS(1002, HttpStatus.NOT_FOUND, "해당 회원은 존재하지 않습니다."),
 

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.toudeuk.server.core.annotation.CurrentUser;
@@ -30,13 +31,13 @@ public class ClickGameController {
 
 	/**
 	 * 사용자 클릭
-	 * @param user
+	 * @param userId
 	 * @return {@link SuccessResponse <Void>}
 	 */
 	@PostMapping(value = "/click")
 	@Operation(summary = "클릭", description = "버튼을 클릭합니다.")
-	public SuccessResponse<Void> click(@CurrentUser User user) {
-		clickGameService.clickButton(user.getId());
+	public SuccessResponse<Void> click(@RequestParam Long userId) {
+		clickGameService.click(userId);
 		return SuccessResponse.empty();
 	}
 
