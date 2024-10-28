@@ -10,9 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
-@RequiredArgsConstructor
-public class CustomOAuth2User implements OAuth2User, UserDetails {
-    private final User user;
+public record CustomOAuth2User(User user) implements OAuth2User, UserDetails {
 
     @Override
     public Map<String, Object> getAttributes() {
