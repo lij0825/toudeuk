@@ -1,28 +1,27 @@
-"use client"
+"use client";
 import { useAuthStore } from "@/store/userAuthStore";
 import Button from "./components/Button";
 import CurrentRank from "./components/CurrentRank";
 import { useEffect, useState } from "react";
-import Link from "next/link";
+// import Link from "next/link";
 
 export default function Toudeuk() {
-  const setAuth = useAuthStore((state) => state.setAccessToken)
+  const setAuth = useAuthStore((state) => state.setAccessToken);
   const urlParams = new URLSearchParams(window.location.search);
-  const [isAnimating, setIsAnimating] = useState(false);
+  const [_, setIsAnimating] = useState(false);
 
   useEffect(() => {
-    const accessToken = urlParams.get('accessToken');
+    const accessToken = urlParams.get("accessToken");
 
-    console.log(accessToken)
+    console.log(accessToken);
 
     if (accessToken) {
       // Zustand 스토어에 인증 정보 설정
       setAuth(accessToken);
-      sessionStorage.setItem('accessToken', accessToken);
+      sessionStorage.setItem("accessToken", accessToken);
     }
 
-    console.log('accessToken', accessToken)
-
+    console.log("accessToken", accessToken);
   }, [setAuth]);
 
   const handleArrowClick = () => {

@@ -20,16 +20,14 @@ const prizeInfoDummyData: PrizeInfo[] = Array.from(
 );
 
 export default function PrizeList() {
-  // const {
-  //   data: prizes,
-  //   isLoading,
-  //   isError,
-  //   error,
-  // } = useQuery<PrizeInfo[]>({
+  // const { data: prizes, isError } = useQuery<PrizeInfo[]>({
   //   queryKey: ["prizes"],
   //   queryFn: fetchPrizes,
   //   staleTime: 5 * 60 * 1000, // 선택적: 5분간 데이터를 fresh로 유지
   // });
+  // if (isError) {
+  //   toast.error(`오류 발생: ${error}`);
+  // }
 
   return (
     <div className="h-full">

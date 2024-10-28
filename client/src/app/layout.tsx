@@ -64,9 +64,11 @@ export default function RootLayout({
         <meta name="twitter:title" content={APP_DEFAULT_TITLE} />
         <meta name="twitter:description" content={APP_DESCRIPTION} />
       </head>
-      <body className="bg-background text-foreground">
+      <body className="place-items-center">
         <ClientWrapper>
-          <main>{children}</main>
+          <main className="bg-background text-foreground max-w-[412px] min-h-[883px] w-full h-full">
+            {children}
+          </main>
         </ClientWrapper>
       </body>
     </html>
