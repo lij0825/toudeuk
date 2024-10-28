@@ -31,25 +31,25 @@ public class ItemController {
 	/**
 	 * 전체 아이템 정보 조회
 	 *
-	 * @param user
+	 * @param userId
 	 * @return {@link SuccessResponse<List<ItemData.ItemInfo>}
 	 */
 	@GetMapping(value = "/list")
 	@Operation(summary = "전체 아이템 정보 조회", description = "전체 아이템 정보를 조회합니다.")
-	public SuccessResponse<List<ItemData.ItemInfo>> getItemList(@CurrentUser User user) {
+	public SuccessResponse<List<ItemData.ItemInfo>> getItemList(@CurrentUser Long userId) {
 		return SuccessResponse.of(itemService.getItemList());
 	}
 
 	/**
 	 * 아이템 구매
 	 *
-	 * @param user, itemId
+	 * @param userId, itemId
 	 * @return {@link SuccessResponse<Void>}
 	 */
 	@PostMapping(value = "/buy")
 	@Operation(summary = "아이템 구매", description = "아이템을 구매합니다.")
-	public SuccessResponse<Void> buyItem(@CurrentUser User user, @RequestBody ItemData.Buy buy) {
-		itemService.buyItem(user.getId(), buy.getItemId());
+	public SuccessResponse<Void> buyItem(@CurrentUser Long userId, @RequestBody ItemData.Buy buy) {
+		itemService.buyItem(userId, buy.getItemId());
 		return SuccessResponse.empty();
 	}
 
