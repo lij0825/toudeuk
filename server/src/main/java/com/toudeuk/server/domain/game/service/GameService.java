@@ -10,6 +10,7 @@ import com.toudeuk.server.domain.game.repository.ClickGameRepository;
 import com.toudeuk.server.domain.user.entity.User;
 import com.toudeuk.server.domain.user.repository.UserRepository;
 
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -21,12 +22,14 @@ public class GameService {
 	private final ClickGameLogRepository clickGameLogRepository;
 	private final UserRepository userRepository;
 
+	private final EntityManager em;
+
 	@Transactional
 	public void NoLockingClick(Long userId, Long gameId) {
 
 		ClickGame clickGame = clickGameRepository.findById(gameId).orElseThrow();
 
-		if(clickGame.getClickCount() >= 1000) {
+		if (clickGame.getClickCount() >= 1000) {
 			throw new IllegalArgumentException("게임 클릭 수 초과");
 		}
 
@@ -35,16 +38,16 @@ public class GameService {
 
 		clickGameRepository.save(clickGame);
 
-
 		// 캐시 차감
 		userRepository.useCash(userId, 10);
 
 		// 게임 로그 저장
-		clickGameLogRepository.save(ClickGameLog.builder()
-			.user(User.builder().id(userId).build())
-			.order(clickGame.getClickCount())
-			.clickGame(clickGame)
-			.build());
+
+		User reference = em.getReference(User.class, userId);
+
+
+		// 게임 로그 저장
+		clickGameLogRepository.save(new ClickGameLog(em.getReference(User.class, userId), clickGame.getClickCount(), clickGame));
 	}
 
 	@Transactional
@@ -52,7 +55,7 @@ public class GameService {
 
 		ClickGame clickGame = clickGameRepository.findByIdWithPessimisticLock(gameId).orElseThrow();
 
-		if(clickGame.getClickCount() >= 1000) {
+		if (clickGame.getClickCount() >= 1000) {
 			throw new IllegalArgumentException("게임 클릭 수 초과");
 		}
 
@@ -61,25 +64,21 @@ public class GameService {
 
 		clickGameRepository.save(clickGame);
 
-
 		// 캐시 차감
 		userRepository.useCash(userId, 10);
 
-		// 게임 로그 저장
-		clickGameLogRepository.save(ClickGameLog.builder()
-			.user(User.builder().id(userId).build())
-			.order(clickGame.getClickCount())
-			.clickGame(clickGame)
-			.build());
-	}
 
+
+		// 게임 로그 저장
+		clickGameLogRepository.save(new ClickGameLog(em.getReference(User.class, userId), clickGame.getClickCount(), clickGame));
+	}
 
 	@Transactional
 	public void pessimisticAndTriggerClick(Long userId, Long gameId) {
 
 		ClickGame clickGame = clickGameRepository.findByIdWithPessimisticLock(gameId).orElseThrow();
 
-		if(clickGame.getClickCount() >= 1000) {
+		if (clickGame.getClickCount() >= 1000) {
 			throw new IllegalArgumentException("게임 클릭 수 초과");
 		}
 
@@ -90,25 +89,18 @@ public class GameService {
 
 
 		// 게임 로그 저장
-		clickGameLogRepository.save(ClickGameLog.builder()
-			.user(User.builder().id(userId).build())
-			.order(clickGame.getClickCount())
-			.clickGame(clickGame)
-			.build());
+		clickGameLogRepository.save(new ClickGameLog(em.getReference(User.class, userId), clickGame.getClickCount(), clickGame));
 
 		// 캐시 차감 트리거 적용
 		// userRepository.useCash(userId, 10);
 	}
-
-
-
 
 	@Transactional
 	public void optimisticClick(Long userId, Long gameId) {
 
 		ClickGame clickGame = clickGameRepository.findByIdWithOptimisticLock(gameId).orElseThrow();
 
-		if(clickGame.getClickCount() >= 1000) {
+		if (clickGame.getClickCount() >= 1000) {
 			throw new IllegalArgumentException("게임 클릭 수 초과");
 		}
 
@@ -117,15 +109,11 @@ public class GameService {
 
 		clickGameRepository.save(clickGame);
 
-
 		// 캐시 차감
 		userRepository.useCash(userId, 10);
 
+
 		// 게임 로그 저장
-		clickGameLogRepository.save(ClickGameLog.builder()
-			.user(User.builder().id(userId).build())
-			.order(clickGame.getClickCount())
-			.clickGame(clickGame)
-			.build());
+		clickGameLogRepository.save(new ClickGameLog(em.getReference(User.class, userId), clickGame.getClickCount(), clickGame));
 	}
 }

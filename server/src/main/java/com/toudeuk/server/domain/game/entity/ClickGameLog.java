@@ -28,8 +28,8 @@ public class ClickGameLog extends TimeEntity {
     @JoinColumn(name = "click_game_id", nullable = false)
     private ClickGame clickGame;
 
-    @Builder
-    public ClickGameLog(Long id, User user, Integer order, ClickGame clickGame) {
+
+    public ClickGameLog(User user, Integer order, ClickGame clickGame) {
         this.id = id;
         this.user = user;
         this.order = order;

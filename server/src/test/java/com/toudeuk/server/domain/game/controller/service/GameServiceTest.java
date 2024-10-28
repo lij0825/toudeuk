@@ -3,6 +3,7 @@ package com.toudeuk.server.domain.game.controller.service;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -85,7 +86,6 @@ class GameServiceTest {
 	public void 비관적_락_테스트() throws InterruptedException {
 
 		User user =  userRepository.save(User.builder()
-			.id(1L)
 			.email("test@naver.com")
 			.name("테스트")
 			.nickname("테스트")
@@ -100,13 +100,18 @@ class GameServiceTest {
 
 		ExecutorService executorService = Executors.newFixedThreadPool(32);
 		CountDownLatch latch = new CountDownLatch(threadCount);
+		AtomicInteger error = new AtomicInteger(0);
+
 
 		for (int i = 0; i < threadCount; i++) {
 
 			executorService.submit(() -> {
 				try {
 					gameService.pessimisticClick(user.getId(), clickGame.getId());
-				} finally {
+				} catch (IllegalArgumentException e) {
+					error.incrementAndGet();
+				}
+				finally {
 					latch.countDown();
 				}
 			});
@@ -115,7 +120,11 @@ class GameServiceTest {
 
 		ClickGame resultGame = clickGameRepository.findById(clickGame.getId()).orElseThrow();
 
-		Assertions.assertThat(resultGame.getClickCount()).isEqualTo(1000L);
+		Assertions.assertThat(
+			clickGameLogRepository.count()
+			).isEqualTo(1000);
+
+		Assertions.assertThat(error.get()).isEqualTo(500);
 	}
 
 	@Test
