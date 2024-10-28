@@ -1,4 +1,4 @@
-version: "3.3"
+name: toudeuk-docker-compose
 
 services:
   database:
@@ -39,7 +39,7 @@ services:
     image: ngrinder/controller:3.5.5
     restart: always
     ports:
-      - "9000:80"
+      - "9090:80"
       - "16001:16001"
       - "12000-12009:12000-12009"
     volumes:
