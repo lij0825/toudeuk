@@ -1,5 +1,5 @@
-import dynamic from "next/dynamic";
 import type { Metadata, Viewport } from "next";
+import dynamic from "next/dynamic";
 import "./globals.css";
 
 const ClientWrapper = dynamic(() => import("@/providers/ReacQueryProvider"), {
@@ -64,9 +64,11 @@ export default function RootLayout({
         <meta name="twitter:title" content={APP_DEFAULT_TITLE} />
         <meta name="twitter:description" content={APP_DESCRIPTION} />
       </head>
-      <body className="bg-background text-foreground">
+      <body className="place-items-center">
         <ClientWrapper>
-          <main>{children}</main>
+          <main className="bg-background text-foreground max-w-[412px] min-h-[883px] max-h-[883px] w-full h-full">
+            {children}
+          </main>
         </ClientWrapper>
       </body>
     </html>

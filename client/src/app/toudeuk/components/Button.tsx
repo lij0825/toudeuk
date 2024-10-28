@@ -1,32 +1,36 @@
 "use client";
 
 //소켓 연결 또는 SSE 방식으로 touch값 fetch
+import { Client, Frame, IFrame, IMessage, Stomp } from "@stomp/stompjs";
 import { useEffect, useState } from "react";
-import SockJS from 'sockjs-client';
-import { Stomp } from '@stomp/stompjs';
-
-
+import SockJS from "sockjs-client";
 
 export default function Button() {
   const [count, setCount] = useState<number>(0);
-  const [stompClient, setStompClient] = useState<any>(null);
+  const [stompClient, setStompClient] = useState<Client | null>(null);
 
   useEffect(() => {
-    const socket = new SockJS('http://localhost:8080/gs-guide-websocket');
+    const socket = new SockJS("http://localhost:8080/gs-guide-websocket");
     const stompClient = Stomp.over(socket);
 
-    stompClient.connect({}, (frame) => {
-      console.log('Connected: ' + frame);
-      // 구독 등의 추가 설정
-    }, (error) => {
-      console.error('Connection error: ', error);
-    });
+    stompClient.connect(
+      {},
+      (frame: IFrame) => {
+        console.log("Connected: " + frame);
+        // 구독 등의 추가 설정
+      },
+      (error: Frame | string) => {
+        console.error("Connection error: ", error);
+      }
+    );
 
     stompClient.connect({}, (frame: string) => {
-      console.log('Connected: ' + frame);
-      stompClient.send('/app/getInitialCount', {}, {});
-      // Subscribe to the game topic
-      stompClient.subscribe('/topic/game', (message: any) => {
+      console.log("Connected: " + frame);
+      stompClient.publish({
+        destination: "/app/getInitialCount",
+        body: JSON.stringify({}),
+      });
+      stompClient.subscribe("/topic/game", (message: IMessage) => {
         setCount(parseInt(message.body));
       });
     });
@@ -43,10 +47,12 @@ export default function Button() {
 
   const handleClick = () => {
     if (stompClient) {
-      stompClient.send('/app/game', {}, {});
+      stompClient.publish({
+        destination: "/app/game",
+        body: JSON.stringify({}),
+      });
     }
   };
-
 
   return (
     <>
