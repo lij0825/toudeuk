@@ -4,7 +4,7 @@ import Gifticon from './components/Gifticon'
 const page = () => {
   return (
     <div>
-      <Gifticon/>
+        <Gifticon />
     </div>
   )
 }

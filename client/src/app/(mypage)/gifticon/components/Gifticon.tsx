@@ -31,7 +31,7 @@ export default function Gifticon() {
 
   return (
     <div className="p-4">
-      <h2 className="text-4xl font-bold mb-6">
+      <h2 className="typo-title font-bold mb-6">
         Gifticon <br /> Shop
       </h2>
       <div className="mt-8">

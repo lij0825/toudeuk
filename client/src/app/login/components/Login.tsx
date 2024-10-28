@@ -46,7 +46,7 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="p-8 rounded shadow-md w-full max-w-md">
-        <h2 className="text-4xl font-bold mb-6">Toudeck</h2>
+        <h2 className="typo-title font-bold mb-6">Toudeuk</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <div>

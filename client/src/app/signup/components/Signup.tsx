@@ -48,7 +48,7 @@ export default function Signup() {
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="p-8 rounded shadow-md w-full max-w-md">
-        <h2 className="text-4xl font-bold mb-6">
+        <h2 className="typo-title font-bold mb-6">
           Create <br /> Account
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
