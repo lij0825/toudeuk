@@ -39,3 +39,5 @@ next-env.d.ts
 
 # service worker
 /public/sw.js.map
+# Sentry Config File
+.env.sentry-build-plugin

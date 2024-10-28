@@ -77,7 +77,7 @@ export default function Rank() {
     return (
         <div className="flex flex-col items-center justify-center py-10">
             <div className="rounded-lg shadow-md w-full max-w-2xl">
-                <h2 className="text-3xl font-bold mb-6">Rank</h2>
+                <h2 className="typo-title font-bold mb-6">Rank</h2>
                 {/* 1위에서 3위까지 큰 카드 */}
                 <div className="flex justify-center mb-4">
                     <div

@@ -4,7 +4,7 @@ export interface UserInfo {
   cash: number;
 }
 
-export interface ListItemInfo {
-  content: string;
+export interface NavItemInfo {
+  label: string;
   href: string;
 }

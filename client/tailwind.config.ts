@@ -19,6 +19,10 @@ const config: Config = {
         "color-3": "#015796",
         "color-4": "#424750",
         "color-5": "#791EF9",
+        //gray톤 card용
+        "card-dark": "#16171B",
+        "card-light": "#353A40",
+        "card-border": "#4A505B",
       },
       spacing: {
         td: "30px",
@@ -56,19 +60,38 @@ const config: Config = {
           fontWeight: theme("fontWeight.extrabold"),
           fontFamily: theme("fontFamily.gilroy"),
         },
+        ".bg-gradient-card": {
+          background: "linear-gradient(180deg, #353A40 17.2%, #16171B 117.2%)",
+        },
+        ".border-card": {
+          borderColor: "#4A505B",
+          borderWidth: "2px",
+        },
       });
       //컴포넌트 css 등록
       const newComponents = {
         ".bottom-sheet": {
           "background-color": `${theme("colors.color-2")}`,
-          "border-top-left-radius": "4rem",
-          "border-top-right-radius": "4rem",
+          // "border-top-left-radius": "4rem",
+          // "border-top-right-radius": "4rem",
           "padding-top": `${theme("spacing.td-y")}`,
           "padding-bottom": `${theme("spacing.td-y")}`,
           "padding-left": `${theme("spacing.td-x")}`,
           "padding-right": `${theme("spacing.td-x")}`,
+          width: "100%",
+          height: "100%",
           background: "linear-gradient(180deg, #4b4f58 0%, #16171B 100%)",
           border: "2px solid #424750",
+        },
+        ".card": {
+          padding: "2rem",
+          borderRadius: "1.5rem",
+          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+          maxWidth: "28rem",
+          width: "100%",
+          background: "linear-gradient(180deg, #252A30 17.2%, #16171B 117.2%)",
+          borderColor: "#4A505B",
+          borderWidth: "2px",
         },
       };
 

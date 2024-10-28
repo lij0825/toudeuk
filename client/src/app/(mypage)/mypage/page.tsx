@@ -1,28 +1,35 @@
-"use client";
-
+import Link from "next/link";
+import { HiInformationCircle } from "react-icons/hi";
+import GifticonSwipe from "./components/GifticonSwipe";
 import MypageList from "./components/MypageList";
-import GifticonCarousel from "./components/GifticonCarousel";
+import MyPoint from "./components/Point";
 
 // import { useQuery } from "@tanstack/react-query";
 // import { fetchUserGifticons } from "@/apis/myInfoApi";
 
 export default function Mypage() {
-  const point = 300;
   return (
-    <div className="flex flex-col bottom-sheet w-full min-h-screen ">
-      <section className="typo-title mb-5 flex items-bottom items-end justify-between">
-        <div>
-          <p>My</p>
-          <p>Point</p>
+    <>
+      <section className="typo-title mb-5 flex items-end justify-between">
+        <div className="flex items-end">
+          <div>
+            <p>My</p>
+            <p>Point</p>
+          </div>
+          <Link href={"/point"}>
+            <HiInformationCircle className="text-gray-500 w-6 h-6 mb-2 ml-2" />
+          </Link>
+          {/*CSR*/}
         </div>
-        <div className="typo-sub-title text-right">{point}pt</div>
+        <MyPoint />
       </section>
       <section>
-        <GifticonCarousel />
+        {/*CSR*/}
+        <GifticonSwipe />
       </section>
       <section>
         <MypageList />
       </section>
-    </div>
+    </>
   );
 }
