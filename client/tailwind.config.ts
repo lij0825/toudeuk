@@ -72,8 +72,6 @@ const config: Config = {
       const newComponents = {
         ".bottom-sheet": {
           "background-color": `${theme("colors.color-2")}`,
-          // "border-top-left-radius": "4rem",
-          // "border-top-right-radius": "4rem",
           "padding-top": `${theme("spacing.td-y")}`,
           "padding-bottom": `${theme("spacing.td-y")}`,
           "padding-left": `${theme("spacing.td-x")}`,
@@ -81,7 +79,6 @@ const config: Config = {
           width: "100%",
           height: "100%",
           background: "linear-gradient(180deg, #4b4f58 0%, #16171B 100%)",
-          border: "2px solid #424750",
         },
         ".card": {
           padding: "2rem",

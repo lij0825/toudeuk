@@ -1,5 +1,5 @@
-import dynamic from "next/dynamic";
 import type { Metadata, Viewport } from "next";
+import dynamic from "next/dynamic";
 import "./globals.css";
 
 const ClientWrapper = dynamic(() => import("@/providers/ReacQueryProvider"), {
@@ -66,7 +66,7 @@ export default function RootLayout({
       </head>
       <body className="place-items-center">
         <ClientWrapper>
-          <main className="bg-background text-foreground max-w-[412px] min-h-[883px] w-full h-full">
+          <main className="bg-background text-foreground max-w-[412px] min-h-[883px] max-h-[883px] w-full h-full">
             {children}
           </main>
         </ClientWrapper>

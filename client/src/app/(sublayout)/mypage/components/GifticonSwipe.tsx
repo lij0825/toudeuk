@@ -43,7 +43,7 @@ const gifticons: UserGifticonInfo[] = [
 const GifticonItem = ({ gifticon }: { gifticon: UserGifticonInfo }) => (
   <Link
     key={gifticon.userItemId}
-    href={`/gifticon/${gifticon.userItemId}`}
+    href={`/mygifticon/${gifticon.userItemId}`}
     className="p-4 border w-[150px] rounded-lg h-32 backdrop-blur-lg bg-white/30 shadow-lg flex-shrink-0"
     style={commonLinkStyle}
   >
@@ -76,7 +76,7 @@ export default function GifticonSwipe() {
     <>
       <div className="flex overflow-x-scroll [&::-webkit-scrollbar]:hidden">
         <Link
-          href={`/mypage/mygifticon`}
+          href={`/mygifticon`}
           className="typo-sub-title p-4 border w-[100px] rounded-lg h-32 backdrop-blur-lg bg-white/30 shadow-lg"
           style={commonLinkStyle}
         >

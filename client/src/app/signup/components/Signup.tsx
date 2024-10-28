@@ -1,8 +1,8 @@
 "use client";
-import { SignupInfo } from "@/types/auth";
-import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
 import { signupUser } from "@/apis/userApi";
+import { SignupInfo } from "@/types/auth";
+import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
 
 export default function Signup() {
   const [formData, setFormData] = useState<SignupInfo>({
@@ -62,13 +62,13 @@ export default function Signup() {
                 onChange={handleChange}
                 className="mt-5 p-2 w-full border border-gray-300 rounded-md bg-transparent shadow-lg"
                 style={{
-                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.6)",
+                  boxShadow:
+                    "0 4px 6px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.6)",
                 }}
                 required
               />
             </div>
             <div>
-
               <input
                 type="password"
                 name="password"

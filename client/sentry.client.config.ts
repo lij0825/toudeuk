@@ -5,15 +5,17 @@
 import * as Sentry from "@sentry/nextjs";
 
 Sentry.init({
-  dsn: "https://873bd5cfbb5745397111c1fd985f2cdc@o4508194294398976.ingest.de.sentry.io/4508194337783888",
-
+  // 기본 설정
+  dsn:
+    process.env.NEXT_PUBLIC_SENTRY_DSN ||
+    "https://873bd5cfbb5745397111c1fd985f2cdc@o4508194294398976.ingest.de.sentry.io/4508194337783888",
+  environment: process.env.NEXT_PUBLIC_SENTRY_ENVIRONMENT || "production",
   // Add optional integrations for additional features
-  integrations: [
-    Sentry.replayIntegration(),
-  ],
+  integrations: [Sentry.replayIntegration()],
 
   // Define how likely traces are sampled. Adjust this value in production, or use tracesSampler for greater control.
-  tracesSampleRate: 1,
+  // 성능 모니터링 설정
+  tracesSampleRate: parseFloat(process.env.SENTRY_TRACES_SAMPLE_RATE || "1.0"),
 
   // Define how likely Replay events are sampled.
   // This sets the sample rate to be 10%. You may want this to be 100% while
@@ -24,5 +26,5 @@ Sentry.init({
   replaysOnErrorSampleRate: 1.0,
 
   // Setting this option to true will print useful information to the console while you're setting up Sentry.
-  debug: false,
+  debug: process.env.NODE_ENV === "development",
 });
