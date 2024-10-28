@@ -15,10 +15,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "click_game_reward_log")
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ClickGameRewardLog extends TimeEntity {
 
@@ -44,5 +46,15 @@ public class ClickGameRewardLog extends TimeEntity {
 	@Column(name = "click_game_reward_type", nullable = false)
 	@Enumerated(EnumType.STRING)
 	private RewardType rewardType;
+
+	public static ClickGameRewardLog create(User user, ClickGame clickGame, int reward, int clickCount, RewardType rewardType) {
+		ClickGameRewardLog clickGameRewardLog = new ClickGameRewardLog();
+		clickGameRewardLog.user = user;
+		clickGameRewardLog.clickGame = clickGame;
+		clickGameRewardLog.reward = reward;
+		clickGameRewardLog.clickCount = clickCount;
+		clickGameRewardLog.rewardType = rewardType;
+		return clickGameRewardLog;
+	}
 
 }

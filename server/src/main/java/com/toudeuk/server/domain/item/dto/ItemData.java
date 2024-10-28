@@ -22,4 +22,9 @@ public class ItemData {
 			return itemInfo;
 		}
 	}
+
+	@Data
+	public static class Buy {
+		private Long itemId;
+	}
 }

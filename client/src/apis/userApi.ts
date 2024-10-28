@@ -1,28 +1,36 @@
-import { LoginInfo, SignupInfo } from "@/types/auth";
+import { LoginInfo } from "@/types/auth";
 import instance from "./clientApi";
 import { BaseResponse } from "@/types/Base";
+import { UserInfo } from "@/types/mypageInfo";
 
-export const signupUser = async (data: SignupInfo): Promise<void> => {
+export const signupUser = async (data: UserInfo): Promise<void> => {
   // promise 걸어주는게 좋습니다
   // 엔드 포인트 주소는 바뀔 수 있습니다
   // BaseResponse 로 응답 형식 맞춰서 드릴께요
-  const response = await instance.post<BaseResponse<null>>(
-    "/auth/signup",
-    data
-  );
+  const response = await instance.post<BaseResponse<null>>("/auth/sign", data);
   if (!response.data.success) {
     throw new Error(response.data.message);
   }
 };
 
-export const loginUser = async (
-  data: LoginInfo
-): Promise<BaseResponse<null>> => {
+export const loginUser = async (data: LoginInfo): Promise<BaseResponse<null>> => {
   const response = await instance.post<BaseResponse<null>>("/auth/login", data);
   if (!response.data.success) {
     throw new Error(response.data.message);
   }
   return response.data;
+};
+
+export const fetchProfile = async (userId: string): Promise<UserInfo> => {
+  const response = await instance.get<BaseResponse<UserInfo>>(`/user/info?userId=${userId}`);
+  console.log(response.data);
+  if (!response.data.success) {
+    throw new Error(response.data.message);
+  }
+  if (!response.data.data) {
+    throw new Error(response.data.message);
+  }
+  return response.data.data;
 };
 
 // export const signupUser = async (data: UserInfo) => {

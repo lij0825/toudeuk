@@ -46,108 +46,82 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6">
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="p-8 rounded shadow-md w-full max-w-md">
+        <h2 className="typo-title font-bold mb-6">
           Create <br /> Account
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
-                ID
-              </label>
               <input
                 type="email"
                 name="email"
+                placeholder="이메일을 입력하세요"
                 value={formData.email}
                 onChange={handleChange}
-                className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                className="mt-5 p-2 w-full border border-gray-300 rounded-md bg-transparent shadow-lg"
+                style={{
+                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.6)",
+                }}
                 required
               />
             </div>
             <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
-                password
-              </label>
+
               <input
                 type="password"
                 name="password"
+                placeholder="비밀번호를 입력하세요"
                 value={formData.password}
                 onChange={handleChange}
-                className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                className="mt-5 p-2 w-full border border-gray-300 rounded-md bg-transparent"
                 required
               />
             </div>
             <div>
-              <label
-                htmlFor="confirmPassword"
-                className="block text-sm font-medium text-gray-700"
-              >
-                confirm password
-              </label>
               <input
                 type="password"
                 name="confirmPassword"
+                placeholder="비밀번호를 입력하세요"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                className="mt-5 p-2 w-full border border-gray-300 rounded-md bg-transparent"
                 required
               />
             </div>
-            <label
-              htmlFor="phoneNumber"
-              className="block text-sm font-medium text-gray-700"
-            >
-              phoneNumber
-            </label>
             <input
               type="text"
               name="phoneNumber"
+              placeholder="전화번호를 입력하세요"
               value={formData.phoneNumber}
               onChange={handleChange}
-              className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+              className="mt-5 p-2 w-full border border-gray-300 rounded-md bg-transparent"
               required
             />
-            <label
-              htmlFor="nickName"
-              className="block text-sm font-medium text-gray-700"
-            >
-              닉네임
-            </label>
             <input
               type="text"
-              name="recommender"
+              name="nickname"
+              placeholder="닉네임을 입력하세요"
               value={formData.nickName}
               onChange={handleChange}
-              className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+              className="mt-5 p-2 w-full border border-gray-300 rounded-md bg-transparent"
             />
             <hr className="my-6 border-gray-300" />
-            <label
-              htmlFor="recommender"
-              className="block text-sm font-medium text-gray-700"
-            >
-              추천인ID
-            </label>
             <input
               type="text"
               name="recommender"
+              placeholder="추천인ID를 입력하세요"
               value={formData.recommender}
               onChange={handleChange}
-              className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+              className="mt-1 p-2 w-full border border-gray-300 rounded-md bg-transparent"
             />
           </div>
           {/* </div> */}
           <div className="flex justify-center items-center">
             <button
               type="submit"
-              className="w-2/4 bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition"
+              className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition"
               //   className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition"
               //   disabled={mutation.isLoading}
             >

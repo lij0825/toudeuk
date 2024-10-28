@@ -63,4 +63,9 @@ public class UserData {
 			return userItemInfo;
 		}
 	}
+
+	@Data
+	public static class UserItemUse {
+		private Long userItemId;
+	}
 }

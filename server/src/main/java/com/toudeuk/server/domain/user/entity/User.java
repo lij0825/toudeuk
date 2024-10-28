@@ -51,17 +51,17 @@ public class User extends TimeEntity {
 	@Column(name = "email", nullable = false)
 	private String email;
 
-    @Column(name = "password")
-    private String password;
+	@Column(name = "password")
+	private String password;
 
-    @Column(name = "name")
-    private String name;
+	@Column(name = "name")
+	private String name;
 
-    @Column(name = "nickname", nullable = false)
-    private String nickname;
+	@Column(name = "nickname")
+	private String nickname;
 
-    @Column(name = "phone_number")
-    private String phoneNumber;
+	@Column(name = "phone_number")
+	private String phoneNumber;
 
 	@Column(name = "profile_img")
 	private String profileImg;
@@ -74,37 +74,38 @@ public class User extends TimeEntity {
 	@Enumerated(EnumType.STRING)
 	private RoleType roleType = RoleType.USER;
 
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @Column(name = "updated_at")
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
+	@JsonSerialize(using = LocalDateTimeSerializer.class)
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
+	@Column(name = "updated_at")
+	@LastModifiedDate
+	private LocalDateTime updatedAt;
 
 	@Enumerated(EnumType.STRING)
 	private UserStatus userStatus;
 
-	public User update(String name) {
-		this.name = name;
-		return this;
-	}
+	@Column(nullable = false)
+	private String username;
+
+	@Column(name = "provider_id", nullable = false)
+	private String providerId;
+
+
+	@Column(name = "provider_type", nullable = false)
+	@Enumerated(EnumType.STRING)
+	private ProviderType providerType;
 
 	public void updateCash(int cash) {
 		this.cash = cash;
 	}
 
-
-    @Builder
-    public User(Long id, String email, String password, String name, String nickname, String phoneNumber, String profileImg, int cash, RoleType roleType, LocalDateTime updatedAt, UserStatus userStatus) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-        this.name = name;
-        this.nickname = nickname;
-        this.phoneNumber = phoneNumber;
-        this.profileImg = profileImg;
-        this.cash = cash;
-        this.roleType = roleType;
-        this.updatedAt = updatedAt;
-        this.userStatus = userStatus;
-    }
+	public static User createUser(String username, String name, ProviderType providerType,
+								  String providerId) {
+		User user = new User();
+		user.username = username;
+		user.name = name;
+		user.email = username;
+		user.providerType = providerType;
+		user.providerId = providerId;
+		return user;
+	}
 }

@@ -4,6 +4,7 @@ import { LoginInfo } from "@/types/auth";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { loginUser } from "@/apis/userApi";
+import Link from "next/link";
 
 export default function Login() {
   const [formData, setFormData] = useState<LoginInfo>({
@@ -40,44 +41,45 @@ export default function Login() {
   const handleKakaoLogin = () => {
     // 카카오 로그인 처리 함수 (구현 필요)
     window.location.href = "http://localhost:8080/oauth2/authorization/kakao";
-    console.log("카카오 로그인 클릭");
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6">Login</h2>
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="p-8 rounded shadow-md w-full max-w-md">
+        <h2 className="typo-title font-bold mb-6">Toudeuk</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <div>
-              <label
+              {/* <label
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
               >
                 ID
-              </label>
+              </label> */}
               <input
                 type="email"
                 name="email"
                 value={formData.email}
+                placeholder="ID"
                 onChange={handleChange}
-                className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                className="mt-1 p-2 w-full border border-gray-300 rounded-md bg-transparent"
                 required
               />
             </div>
             <div>
-              <label
+              {/* <label
                 htmlFor="password"
                 className="block text-sm font-medium text-gray-700"
               >
                 password
-              </label>
+              </label> */}
               <input
                 type="password"
                 name="password"
+                placeholder="PASSWORD"
                 value={formData.password}
                 onChange={handleChange}
-                className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                className="mt-1 p-2 w-full border border-gray-300 rounded-md bg-transparent"
                 required
               />
             </div>
@@ -85,9 +87,9 @@ export default function Login() {
           <div className="flex justify-center items-center">
             <button
               type="submit"
-              className="w-2/4 bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition"
-              //   className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition"
-              //   disabled={mutation.isLoading}
+              className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition"
+            //   className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition"
+            //   disabled={mutation.isLoading}
             >
               {/* {mutation.isLoading ? '회원가입 중...' : '회원가입'} */}
               Login
@@ -102,10 +104,17 @@ export default function Login() {
         <div className="flex justify-center">
           <button
             onClick={handleKakaoLogin}
-            className="flex items-center justify-center w-2/4 h-10 rounded-[20.997px] bg-[#FEE500] border border-[#FEE500] text-black hover:bg-[#FEE500] transition duration-200"
+            className="flex items-center justify-center w-full h-10 rounded-md bg-[#FEE500] border border-[#FEE500] text-black hover:bg-[#FEE500] transition duration-200"
           >
             Login with Kakao
           </button>
+        </div>
+        <div className="flex justify-center mt-4">
+          <Link href="/signup">
+            <span className="text-gray-300 cursor-pointer hover:underline">
+              Signup
+            </span>
+          </Link>
         </div>
       </div>
     </div>
