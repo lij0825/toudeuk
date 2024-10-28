@@ -1,9 +1,15 @@
 package com.toudeuk.server.domain.game.repository;
 
+import jakarta.annotation.Resource;
+import jakarta.transaction.Transactional;
+import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Repository;
 import lombok.RequiredArgsConstructor;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -14,101 +20,86 @@ public class ClickGameCacheRepository {
 
     private static final String CLICK_KEY = "click:";
     private static final String GAME_KEY = "game:";
+    private static final String COOLTIME_KEY = "cooltime:";
 
-    private final RedisTemplate<String, Long> redisTemplate;
 
-    // 총 클릭
-    public void initTotalClick() {
-        redisTemplate.opsForValue().set(CLICK_KEY + "total", 0L);
+    @Resource(name = "redisTemplate")
+    private ZSetOperations<String, Long> zSetOperations;
+
+    @Resource(name = "redisTemplate")
+    private ListOperations<String, Long> listOperations;
+
+    @Resource(name = "redisTemplate")
+    private ValueOperations<String, Long> valueOperationsLong;
+
+    @Resource(name = "redisTemplate")
+    private ValueOperations<String, Integer> valueOperationsInt;
+
+    public RedisTemplate<String, String> redisTemplate;
+
+
+    public Integer getTotalClick() {
+        return valueOperationsInt.get(CLICK_KEY + "total");
     }
 
-    public int getTotalClick() {
-        Long totalClick = redisTemplate.opsForValue().get(CLICK_KEY + "total");
-        return totalClick == null ? 0 : totalClick.intValue();
+    public Integer getUserClick(Long userId) {
+        Integer clickCount = valueOperationsInt.get(CLICK_KEY + userId);
+        return clickCount == null ? 0 : clickCount;
     }
 
-    // 유저 클릭
-    public String addUserClick(Long userId) {
-        // 게임 쿨타임
-        if (isGameInCooltime()) {
-            return "GAME_COOLTIME";
-        }
-
-        // 유저 쿨타임
-        Long userCooltime = redisTemplate.opsForValue().get(CLICK_KEY + "cooltime:" + userId);
-        if (userCooltime != null && userCooltime == 1L) {
-            return "USER_COOLTIME";
-        }
-
-        redisTemplate.opsForValue().increment(CLICK_KEY + "total");
-        int totalClick = getTotalClick();
-        if (totalClick == 12000) {
-            setGameCooltime();
-        }
-
-        redisTemplate.opsForZSet().incrementScore(CLICK_KEY + "order", userId, 1);
-        saveClickLog(userId);
-
-        // 유저 쿨타임 시작
-        redisTemplate.opsForValue().set(CLICK_KEY + "cooltime:" + userId, 1L);
-        redisTemplate.expire(CLICK_KEY + "cooltime:" + userId, 500, TimeUnit.MILLISECONDS);
-
-        return "SUCCESS";
+    public Integer getUserOrder(Long userId) {
+        Long order = zSetOperations.reverseRank(CLICK_KEY + "order", userId);
+        return order == null ? null : order.intValue();
     }
 
-    // 유저 클릭수
-    public int getUserClick(Long userId) {
-        Double userClick = redisTemplate.opsForZSet().score(CLICK_KEY + "order", userId);
-        return userClick == null ? 0 : userClick.intValue();
+    public Set<Long> getPreviousOrderUser(int clickCount) {
+        return zSetOperations.rangeByScore(CLICK_KEY + "order", clickCount + 1, Integer.MAX_VALUE, 0, 1);
     }
 
-    // 맥시클릭커
-    public Long getMaxClicker() {
-        Set<Long> result = redisTemplate.opsForZSet().reverseRangeByScore(CLICK_KEY + "order", Integer.MAX_VALUE, -1, 0, 1);
-
-        return result.isEmpty() ? null : result.iterator().next();
+    public Set<Long> getMaxClickUser() {
+        return zSetOperations.reverseRange(CLICK_KEY + "order", 0, 0);
     }
 
-    // 유저 순위
-    public Long getUserOrder(Long userId) {
-        Long order = redisTemplate.opsForZSet().reverseRank(CLICK_KEY + "order", userId);
-        return order == null ? null : order;
+    public Long getWinner() {
+        return listOperations.index(CLICK_KEY + "log", 12000-1);
     }
 
-    // 내 앞순위 유저
-    public Long getPreviousOrderUser(Long userId) {
-        int clickCount = getUserClick(userId);
-        Set<Long> result = redisTemplate.opsForZSet().rangeByScore(CLICK_KEY + "order", clickCount + 1, Integer.MAX_VALUE, 0, 1);
-        return result == null ? null : result.iterator().next();
+
+    public List<Long> getLog() {
+        return listOperations.range(CLICK_KEY + "log", 0, 12000-1);
     }
 
-    // 클릭 로그 저장
-    public void saveClickLog(Long userId) {
-        redisTemplate.opsForList().rightPush(CLICK_KEY + "log", userId);
+    public boolean isGameCoolTime() {
+        return Boolean.TRUE.equals(redisTemplate.hasKey(COOLTIME_KEY + "game"));
     }
 
-    public List<Long> getClickLog() {
-        return redisTemplate.opsForList().range(CLICK_KEY + "log", 0, 12000);
+    public boolean isUserCoolTime(Long userId) {
+        return Boolean.TRUE.equals(redisTemplate.hasKey(COOLTIME_KEY + userId));
     }
 
-    // 게임 회차 설정
-    public void setGameId(Long gameId) {
-        redisTemplate.opsForValue().set(GAME_KEY + "id", gameId);
+
+    public void setTotalClick() {
+        valueOperationsInt.set(CLICK_KEY + "total", 0);
     }
 
-    public Long getGameId() {
-        return (Long) redisTemplate.opsForValue().get(GAME_KEY + "id");
+
+    public void addTotalClick() {
+        valueOperationsInt.increment(CLICK_KEY + "total");
     }
 
-    // 게임 쿨타임 설정
-    public void setGameCooltime() {
-        redisTemplate.opsForValue().set(GAME_KEY + "cooltime", 1L);
-        redisTemplate.expire(GAME_KEY + "cooltime", 5, TimeUnit.MINUTES);
+    public void addUserClick(Long userId) {
+        zSetOperations.incrementScore(CLICK_KEY + "order", userId, 1);
+    }
+    public void addLog(Long userId) {
+        listOperations.rightPush(CLICK_KEY + "log", userId);
     }
 
-    public boolean isGameInCooltime() {
-        Long cooltime = redisTemplate.opsForValue().get(GAME_KEY + "cooltime");
-        return cooltime != null && cooltime == 1L;
+    public void setGameCoolTime() {
+        redisTemplate.opsForValue().set(COOLTIME_KEY + "game", "true", Duration.ofMinutes(5));
+    }
+
+    public void setUserCoolTime(Long userId) {
+        redisTemplate.opsForValue().set(COOLTIME_KEY + userId, "true", Duration.ofMillis(500));
     }
 
 
