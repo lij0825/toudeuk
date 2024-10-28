@@ -41,11 +41,11 @@ public class JWTService {
     /**
      * 신규 JWT 토큰(accessToken, refreshToken) 생성
      *
-     * @param username    사용자 아이디
+     * @param userId    사용자 ID
      * @param authorities 사용자 권한
      * @return {@link JwtToken} accessToken, refreshToken
      */
-    public JwtToken generateToken(String username, Collection<? extends GrantedAuthority> authorities) {
+    public JwtToken generateToken(Long userId, Collection<? extends GrantedAuthority> authorities) {
         String authority = authorities.stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
@@ -58,7 +58,7 @@ public class JWTService {
         String accessToken = Jwts.builder()
                 .header().add("typ", "JWT").add("alg", "HS256")
                 .and()
-                .subject(username)
+                .subject(userId.toString())
                 .claim("authorities", authority)
                 .issuedAt(new Date(now))
                 .expiration(accessTokenExpire)
@@ -66,7 +66,7 @@ public class JWTService {
                 .compact();
 
         String refreshToken = Jwts.builder()
-                .subject(username)
+                .subject(userId.toString())
                 .claim("authorities", authority)
                 .issuedAt(new Date(now))
                 .expiration(refreshTokenExpire)
@@ -120,7 +120,7 @@ public class JWTService {
                         .map(SimpleGrantedAuthority::new)
                         .toList();
 
-        return generateToken(claims.getSubject(), authorities);
+        return generateToken(Long.parseLong(claims.getSubject()), authorities);
     }
 
     public Authentication parseAuthentication(String accessToken) throws Exception {
