@@ -40,9 +40,15 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath profileImg = createString("profileImg");
 
+    public final StringPath providerId = createString("providerId");
+
+    public final EnumPath<ProviderType> providerType = createEnum("providerType", ProviderType.class);
+
     public final EnumPath<RoleType> roleType = createEnum("roleType", RoleType.class);
 
     public final DateTimePath<java.time.LocalDateTime> updatedAt = createDateTime("updatedAt", java.time.LocalDateTime.class);
+
+    public final StringPath username = createString("username");
 
     public final EnumPath<UserStatus> userStatus = createEnum("userStatus", UserStatus.class);
 

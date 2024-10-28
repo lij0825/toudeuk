@@ -44,23 +44,23 @@ public class ClickGameController {
 	 * 모든 게임 정보 조회
 	 * 몇 회차인지, 우승자, 시간
 	 *
-	 * @param user
+	 * @param userId, pageable
 	 * @return Page<HistoryData.AllInfo>
 	 */
 	@GetMapping("/history")
 	@Operation(summary = "모든 게임 정보 조회", description = "모든 게임 정보를 조회합니다.")
-	public SuccessResponse<Page<HistoryData.AllInfo>> getHistory(@CurrentUser User user, Pageable pageable) {
+	public SuccessResponse<Page<HistoryData.AllInfo>> getHistory(@CurrentUser Long userId, Pageable pageable) {
 		return SuccessResponse.of(clickGameService.getAllHistory(pageable));
 	}
 
 	/**
 	 * 게임 상세 정보 조회
 	 *
-	 * @param user, gameId
+	 * @param userId, gameId
 	 */
 	@GetMapping("/history/{gameId}")
 	@Operation(summary = "게임 상세 정보 조회", description = "게임 상세 정보를 조회합니다.")
-	public SuccessResponse<Page<HistoryData.DetailInfo>> getHistoryDetail(@CurrentUser User user,
+	public SuccessResponse<Page<HistoryData.DetailInfo>> getHistoryDetail(@CurrentUser Long userId,
 		@PathVariable Long gameId,
 		Pageable pageable) {
 		return SuccessResponse.of(clickGameService.getHistoryDetail(gameId, pageable));
