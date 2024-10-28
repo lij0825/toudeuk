@@ -36,8 +36,8 @@ public class ClickGameController {
 	 */
 	@PostMapping(value = "/click")
 	@Operation(summary = "클릭", description = "버튼을 클릭합니다.")
-	public SuccessResponse<Void> click(@RequestParam Long userId) {
-		clickGameService.clickButton(userId);
+	public SuccessResponse<Void> click(@CurrentUser Long userId) {
+		clickGameService.click(userId);
 		return SuccessResponse.empty();
 	}
 

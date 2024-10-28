@@ -5,8 +5,10 @@ import static com.toudeuk.server.domain.game.entity.RewardType.*;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.toudeuk.server.domain.game.entity.RewardType;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -45,73 +47,110 @@ public class ClickGameService {
 	private final ClickGameRewardLogRepository clickGameRewardLogRepository;
 	private final ApplicationEventPublisher applicationEventPublisher;
 
-	// 클릭 로그 저장
+	// 게임 시작
+	public void startGame(Long gameId) {
+		if (clickCacheRepository.isGameCoolTime()) {
+			throw new BaseException(COOL_TIME);
+		}
+		clickCacheRepository.setTotalClick();
+	}
+
+	// 클릭
 	@Transactional
-	public void saveClickGame() {
-		List<Long> clickLogs = clickCacheRepository.getClickLog();
+	public void click(Long userId) {
+		if (clickCacheRepository.isUserCoolTime(userId)) {
+			throw new BaseException(COOL_TIME);
+		}
 
-		Long gameId = clickCacheRepository.getGameId();
-		ClickGame clickGame = findById(gameId);
+		clickCacheRepository.addUserClick(userId);
+		clickCacheRepository.addTotalClick();
+		clickCacheRepository.addLog(userId);
+		clickCacheRepository.setUserCoolTime(userId);
+	}
 
-		// 저장 하기
-		AtomicInteger order = new AtomicInteger(1);
+
+	public Integer getUserClick(Long userId) {
+		Integer clickCount = clickCacheRepository.getUserClick(userId);
+		if (clickCount == null) {
+			throw new BaseException(GAME_ERROR);
+		}
+		return clickCount;
+	}
+
+	public Integer getTotalClick() {
+		Integer totalClick = clickCacheRepository.getTotalClick();
+		if (totalClick == null) {
+			throw new BaseException(GAME_ERROR);
+		}
+		return totalClick;
+	}
+
+	public Integer getUserOrder(Long userId) {
+		Integer order = clickCacheRepository.getUserOrder(userId);
+		if (order == null) {
+			throw new BaseException(GAME_ERROR);
+		}
+		return order;
+	}
+
+	public Long getPreviousOrderUser(int clickCount) {
+		return clickCacheRepository.getPreviousOrderUser(clickCount).stream().findFirst()
+				.orElseThrow(() -> new BaseException(REWARD_USER_NOT_FOUND));
+	}
+
+
+	@Transactional
+	public void saveLog(Long gameId) {
+		ClickGame clickGame = clickGameRepository.findById(gameId)
+				.orElseThrow(() -> new BaseException(GAME_NOT_FOUND));
+
+		List<Long> clickLogs = clickCacheRepository.getLog();
+		if (clickLogs == null) {
+			throw new BaseException(GAME_LOG_NOT_FOUND);
+		}
+
+		int order = 1;
 		for (Long userId : clickLogs) {
 			User user = userRepository.findById(userId)
-				.orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+					.orElseThrow(() -> new BaseException(USER_NOT_FOUND));
 
-			ClickGameLog clickGameLog = ClickGameLog.create(user, order.getAndIncrement(), clickGame);
+			ClickGameLog clickGameLog = ClickGameLog.create(user, order, clickGame);
 			clickGameLogRepository.save(clickGameLog);
-
-			if (order.get() == 12000) {
-				int count = clickCacheRepository.getUserClick(userId);
-				ClickGameRewardLog rewardLog = ClickGameRewardLog.create(user, clickGame, 10000, count, WINNER);
-				clickGameRewardLogRepository.save(rewardLog);
-				continue;
-			}
-			if (order.get() % 1000 == 0) {
-				int count = clickCacheRepository.getUserClick(userId);
-
-				ClickGameRewardLog rewardLog = ClickGameRewardLog.create(user, clickGame, 100, count, SECTION);
-				clickGameRewardLogRepository.save(rewardLog);
-			}
 		}
-
-		Long maxClickerId = clickCacheRepository.getMaxClicker();
-		int maxCount = clickCacheRepository.getUserClick(maxClickerId);
-		User MaxClicker = userRepository.findById(maxClickerId)
-			.orElseThrow(() -> new BaseException(USER_NOT_FOUND));
-
-		ClickGameRewardLog rewardLog = ClickGameRewardLog.create(MaxClicker, clickGame, 10000, maxCount, MAX_CLICKER);
-
-		// Redis의 클릭 정보를 삭제
-		clickCacheRepository.deleteAllClickInfo();
 	}
 
 	@Transactional
-	public void clickButton(Long userId) {
-		synchronized (userId) {
-			clickCacheRepository.addUserClick(userId);
+	public void saveReward(Long gameId) {
+		ClickGame clickGame = clickGameRepository.findById(gameId)
+				.orElseThrow(() -> new BaseException(GAME_NOT_FOUND));
 
-			User user = userRepository.findById(userId)
+		Long maxClickUserId = clickCacheRepository.getMaxClickUser().stream().findFirst()
+				.orElseThrow(() -> new BaseException(REWARD_USER_NOT_FOUND));
+		Long winnerId = clickCacheRepository.getWinner();
+
+		if (maxClickUserId == null || winnerId == null) {
+			throw new BaseException(REWARD_USER_NOT_FOUND);
+		}
+
+		User maxClickUser = userRepository.findById(maxClickUserId)
 				.orElseThrow(() -> new BaseException(USER_NOT_FOUND));
 
-			int changeCash = -1;
-			int resultCash = user.getCash() - 1;
+		User winner = userRepository.findById(winnerId)
+				.orElseThrow(() -> new BaseException(USER_NOT_FOUND));
 
-			applicationEventPublisher.publishEvent(
-				new CashLogEvent(user, changeCash, resultCash, "clickGame", CashLogType.GAME));
+		int maxClickCount = clickCacheRepository.getUserClick(maxClickUserId);
 
-			user.updateCash(resultCash);
-		}
+		int winnerClickCount = clickCacheRepository.getUserClick(winnerId);
+
+		ClickGameRewardLog maxClickReward = ClickGameRewardLog.create(maxClickUser, clickGame, 1000, maxClickCount, MAX_CLICKER);
+		ClickGameRewardLog winnerReward = ClickGameRewardLog.create(winner, clickGame, 10000, winnerClickCount, WINNER);
+
+		clickGameRewardLogRepository.save(maxClickReward);
+		clickGameRewardLogRepository.save(winnerReward);
+
+
 	}
 
-	public ClickGame findById(Long id) {
-
-		ClickGame findClickGame = clickGameRepository.findById(id)
-			.orElseThrow(() -> new EntityNotFoundException(ClickGame_NOT_FOUND.getMessage()));
-
-		return findClickGame;
-	}
 
 	public Page<HistoryData.AllInfo> getAllHistory(Pageable pageable) {
 
@@ -119,7 +158,7 @@ public class ClickGameService {
 			clickGame -> HistoryData.AllInfo.of(
 				clickGame,
 				clickGameRewardLogRepository.findWinnerAndMaxClickerByClickGameId(clickGame.getId()).orElseThrow(
-					() -> new BaseException(WINNER_NOT_FOUND)
+					() -> new BaseException(REWARD_USER_NOT_FOUND)
 				)
 			)
 		);
@@ -127,18 +166,18 @@ public class ClickGameService {
 	}
 
 	public Page<HistoryData.DetailInfo> getHistoryDetail(Long gameId, Pageable pageable) {
-		
+
 		ClickGame clickGame = clickGameRepository.findById(gameId).orElseThrow(
-			() -> new BaseException(ClickGame_NOT_FOUND)
+			() -> new BaseException(GAME_NOT_FOUND)
 		);
 
 		HistoryData.WinnerAndMaxClickerData winnerAndMaxClickerData = clickGameRewardLogRepository.findWinnerAndMaxClickerByClickGameId(
 			clickGame.getId()).orElseThrow(
-			() -> new BaseException(WINNER_NOT_FOUND)
+			() -> new BaseException(REWARD_USER_NOT_FOUND)
 		);
 
 		List<HistoryData.RewardUser> middleRewardUsers = clickGameRewardLogRepository.findMiddleByClickGameId(gameId)
-			.orElseThrow(() -> new BaseException(MIDDLE_NOT_FOUND));
+			.orElseThrow(() -> new BaseException(REWARD_USER_NOT_FOUND));
 
 		List<HistoryData.RewardUser> allUsers = clickGameLogRepository.findAllUsersByGameId(gameId).orElseThrow(
 			() -> new BaseException(USER_NOT_FOUND));
