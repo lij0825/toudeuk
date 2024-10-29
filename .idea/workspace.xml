@@ -4,9 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9b842f81-2595-4bac-a2da-938dcaaea3e6" name="Changes" comment="">
+    <list default="true" id="9b842f81-2595-4bac-a2da-938dcaaea3e6" name="Changes" comment="Changes">
+      <change afterPath="$PROJECT_DIR$/prometheus.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/toudeuk/server/core/annotation/CurrentUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/toudeuk/server/core/annotation/CurrentUser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose/docker-compose.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/server/build.gradle" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,6 +58,9 @@
     &quot;second&quot;: &quot;82b251d1-c934-4b6b-af46-7c383b33db50&quot;
   }
 }</component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
 }</component>
@@ -71,11 +76,13 @@
     "RequestMappingsPanelOrder1": "1",
     "RequestMappingsPanelWidth0": "75",
     "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "Spring Boot.ServerApplication.executor": "Run",
+    "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "back/feat/oauth2",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/SSAFY/Desktop/S11P31C202/server/src/main/java/com/toudeuk/server/core/config",
+    "last_opened_file_path": "/Users/yangjun-yeong/Desktop/S11P31C202",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -89,18 +96,18 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
       <recent name="C:\Users\SSAFY\Desktop\S11P31C202\server\src\main\java\com\toudeuk\server\core\config" />
       <recent name="C:\Users\SSAFY\Desktop\S11P31C202\server\src\main\java\com\toudeuk\server\core\listener" />
       <recent name="C:\Users\SSAFY\Desktop\S11P31C202\server\src\main\java\com\toudeuk\server\domain\user\dto" />
       <recent name="C:\Users\SSAFY\Desktop\S11P31C202\server\src\main\java\com\toudeuk\server\domain\user\repository" />
-      <recent name="C:\Users\SSAFY\Desktop\S11P31C202\server\src\main\java\com\toudeuk\server\domain\user\service" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="com.toudeuk.server.core.exception" />
       <recent name="com.toudeuk.server.domain.user.entity" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Docker.docker-compose/docker-compose.yaml: Compose 배포">
     <configuration name="ServerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
       <module name="server.main" />
@@ -109,6 +116,33 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="docker-compose/docker-compose.yaml: Compose 배포" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="sourceFilePath" value="docker-compose/docker-compose.yaml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration name="docker-compose/docker-compose.yaml.database: Compose 배포" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="services">
+            <list>
+              <option value="database" />
+            </list>
+          </option>
+          <option name="sourceFilePath" value="docker-compose/docker-compose.yaml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Docker.docker-compose/docker-compose.yaml: Compose 배포" />
+        <item itemvalue="Docker.docker-compose/docker-compose.yaml.database: Compose 배포" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -127,11 +161,23 @@
       <option name="presentableId" value="Default" />
       <updated>1729636360437</updated>
       <workItem from="1729636361642" duration="16965000" />
+      <workItem from="1730202580720" duration="1555000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="변경" />
