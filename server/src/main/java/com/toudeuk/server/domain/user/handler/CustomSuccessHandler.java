@@ -31,6 +31,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private final JwtProperties properties;
     private final CustomAuthorizationRequestRepository customAuthorizationRequestRepository;
 
+
     @Override
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         Optional<String> redirectUri = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME).map(Cookie::getValue);
