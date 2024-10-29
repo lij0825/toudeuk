@@ -76,7 +76,6 @@ public class ClickGameService {
 		// * 클릭 시 레디스 캐쉬 로직
 		clickCacheRepository.addUserClick(userId);
 		clickCacheRepository.addTotalClick();
-
 		clickCacheRepository.addLog(userId);
 		clickCacheRepository.setUserCoolTime(userId);
 
@@ -127,6 +126,8 @@ public class ClickGameService {
 		}
 
 		int order = 1;
+
+		log.info("clickLogs : {}", clickLogs);
 
 		for (Long userId : clickLogs) {
 			User user = userRepository.findById(userId)

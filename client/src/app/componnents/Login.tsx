@@ -40,6 +40,7 @@ export default function Login() {
 
   const handleKakaoLogin = () => {
     // 카카오 로그인 처리 함수 (구현 필요)
+    console.log("카카오 로그인", process.env.NEXT_PUBLIC_API_URL);
     window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/oauth2/authorization/kakao`;
   };
 
@@ -112,9 +113,7 @@ export default function Login() {
         </div>
         <div className="flex justify-center mt-4 typo-body">
           <Link href="/signup">
-            <span className="text-gray-300 cursor-pointer hover:underline ">
-              Signup
-            </span>
+            <span className="text-gray-300 cursor-pointer hover:underline ">Signup</span>
           </Link>
         </div>
       </div>
