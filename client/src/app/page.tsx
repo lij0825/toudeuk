@@ -1,30 +1,26 @@
-"use client";
-
-import Link from "next/link";
-import { Suspense } from "react";
-
+// import { Suspense } from "react";
+// import dynamic from "next/dynamic";
+import Login from "./componnents/Login";
 // HomeIcon을 동적으로 import하여 에러 격리
 // const HomeIcon = dynamic(() => import("./componnents/HomeIcon"), {
 //   loading: () => <div>Loading icon...</div>,
-//   ssr: false, // 클라이언트 사이드에서만 렌더링
+//   ssr: false,
 // });
 
 export default function Home() {
   return (
-    <div className="p-td flex flex-col justify-center w-full h-full min-h-screen">
-      <Suspense fallback={<div>Loading...</div>}>{/* <HomeIcon /> */}</Suspense>
+    <div className="p-td flex flex-col justify-center w-full h-full min-h-screen relative">
+      {/* HomeIcon을 배경에 위치 */}
+      <div className="absolute top-0 left-0 w-full h-full z-0">
+        {/* <Suspense fallback={<div>Loading...</div>}>
+          <HomeIcon />
+        </Suspense> */}
+      </div>
 
-      <h1 className="typo-title">터득</h1>
-      <h1 className="typo-title">TouDeuk</h1>
-
-      <Link href="/login">
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition"
-        >
-          Login
-        </button>
-      </Link>
+      {/* Login을 그 위에 배치 */}
+      <div className="relative z-10">
+        <Login />
+      </div>
     </div>
   );
 }
