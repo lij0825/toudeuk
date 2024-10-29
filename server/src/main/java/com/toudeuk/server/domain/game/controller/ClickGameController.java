@@ -39,6 +39,17 @@ public class ClickGameController {
 		clickGameService.click(userId);
 		return SuccessResponse.empty();
 	}
+	/**
+	 * 게임 시작
+	 * @return {@link SuccessResponse <Void>}
+	 */
+	@PostMapping(value = "/start")
+	@Operation(summary = "게임 시작", description = "게임을 시작합니다.")
+	public SuccessResponse<Void> startGame() {
+		clickGameService.startGame(1L);
+		return SuccessResponse.empty();
+	}
+
 
 	/**
 	 * 모든 게임 정보 조회
