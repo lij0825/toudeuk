@@ -4,8 +4,6 @@ import GifticonSwipe from "./components/GifticonSwipe";
 import MypageList from "./components/MypageList";
 import MyPoint from "./components/Point";
 
-// import { useQuery } from "@tanstack/react-query";
-// import { fetchUserGifticons } from "@/apis/myInfoApi";
 
 export default function Mypage() {
   return (
