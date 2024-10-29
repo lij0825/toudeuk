@@ -10,7 +10,7 @@ export default function Button() {
   const [stompClient, setStompClient] = useState<Client | null>(null);
 
   useEffect(() => {
-    const socket = new SockJS("http://localhost:8080/ws");
+    const socket = new SockJS("https://solpop.xyz/ws");
     const stompClient = Stomp.over(socket);
 
     stompClient.connect(
