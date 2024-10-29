@@ -45,13 +45,14 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         JwtToken jwtToken = jwtService.generateToken(customUserDetails.user().getId(), customUserDetails.getAuthorities());
         CookieUtils.addCookie(response, AuthConst.REFRESH_TOKEN, jwtToken.getRefreshToken(), properties.getRefreshExpire(), true);
-        response.setHeader("authorization", "Bearer " + jwtToken.getAccessToken());
+
         String redirectURI = determineTargetUrl(request, response, authentication);
-        getRedirectStrategy().sendRedirect(request, response, getRedirectUrl());
+        getRedirectStrategy().sendRedirect(request, response, getRedirectUrl(redirectURI, jwtToken));
     }
 
-    private String getRedirectUrl() {
-        return UriComponentsBuilder.fromUriString("http://localhost:3000/toudeuk")
+    private String getRedirectUrl(String targetUrl, JwtToken token) {
+        return UriComponentsBuilder.fromUriString("https://solpop.xyz/toudeuk")
+                .queryParam("accessToken", token.getAccessToken())
                 .build().toUriString();
     }
 
