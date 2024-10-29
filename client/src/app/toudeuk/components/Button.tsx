@@ -10,6 +10,7 @@ export default function Button() {
   const [stompClient, setStompClient] = useState<Client | null>(null);
 
   useEffect(() => {
+    // ! FIXME : 서버 주소 변경 필요
     const socket = new SockJS("https://solpop.xyz/ws");
     const stompClient = Stomp.over(socket);
 

@@ -40,8 +40,9 @@ public class SecurityConfig {
 			.cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
 				CorsConfiguration configuration = new CorsConfiguration();
 				configuration.setAllowedOrigins(
-					List.of("http://localhost:3000", "https://www.toudeuk.com", "https://www.solpop.xyz",
-						"https://solpop.xyz"));
+					List.of("http://localhost:3000", "https://www.toudeuk.com", "https://www.solpop.xyz"
+						// , "https://solpop.xyz"
+					));
 				configuration.setAllowedMethods(Collections.singletonList("*"));
 				configuration.setAllowCredentials(true);
 				configuration.setAllowedHeaders(Collections.singletonList("*"));
