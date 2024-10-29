@@ -23,7 +23,7 @@ public class ClickGameCacheRepository {
     private static final String GAME_KEY = "game:";
     private static final String COOLTIME_KEY = "cooltime:";
 
-    private static final int MAX_CLICK = 5; // 12000
+    private static final long MAX_CLICK = 5; // 12000
 
     @Resource(name = "redisTemplate")
     private ZSetOperations<String, Long> zSetOperations;
@@ -31,21 +31,22 @@ public class ClickGameCacheRepository {
     @Resource(name = "redisTemplate")
     private ListOperations<String, Long> listOperations;
 
-
-    @Resource(name = "redisTemplate")
-    private ValueOperations<String, Integer> valueOperationsInt;
+//
+//    @Resource(name = "redisTemplate")
+//    private ValueOperations<String, Integer> valueOperationsInt;
 
     @Autowired
-    public RedisTemplate<String, String> redisTemplate;
+    public RedisTemplate<String, Object> redisTemplate;
 
 
     public Integer getTotalClick() {
-        return valueOperationsInt.get(CLICK_KEY + "total");
+        Object o = redisTemplate.opsForValue().get(CLICK_KEY + "total");
+        return o == null ? null : (Integer) o;
     }
 
     public Integer getUserClick(Long userId) {
-        Integer clickCount = valueOperationsInt.get(CLICK_KEY + userId);
-        return clickCount == null ? 0 : clickCount;
+        Object o = redisTemplate.opsForValue().get(CLICK_KEY + userId);
+        return o == null ? null : (Integer) o;
     }
 
     public Integer getUserOrder(Long userId) {
@@ -53,8 +54,9 @@ public class ClickGameCacheRepository {
         return order == null ? null : order.intValue();
     }
 
-    public Set<Long> getPreviousOrderUser(int clickCount) {
-        return zSetOperations.rangeByScore(CLICK_KEY + "order", clickCount + 1, Integer.MAX_VALUE, 0, 1);
+    public Long getPreviousOrderUser(int clickCount) {
+        Set<Long> userIds = zSetOperations.reverseRange(CLICK_KEY + "order", 0, clickCount - 1);
+        return userIds.isEmpty() ? null : userIds.iterator().next();
     }
 
     public Set<Long> getMaxClickUser() {
@@ -62,12 +64,14 @@ public class ClickGameCacheRepository {
     }
 
     public Long getWinner() {
-        return listOperations.index(CLICK_KEY + "log", MAX_CLICK-1);
+        Object o = redisTemplate.opsForList().index(CLICK_KEY + "log", -1);
+        return o == null ? null : Long.parseLong(String.valueOf(o));
     }
 
 
     public List<Long> getLog() {
-        return listOperations.range(CLICK_KEY + "log", 0, MAX_CLICK-1);
+        Object o = redisTemplate.opsForList().range(CLICK_KEY + "log", 0, MAX_CLICK-1);
+        return o == null ? null : (List<Long>) o;
     }
 
     public boolean isGameCoolTime() {
@@ -80,12 +84,12 @@ public class ClickGameCacheRepository {
 
 
     public void setTotalClick() {
-        valueOperationsInt.set(CLICK_KEY + "total", 0);
+        redisTemplate.opsForValue().set(CLICK_KEY + "total", 0);
     }
 
 
     public void addTotalClick() {
-        Long totalClick = valueOperationsInt.increment(CLICK_KEY + "total");
+        Long totalClick = redisTemplate.opsForValue().increment(CLICK_KEY + "total");
         if (totalClick == MAX_CLICK) {
             setGameCoolTime();
         }
@@ -94,8 +98,9 @@ public class ClickGameCacheRepository {
     public void addUserClick(Long userId) {
         zSetOperations.incrementScore(CLICK_KEY + "order", userId, 1);
     }
+
     public void addLog(Long userId) {
-        listOperations.rightPush(CLICK_KEY + "log", (Long) userId);
+        redisTemplate.opsForList().rightPush(CLICK_KEY + "log", userId);
     }
 
     public void setGameCoolTime() {

@@ -17,8 +17,8 @@ public enum ErrorCode {
 	USER_NOT_FOUND(2000, HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
 	USER_CASH_LOG_NOT_FOUND(2001, HttpStatus.NOT_FOUND, "사용자의 캐시 로그를 찾을 수 없습니다."),
 	INVALID_TOKEN(2002, HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다."),
+	NOT_ENOUGH_CASH(2003, HttpStatus.BAD_REQUEST, "캐시가 부족합니다."),
 	INVALID_ACCESS_TOKEN(2008, HttpStatus.UNAUTHORIZED, "유효하지 않은 액세스 토큰입니다."),
-
 	// Item
 	ITEM_NOT_FOUND(3000, HttpStatus.NOT_FOUND, "아이템을 찾을 수 없습니다."),
 	USER_ITEM_NOT_FOUND(3001, HttpStatus.NOT_FOUND, "사용자의 아이템을 찾을 수 없습니다."),
