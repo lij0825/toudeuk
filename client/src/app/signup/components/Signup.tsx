@@ -101,7 +101,7 @@ export default function Signup() {
             />
             <input
               type="text"
-              name="nickname"
+              name="nickName"
               placeholder="닉네임을 입력하세요"
               value={formData.nickName}
               onChange={handleChange}
