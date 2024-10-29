@@ -2,6 +2,7 @@ package com.toudeuk.server.domain.game.repository;
 
 import jakarta.annotation.Resource;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -35,6 +36,7 @@ public class ClickGameCacheRepository {
     @Resource(name = "redisTemplate")
     private ValueOperations<String, Integer> valueOperationsInt;
 
+    @Autowired
     public RedisTemplate<String, String> redisTemplate;
 
 
