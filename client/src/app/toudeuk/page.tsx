@@ -1,8 +1,29 @@
+"use client"
 import Link from "next/link";
 import Button from "./components/Button";
 import CurrentRank from "./components/CurrentRank";
+import { useEffect } from "react";
+import { useAuthStore } from "@/store/userAuthStore";
 
 export default function Toudeuk() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const setAuth = useAuthStore((state) => state.setAccessToken)
+
+  useEffect(() => {
+    const accessToken = urlParams.get('accessToken');
+
+    console.log(accessToken)
+
+    if (accessToken) {
+      // Zustand 스토어에 인증 정보 설정
+      setAuth(accessToken);
+      sessionStorage.setItem('accessToken', accessToken);
+    }
+
+    console.log('accessToken', accessToken)
+
+  }, [setAuth]);
+
   return (
     <div className="flex flex-col justify-between items-center min-h-screen">
       <div className="flex flex-col items-center justify-center flex-grow">

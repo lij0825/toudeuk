@@ -8,37 +8,33 @@ import { PointInfo } from "@/types/point";
 
 const pointHistory: PointInfo[] = [
   {
-    id: 1,
-    type: "charge",
-    amount: 5000,
-    date: "2024-10-21",
-    description: "포인트 충전",
+    type: "CHARGING",
+    changeCash: 5000,
+    resultCash : 5000,
+    createdAt: "2024-10-21",
   },
   {
-    id: 2,
-    type: "use",
-    amount: -2000,
-    date: "2024-10-22",
-    description: "상품 구매",
+    type: "ITEM",
+    changeCash: -2000,
+    resultCash : 3000,
+    createdAt: "2024-10-22",
   },
   {
-    id: 3,
-    type: "charge",
-    amount: 10000,
-    date: "2024-10-23",
-    description: "포인트 충전",
+    type: "CHARGING",
+    changeCash: 10000,
+    resultCash : 13000,
+    createdAt: "2024-10-23",
   },
   {
-    id: 4,
-    type: "use",
-    amount: -3000,
-    date: "2024-10-23",
-    description: "이벤트 참가",
+    type: "ITEM",
+    changeCash: -3000,
+    resultCash: 10000,
+    createdAt: "2024-10-23",
   },
 ];
 
 export default function PointList() {
-  const [filter, setFilter] = useState<"all" | "charge" | "use">("all");
+  const [filter, setFilter] = useState<"all" | "CHARGING" | "ITEM">("all");
 
   // react-query로 데이터 fetching
   // const { data: pointHistory = [], isLoading, error } = useQuery<PointInfo[]>({
@@ -71,9 +67,9 @@ export default function PointList() {
           전체 내역
         </button>
         <button
-          onClick={() => setFilter("charge")}
+          onClick={() => setFilter("CHARGING")}
           className={`mr-2 px-4 py-2 ${
-            filter === "charge"
+            filter === "CHARGING"
               ? "bg-white text-black rounded-md"
               : "bg-transparent border rounded-md"
           }`}
@@ -81,9 +77,9 @@ export default function PointList() {
           충전 내역
         </button>
         <button
-          onClick={() => setFilter("use")}
+          onClick={() => setFilter("ITEM")}
           className={`px-4 py-2 ${
-            filter === "use"
+            filter === "ITEM"
               ? "bg-white text-black rounded-md"
               : "bg-transparent border rounded-md"
           }`}
@@ -95,20 +91,20 @@ export default function PointList() {
       {/* 포인트 내역 리스트 */}
       <ul className="space-y-4">
         {filteredHistory?.map((transaction) => (
-          <li key={transaction.id} className={`p-4 border rounded-lg `}>
+          <li key={transaction.type} className={`p-4 border rounded-lg `}>
             <div className="flex justify-between">
-              <span>{transaction.description}</span>
+              {/* <span>{transaction.description}</span> */}
               <span
                 className={`${
-                  transaction.type === "charge"
+                  transaction.type === "CHARGING"
                     ? "text-green-500"
                     : "text-red-500"
                 }`}
               >
-                {transaction.amount.toLocaleString()}P
+                {transaction.changeCash.toLocaleString()}P
               </span>
             </div>
-            <div className="text-sm text-gray-500">{transaction.date}</div>
+            <div className="text-sm text-gray-500">{transaction.createdAt}</div>
           </li>
         ))}
       </ul>
