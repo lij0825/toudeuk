@@ -51,7 +51,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     }
 
     private String getRedirectUrl(String targetUrl, JwtToken token) {
-        return UriComponentsBuilder.fromUriString("http://localhost:3000/toudeuk")
+        return UriComponentsBuilder.fromUriString("https://solpop.xyz/toudeuk")
                 .queryParam("accessToken", token.getAccessToken())
                 .build().toUriString();
     }

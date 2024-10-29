@@ -40,13 +40,14 @@ export default function Login() {
 
   const handleKakaoLogin = () => {
     // 카카오 로그인 처리 함수 (구현 필요)
-    window.location.href = "http://localhost:8080/oauth2/authorization/kakao";
+    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/oauth2/authorization/kakao`;
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div className="flex items-center justify-center">
       <div className="p-8 rounded shadow-md w-full max-w-md">
-        <h2 className="typo-title font-bold mb-6">Toudeuk</h2>
+        <h1 className="typo-title">터득</h1>
+        <h1 className="typo-title">TouDeuk</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <div>
@@ -84,12 +85,12 @@ export default function Login() {
               />
             </div>
           </div>
-          <div className="flex justify-center items-center">
+          <div className="flex justify-center items-center typo-body">
             <button
               type="submit"
               className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition"
-            //   className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition"
-            //   disabled={mutation.isLoading}
+              //   className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition"
+              //   disabled={mutation.isLoading}
             >
               {/* {mutation.isLoading ? '회원가입 중...' : '회원가입'} */}
               Login
@@ -101,7 +102,7 @@ export default function Login() {
           <span className="mx-2 text-gray-500">또는</span>
           <hr className="flex-grow border-gray-300" />
         </div>
-        <div className="flex justify-center">
+        <div className="flex justify-center typo-body">
           <button
             onClick={handleKakaoLogin}
             className="flex items-center justify-center w-full h-10 rounded-md bg-[#FEE500] border border-[#FEE500] text-black hover:bg-[#FEE500] transition duration-200"
@@ -109,9 +110,9 @@ export default function Login() {
             Login with Kakao
           </button>
         </div>
-        <div className="flex justify-center mt-4">
+        <div className="flex justify-center mt-4 typo-body">
           <Link href="/signup">
-            <span className="text-gray-300 cursor-pointer hover:underline">
+            <span className="text-gray-300 cursor-pointer hover:underline ">
               Signup
             </span>
           </Link>
