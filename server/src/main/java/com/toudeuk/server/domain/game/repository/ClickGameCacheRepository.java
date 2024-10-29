@@ -23,6 +23,7 @@ public class ClickGameCacheRepository {
     private static final String GAME_KEY = "game:";
     private static final String COOLTIME_KEY = "cooltime:";
 
+    private static final int MAX_CLICK = 5; // 12000
 
     @Resource(name = "redisTemplate")
     private ZSetOperations<String, Long> zSetOperations;
@@ -30,8 +31,6 @@ public class ClickGameCacheRepository {
     @Resource(name = "redisTemplate")
     private ListOperations<String, Long> listOperations;
 
-    @Resource(name = "redisTemplate")
-    private ValueOperations<String, Long> valueOperationsLong;
 
     @Resource(name = "redisTemplate")
     private ValueOperations<String, Integer> valueOperationsInt;
@@ -63,12 +62,12 @@ public class ClickGameCacheRepository {
     }
 
     public Long getWinner() {
-        return listOperations.index(CLICK_KEY + "log", 12000-1);
+        return listOperations.index(CLICK_KEY + "log", MAX_CLICK-1);
     }
 
 
     public List<Long> getLog() {
-        return listOperations.range(CLICK_KEY + "log", 0, 12000-1);
+        return listOperations.range(CLICK_KEY + "log", 0, MAX_CLICK-1);
     }
 
     public boolean isGameCoolTime() {
@@ -86,18 +85,21 @@ public class ClickGameCacheRepository {
 
 
     public void addTotalClick() {
-        valueOperationsInt.increment(CLICK_KEY + "total");
+        Long totalClick = valueOperationsInt.increment(CLICK_KEY + "total");
+        if (totalClick == MAX_CLICK) {
+            setGameCoolTime();
+        }
     }
 
     public void addUserClick(Long userId) {
         zSetOperations.incrementScore(CLICK_KEY + "order", userId, 1);
     }
     public void addLog(Long userId) {
-        listOperations.rightPush(CLICK_KEY + "log", userId);
+        listOperations.rightPush(CLICK_KEY + "log", (Long) userId);
     }
 
     public void setGameCoolTime() {
-        redisTemplate.opsForValue().set(COOLTIME_KEY + "game", "true", Duration.ofMinutes(5));
+        redisTemplate.opsForValue().set(COOLTIME_KEY + "game", "true", Duration.ofMinutes(1));
     }
 
     public void setUserCoolTime(Long userId) {
