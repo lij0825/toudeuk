@@ -66,7 +66,7 @@ export default function RootLayout({
       </head>
       <body className="place-items-center">
         <ClientWrapper>
-          <main className="bg-background text-foreground max-w-[412px] min-h-[883px] max-h-[883px] w-full h-full">
+          <main className="bg-background text-foreground max-w-[412px] w-full h-screen">
             {children}
           </main>
         </ClientWrapper>
