@@ -1,7 +1,8 @@
 export interface GifticonInfo {
-  id: number;
-  name: string;
-  imageUrl: string;
+  itemId: number;
+  itemName: string;
+  itemImage: string;
+  itemPrice: number;
 }
 
 export interface UserGifticonInfo {

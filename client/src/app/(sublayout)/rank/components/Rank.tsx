@@ -193,7 +193,7 @@ export default function Rank() {
                         ))}
                         </div> */}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-2xl">
+        <div className="grid grid-cols-1 gap-4 w-full max-w-2xl">
           {ranks[0].slice(3).map((user, index) => (
             <div
               key={user.rank}
