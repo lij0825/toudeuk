@@ -10,7 +10,7 @@ export default function Button() {
   const [stompClient, setStompClient] = useState<Client | null>(null);
 
   useEffect(() => {
-    const socket = new SockJS("http://localhost:8080/gs-guide-websocket");
+    const socket = new SockJS("http://localhost:8080/ws");
     const stompClient = Stomp.over(socket);
 
     stompClient.connect(

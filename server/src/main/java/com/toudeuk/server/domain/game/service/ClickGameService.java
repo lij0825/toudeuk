@@ -7,12 +7,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import com.toudeuk.server.domain.game.entity.RewardType;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -29,12 +26,9 @@ import com.toudeuk.server.domain.game.repository.ClickGameCacheRepository;
 import com.toudeuk.server.domain.game.repository.ClickGameLogRepository;
 import com.toudeuk.server.domain.game.repository.ClickGameRepository;
 import com.toudeuk.server.domain.game.repository.ClickGameRewardLogRepository;
-import com.toudeuk.server.domain.user.entity.CashLogType;
 import com.toudeuk.server.domain.user.entity.User;
-import com.toudeuk.server.domain.user.event.CashLogEvent;
 import com.toudeuk.server.domain.user.repository.UserRepository;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -86,7 +80,6 @@ public class ClickGameService {
 		clickCacheRepository.setUserCoolTime(userId);
 	}
 
-
 	public Integer getUserClick(Long userId) {
 		Integer clickCount = clickCacheRepository.getUserClick(userId);
 		if (clickCount == null) {
@@ -113,14 +106,13 @@ public class ClickGameService {
 
 	public Long getPreviousOrderUser(int clickCount) {
 		return clickCacheRepository.getPreviousOrderUser(clickCount).stream().findFirst()
-				.orElseThrow(() -> new BaseException(REWARD_USER_NOT_FOUND));
+			.orElseThrow(() -> new BaseException(REWARD_USER_NOT_FOUND));
 	}
-
 
 	@Transactional
 	public void saveLog(Long gameId) {
 		ClickGame clickGame = clickGameRepository.findById(gameId)
-				.orElseThrow(() -> new BaseException(GAME_NOT_FOUND));
+			.orElseThrow(() -> new BaseException(GAME_NOT_FOUND));
 
 		List<Long> clickLogs = clickCacheRepository.getLog();
 		if (clickLogs == null) {
@@ -130,7 +122,7 @@ public class ClickGameService {
 		int order = 1;
 		for (Long userId : clickLogs) {
 			User user = userRepository.findById(userId)
-					.orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+				.orElseThrow(() -> new BaseException(USER_NOT_FOUND));
 
 			ClickGameLog clickGameLog = ClickGameLog.create(user, order, clickGame);
 			clickGameLogRepository.save(clickGameLog);
@@ -140,10 +132,10 @@ public class ClickGameService {
 	@Transactional
 	public void saveReward(Long gameId) {
 		ClickGame clickGame = clickGameRepository.findById(gameId)
-				.orElseThrow(() -> new BaseException(GAME_NOT_FOUND));
+			.orElseThrow(() -> new BaseException(GAME_NOT_FOUND));
 
 		Long maxClickUserId = clickCacheRepository.getMaxClickUser().stream().findFirst()
-				.orElseThrow(() -> new BaseException(REWARD_USER_NOT_FOUND));
+			.orElseThrow(() -> new BaseException(REWARD_USER_NOT_FOUND));
 		Long winnerId = clickCacheRepository.getWinner();
 
 		if (maxClickUserId == null || winnerId == null) {
@@ -166,7 +158,8 @@ public class ClickGameService {
 		}
 
 		Map<Long, User> userMap = users.stream()
-			.collect(Collectors.toMap(User::getId, Function.identity())); // * Function.identity()은 입력을 그대로 반환하는 함수 User 넣으면 User 반환
+			.collect(Collectors.toMap(User::getId,
+				Function.identity())); // * Function.identity()은 입력을 그대로 반환하는 함수 User 넣으면 User 반환
 
 		User maxClickUser = Optional.ofNullable(userMap.get(maxClickUserId))
 			.orElseThrow(() -> new BaseException(USER_NOT_FOUND));
@@ -178,7 +171,8 @@ public class ClickGameService {
 
 		int winnerClickCount = clickCacheRepository.getUserClick(winnerId);
 
-		ClickGameRewardLog maxClickReward = ClickGameRewardLog.create(maxClickUser, clickGame, 1000, maxClickCount, MAX_CLICKER);
+		ClickGameRewardLog maxClickReward = ClickGameRewardLog.create(maxClickUser, clickGame, 1000, maxClickCount,
+			MAX_CLICKER);
 		ClickGameRewardLog winnerReward = ClickGameRewardLog.create(winner, clickGame, 10000, winnerClickCount, WINNER);
 
 		clickGameRewardLogRepository.save(maxClickReward);
@@ -186,7 +180,6 @@ public class ClickGameService {
 
 		// * 게임 참가자들의 모든 캐쉬 로그 찍어줘야함
 	}
-
 
 	public Page<HistoryData.AllInfo> getAllHistory(Pageable pageable) {
 
