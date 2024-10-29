@@ -1,6 +1,6 @@
 import { LoginInfo, SignupInfo } from "@/types/auth";
 import { BaseResponse } from "@/types/Base";
-import { UserInfo } from "@/types/mypageInfo";
+// import { UserInfo } from "@/types/mypageInfo";
 import instance from "./clientApi";
 
 export const signupUser = async (data: SignupInfo): Promise<void> => {
@@ -23,19 +23,6 @@ export const loginUser = async (
   return response.data;
 };
 
-export const fetchProfile = async (userId: string): Promise<UserInfo> => {
-  const response = await instance.get<BaseResponse<UserInfo>>(
-    `/user/info?userId=${userId}`
-  );
-  console.log(response.data);
-  if (!response.data.success) {
-    throw new Error(response.data.message);
-  }
-  if (!response.data.data) {
-    throw new Error(response.data.message);
-  }
-  return response.data.data;
-};
 
 // export const signupUser = async (data: UserInfo) => {
 //   const response = await fetch("/api/signup", {
