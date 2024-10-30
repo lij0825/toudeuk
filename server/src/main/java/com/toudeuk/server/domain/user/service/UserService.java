@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.toudeuk.server.core.constants.AuthConst;
+import com.toudeuk.server.domain.user.entity.JwtToken;
+import com.toudeuk.server.domain.user.repository.AuthCacheRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +31,9 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 public class UserService {
 
+
+	private final JWTService jwtService;
+	private final AuthCacheRepository authCacheRepository;
 	private final UserRepository userRepository;
 	private final UserItemRepository userItemRepository;
 	private final CashLogRepository cashLogRepository;
@@ -73,6 +79,26 @@ public class UserService {
 
 		userItem.useItem();
 
+	}
+
+
+	public JwtToken refresh(String refreshToken) {
+		try {
+			String username = jwtService.getUsername(refreshToken);
+
+			if (authCacheRepository.existsByUsername(getSignOutKey(username))) {
+				throw new BaseException(ErrorCode.EXPIRED_REFRESH_TOKEN);
+			}
+
+			return jwtService.refreshToken(refreshToken);
+		} catch (Exception e) {
+			throw new BaseException(ErrorCode.EXPIRED_TOKEN, e);
+		}
+	}
+
+
+	private String getSignOutKey(String username) {
+		return AuthConst.SIGN_OUT_CACHE_KEY + username;
 	}
 
 	//    public Long save(AddUserRequest dto) {
