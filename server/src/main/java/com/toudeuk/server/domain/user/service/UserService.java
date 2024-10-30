@@ -7,10 +7,18 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.toudeuk.server.core.constants.AuthConst;
+import com.toudeuk.server.domain.user.entity.CashLogType;
 import com.toudeuk.server.domain.user.entity.JwtToken;
+import com.toudeuk.server.domain.user.event.CashLogEvent;
+import com.toudeuk.server.domain.user.event.UserPaymentEvent;
 import com.toudeuk.server.domain.user.repository.AuthCacheRepository;
+
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import com.toudeuk.server.core.exception.BaseException;
 import com.toudeuk.server.core.exception.ErrorCode;
@@ -37,6 +45,7 @@ public class UserService {
 	private final UserRepository userRepository;
 	private final UserItemRepository userItemRepository;
 	private final CashLogRepository cashLogRepository;
+	private final ApplicationEventPublisher eventPublisher;
 
 	public List<User> findAll() {
 		return userRepository.findAll();
@@ -94,6 +103,21 @@ public class UserService {
 		} catch (Exception e) {
 			throw new BaseException(ErrorCode.EXPIRED_TOKEN, e);
 		}
+	}
+
+	@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public void userPaymentEvent(UserPaymentEvent event) {
+
+		User user = event.getUser();
+		Integer cash = event.getCash();
+
+		User findUser = userRepository.findById(user.getId())
+			.orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+
+		findUser.updateCash(findUser.getCash() + cash);
+		eventPublisher.publishEvent(new CashLogEvent(user, cash, findUser.getCash(), "충전", CashLogType.CHARGING));
+		userRepository.save(findUser);
 	}
 
 
