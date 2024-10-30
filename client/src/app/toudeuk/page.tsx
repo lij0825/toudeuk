@@ -2,22 +2,22 @@
 import Link from "next/link";
 import Button from "./components/Button";
 import CurrentRank from "./components/CurrentRank";
-import { useEffect } from "react";
+// import { useEffect } from "react";
 // import { useAuthStore } from "@/store/userAuthStore";
 
 export default function Toudeuk() {
   // const urlParams = new URLSearchParams(window.location.search);
   // const setAuth = useAuthStore((state) => state.setAccessToken)
 
-  useEffect(() => {
-      // URLSearchParams를 사용하여 쿼리 파라미터에서 authorization 값 가져오기
-      const params = new URLSearchParams(window.location.search);
-      const token = params.get('Authorization'); // 'authorization' 파라미터 가져오기
-      console.log(token)
-      if (token) {
-        sessionStorage.setItem('accessToken', token);
-      }
-  }, []);
+  // useEffect(() => {
+  //     // URLSearchParams를 사용하여 쿼리 파라미터에서 authorization 값 가져오기
+  //     const params = new URLSearchParams(window.location.search);
+  //     const token = params.get('Authorization'); // 'authorization' 파라미터 가져오기
+  //     console.log(token)
+  //     if (token) {
+  //       sessionStorage.setItem('accessToken', token);
+  //     }
+  // }, []);
 
   // useEffect(() => {
   //   const accessToken = urlParams.get('accessToken');
