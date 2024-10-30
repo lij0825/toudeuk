@@ -2,27 +2,37 @@
 import Link from "next/link";
 import Button from "./components/Button";
 import CurrentRank from "./components/CurrentRank";
-import { useEffect } from "react";
-import { useAuthStore } from "@/store/userAuthStore";
+// import { useEffect } from "react";
+// import { useAuthStore } from "@/store/userAuthStore";
 
 export default function Toudeuk() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const setAuth = useAuthStore((state) => state.setAccessToken)
+  // const urlParams = new URLSearchParams(window.location.search);
+  // const setAuth = useAuthStore((state) => state.setAccessToken)
 
-  useEffect(() => {
-    const accessToken = urlParams.get('accessToken');
+  // useEffect(() => {
+  //     // URLSearchParams를 사용하여 쿼리 파라미터에서 authorization 값 가져오기
+  //     const params = new URLSearchParams(window.location.search);
+  //     const token = params.get('Authorization'); // 'authorization' 파라미터 가져오기
+  //     console.log(token)
+  //     if (token) {
+  //       sessionStorage.setItem('accessToken', token);
+  //     }
+  // }, []);
 
-    console.log(accessToken)
+  // useEffect(() => {
+  //   const accessToken = urlParams.get('accessToken');
 
-    if (accessToken) {
-      // Zustand 스토어에 인증 정보 설정
-      setAuth(accessToken);
-      sessionStorage.setItem('accessToken', accessToken);
-    }
+  //   console.log(accessToken)
 
-    console.log('accessToken', accessToken)
+  //   if (accessToken) {
+  //     // Zustand 스토어에 인증 정보 설정
+  //     setAuth(accessToken);
+  //     sessionStorage.setItem('accessToken', accessToken);
+  //   }
 
-  }, [setAuth]);
+  //   console.log('accessToken', accessToken)
+
+  // }, [setAuth]);
 
   return (
     <div className="flex flex-col justify-between items-center min-h-screen">
