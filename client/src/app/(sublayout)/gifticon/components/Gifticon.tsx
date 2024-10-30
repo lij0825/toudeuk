@@ -57,7 +57,7 @@ export default function Gifticon() {
   // if (error) return <div>데이터를 불러오는 중 오류가 발생했습니다.</div>;
 
   return (
-    <div className="p-4">
+    <>
       <h2 className="typo-title font-bold mb-6">
         Gifticon <br /> Shop
       </h2>
@@ -87,6 +87,6 @@ export default function Gifticon() {
           ))}
         </div>
       </div>
-    </div>
+    </>
   );
 }

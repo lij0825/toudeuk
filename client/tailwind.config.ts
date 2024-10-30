@@ -81,14 +81,16 @@ const config: Config = {
           background: "linear-gradient(180deg, #4b4f58 0%, #16171B 100%)",
         },
         ".card": {
-          padding: "2rem",
-          borderRadius: "1.5rem",
+          display: "flex",
+          alignItems: "center",
+          borderRadius: "1rem",
           boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-          maxWidth: "28rem",
+          padding: "1rem",
           width: "100%",
           background: "linear-gradient(180deg, #252A30 17.2%, #16171B 117.2%)",
           borderColor: "#4A505B",
           borderWidth: "2px",
+          height: "82px",
         },
       };
 

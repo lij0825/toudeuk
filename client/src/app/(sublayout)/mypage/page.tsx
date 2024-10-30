@@ -1,9 +1,7 @@
-import Link from "next/link";
-import { HiInformationCircle } from "react-icons/hi";
+import SettingButton from "./components/Setting";
 import GifticonSwipe from "./components/GifticonSwipe";
 import MypageList from "./components/MypageList";
 import MyPoint from "./components/Point";
-
 
 export default function Mypage() {
   return (
@@ -14,12 +12,15 @@ export default function Mypage() {
             <p>My</p>
             <p>Point</p>
           </div>
-          <Link href={"/point"}>
-            <HiInformationCircle className="text-gray-500 w-6 h-6 mb-2 ml-2" />
-          </Link>
           {/*CSR*/}
         </div>
-        <MyPoint />
+        <div className="flex flex-col items-end h-full gap-8">
+          <SettingButton />
+          <MyPoint />
+        </div>
+      </section>
+      <section>
+        <div className="typo-body"></div>
       </section>
       <section>
         {/*CSR*/}

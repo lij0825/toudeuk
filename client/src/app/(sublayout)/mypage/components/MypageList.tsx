@@ -9,8 +9,9 @@ export default function MypageList() {
 
   const navItems: NavItemInfo[] = [
     { label: "Rewards", href: "/prize" },
-    { label: "Gifticon Shop", href: "/gifticon" },
+    { label: "My Prize", href: "/prize" },
     { label: "Ranking", href: "/rank" },
+    { label: "History", href: "/gifticon" },
   ];
 
   // 클릭 시 지정된 페이지로 이동하는 함수
