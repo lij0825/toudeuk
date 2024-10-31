@@ -30,9 +30,9 @@ export default function PrizeList() {
   // }
 
   return (
-    <div className="h-full">
+    <>
       <Suspense fallback={<Loading />}>
-        <section className="overflow-y-auto h-full">
+        <section className="overflow-y-auto h-full scrollbar-hidden">
           {/* 고정된 높이 및 스크롤 처리 */}
           {prizeInfoDummyData
             .slice()
@@ -44,6 +44,6 @@ export default function PrizeList() {
             ))}
         </section>
       </Suspense>
-    </div>
+    </>
   );
 }

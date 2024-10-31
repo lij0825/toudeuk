@@ -1,10 +1,13 @@
 "use client";
 
+//소켓 연결 또는 SSE 방식으로 touch값 fetch
 import { Client, Frame, IFrame, IMessage, Stomp } from "@stomp/stompjs";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import SockJS from "sockjs-client";
 
-export default function Button() {
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+export default function GameButton() {
   const [count, setCount] = useState<number>(0);
   const [stompClient, setStompClient] = useState<Client | null>(null);
 
@@ -13,7 +16,7 @@ export default function Button() {
     const accessToken = sessionStorage.getItem('accessToken');
 
     // ! FIXME : 서버 주소 변경 필요
-    const socket = new SockJS(`${process.env.NEXT_PUBLIC_API_URL}/ws`);
+    const socket = new SockJS(`${BASE_URL}/ws`);
     const stompClient = Stomp.over(socket);
 
     // 연결 헤더에 accessToken을 추가합니다.
@@ -51,7 +54,7 @@ export default function Button() {
     };
   }, []);
 
-  const handleClick = () => {
+  const handleClick = async() => {
     if (stompClient) {
       const accessToken = sessionStorage.getItem('accessToken');
       stompClient.publish({
@@ -62,6 +65,23 @@ export default function Button() {
         }
       });
     }
+    const accessToken = sessionStorage.getItem('accessToken')
+    try {
+      const response = await axios.post(`${BASE_URL}/api/v1/game/click`, {} ,{
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${accessToken}`
+        }
+      }); // 필요한 데이터 추가 가능
+      console.log("POST response:", response.data);
+    } catch (error) {
+      console.error("Error sending POST request:", error);
+    }
+    // try {
+    //   await fetchClick(); // fetchClick 사용
+    // } catch (error) {
+    //   console.error("클릭 요청 실패", error);
+    // }
   };
 
   return (

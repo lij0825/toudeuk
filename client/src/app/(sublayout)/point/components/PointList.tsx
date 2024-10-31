@@ -1,49 +1,22 @@
 "use client";
 
 import React, { useState } from "react";
-// import { useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { PointInfo } from "@/types/point";
-// import { fetchPoints } from '@/apis/pointApi';
+import { fetchPoints } from '@/apis/pointApi';
 // import { useAuthStore } from '@/store/userAuthStore';
-
-const pointHistory: PointInfo[] = [
-  {
-    type: "CHARGING",
-    changeCash: 5000,
-    resultCash : 5000,
-    createdAt: "2024-10-21",
-  },
-  {
-    type: "ITEM",
-    changeCash: -2000,
-    resultCash : 3000,
-    createdAt: "2024-10-22",
-  },
-  {
-    type: "CHARGING",
-    changeCash: 10000,
-    resultCash : 13000,
-    createdAt: "2024-10-23",
-  },
-  {
-    type: "ITEM",
-    changeCash: -3000,
-    resultCash: 10000,
-    createdAt: "2024-10-23",
-  },
-];
 
 export default function PointList() {
   const [filter, setFilter] = useState<"all" | "CHARGING" | "ITEM">("all");
 
   // react-query로 데이터 fetching
-  // const { data: pointHistory = [], isLoading, error } = useQuery<PointInfo[]>({
-  //   queryKey: ['points'],
-  //   queryFn: fetchPoints,
-  // });
+  const { data: pointHistory = [], isLoading, error } = useQuery<PointInfo[]>({
+    queryKey: ['points'],
+    queryFn: fetchPoints,
+  });
 
-  // if (isLoading) return <div>로딩 중...</div>;
-  // if (error) return <div>데이터를 불러오는 중 오류가 발생했습니다.</div>;
+  if (isLoading) return <div>로딩 중...</div>;
+  if (error) return <div>데이터를 불러오는 중 오류가 발생했습니다.</div>;
 
   // 필터링된 포인트 내역
   const filteredHistory = pointHistory?.filter((transaction) =>
