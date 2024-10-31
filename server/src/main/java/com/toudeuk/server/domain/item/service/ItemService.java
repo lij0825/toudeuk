@@ -56,6 +56,10 @@ public class ItemService {
 		int changeCash = -item.getPrice();
 		int resultCash = user.getCash() - item.getPrice();
 
+		if (resultCash < 0) {
+			throw new BaseException(NOT_ENOUGH_CASH);
+		}
+
 		applicationEventPublisher.publishEvent(
 			new CashLogEvent(user, changeCash, resultCash, item.getName(), CashLogType.ITEM));
 
