@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.toudeuk.server.core.annotation.CurrentUser;
@@ -47,7 +48,7 @@ public class ItemController {
 	 */
 	@GetMapping(value = "/detail")
 	@Operation(summary = "아이템 상세 조회", description = "아이템 상세 정보를 조회합니다.")
-	public SuccessResponse<ItemData.ItemInfo> getItemDetail(@CurrentUser Long userId, Long itemId) {
+	public SuccessResponse<ItemData.ItemInfo> getItemDetail(@CurrentUser Long userId, @RequestParam Long itemId) {
 		return SuccessResponse.of(itemService.getItemDetail(itemId));
 	}
 
