@@ -38,8 +38,7 @@ public class ClickGameController {
 	@Operation(summary = "클릭", description = "버튼을 클릭합니다.")
 	public SuccessResponse<GameData.DisplayInfo> click(@CurrentUser Long userId) {
 		clickGameService.click(userId);
-		GameData.DisplayInfo result = clickGameService.getGameDisplayData(userId);
-		return SuccessResponse.of(result);
+		return SuccessResponse.of(clickGameService.getGameDisplayData(userId));
 	}
 
 	/**
