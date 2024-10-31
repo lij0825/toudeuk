@@ -14,10 +14,9 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 public class GameClickController {
+
 	private static Integer cnt = 0;
-
 	private final JWTService jwtService;
-
 
 	@MessageMapping("/game")
 	@SendTo("/topic/game")

@@ -1,4 +1,4 @@
-package com.toudeuk.server.core.configuration;
+package com.toudeuk.server.core.configuration.database;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
