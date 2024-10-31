@@ -12,7 +12,6 @@ import com.toudeuk.server.core.annotation.CurrentUser;
 import com.toudeuk.server.core.response.SuccessResponse;
 import com.toudeuk.server.domain.item.dto.ItemData;
 import com.toudeuk.server.domain.item.service.ItemService;
-import com.toudeuk.server.domain.user.entity.User;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,6 +37,18 @@ public class ItemController {
 	@Operation(summary = "전체 아이템 정보 조회", description = "전체 아이템 정보를 조회합니다.")
 	public SuccessResponse<List<ItemData.ItemInfo>> getItemList(@CurrentUser Long userId) {
 		return SuccessResponse.of(itemService.getItemList());
+	}
+
+	/**
+	 * 아이템 상세 조회
+	 *
+	 * @param userId, itemId
+	 * @return {@link SuccessResponse<ItemData.ItemInfo>}
+	 */
+	@GetMapping(value = "/detail")
+	@Operation(summary = "아이템 상세 조회", description = "아이템 상세 정보를 조회합니다.")
+	public SuccessResponse<ItemData.ItemInfo> getItemDetail(@CurrentUser Long userId, Long itemId) {
+		return SuccessResponse.of(itemService.getItemDetail(itemId));
 	}
 
 	/**
