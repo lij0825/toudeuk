@@ -45,7 +45,7 @@ public class ItemService {
 	}
 
 	@Transactional
-	public void buyItem(Long userId, Long itemId) {
+ 	public void buyItem(Long userId, Long itemId) {
 		User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
 		Item item = itemRepository.findById(itemId).orElseThrow(() -> new BaseException(ITEM_NOT_FOUND));
 
