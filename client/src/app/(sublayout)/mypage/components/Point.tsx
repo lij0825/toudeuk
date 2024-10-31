@@ -1,12 +1,11 @@
 "use client";
 
-import Link from "next/link";
-import { fetchUserInfo } from "@/apis/myInfoApi";
+import { fetchUserInfo } from "@/apis/userInfoApi";
 import { UserInfo } from "@/types/mypageInfo";
-import { useQuery } from "@tanstack/react-query";
-import { toast } from "react-toastify";
-import { QueryClient, dehydrate } from "@tanstack/react-query";
+import { QueryClient, dehydrate, useQuery } from "@tanstack/react-query";
 import { GetServerSideProps } from "next";
+import Link from "next/link";
+import { toast } from "react-toastify";
 
 //Serverside 렌더링시 미리 데이터를 가져오기/gesServerSideProps 는 컴포넌트 외부에서 선언해야함
 //함수형으로 선언할 필요가 없음

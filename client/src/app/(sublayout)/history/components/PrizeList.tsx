@@ -4,7 +4,6 @@ import { Suspense } from "react";
 // import { fetchPrizes } from "@/apis/prizeApi";
 // import { useQuery } from "@tanstack/react-query";
 import { PrizeInfo } from "@/types/prize";
-import Loading from "../loading";
 
 const prizeInfoDummyData: PrizeInfo[] = Array.from(
   { length: 100 },
@@ -31,7 +30,7 @@ export default function PrizeList() {
 
   return (
     <>
-      <Suspense fallback={<Loading />}>
+      <Suspense fallback={""}>
         <section className="overflow-y-auto h-full scrollbar-hidden">
           {/* 고정된 높이 및 스크롤 처리 */}
           {prizeInfoDummyData

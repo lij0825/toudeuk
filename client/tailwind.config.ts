@@ -95,6 +95,10 @@ const config: Config = {
           borderWidth: "2px",
           height: "82px",
         },
+        ".card-selected": {
+          background: "linear-gradient(180deg, #1b2229 17.2%, #0f1012 117.2%)",
+          borderColor: "#ffffff",
+        },
       };
 
       addComponents(newComponents);

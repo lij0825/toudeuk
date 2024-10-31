@@ -1,11 +1,12 @@
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
+import { fetchUserGifticons } from "@/apis/gifticonApi";
 import { UserGifticonInfo } from "@/types/gifticon";
+import { QueryClient, dehydrate, useQuery } from "@tanstack/react-query";
 import { GetServerSideProps } from "next";
-import { fetchUserGifticons } from "@/apis/myInfoApi";
-import { QueryClient, dehydrate } from "@tanstack/react-query";
+import Image from "next/image";
+import Link from "next/link";
+import { toast } from "react-toastify";
 // import { QueryClient, dehydrate, useQuery } from "@tanstack/react-query";
 // import { toast } from "react-toastify";
 
@@ -42,49 +43,28 @@ export const getServerSideProps: GetServerSideProps = async () => {
   };
 };
 
-const usergifticons: UserGifticonInfo[] = [
-  {
-    userItemId: 1,
-    itemName: "Coffee Coupon",
-    itemImage:
-      "https://bizimg.giftishow.com/Resource/goods/G00000750717/G00000750717.jpg",
-    itemPrice: 4500,
-    createdAt: "2024-10-10",
-    used: true,
-  },
-  {
-    userItemId: 2,
-    itemName: "Pizza Gift Card",
-    itemImage:
-      "https://bizimg.giftishow.com/Resource/goods/G00000750717/G00000750717.jpg",
-    itemPrice: 25000,
-    createdAt: "2024-09-28",
-    used: false,
-  },
-];
-
 export default function GifticonSwipe() {
-  // const { data: usergifticons = [], isError } = useQuery<UserGifticonInfo[]>({
-  //   queryKey: ["user"], // 캐싱 키 설정
-  //   queryFn: fetchUserGifticons,
-  // });
+  const { data: usergifticons = [], isError } = useQuery<UserGifticonInfo[]>({
+    queryKey: ["usergifticons"], // 캐싱 키 설정
+    queryFn: fetchUserGifticons,
+  });
 
-  // // 에러가 발생했을 때 Toastify로 에러 메시지 표시
-  // if (isError) {
-  //   toast.error("유저정보를 다시 불러와주세요");
-  // }
+  // 에러가 발생했을 때 Toastify로 에러 메시지 표시
+  if (isError) {
+    toast.error("유저정보를 다시 불러와주세요");
+  }
 
   return (
     <>
-      <div className="flex overflow-x-scroll [&::-webkit-scrollbar]:hidden">
+      <div className="flex overflow-x-scroll overflow-y-hidden [&::-webkit-scrollbar]:hidden">
         <Link
           href={`/mygifticon`}
           className="typo-sub-title p-4 border  rounded-lg backdrop-blur-lg bg-white/30 shadow-lg mr-3 "
           style={CommonLinkStyle}
         >
-          <div className="w-[210px]">
+          <div className="w-[180px]">
             <div>My</div>
-            <div>{`Gifticon >>`}</div>
+            <div>{`Gifticon`}</div>
           </div>
         </Link>
         {usergifticons.map((gifticon: UserGifticonInfo) => (
@@ -94,14 +74,17 @@ export default function GifticonSwipe() {
             className="p-4 border rounded-lg backdrop-blur-lg bg-white/30 shadow-lg flex-shrink-0 mr-3"
             style={CommonLinkStyle}
           >
-            <div className="w-[160px]">
+            <div className="w-[100px] h-[100px] overflow-hidden">
               <Image
                 src={gifticon.itemImage}
                 alt={gifticon.itemName}
                 width={100}
                 height={100}
-                className="rounded-md"
+                className="rounded-sm object-cover w-full h-full"
               />
+            </div>
+            <div className="text-center mt-2 text-sm font-medium w-[100px] overflow-hidden text-ellipsis whitespace-nowrap">
+              {gifticon.itemName}
             </div>
           </Link>
         ))}
