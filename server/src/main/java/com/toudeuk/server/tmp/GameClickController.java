@@ -26,30 +26,16 @@ public class GameClickController {
 		;
 		Long userId = resolveToken(bearerToken);
 		System.out.println(userId + " 유저 아이디 ");
-		// 특정 사용자에게만 메시지 전송
+
+		// 모든 구독자에게 메시지 전송
+		messagingTemplate.convertAndSend("/topic/game", cnt);
+
+		// 특정 사용자에게만 개별 메시지 전송
 		messagingTemplate.convertAndSendToUser(
 			userId.toString(),
 			"/queue/game",
-			cnt
+			"개인 메시지: " + cnt
 		);
-
-		messagingTemplate.convertAndSend("/topic/game", cnt);
-	}
-
-
-	@MessageMapping("/game")
-	public void sendUser(@Header("Authorization") String bearerToken) throws Exception {
-		;
-		Long userId = resolveToken(bearerToken);
-		
-		messagingTemplate.convertAndSendToUser(
-			userId.toString(),
-			"/queue/game/" + userId,
-			cnt
-		);
-
-		//userId번 에게 전송
-		messagingTemplate.convertAndSend("/topic/game", cnt);
 	}
 
 
