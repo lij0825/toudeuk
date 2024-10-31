@@ -12,7 +12,6 @@ import com.toudeuk.server.core.annotation.CurrentUser;
 import com.toudeuk.server.core.response.SuccessResponse;
 import com.toudeuk.server.domain.game.dto.HistoryData;
 import com.toudeuk.server.domain.game.service.ClickGameService;
-import com.toudeuk.server.domain.user.entity.User;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -39,6 +38,7 @@ public class ClickGameController {
 		clickGameService.click(userId);
 		return SuccessResponse.empty();
 	}
+
 	/**
 	 * 게임 시작
 	 * @return {@link SuccessResponse <Void>}
@@ -50,7 +50,6 @@ public class ClickGameController {
 		clickGameService.startGame();
 		return SuccessResponse.empty();
 	}
-
 
 	/**
 	 * 모든 게임 정보 조회
@@ -77,4 +76,18 @@ public class ClickGameController {
 		Pageable pageable) {
 		return SuccessResponse.of(clickGameService.getHistoryDetail(gameId, pageable));
 	}
+
+	/**
+	 * 유저 게임 정보 조회
+	 *
+	 * @param userId
+	 * @return {@link SuccessResponse <Void>}
+	 */
+	// @GetMapping("/history/{userId}")
+	// @Operation(summary = "유저 게임 정보 조회", description = "유저 게임 정보를 조회합니다.")
+	// public SuccessResponse<Page<HistoryData.UserGameInfo>> getUserGameInfo(@CurrentUser Long userId,
+	// 	Pageable pageable) {
+	// 	return SuccessResponse.of(clickGameService.getUserGameInfo(userId, pageable));
+	// }
+
 }
