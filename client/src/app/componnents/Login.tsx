@@ -1,20 +1,20 @@
 "use client";
 
-import { LoginInfo } from "@/types/auth";
-import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { loginUser } from "@/apis/userApi";
-import Link from "next/link";
+// import { LoginInfo } from "@/types/auth";
+// import { useState } from "react";
+// import { useMutation } from "@tanstack/react-query";
+// import { loginUser } from "@/apis/userApi";
+// import Link from "next/link";
 
 export default function Login() {
-  const [formData, setFormData] = useState<LoginInfo>({
-    email: "",
-    password: "",
-  });
+  // const [formData, setFormData] = useState<LoginInfo>({
+  //   email: "",
+  //   password: "",
+  // });
 
-  const mutation = useMutation({
-    mutationFn: loginUser,
-  });
+  // const mutation = useMutation({
+  //   mutationFn: loginUser,
+  // });
 
   //   const mutation = useMutation(loginUser, {
   //     onSuccess: (data) => {
@@ -28,15 +28,15 @@ export default function Login() {
   //     },
   //   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = e.target;
+  //   setFormData((prev) => ({ ...prev, [name]: value }));
+  // };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    mutation.mutate(formData);
-  };
+  // const handleSubmit = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   mutation.mutate(formData);
+  // };
 
 
     const handleKakaoLogin = () => {
@@ -50,15 +50,9 @@ export default function Login() {
       <div className="p-8 rounded shadow-md w-full max-w-md">
         <h1 className="typo-title">터득</h1>
         <h1 className="typo-title">TouDeuk</h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        {/* <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <div>
-              {/* <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
-                ID
-              </label> */}
               <input
                 type="email"
                 name="email"
@@ -70,12 +64,6 @@ export default function Login() {
               />
             </div>
             <div>
-              {/* <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
-                password
-              </label> */}
               <input
                 type="password"
                 name="password"
@@ -91,10 +79,7 @@ export default function Login() {
             <button
               type="submit"
               className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition"
-              //   className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition"
-              //   disabled={mutation.isLoading}
             >
-              {/* {mutation.isLoading ? '회원가입 중...' : '회원가입'} */}
               Login
             </button>
           </div>
@@ -103,7 +88,7 @@ export default function Login() {
           <hr className="flex-grow border-gray-300" />
           <span className="mx-2 text-gray-500">또는</span>
           <hr className="flex-grow border-gray-300" />
-        </div>
+        </div> */}
         <div className="flex justify-center typo-body">
           <button
             onClick={handleKakaoLogin}
@@ -111,11 +96,6 @@ export default function Login() {
           >
             Login with Kakao
           </button>
-        </div>
-        <div className="flex justify-center mt-4 typo-body">
-          <Link href="/signup">
-            <span className="text-gray-300 cursor-pointer hover:underline ">Signup</span>
-          </Link>
         </div>
       </div>
     </div>

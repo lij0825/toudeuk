@@ -2,26 +2,30 @@ package com.toudeuk.server.domain.user.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.toudeuk.server.core.annotation.CurrentUser;
 import com.toudeuk.server.core.constants.AuthConst;
 import com.toudeuk.server.core.exception.BaseException;
 import com.toudeuk.server.core.exception.ErrorCode;
 import com.toudeuk.server.core.properties.JwtProperties;
-import com.toudeuk.server.core.util.CookieUtils;
-import com.toudeuk.server.domain.user.entity.JwtToken;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-
-import com.toudeuk.server.core.annotation.CurrentUser;
 import com.toudeuk.server.core.response.SuccessResponse;
+import com.toudeuk.server.core.util.CookieUtils;
 import com.toudeuk.server.domain.user.dto.UserData;
-import com.toudeuk.server.domain.user.entity.User;
+import com.toudeuk.server.domain.user.entity.JwtToken;
 import com.toudeuk.server.domain.user.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -84,18 +88,19 @@ public class UserController {
 		return SuccessResponse.empty();
 	}
 
-
 	@PostMapping(value = "/refresh")
+	@Operation(summary = "토큰 재발급", description = "토큰을 재발급합니다.")
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public SuccessResponse<JwtToken> refresh(HttpServletRequest request, HttpServletResponse response) {
 		Cookie cookie = CookieUtils.getCookie(request, AuthConst.REFRESH_TOKEN).orElseThrow(
-				() -> new BaseException(ErrorCode.UNAUTHORIZED)
+			() -> new BaseException(ErrorCode.UNAUTHORIZED)
 		);
 
 		JwtToken refreshedToken = userService.refresh(cookie.getValue());
 
 		CookieUtils.removeCookie(response, AuthConst.REFRESH_TOKEN);
-		CookieUtils.addCookie(response, AuthConst.REFRESH_TOKEN, refreshedToken.getRefreshToken(), properties.getRefreshExpire(), true);
+		CookieUtils.addCookie(response, AuthConst.REFRESH_TOKEN, refreshedToken.getRefreshToken(),
+			properties.getRefreshExpire(), true);
 		return SuccessResponse.of(refreshedToken);
 	}
 }

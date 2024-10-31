@@ -15,7 +15,7 @@ export const fetchGifticonDetail = async (
   id: string
 ): Promise<GifticonInfo> => {
   const response = await instance.get<BaseResponse<GifticonInfo>>(
-    `/gifticon/${id}`
+    `/item/detail?itemId=${id}`
   );
   if (!response.data.success) {
     throw new Error(response.data.message);

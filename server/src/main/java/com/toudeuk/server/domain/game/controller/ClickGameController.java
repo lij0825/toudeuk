@@ -1,5 +1,6 @@
 package com.toudeuk.server.domain.game.controller;
 
+import com.toudeuk.server.domain.game.dto.GameData;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +13,6 @@ import com.toudeuk.server.core.annotation.CurrentUser;
 import com.toudeuk.server.core.response.SuccessResponse;
 import com.toudeuk.server.domain.game.dto.HistoryData;
 import com.toudeuk.server.domain.game.service.ClickGameService;
-import com.toudeuk.server.domain.user.entity.User;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,14 +31,15 @@ public class ClickGameController {
 	/**
 	 * 사용자 클릭
 	 * @param userId
-	 * @return {@link SuccessResponse <Void>}
+	 * @return {@link SuccessResponse<GameData.DisplayInfo>}
 	 */
 	@PostMapping(value = "/click")
 	@Operation(summary = "클릭", description = "버튼을 클릭합니다.")
-	public SuccessResponse<Void> click(@CurrentUser Long userId) {
+	public SuccessResponse<GameData.DisplayInfo> click(@CurrentUser Long userId) {
 		clickGameService.click(userId);
-		return SuccessResponse.empty();
+		return SuccessResponse.of(clickGameService.getGameDisplayData(userId));
 	}
+
 	/**
 	 * 게임 시작
 	 * @return {@link SuccessResponse <Void>}
@@ -50,7 +51,6 @@ public class ClickGameController {
 		clickGameService.startGame();
 		return SuccessResponse.empty();
 	}
-
 
 	/**
 	 * 모든 게임 정보 조회
@@ -77,4 +77,18 @@ public class ClickGameController {
 		Pageable pageable) {
 		return SuccessResponse.of(clickGameService.getHistoryDetail(gameId, pageable));
 	}
+
+	/**
+	 * 유저 게임 정보 조회
+	 *
+	 * @param userId
+	 * @return {@link SuccessResponse <Void>}
+	 */
+	// @GetMapping("/history/{userId}")
+	// @Operation(summary = "유저 게임 정보 조회", description = "유저 게임 정보를 조회합니다.")
+	// public SuccessResponse<Page<HistoryData.UserGameInfo>> getUserGameInfo(@CurrentUser Long userId,
+	// 	Pageable pageable) {
+	// 	return SuccessResponse.of(clickGameService.getUserGameInfo(userId, pageable));
+	// }
+
 }

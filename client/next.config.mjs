@@ -25,7 +25,17 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "cdn-icons-png.flaticon.com",
+        hostname: "image.yes24.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "contents.kyobobook.co.kr",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "mblogthumb-phinf.pstatic.net",
         pathname: "/**",
       },
     ],

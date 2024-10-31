@@ -10,10 +10,12 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.toudeuk.server.domain.game.dto.GameData;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -97,6 +99,23 @@ public class ClickGameService {
 		}
 	}
 
+	public GameData.DisplayInfo getGameDisplayData(Long userId) {
+		Long myRank = clickCacheRepository.getUserRank(userId);
+		Integer myClickCount = clickCacheRepository.getUserClickCount(userId);
+		Long prevUserId = clickCacheRepository.getPrevUserId(myClickCount);
+		Integer prevClickCount = prevUserId == null ? null : clickCacheRepository.getUserClickCount(prevUserId);
+		Integer totalClick = clickCacheRepository.getTotalClick();
+		log.info("myRank : {}, myClickCount : {}, prevUserId : {}, prevClickCount : {}, totalClick : {}",
+				myRank, myClickCount, prevUserId, prevClickCount, totalClick);
+		return GameData.DisplayInfo.of(
+				myRank.intValue() +1,
+				myClickCount,
+				prevUserId,
+				prevClickCount,
+				totalClick
+		);
+	}
+
 
 	@Transactional
 	public void saveLog(Long gameId) {
@@ -167,6 +186,8 @@ public class ClickGameService {
 
 		// * 게임 참가자들의 모든 캐쉬 로그 찍어줘야함
 	}
+
+
 
 	public Page<HistoryData.AllInfo> getAllHistory(Pageable pageable) {
 
