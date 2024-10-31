@@ -6,7 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="9b842f81-2595-4bac-a2da-938dcaaea3e6" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/toudeuk/server/core/annotation/CurrentUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/toudeuk/server/core/annotation/CurrentUser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/.env.development" beforeDir="false" afterPath="$PROJECT_DIR$/client/.env.development" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/app/componnents/Login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/app/componnents/Login.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/toudeuk/server/domain/user/handler/CustomSuccessHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/toudeuk/server/domain/user/handler/CustomSuccessHandler.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,7 +25,12 @@
       <state>
         <projects_view>
           <tree_state>
-            <expand />
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="server" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
             <select />
           </tree_state>
         </projects_view>
@@ -66,6 +73,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Docker.docker-compose/docker-compose.yaml: Compose Deployment.executor": "Run",
     "Gradle.Build server.executor": "Run",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
@@ -73,7 +81,7 @@
     "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "Spring Boot.ServerApplication.executor": "Run",
-    "git-widget-placeholder": "back/feat/oauth2",
+    "git-widget-placeholder": "develop",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/SSAFY/Desktop/S11P31C202/server/src/main/java/com/toudeuk/server/core/config",
     "node.js.detected.package.eslint": "true",
@@ -100,7 +108,7 @@
       <recent name="com.toudeuk.server.domain.user.entity" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Docker.docker-compose/docker-compose.yaml: Compose Deployment">
     <configuration name="ServerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
       <module name="server.main" />
@@ -109,6 +117,23 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
+      <deployment type="docker-compose.yml" />
+      <method v="2" />
+    </configuration>
+    <configuration name="docker-compose/docker-compose.yaml: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="sourceFilePath" value="docker-compose/docker-compose.yaml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Docker.docker-compose/docker-compose.yaml: Compose Deployment" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
