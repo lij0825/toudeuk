@@ -6,7 +6,7 @@ import MyPoint from "./components/Point";
 export default function Mypage() {
   return (
     <>
-      <section className="typo-title mb-5 flex items-end justify-between">
+      <section className="typo-title mb-2 flex items-end justify-between">
         <div className="flex items-end">
           <div>
             <p>My</p>
@@ -22,7 +22,7 @@ export default function Mypage() {
       <section>
         <div className="typo-body"></div>
       </section>
-      <section>
+      <section className="">
         {/*CSR*/}
         <GifticonSwipe />
       </section>

@@ -2,18 +2,16 @@ import PrizeList from "./components/PrizeList";
 
 const Page = () => {
   return (
-    <div className="">
-      <section className="flex items-end">
-        <div className="typo-title mb-5 z-10 ">
+    <div className="flex flex-col h-full scrollbar-hidden">
+      <section className="flex-shrink-0 flex items-end">
+        <div className="typo-title mb-2 z-10">
+          <p>My</p>
           <p>Prize</p>
-          <p>History</p>
         </div>
       </section>
-      <div className="h-screen overflow-hidden">
-        <div className="h-full overflow-auto scrollbar-hide">
-          <PrizeList />
-        </div>
-      </div>
+      <section className="flex-grow overflow-hidden ">
+        <PrizeList />
+      </section>
     </div>
   );
 };

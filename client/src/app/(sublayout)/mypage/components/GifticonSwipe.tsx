@@ -18,7 +18,7 @@ export const CommonLinkStyle = {
   border: "solid 0.5px",
   borderRadius: "lg",
   alignItems: "center",
-  height: "180px",
+  height: "150px",
 };
 
 //[!FIX] suspense를 활용한 클라이언트 사이드 렌더링이 더 적합한가?

@@ -8,10 +8,10 @@ export default function MypageList() {
   const router = useRouter();
 
   const navItems: NavItemInfo[] = [
-    { label: "Rewards", href: "/prize" },
     { label: "My Prize", href: "/prize" },
+    { label: "History", href: "/history" },
     { label: "Ranking", href: "/rank" },
-    { label: "History", href: "/gifticon" },
+    { label: "Gifticon Shop", href: "/gifticon" },
   ];
 
   // 클릭 시 지정된 페이지로 이동하는 함수
@@ -25,7 +25,7 @@ export default function MypageList() {
         <div
           key={index}
           onClick={() => handleClick(item.href)}
-          className="card typo-sub-title my-5"
+          className="card typo-sub-title my-3"
         >
           {item.label}
         </div>

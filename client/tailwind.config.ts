@@ -26,8 +26,8 @@ const config: Config = {
       },
       spacing: {
         td: "30px",
-        "td-x": "40px",
-        "td-y": "50px",
+        "td-x": "30px",
+        "td-y": "40px",
       },
       fontFamily: {
         gilroy: ["Gilroy"], // 폰트 패밀리명을 정확히 'gilroy'로 수정
@@ -66,6 +66,9 @@ const config: Config = {
         ".border-card": {
           borderColor: "#4A505B",
           borderWidth: "2px",
+        },
+        ".scrollbar-hidden::-webkit-scrollbar": {
+          display: "none",
         },
       });
       //컴포넌트 css 등록

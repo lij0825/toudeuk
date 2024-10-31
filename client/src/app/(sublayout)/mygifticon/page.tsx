@@ -6,7 +6,7 @@ import { mygifticons } from "./constant/dummyUserGifticon";
 export default function MyGifticon() {
   return (
     <>
-      <section className="typo-title mb-5 flex items-end justify-between">
+      <section className="typo-title mb-2 flex items-end justify-between">
         <div className="flex items-end">
           <div>
             <p>My</p>
