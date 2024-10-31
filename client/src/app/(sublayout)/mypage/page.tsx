@@ -6,24 +6,18 @@ import MyPoint from "./components/Point";
 export default function Mypage() {
   return (
     <>
-      <section className="typo-title mb-2 flex items-end justify-between">
-        <div className="flex items-end">
-          <div>
-            <p>My</p>
-            <p>Point</p>
-          </div>
-          {/*CSR*/}
-        </div>
-        <div className="flex flex-col items-end h-full gap-8">
+      <section className="typo-title mb-2 justify-between">
+        <div className="flex justify-between">
+          <p>My</p>
           <SettingButton />
+        </div>
+        <div className="flex justify-between">
+          <p>Point</p>
           <MyPoint />
         </div>
+        <div className="h-full gap-8"></div>
       </section>
       <section>
-        <div className="typo-body"></div>
-      </section>
-      <section className="">
-        {/*CSR*/}
         <GifticonSwipe />
       </section>
       <section>

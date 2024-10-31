@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import SettingIcon from "../../../../../public/icons/setting.svg";
-
 interface ModalProps {
   isOpen: boolean;
   handleModalOpen: () => void;
@@ -13,25 +12,28 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
 
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 "
       onClick={handleModalOpen} // 모달 바깥 클릭 시 닫기
     >
       <div
-        className="bg-white bg-opacity-10 backdrop-blur-lg border border-white border-opacity-30 shadow-lg rounded-xl p-6 w-80% h-[200px]"
+        className="max-w-1/2 z-50 bg-white bg-opacity-10 backdrop-blur-lg border border-white border-opacity-30 shadow-lg rounded-xl p-6"
         onClick={(e) => e.stopPropagation()} // 모달 내부 클릭 시 닫히지 않도록 이벤트 중지
       >
-        <section className="typo-title mb-5 flex items-end justify-between">
+        <section className="typo-body mb-2 flex items-end justify-between">
           <div className="flex items-end">
-            <div>
-              <p className="text-white">My</p>
-              <p className="text-white">Profile</p>
-            </div>
+            <p>My</p>
+            <p>Profile</p>
           </div>
         </section>
-        <div className="text-center text-white">
+        <section className="typo-body">
           <p>Settings and Options</p>
-          {/* 추가적인 설정 항목들이 이곳에 들어갈 수 있음 */}
-        </div>
+          <form action="" className="g-10">
+            <input type="text" className="w-full" />
+            <input type="text" className="w-full" />
+            <input type="text" className="w-full" />
+            <input type="text" className="w-full" />
+          </form>
+        </section>
       </div>
     </div>
   );
@@ -45,7 +47,7 @@ export default function SettingButton() {
   };
 
   return (
-    <>
+    <div className="relative z-9999 w-full">
       <SettingIcon
         style={{ width: "32px", height: "32px" }}
         isOpen={isOpen}
@@ -54,6 +56,6 @@ export default function SettingButton() {
       {isOpen && (
         <SettingModal isOpen={isOpen} handleModalOpen={handleModalOpen} />
       )}
-    </>
+    </div>
   );
 }
