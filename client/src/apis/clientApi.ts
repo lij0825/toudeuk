@@ -23,8 +23,9 @@ const instance = axios.create({
 // 요청 전에 accessToken을 헤더에 포함시키는 인터셉터
 instance.interceptors.request.use(
   (config) => {
-    const accessToken = sessionStorage.getItem('accessToken')
-    // const accessToken = useAuthStore.getState().accessToken;
+    // const accessToken = sessionStorage.getItem('accessToken')
+    const accessToken = `eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwiYXV0aG9yaXRpZXMiOiJVU0VSIiwiaWF0IjoxNzMwMzQ4NTEzLCJleHAiOjE3MzEzNDg1MTN9.DBfXrJANg-1HaTDGaBrZ3-xSuyvN5eK7uwz9uDCXtKM`;
+
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
@@ -58,7 +59,7 @@ instance.interceptors.response.use(
         const { accessToken: newAccessToken } = refreshResponse.data;
 
         // 새로운 accessToken 저장
-        sessionStorage.setItem('accessToken', newAccessToken);
+        sessionStorage.setItem("accessToken", newAccessToken);
 
         // 실패했던 요청을 다시 보내기
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
