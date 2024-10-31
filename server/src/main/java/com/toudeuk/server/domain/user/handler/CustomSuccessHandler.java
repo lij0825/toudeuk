@@ -49,6 +49,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
 		JwtToken jwtToken = jwtService.generateToken(customUserDetails.user().getId(),
 			customUserDetails.getAuthorities());
+			
 		CookieUtils.addCookie(response, AuthConst.REFRESH_TOKEN, jwtToken.getRefreshToken(),
 			properties.getRefreshExpire(), true);
 
