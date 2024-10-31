@@ -46,6 +46,7 @@ public class ClickGameController {
 	@PostMapping(value = "/start")
 	@Operation(summary = "게임 시작", description = "게임을 시작합니다.")
 	public SuccessResponse<Void> startGame() {
+		log.info("게임 시작 컨트롤러");
 		clickGameService.startGame();
 		return SuccessResponse.empty();
 	}

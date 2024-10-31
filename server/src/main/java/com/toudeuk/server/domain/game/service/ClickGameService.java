@@ -48,11 +48,12 @@ public class ClickGameService {
 	private final ApplicationEventPublisher applicationEventPublisher;
 
 	// 게임 시작
+	@Transactional
 	public void startGame() {
 		if (clickCacheRepository.isGameCoolTime()) {
 			throw new BaseException(COOL_TIME);
 		}
-		Long lastRound = clickGameRepository.findLastRound().orElse(1L);
+		Long lastRound = clickGameRepository.findLastRound().orElse(0L);
 		ClickGame newGame = ClickGame.create(lastRound + 1);
 		clickGameRepository.save(newGame);
 		clickCacheRepository.setTotalClick();
@@ -62,6 +63,12 @@ public class ClickGameService {
 	// 클릭
 	@Transactional
 	public void click(Long userId) {
+		if (clickCacheRepository.isGameCoolTime()) {
+			throw new BaseException(COOL_TIME);
+		}
+		if (clickCacheRepository.getGameId() == null) {
+			throw new BaseException(GAME_NOT_FOUND);
+		}
 
 		// * 클릭시 캐쉬 로직 추가 / 유저 조회 -> 캐쉬 업데이트 이렇게 2번 DB에 접근
 		// * resultCash = 유저의 현재 캐쉬 - 클릭당 캐쉬
@@ -72,6 +79,9 @@ public class ClickGameService {
 
 		int resultCash = user.getCash() + CLICK_CASH;
 
+		if (resultCash < 0) {
+			throw new BaseException(NOT_ENOUGH_CASH);
+		}
 		user.updateCash(resultCash);
 
 		// * 클릭 시 레디스 캐쉬 로직
@@ -133,10 +143,6 @@ public class ClickGameService {
 
 		List<User> users = userRepository.findAllById(List.of(maxClickUserId, winnerId));
 
-		// * 예외 처리할거 더 있으면 추가하고
-		if (users.size() < 2) {
-			throw new BaseException(USER_NOT_FOUND);
-		}
 
 		Map<Long, User> userMap = users.stream()
 			.collect(Collectors.toMap(User::getId,
