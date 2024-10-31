@@ -6,8 +6,8 @@
 //     description: string;
 // }
 export interface PointInfo {
-    type: 'REWARD' | 'ITEM' | 'GAME' | 'CHARGING',
-    changeCash: number,
-    resultCash: number,
-    createdAt: string
+  type: "REWARD" | "ITEM" | "GAME" | "CHARGING";
+  changeCash: number;
+  resultCash: number;
+  createdAt: string;
 }

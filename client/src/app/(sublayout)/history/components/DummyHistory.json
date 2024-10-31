@@ -1,0 +1,298 @@
+{
+  "success": true,
+  "status": 0,
+  "message": "Request successful",
+  "data": {
+    "totalPages": 5,
+    "totalElements": 100,
+    "size": 20,
+    "content": [
+      {
+        "clickGameId": 1,
+        "round": 1,
+        "createdAt": "2024-10-31T10:00:00Z",
+        "winner": {
+          "nickname": "Winner1",
+          "profileImg": "https://example.com/images/winner1.png",
+          "clickCount": 40,
+          "rewardType": "MAX_CLICKER"
+        },
+        "maxClicker": {
+          "nickname": "MaxClicker1",
+          "profileImg": "https://example.com/images/maxclicker1.png",
+          "clickCount": 50,
+          "rewardType": "MAX_CLICKER"
+        },
+        "commonFields": {
+          "createdAt": "2024-10-31T05:06:56.733Z",
+          "id": 1,
+          "round": 1
+        }
+      },
+      {
+        "clickGameId": 2,
+        "round": 2,
+        "createdAt": "2024-10-31T10:05:00Z",
+        "winner": {
+          "nickname": "Winner2",
+          "profileImg": "https://example.com/images/winner2.png",
+          "clickCount": 43,
+          "rewardType": "MAX_CLICKER"
+        },
+        "maxClicker": {
+          "nickname": "MaxClicker2",
+          "profileImg": "https://example.com/images/maxclicker2.png",
+          "clickCount": 55,
+          "rewardType": "MAX_CLICKER"
+        },
+        "commonFields": {
+          "createdAt": "2024-10-31T05:06:56.733Z",
+          "id": 2,
+          "round": 2
+        }
+      },
+      {
+        "clickGameId": 3,
+        "round": 3,
+        "createdAt": "2024-10-31T10:10:00Z",
+        "winner": {
+          "nickname": "Winner3",
+          "profileImg": "https://example.com/images/winner3.png",
+          "clickCount": 39,
+          "rewardType": "MAX_CLICKER"
+        },
+        "maxClicker": {
+          "nickname": "MaxClicker3",
+          "profileImg": "https://example.com/images/maxclicker3.png",
+          "clickCount": 47,
+          "rewardType": "MAX_CLICKER"
+        },
+        "commonFields": {
+          "createdAt": "2024-10-31T05:06:56.733Z",
+          "id": 3,
+          "round": 3
+        }
+      },
+      {
+        "clickGameId": 4,
+        "round": 4,
+        "createdAt": "2024-10-31T10:15:00Z",
+        "winner": {
+          "nickname": "Winner4",
+          "profileImg": "https://example.com/images/winner4.png",
+          "clickCount": 45,
+          "rewardType": "MAX_CLICKER"
+        },
+        "maxClicker": {
+          "nickname": "MaxClicker4",
+          "profileImg": "https://example.com/images/maxclicker4.png",
+          "clickCount": 52,
+          "rewardType": "MAX_CLICKER"
+        },
+        "commonFields": {
+          "createdAt": "2024-10-31T05:06:56.733Z",
+          "id": 4,
+          "round": 4
+        }
+      },
+      {
+        "clickGameId": 5,
+        "round": 5,
+        "createdAt": "2024-10-31T10:20:00Z",
+        "winner": {
+          "nickname": "Winner5",
+          "profileImg": "https://example.com/images/winner5.png",
+          "clickCount": 44,
+          "rewardType": "MAX_CLICKER"
+        },
+        "maxClicker": {
+          "nickname": "MaxClicker5",
+          "profileImg": "https://example.com/images/maxclicker5.png",
+          "clickCount": 51,
+          "rewardType": "MAX_CLICKER"
+        },
+        "commonFields": {
+          "createdAt": "2024-10-31T05:06:56.733Z",
+          "id": 5,
+          "round": 5
+        }
+      },
+      {
+        "clickGameId": 6,
+        "round": 6,
+        "createdAt": "2024-10-31T10:25:00Z",
+        "winner": {
+          "nickname": "Winner6",
+          "profileImg": "https://example.com/images/winner6.png",
+          "clickCount": 42,
+          "rewardType": "MAX_CLICKER"
+        },
+        "maxClicker": {
+          "nickname": "MaxClicker6",
+          "profileImg": "https://example.com/images/maxclicker6.png",
+          "clickCount": 49,
+          "rewardType": "MAX_CLICKER"
+        },
+        "commonFields": {
+          "createdAt": "2024-10-31T05:06:56.733Z",
+          "id": 6,
+          "round": 6
+        }
+      },
+      {
+        "clickGameId": 7,
+        "round": 7,
+        "createdAt": "2024-10-31T10:30:00Z",
+        "winner": {
+          "nickname": "Winner7",
+          "profileImg": "https://example.com/images/winner7.png",
+          "clickCount": 41,
+          "rewardType": "MAX_CLICKER"
+        },
+        "maxClicker": {
+          "nickname": "MaxClicker7",
+          "profileImg": "https://example.com/images/maxclicker7.png",
+          "clickCount": 53,
+          "rewardType": "MAX_CLICKER"
+        },
+        "commonFields": {
+          "createdAt": "2024-10-31T05:06:56.733Z",
+          "id": 7,
+          "round": 7
+        }
+      },
+      {
+        "clickGameId": 8,
+        "round": 8,
+        "createdAt": "2024-10-31T10:35:00Z",
+        "winner": {
+          "nickname": "Winner8",
+          "profileImg": "https://example.com/images/winner8.png",
+          "clickCount": 46,
+          "rewardType": "MAX_CLICKER"
+        },
+        "maxClicker": {
+          "nickname": "MaxClicker8",
+          "profileImg": "https://example.com/images/maxclicker8.png",
+          "clickCount": 54,
+          "rewardType": "MAX_CLICKER"
+        },
+        "commonFields": {
+          "createdAt": "2024-10-31T05:06:56.733Z",
+          "id": 8,
+          "round": 8
+        }
+      },
+      {
+        "clickGameId": 9,
+        "round": 9,
+        "createdAt": "2024-10-31T10:40:00Z",
+        "winner": {
+          "nickname": "Winner9",
+          "profileImg": "https://example.com/images/winner9.png",
+          "clickCount": 48,
+          "rewardType": "MAX_CLICKER"
+        },
+        "maxClicker": {
+          "nickname": "MaxClicker9",
+          "profileImg": "https://example.com/images/maxclicker9.png",
+          "clickCount": 52,
+          "rewardType": "MAX_CLICKER"
+        },
+        "commonFields": {
+          "createdAt": "2024-10-31T05:06:56.733Z",
+          "id": 9,
+          "round": 9
+        }
+      },
+      {
+        "clickGameId": 10,
+        "round": 10,
+        "createdAt": "2024-10-31T10:45:00Z",
+        "winner": {
+          "nickname": "Winner10",
+          "profileImg": "https://example.com/images/winner10.png",
+          "clickCount": 42,
+          "rewardType": "MAX_CLICKER"
+        },
+        "maxClicker": {
+          "nickname": "MaxClicker10",
+          "profileImg": "https://example.com/images/maxclicker10.png",
+          "clickCount": 56,
+          "rewardType": "MAX_CLICKER"
+        },
+        "commonFields": {
+          "createdAt": "2024-10-31T05:06:56.733Z",
+          "id": 10,
+          "round": 10
+        }
+      },
+      {
+        "clickGameId": 11,
+        "round": 11,
+        "createdAt": "2024-10-31T10:45:00Z",
+        "winner": {
+          "nickname": "Winner10",
+          "profileImg": "https://example.com/images/winner10.png",
+          "clickCount": 42,
+          "rewardType": "MAX_CLICKER"
+        },
+        "maxClicker": {
+          "nickname": "MaxClicker10",
+          "profileImg": "https://example.com/images/maxclicker10.png",
+          "clickCount": 56,
+          "rewardType": "MAX_CLICKER"
+        },
+        "commonFields": {
+          "createdAt": "2024-10-31T05:06:56.733Z",
+          "id": 11,
+          "round": 11
+        }
+      },
+      {
+        "clickGameId": 11,
+        "round": 11,
+        "createdAt": "2024-10-31T10:45:00Z",
+        "winner": {
+          "nickname": "Winner10",
+          "profileImg": "https://example.com/images/winner10.png",
+          "clickCount": 42,
+          "rewardType": "MAX_CLICKER"
+        },
+        "maxClicker": {
+          "nickname": "MaxClicker10",
+          "profileImg": "https://example.com/images/maxclicker10.png",
+          "clickCount": 56,
+          "rewardType": "MAX_CLICKER"
+        },
+        "commonFields": {
+          "createdAt": "2024-10-31T05:06:56.733Z",
+          "id": 10,
+          "round": 10
+        }
+      }
+    ],
+    "number": 0,
+    "sort": {
+      "empty": false,
+      "sorted": true,
+      "unsorted": false
+    },
+    "numberOfElements": 20,
+    "pageable": {
+      "offset": 0,
+      "sort": {
+        "empty": false,
+        "sorted": true,
+        "unsorted": false
+      },
+      "paged": true,
+      "pageNumber": 0,
+      "pageSize": 20,
+      "unpaged": false
+    },
+    "first": true,
+    "last": false,
+    "empty": false
+  }
+}

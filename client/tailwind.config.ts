@@ -26,8 +26,8 @@ const config: Config = {
       },
       spacing: {
         td: "30px",
-        "td-x": "40px",
-        "td-y": "50px",
+        "td-x": "30px",
+        "td-y": "40px",
       },
       fontFamily: {
         gilroy: ["Gilroy"], // 폰트 패밀리명을 정확히 'gilroy'로 수정
@@ -67,6 +67,9 @@ const config: Config = {
           borderColor: "#4A505B",
           borderWidth: "2px",
         },
+        ".scrollbar-hidden::-webkit-scrollbar": {
+          display: "none",
+        },
       });
       //컴포넌트 css 등록
       const newComponents = {
@@ -81,14 +84,16 @@ const config: Config = {
           background: "linear-gradient(180deg, #4b4f58 0%, #16171B 100%)",
         },
         ".card": {
-          padding: "2rem",
-          borderRadius: "1.5rem",
+          display: "flex",
+          alignItems: "center",
+          borderRadius: "1rem",
           boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-          maxWidth: "28rem",
+          padding: "1rem",
           width: "100%",
           background: "linear-gradient(180deg, #252A30 17.2%, #16171B 117.2%)",
           borderColor: "#4A505B",
           borderWidth: "2px",
+          height: "82px",
         },
       };
 

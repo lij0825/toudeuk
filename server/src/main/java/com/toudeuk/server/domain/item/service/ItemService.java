@@ -39,6 +39,11 @@ public class ItemService {
 			.toList();
 	}
 
+	public ItemData.ItemInfo getItemDetail(Long itemId) {
+		Item item = itemRepository.findById(itemId).orElseThrow(() -> new BaseException(ITEM_NOT_FOUND));
+		return ItemData.ItemInfo.of(item);
+	}
+
 	@Transactional
  	public void buyItem(Long userId, Long itemId) {
 		User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));

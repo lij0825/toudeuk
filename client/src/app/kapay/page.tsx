@@ -80,7 +80,7 @@ const KapayPage = () => {
   return (
     <div className="mx-[25px]">
       <div
-        onClick={() => router.push("/mypage")}
+        onClick={() => router.push("/point")}
         className="cursor-pointer py-4 flex flex-row items-center"
       >
         <IoChevronBack size={25} color="#545454" />

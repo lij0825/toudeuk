@@ -1,6 +1,6 @@
 "use client"
 import Link from "next/link";
-import Button from "./components/Button";
+import GameButton from "./components/GameButton";
 import CurrentRank from "./components/CurrentRank";
 // import { useEffect } from "react";
 // import { useAuthStore } from "@/store/userAuthStore";
@@ -38,7 +38,7 @@ export default function Toudeuk() {
     <div className="flex flex-col justify-between items-center min-h-screen">
       <div className="flex flex-col items-center justify-center flex-grow">
         <CurrentRank rank={7} />
-        <Button />
+        <GameButton />
       </div>
       <div className="flex justify-center w-full mt-auto mb-4">
         <Link href={"/mypage"}>
