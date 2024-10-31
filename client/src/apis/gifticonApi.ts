@@ -1,16 +1,19 @@
-import { GifticonInfo } from "@/types/gifticon";
-import instance from "./clientApi";
 import { BaseResponse } from "@/types/Base";
+import { GifticonInfo, UserGifticonInfo } from "@/types/gifticon";
+import instance from "./clientApi";
 
 export const fetchGifticonList = async (): Promise<GifticonInfo[]> => {
-  const response = await instance.get<BaseResponse<GifticonInfo[]>>("/item/list");
+  const response = await instance.get<BaseResponse<GifticonInfo[]>>(
+    "/item/list"
+  );
   if (!response.data.success) {
-    throw new Error(response.data.message)
+    throw new Error(response.data.message);
   }
 
   return response.data.data || [];
 };
 
+//구매페이지
 export const fetchGifticonDetail = async (
   id: string
 ): Promise<GifticonInfo> => {
@@ -27,29 +30,46 @@ export const fetchGifticonDetail = async (
 
   // reponse.data.data가 항상 GifticonInfo 형식임을 보장할 때 사용
   // return response.data.data as GifticonInfo;
-}
+};
 
 export const buyGifticon = async (id: string): Promise<GifticonInfo> => {
-  const response = await instance.post<BaseResponse<GifticonInfo>>(`/item/buy`,
-    { "itemId": id }
-  )
+  const response = await instance.post<BaseResponse<GifticonInfo>>(
+    `/item/buy`,
+    { itemId: id }
+  );
   if (!response.data.success) {
-    throw new Error(response.data.message)
+    throw new Error(response.data.message);
   }
   if (!response.data.data) {
-    throw new Error(response.data.message)
+    throw new Error(response.data.message);
   }
   return response.data.data;
-}
+};
 
 export const useGifticon = async (id: string): Promise<void> => {
-  const response = await instance.post<BaseResponse<void>>(`/items/use`,
-    { "userItemId": id }
-  )
+  const response = await instance.post<BaseResponse<void>>(`/items/use`, {
+    userItemId: id,
+  });
   if (!response.data.success) {
-    throw new Error(response.data.message)
+    throw new Error(response.data.message);
   }
   if (!response.data.data) {
-    throw new Error(response.data.message)
+    throw new Error(response.data.message);
   }
-}
+};
+
+//유저 기프티콘 정보 가져오기
+export const fetchUserGifticons = async (): Promise<UserGifticonInfo[]> => {
+  const response = await instance.get<BaseResponse<UserGifticonInfo[]>>(
+    "/user/items"
+  );
+  if (!response.data.success) {
+    throw new Error("기프티콘 정보를 불러오는데 실패했습니다.");
+  }
+  if (!response.data.data) {
+    throw new Error("기프티콘 데이터가 존재하지 않습니다.");
+  }
+  return response.data.data;
+};
+
+//유저 기프티콘 상세 정보 가져오기

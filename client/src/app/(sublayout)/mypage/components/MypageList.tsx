@@ -8,7 +8,6 @@ export default function MypageList() {
   const router = useRouter();
 
   const navItems: NavItemInfo[] = [
-    { label: "My Prize", href: "/prize" },
     { label: "History", href: "/history" },
     { label: "Ranking", href: "/rank" },
     { label: "Gifticon Shop", href: "/gifticon" },
