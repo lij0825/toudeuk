@@ -58,7 +58,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
 	private String getRedirectUrl(String targetUrl, JwtToken token) {
 
-		return UriComponentsBuilder.fromUriString(targetUrl + "/login/auth")
+		return UriComponentsBuilder.fromUriString(targetUrl + "/auth/callback")
 			.queryParam("accessToken", token.getAccessToken())
 			.build().toUriString();
 	}
