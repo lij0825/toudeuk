@@ -56,7 +56,7 @@ export default withSentryConfig(withPWA(nextConfig), {
   // https://github.com/getsentry/sentry-webpack-plugin#options
   org: "none-0b7", // Sentry 조직 설정
   project: "javascript-nextjs", // Sentry 프로젝트 이름
-  silent: !process.env.CI, // CI 환경에서는 로그를 출력하지 않음
+  silent: false,
   widenClientFileUpload: true, // 파일 업로드 시 더 많은 정보를 포함
   reactComponentAnnotation: { enabled: true }, // React 컴포넌트에서 에러 추적 활성화
   hideSourceMaps: true, // 소스맵을 숨김
