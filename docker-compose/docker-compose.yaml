@@ -34,6 +34,26 @@ services:
       - "6379:6379"
     entrypoint: redis-server --requirepass toudeuk --maxmemory 1gb
 
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    user: "$UID:$GID"
+    ports:
+      - "3001:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+
 
   # !! Ngrinder 설정 나중에 서버를 분리하면 스프링 서버가 돌아가지 않는 다른 서버에서 해야함 !!
   controller:
@@ -41,7 +61,7 @@ services:
     image: ngrinder/controller:3.5.5
     restart: always
     ports:
-      - "9090:80"
+      - "9091:80"
       - "16001:16001"
       - "12000-12009:12000-12009"
     volumes:
@@ -55,3 +75,5 @@ services:
 
 volumes:
   toudeuk-db:
+  grafana-data:
+  prometheus-data:

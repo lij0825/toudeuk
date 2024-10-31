@@ -1,6 +1,7 @@
 package com.toudeuk.server.domain.game.repository;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -22,6 +23,7 @@ public class ClickGameCacheRepository {
 	private static final String GAME_KEY = "game:";
 
 	private static final long MAX_CLICK = 5; // 12000
+	private static final long COOLTIME_MINUTES = 1; // 5분
 
 	@Resource(name = "longRedisTemplate")
 	private ZSetOperations<String, Long> zSetOperations;
@@ -48,7 +50,8 @@ public class ClickGameCacheRepository {
 	}
 
 	public void setGameCoolTime() {
-		redisTemplate.opsForValue().set(GAME_KEY + "cooltime", "true", Duration.ofMinutes(5));
+		LocalDateTime expiredAt = LocalDateTime.now().plusMinutes(COOLTIME_MINUTES);
+		redisTemplate.opsForValue().set(GAME_KEY + "cooltime", expiredAt.toString(), Duration.ofMinutes(COOLTIME_MINUTES));
 	}
 
 	public boolean isGameCoolTime() {
@@ -118,5 +121,6 @@ public class ClickGameCacheRepository {
 		redisTemplate.delete(CLICK_KEY + "total");
 		redisTemplate.delete(CLICK_KEY + "count");
 		redisTemplate.delete(CLICK_KEY + "log");
+		redisTemplate.delete(GAME_KEY + "id");
 	}
 }
