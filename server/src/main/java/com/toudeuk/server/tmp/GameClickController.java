@@ -30,12 +30,8 @@ public class GameClickController {
 		// 모든 구독자에게 메시지 전송
 		messagingTemplate.convertAndSend("/topic/game", cnt);
 
-		// 특정 사용자에게만 개별 메시지 전송
-		messagingTemplate.convertAndSendToUser(
-			userId.toString(),
-			"/queue/game",
-			"개인 메시지: " + cnt
-		);
+		// 특정 구독자에게 메시지 전송
+		messagingTemplate.convertAndSend("/topic/game/" +userId, cnt);
 	}
 
 
