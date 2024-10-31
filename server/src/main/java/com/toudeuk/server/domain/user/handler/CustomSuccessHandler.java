@@ -58,7 +58,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
 	private String getRedirectUrl(String targetUrl, JwtToken token) {
 		// FIXME
-		// return UriComponentsBuilder.fromUriString("http://localhost:3000/login/auth")
+//		 return UriComponentsBuilder.fromUriString("http://localhost:3000/login/auth")
 		return UriComponentsBuilder.fromUriString("https://solpop.xyz/login/auth")
 			.queryParam("accessToken", token.getAccessToken())
 			.build().toUriString();
