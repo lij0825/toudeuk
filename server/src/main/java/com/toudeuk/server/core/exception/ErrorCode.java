@@ -18,9 +18,10 @@ public enum ErrorCode {
 	USER_CASH_LOG_NOT_FOUND(2001, HttpStatus.NOT_FOUND, "사용자의 캐시 로그를 찾을 수 없습니다."),
 	INVALID_TOKEN(2002, HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다."),
 	UNAUTHORIZED(2003, HttpStatus.UNAUTHORIZED, "인증되지 않은 사용자입니다."),
+	NOT_ENOUGH_CASH(2004, HttpStatus.BAD_REQUEST, "캐시가 부족합니다."),
 
-	EXPIRED_TOKEN(2004, HttpStatus.UNAUTHORIZED, "만료된 토큰입니다."),
-	EXPIRED_REFRESH_TOKEN(2005, HttpStatus.UNAUTHORIZED, "만료된 리프레시 토큰입니다."),
+	EXPIRED_TOKEN(2005, HttpStatus.UNAUTHORIZED, "만료된 토큰입니다."),
+	EXPIRED_REFRESH_TOKEN(2006, HttpStatus.UNAUTHORIZED, "만료된 리프레시 토큰입니다."),
 	INVALID_ACCESS_TOKEN(2008, HttpStatus.UNAUTHORIZED, "유효하지 않은 액세스 토큰입니다."),
 
 	// Item
