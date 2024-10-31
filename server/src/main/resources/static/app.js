@@ -13,7 +13,7 @@ function setConnected(connected, index) {
 }
 
 function connect(index) {
-    var socket = new SockJS('/gs-guide-websocket');
+    var socket = new SockJS('/ws');
     var stompClient = Stomp.over(socket);
     stompClients[index] = stompClient;
     stompClient.connect({}, function (frame) {

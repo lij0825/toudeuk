@@ -1,6 +1,5 @@
 "use client";
 
-//소켓 연결 또는 SSE 방식으로 touch값 fetch
 import { Client, Frame, IFrame, IMessage, Stomp } from "@stomp/stompjs";
 import { useEffect, useState } from "react";
 import SockJS from "sockjs-client";
@@ -10,31 +9,37 @@ export default function Button() {
   const [stompClient, setStompClient] = useState<Client | null>(null);
 
   useEffect(() => {
+    // accessToken을 sessionStorage에서 가져옵니다.
+    const accessToken = sessionStorage.getItem('accessToken');
+
     // ! FIXME : 서버 주소 변경 필요
-    const socket = new SockJS("https://solpop.xyz/ws");
+    const socket = new SockJS(`${process.env.NEXT_PUBLIC_API_URL}/ws`);
     const stompClient = Stomp.over(socket);
 
+    // 연결 헤더에 accessToken을 추가합니다.
+    const headers = {
+      Authorization: `Bearer ${accessToken}`
+    };
+
     stompClient.connect(
-      {},
+      headers,
       (frame: IFrame) => {
         console.log("Connected: " + frame);
-        // 구독 등의 추가 설정
+        
+        stompClient.publish({
+          destination: "/app/getInitialCount",
+          body: JSON.stringify({}),
+          headers: headers
+        });
+        
+        stompClient.subscribe("/topic/game", (message: IMessage) => {
+          setCount(parseInt(message.body));
+        }, headers);
       },
       (error: Frame | string) => {
         console.error("Connection error: ", error);
       }
     );
-
-    stompClient.connect({}, (frame: string) => {
-      console.log("Connected: " + frame);
-      stompClient.publish({
-        destination: "/app/getInitialCount",
-        body: JSON.stringify({}),
-      });
-      stompClient.subscribe("/topic/game", (message: IMessage) => {
-        setCount(parseInt(message.body));
-      });
-    });
 
     setStompClient(stompClient);
 
@@ -48,9 +53,13 @@ export default function Button() {
 
   const handleClick = () => {
     if (stompClient) {
+      const accessToken = sessionStorage.getItem('accessToken');
       stompClient.publish({
         destination: "/app/game",
         body: JSON.stringify({}),
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
       });
     }
   };
