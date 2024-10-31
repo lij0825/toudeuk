@@ -2,6 +2,7 @@ package com.toudeuk.server.domain.game.entity;
 
 import com.toudeuk.server.core.entity.TimeEntity;
 
+import com.toudeuk.server.domain.user.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,5 +26,11 @@ public class ClickGame extends TimeEntity {
 
 	@Column(name = "click_game_round", nullable = false)
 	private Long round;
+
+	public static ClickGame create(Long round) {
+		ClickGame clickGame = new ClickGame();
+		clickGame.round = round;
+		return clickGame;
+	}
 
 }

@@ -48,18 +48,26 @@ public class ClickGameService {
 	private final ApplicationEventPublisher applicationEventPublisher;
 
 	// 게임 시작
-	public void startGame(Long gameId) {
+	@Transactional
+	public void startGame() {
 		if (clickCacheRepository.isGameCoolTime()) {
 			throw new BaseException(COOL_TIME);
 		}
+		Long lastRound = clickGameRepository.findLastRound().orElse(0L);
+		ClickGame newGame = ClickGame.create(lastRound + 1);
+		clickGameRepository.save(newGame);
 		clickCacheRepository.setTotalClick();
+		clickCacheRepository.setGameId(newGame.getId());
 	}
 
 	// 클릭
 	@Transactional
 	public void click(Long userId) {
-		if (clickCacheRepository.isUserCoolTime(userId)) {
+		if (clickCacheRepository.isGameCoolTime()) {
 			throw new BaseException(COOL_TIME);
+		}
+		if (clickCacheRepository.getGameId() == null) {
+			throw new BaseException(GAME_NOT_FOUND);
 		}
 
 		// * 클릭시 캐쉬 로직 추가 / 유저 조회 -> 캐쉬 업데이트 이렇게 2번 DB에 접근
@@ -71,49 +79,24 @@ public class ClickGameService {
 
 		int resultCash = user.getCash() + CLICK_CASH;
 
+		if (resultCash < 0) {
+			throw new BaseException(NOT_ENOUGH_CASH);
+		}
 		user.updateCash(resultCash);
 
 		// * 클릭 시 레디스 캐쉬 로직
 		clickCacheRepository.addUserClick(userId);
 		clickCacheRepository.addTotalClick();
 		clickCacheRepository.addLog(userId);
-		clickCacheRepository.setUserCoolTime(userId);
 
 		if (clickCacheRepository.isGameCoolTime()) {
-			saveLog(1L);
-			saveReward(1L);
+			Long gameId = clickCacheRepository.getGameId();
+			saveLog(gameId);
+			saveReward(gameId);
 			clickCacheRepository.deleteAllClickInfo();
 		}
 	}
 
-	public Integer getUserClick(Long userId) {
-		Integer clickCount = clickCacheRepository.getUserClick(userId);
-		if (clickCount == null) {
-			throw new BaseException(GAME_ERROR);
-		}
-		return clickCount;
-	}
-
-	public Integer getTotalClick() {
-		Integer totalClick = clickCacheRepository.getTotalClick();
-		if (totalClick == null) {
-			throw new BaseException(GAME_ERROR);
-		}
-		return totalClick;
-	}
-
-	public Integer getUserOrder(Long userId) {
-		Integer order = clickCacheRepository.getUserOrder(userId);
-		if (order == null) {
-			throw new BaseException(GAME_ERROR);
-		}
-		return order;
-	}
-
-	public Long getPreviousOrderUser(int clickCount) {
-		return clickCacheRepository.getPreviousOrderUser(clickCount).stream().findFirst()
-			.orElseThrow(() -> new BaseException(REWARD_USER_NOT_FOUND));
-	}
 
 	@Transactional
 	public void saveLog(Long gameId) {
@@ -143,8 +126,7 @@ public class ClickGameService {
 		ClickGame clickGame = clickGameRepository.findById(gameId)
 			.orElseThrow(() -> new BaseException(GAME_NOT_FOUND));
 
-		Long maxClickUserId = clickCacheRepository.getMaxClickUser().stream().findFirst()
-			.orElseThrow(() -> new BaseException(REWARD_USER_NOT_FOUND));
+		Long maxClickUserId = clickCacheRepository.getMaxClickUserId();
 		Long winnerId = clickCacheRepository.getWinner();
 
 		if (maxClickUserId == null || winnerId == null) {
@@ -161,10 +143,6 @@ public class ClickGameService {
 
 		List<User> users = userRepository.findAllById(List.of(maxClickUserId, winnerId));
 
-		// * 예외 처리할거 더 있으면 추가하고
-		if (users.size() < 2) {
-			throw new BaseException(USER_NOT_FOUND);
-		}
 
 		Map<Long, User> userMap = users.stream()
 			.collect(Collectors.toMap(User::getId,
@@ -176,9 +154,9 @@ public class ClickGameService {
 		User winner = Optional.ofNullable(userMap.get(winnerId))
 			.orElseThrow(() -> new BaseException(USER_NOT_FOUND));
 
-		int maxClickCount = clickCacheRepository.getUserClick(maxClickUserId);
+		int maxClickCount = clickCacheRepository.getUserClickCount(maxClickUserId);
 
-		int winnerClickCount = clickCacheRepository.getUserClick(winnerId);
+		int winnerClickCount = clickCacheRepository.getUserClickCount(winnerId);
 
 		ClickGameRewardLog maxClickReward = ClickGameRewardLog.create(maxClickUser, clickGame, 1000, maxClickCount,
 			MAX_CLICKER);
