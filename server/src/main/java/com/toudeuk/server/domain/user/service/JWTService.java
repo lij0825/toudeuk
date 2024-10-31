@@ -82,7 +82,7 @@ public class JWTService {
      * @param accessToken JWT 토큰
      * @return 토큰의 클레임
      */
-    private Claims parseClaims(String accessToken) {
+	public Claims parseClaims(String accessToken) {
         String message;
         Exception exception;
         try {
