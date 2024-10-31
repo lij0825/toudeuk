@@ -16,4 +16,7 @@ public interface ClickGameRepository extends JpaRepository<ClickGame, Long> {
 
 	@Query("SELECT cg FROM ClickGame cg ORDER BY cg.id DESC")
 	Page<ClickGame> findAllByOrderByIdDesc(Pageable pageable);
+
+	@Query("SELECT MAX(cg.round) FROM ClickGame cg")
+	Optional<Long> findLastRound();
 }
