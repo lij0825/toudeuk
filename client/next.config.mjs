@@ -38,6 +38,11 @@ const nextConfig = {
         hostname: "mblogthumb-phinf.pstatic.net",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "d2uaylxt6f2ffw.cloudfront.net",
+        pathname: "/**",
+      },
     ],
   },
   webpack(config) {
