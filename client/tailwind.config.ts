@@ -81,7 +81,7 @@ const config: Config = {
           "padding-right": `${theme("spacing.td-x")}`,
           width: "100%",
           height: "100%",
-          background: "linear-gradient(180deg, #4b4f58 0%, #16171B 100%)",
+          background: "linear-gradient(0deg, #16171B 0%, #16171B 100%)",
         },
         ".card": {
           display: "flex",

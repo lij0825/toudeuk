@@ -11,13 +11,13 @@ export default function ToggleSwitch({
 }: ToggleSwitchProps) {
   return (
     <div className="toggle-container">
+      {label && <span className="toggle-label">{label}</span>}
       <div
         className={`toggle-switch ${isToggled ? "toggled" : ""}`}
         onClick={onToggle}
       >
         <div className="toggle-knob"></div>
       </div>
-      {label && <span className="toggle-label">{label}</span>}
 
       <style jsx>{`
         .toggle-container {
@@ -29,13 +29,13 @@ export default function ToggleSwitch({
           width: 40px;
           height: 20px;
           border-radius: 20px;
-          background-color: #ccc;
+          background-color: #9f9f9f;
           position: relative;
           cursor: pointer;
           transition: background-color 0.3s ease;
         }
         .toggle-switch.toggled {
-          background-color: #4caf50;
+          background-color: #17181c;
         }
         .toggle-knob {
           width: 16px;
@@ -52,7 +52,7 @@ export default function ToggleSwitch({
         }
         .toggle-label {
           font-size: 16px;
-          color: #333;
+          color: #ffffff;
         }
       `}</style>
     </div>

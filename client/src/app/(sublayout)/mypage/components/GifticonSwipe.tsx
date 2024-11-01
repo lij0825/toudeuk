@@ -7,8 +7,6 @@ import { GetServerSideProps } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { toast } from "react-toastify";
-// import { QueryClient, dehydrate, useQuery } from "@tanstack/react-query";
-// import { toast } from "react-toastify";
 
 // 공통 스타일을 상수로 분리
 export const CommonLinkStyle = {
