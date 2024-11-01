@@ -56,7 +56,7 @@ export default withSentryConfig(withPWA(nextConfig), {
   // https://github.com/getsentry/sentry-webpack-plugin#options
   org: "none-0b7",
   project: "javascript-nextjs",
-  silent: false,
+  silent: true,
   widenClientFileUpload: true,
   reactComponentAnnotation: { enabled: true },
   hideSourceMaps: false, // 소스맵을 숨기지 않음
