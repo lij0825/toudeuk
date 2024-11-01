@@ -19,20 +19,12 @@ export default function PointList() {
   if (error) return <div>데이터를 불러오는 중 오류가 발생했습니다.</div>;
 
   // 필터링된 포인트 내역
-  const filteredHistory = pointHistory?.filter((transaction) =>
-    filter === "all" ? true : transaction.type === filter
+  const filteredHistory = pointHistory?.filter((transaction) => {
+    if (filter === "all") return true;
+    if (filter === "ITEM") return transaction.type === "ITEM" || transaction.type === "GAME";
+    return transaction.type === filter;
+  }
   );
-
-  // const handleFilterClick = (type: "all" | "CHARGING" | "GAME" | "REWARD" | "ITEM") => {
-  //   setFilter((prev) => {
-  //     if (type === "all") return ["all"]; // 전체 내역 클릭 시 모든 필터 초기화
-  //     if (prev.includes(type)) {
-  //       return prev.filter(f => f !== type); // 이미 포함되어 있으면 제거
-  //     } else {
-  //       return [...prev, type]; // 포함되어 있지 않으면 추가
-  //     }
-  //   });
-  // };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -45,6 +37,21 @@ export default function PointList() {
       second: "2-digit",
       hour12: false
     }).replace(/\./g, "").replace(/\s/g, " ");
+  };
+
+  const getTypeInKorean = (type: string) => {
+    switch (type) {
+      case "CHARGING":
+        return "충전";
+      case "REWARD":
+        return "보상";
+      case "ITEM":
+        return "구매";
+      case "GAME":
+        return "게임";
+      default:
+        return type; // 기본값으로 원래 타입을 반환
+    }
   };
 
   return (
@@ -99,6 +106,7 @@ export default function PointList() {
                   >
                     {transaction.changeCash.toLocaleString()}P
                   </span>
+                  <span className="text-gray-500 ml-4">{getTypeInKorean(transaction.type)}</span>
                 </div>
                 <div className="text-sm text-gray-500">{formatDate(transaction.createdAt)}</div>
               </li>

@@ -11,7 +11,10 @@ export default function MyPoint() {
 
   // 설명 토글 함수
   const handleInfoClick = () => {
-    toast.info('잔여 포인트입니다')
+    toast.info('잔여 포인트입니다',{
+      position: "top-center",
+      theme: "light"
+    })
   };
 
   const { data: userInfo, isError } = useQuery<UserInfo>({
