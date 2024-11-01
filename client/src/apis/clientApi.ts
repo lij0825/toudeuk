@@ -23,8 +23,8 @@ const instance = axios.create({
 // 요청 전에 accessToken을 헤더에 포함시키는 인터셉터
 instance.interceptors.request.use(
   (config) => {
-    // const accessToken = sessionStorage.getItem('accessToken')
-    const accessToken = `eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwiYXV0aG9yaXRpZXMiOiJVU0VSIiwiaWF0IjoxNzMwMzQ4NTEzLCJleHAiOjE3MzEzNDg1MTN9.DBfXrJANg-1HaTDGaBrZ3-xSuyvN5eK7uwz9uDCXtKM`;
+    const accessToken = sessionStorage.getItem('accessToken')
+    // const accessToken = `eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwiYXV0aG9yaXRpZXMiOiJVU0VSIiwiaWF0IjoxNzMwMzQ4NTEzLCJleHAiOjE3MzEzNDg1MTN9.DBfXrJANg-1HaTDGaBrZ3-xSuyvN5eK7uwz9uDCXtKM`;
 
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
@@ -71,6 +71,10 @@ instance.interceptors.response.use(
         window.location.href = "/";
         return Promise.reject(refreshError);
       }
+    }
+
+    if (error.response?.data?.message) {
+      return Promise.reject(new Error(error.response.data.message));
     }
 
     return Promise.reject(error);

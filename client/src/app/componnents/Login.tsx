@@ -50,6 +50,8 @@ export default function Login() {
       <div className="p-8 rounded shadow-md w-full max-w-md">
         <h1 className="typo-title">터득</h1>
         <h1 className="typo-title">TouDeuk</h1>
+
+        <div className="mb-4"></div> 
         {/* <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <div>
@@ -94,7 +96,7 @@ export default function Login() {
             onClick={handleKakaoLogin}
             className="flex items-center justify-center w-full h-10 rounded-md bg-[#FEE500] border border-[#FEE500] text-black hover:bg-[#FEE500] transition duration-200"
           >
-            Login with Kakao
+            Game Start
           </button>
         </div>
       </div>
