@@ -4,10 +4,10 @@ import { UserInfo } from "@/types";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import SettingIcon from "../../../../../public/icons/setting.svg";
-// interface FormData {
-//   nickname: string;
-//   imageUrl: string | File; // 이미지 URL 또는 파일로 관리
-// }
+import { patchUserInfo } from "@/apis/userInfoApi";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import Image from "next/image";
 
 interface ModalProps {
   isOpen: boolean;
@@ -36,24 +36,27 @@ export default function SettingButton() {
 }
 
 function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
-  //불필요한 호출 방지를 위하여, 최초 렌더링 시 상위 컴포넌트에서 호출한 'user'를 가져옴
   const cache = useQueryClient();
   const user = cache.getQueryData<UserInfo>(["user"]);
-
-  // 상태관리
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [nickname, setNickname] = useState<string>(user?.nickName || "");
   const [profileImage, setProfileImage] = useState<File | null>(null);
-  // const [previewImage, setPreviewImage] = useState<string | null>(
-  // user?.profileImg || "/default-profile.png")
+  const [previewImage, setPreviewImage] = useState<string>(
+    user?.profileImg || "/default_profile.png"
+  );
 
-  // const [formData, setFormData] = useState<FormData>({
-  //   nickname: nickname,
-  //   imageUrl: "/default-profile.png", // 기본 이미지 설정
-  // });
+  const mutation = useMutation({
+    mutationFn: (formData: FormData) => patchUserInfo(formData),
+    onSuccess: () => {
+      toast.success("유저 정보 변경이 완료되었습니다.");
+      cache.invalidateQueries({ queryKey: ["user"] });
+    },
+    onError: () => {
+      toast.error("유저 정보 변경 중 에러가 발생했습니다.");
+    },
+  });
 
-  //편집모드 전환
   function toggleEditMode(): void {
     setIsEditing(!isEditing);
   }
@@ -66,17 +69,24 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
     const file = e.target.files?.[0];
     if (file) {
       setProfileImage(file);
-      // setPreviewImage(URL.createObjectURL(file)); // 파일 미리보기 설정
+      setPreviewImage(URL.createObjectURL(file)); // 미리보기 설정
     }
   };
 
   function handleSave() {
-    //mutation 로직
+    const formData = new FormData();
+    formData.append("nickname", nickname);
+    if (profileImage) {
+      formData.append("profileImage", profileImage);
+    }
+
+    mutation.mutate(formData);
+
     setIsEditing(false);
     handleModalOpen();
   }
 
-  if (!isOpen) return null; // 모달이 열리지 않은 경우 null 반환
+  if (!isOpen) return null;
 
   return (
     <div
@@ -103,7 +113,7 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
         <section className="typo-body mb-4">
           {isEditing ? (
             <>
-              <label className="block mb-2 text-">Nickname</label>
+              <label className="block mb-2">Nickname</label>
               <input
                 type="text"
                 className="w-full mb-4 p-2 border rounded text-black"
@@ -119,26 +129,33 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
                 className="w-full mb-2 p-2 border rounded"
                 onChange={handleImageChange}
               />
+
+              {previewImage && (
+                <Image
+                  width={30}
+                  height={30}
+                  src={previewImage}
+                  alt="Profile preview"
+                  className="w-24 h-24 object-cover rounded-full mt-4"
+                />
+              )}
             </>
           ) : (
-            <>
-              <ul className="list-none space-y-2">
-                <li>
-                  <strong>Nickname:</strong> {nickname}
-                </li>
-              </ul>
-            </>
+            <ul className="list-none space-y-2">
+              <li>
+                <strong>Nickname:</strong> {nickname}
+              </li>
+              <li>
+                <Image
+                  width={30}
+                  height={30}
+                  src={previewImage}
+                  alt="Profile preview"
+                  className="w-24 h-24 object-cover rounded-full mt-4"
+                />
+              </li>
+            </ul>
           )}
-
-          {profileImage &&
-            // <Image
-            //   width={30}
-            //   height={30}
-            //   // src={profileImage}
-            //   alt="Profile preview"
-            //   className="w-24 h-24 object-cover rounded-full mt-4"
-            // />
-            ""}
         </section>
 
         {isEditing && (
