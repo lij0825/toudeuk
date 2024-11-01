@@ -1,6 +1,5 @@
 package com.toudeuk.server.domain.game.controller;
 
-import com.toudeuk.server.domain.game.dto.GameData;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.toudeuk.server.core.annotation.CurrentUser;
 import com.toudeuk.server.core.response.SuccessResponse;
+import com.toudeuk.server.domain.game.dto.GameData;
 import com.toudeuk.server.domain.game.dto.HistoryData;
 import com.toudeuk.server.domain.game.service.ClickGameService;
 
@@ -64,7 +64,7 @@ public class ClickGameController {
 	public SuccessResponse<Page<HistoryData.AllInfo>> getHistory(@CurrentUser Long userId, Pageable pageable) {
 		return SuccessResponse.of(clickGameService.getAllHistory(pageable));
 	}
-
+	
 	/**
 	 * 게임 상세 정보 조회
 	 *

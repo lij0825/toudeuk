@@ -1,5 +1,7 @@
 package com.toudeuk.server.domain.user.dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.toudeuk.server.domain.item.entity.Item;
 import com.toudeuk.server.domain.user.entity.CashLog;
 import com.toudeuk.server.domain.user.entity.CashLogType;
@@ -22,6 +24,12 @@ public class UserData {
 			info.cash = user.getCash();
 			return info;
 		}
+	}
+
+	@Data
+	public static class UpdateInfo {
+		private String nickname;
+		private MultipartFile profileImage;
 	}
 
 	@Data

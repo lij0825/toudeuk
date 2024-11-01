@@ -1,10 +1,9 @@
 package com.toudeuk.server.domain.user.response.impl;
 
+import java.util.Map;
 
 import com.toudeuk.server.domain.user.entity.ProviderType;
 import com.toudeuk.server.domain.user.response.OAuth2Response;
-
-import java.util.Map;
 
 public class NaverResponse implements OAuth2Response {
 	private final Map<String, Object> attribute;
@@ -34,7 +33,7 @@ public class NaverResponse implements OAuth2Response {
 	}
 
 	@Override
-	public String getGender() {
-		return attribute.get("gender").toString();
+	public String getProfileImage() {
+		return attribute.get("profile_image").toString();
 	}
 }

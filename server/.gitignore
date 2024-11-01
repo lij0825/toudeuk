@@ -26,6 +26,10 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 
+### properties ###
+application.properties
+application-secret.properties
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
