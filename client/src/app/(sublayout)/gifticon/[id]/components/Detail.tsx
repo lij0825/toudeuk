@@ -21,8 +21,9 @@ export default function Detail() {
     onSuccess: () => {
       toast.success(`${gifticon?.itemName} 구매가 완료되었습니다.`);
     },
-    onError: () => {
-      toast.error("구매 중 오류가 발생했습니다.");
+    onError: (error) => {
+      const errorMessage = error instanceof Error ? error.message : "구매 중 오류가 발생했습니다.";
+      toast.error(errorMessage);
     },
   });
   if (isLoading) return <div>로딩 중...</div>;
@@ -50,7 +51,7 @@ export default function Detail() {
           {/* 구매하기 버튼 */}
           <button
             className="mt-8 bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors"
-            onClick={()=>mutation.mutate()}
+            onClick={() => mutation.mutate()}
           >
             구매하기
           </button>

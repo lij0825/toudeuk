@@ -1,9 +1,24 @@
+"use client";
+
+import { fetchUserGifticons } from "@/apis/gifticonApi";
+import { UserGifticonInfo } from "@/types/gifticon";
+import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
-import { mygifticons } from "./constant/dummyUserGifticon";
+import { toast } from "react-toastify";
 
 // MyGifticon 컴포넌트
 export default function MyGifticon() {
+  const { data: usergifticons = [], isError } = useQuery<UserGifticonInfo[]>({
+    queryKey: ["usergifticons"], // 캐싱 키 설정
+    queryFn: fetchUserGifticons,
+  });
+
+  // 에러가 발생했을 때 Toastify로 에러 메시지 표시
+  if (isError) {
+    toast.error("유저정보를 다시 불러와주세요");
+  }
+
   return (
     <>
       <section className="typo-title mb-2 flex items-end justify-between">
@@ -15,7 +30,7 @@ export default function MyGifticon() {
         </div>
       </section>
       <div className="grid grid-cols-2 gap-4">
-        {mygifticons.map((gifticon) => (
+        {usergifticons.map((gifticon) => (
           <Link
             key={gifticon.userItemId}
             href={`/mygifticon/${gifticon.userItemId}`}
