@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import com.toudeuk.server.core.entity.BaseEntity;
 import com.toudeuk.server.core.entity.TimeEntity;
 
 import jakarta.persistence.Column;
@@ -23,7 +22,6 @@ import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -89,7 +87,6 @@ public class User extends TimeEntity {
 	@Column(name = "provider_id", nullable = false)
 	private String providerId;
 
-
 	@Column(name = "provider_type", nullable = false)
 	@Enumerated(EnumType.STRING)
 	private ProviderType providerType;
@@ -99,13 +96,23 @@ public class User extends TimeEntity {
 	}
 
 	public static User createUser(String username, String name, ProviderType providerType,
-								  String providerId) {
+		String providerId, String profileImg) {
 		User user = new User();
 		user.username = username;
 		user.name = name;
+		user.nickname = name;
 		user.email = username;
 		user.providerType = providerType;
 		user.providerId = providerId;
+		user.profileImg = profileImg;
 		return user;
+	}
+
+	public void updateProfileImg(String profileImg) {
+		this.profileImg = profileImg;
+	}
+
+	public void updateNickname(String nickname) {
+		this.nickname = nickname;
 	}
 }

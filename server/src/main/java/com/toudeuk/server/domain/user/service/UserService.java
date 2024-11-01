@@ -3,15 +3,7 @@ package com.toudeuk.server.domain.user.service;
 import static com.toudeuk.server.core.exception.ErrorCode.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
-
-import com.toudeuk.server.core.constants.AuthConst;
-import com.toudeuk.server.domain.user.entity.CashLogType;
-import com.toudeuk.server.domain.user.entity.JwtToken;
-import com.toudeuk.server.domain.user.event.CashLogEvent;
-import com.toudeuk.server.domain.user.event.UserPaymentEvent;
-import com.toudeuk.server.domain.user.repository.AuthCacheRepository;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -20,16 +12,22 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
+import com.toudeuk.server.core.constants.AuthConst;
 import com.toudeuk.server.core.exception.BaseException;
 import com.toudeuk.server.core.exception.ErrorCode;
 import com.toudeuk.server.domain.user.dto.UserData;
+import com.toudeuk.server.domain.user.entity.CashLogType;
+import com.toudeuk.server.domain.user.entity.JwtToken;
 import com.toudeuk.server.domain.user.entity.User;
 import com.toudeuk.server.domain.user.entity.UserItem;
+import com.toudeuk.server.domain.user.event.CashLogEvent;
+import com.toudeuk.server.domain.user.event.S3UploadEvent;
+import com.toudeuk.server.domain.user.event.UserPaymentEvent;
+import com.toudeuk.server.domain.user.repository.AuthCacheRepository;
 import com.toudeuk.server.domain.user.repository.CashLogRepository;
 import com.toudeuk.server.domain.user.repository.UserItemRepository;
 import com.toudeuk.server.domain.user.repository.UserRepository;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,7 +36,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserService {
-
 
 	private final JWTService jwtService;
 	private final AuthCacheRepository authCacheRepository;
@@ -90,7 +87,6 @@ public class UserService {
 
 	}
 
-
 	public JwtToken refresh(String refreshToken) {
 		try {
 			String username = jwtService.getUsername(refreshToken);
@@ -120,9 +116,20 @@ public class UserService {
 		userRepository.save(findUser);
 	}
 
-
 	private String getSignOutKey(String username) {
 		return AuthConst.SIGN_OUT_CACHE_KEY + username;
+	}
+
+	@Transactional
+	public void updateUserInfo(Long userId, UserData.UpdateInfo updateInfo) {
+
+		User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+
+		user.updateNickname(updateInfo.getNickname());
+
+		eventPublisher.publishEvent(new S3UploadEvent(user, updateInfo.getProfileImage()));
+
+		userRepository.save(user);
 	}
 
 	//    public Long save(AddUserRequest dto) {
