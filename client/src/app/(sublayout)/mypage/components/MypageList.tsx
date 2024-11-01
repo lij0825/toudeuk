@@ -19,14 +19,34 @@ export default function MypageList() {
   };
 
   return (
-    <div>
-      {navItems.map((item, index) => (
+    <div className="flex flex-col items-center gap-4">
+      {navItems.map((item) => (
         <div
-          key={index}
+          key={item.label}
           onClick={() => handleClick(item.href)}
-          className="card typo-sub-title my-3"
+          className="flex items-center justify-center w-full cursor-pointer rounded-md shadow-lg transition duration-300 ease-in-out transform hover:scale-105"
+          style={{
+            background: "linear-gradient(145deg, #d4af37, #a8861c)",
+            boxShadow: "0 6px 8px rgba(0, 0, 0, 0.4)",
+            padding: "3px",
+          }}
         >
-          {item.label}
+          <div
+            className="flex items-center justify-center w-full h-full rounded-sm transition duration-300 ease-in-out transform hover:scale-105 hover:brightness-125"
+            style={{
+              background: "linear-gradient(145deg, #ffd700, #ffea7f)",
+              boxShadow:
+                "inset 0 -1px 4px rgba(210, 179, 0, 0.6), inset 0 1px 3px rgba(255, 255, 255, 0.3)",
+              transform: "translateY(-2px)",
+            }}
+          >
+            <p
+              className="text-white typo-sub-title text-center"
+              style={{ fontSize: "3rem" }}
+            >
+              {item.label}
+            </p>
+          </div>
         </div>
       ))}
     </div>

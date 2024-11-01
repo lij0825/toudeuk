@@ -5,3 +5,4 @@ export * from "./history";
 export * from "./mypageInfo";
 export * from "./point";
 export * from "./rankInfo";
+export * from "./prize";
