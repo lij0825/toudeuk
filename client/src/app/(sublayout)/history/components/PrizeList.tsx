@@ -1,46 +1,46 @@
 "use client";
 
-import { Suspense } from "react";
-// import { fetchPrizes } from "@/apis/prizeApi";
-// import { useQuery } from "@tanstack/react-query";
+import { Suspense, useState } from "react";
+import { fetchPrizes } from "@/apis/prizeApi";
+import { useQuery } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 import { PrizeInfo } from "@/types/prize";
-
-const prizeInfoDummyData: PrizeInfo[] = Array.from(
-  { length: 100 },
-  (_, index) => ({
-    roundId: index + 1,
-    date: `2024-10-${(index % 31) + 1}`,
-    point: Math.floor(Math.random() * 200000) + 50000,
-    nickName: `Player${String.fromCharCode(65 + (index % 26))}`,
-    participant: Math.floor(Math.random() * 500) + 50,
-    clicks: Math.floor(Math.random() * 50) + 10,
-    imageSrc: `https://picsum.photos/seed/picsum${index}/150/150`,
-  })
-);
+import PrizeItem from "./PrizeItem";
 
 export default function PrizeList() {
-  // const { data: prizes, isError } = useQuery<PrizeInfo[]>({
-  //   queryKey: ["prizes"],
-  //   queryFn: fetchPrizes,
-  //   staleTime: 5 * 60 * 1000, // 선택적: 5분간 데이터를 fresh로 유지
-  // });
-  // if (isError) {
-  //   toast.error(`오류 발생: ${error}`);
-  // }
+  // const [size, setSize] = useState<number>(10);
+  // const [page, SetPage] = useState<number>(0);
+  // const [sort, setSort] = useState<string>("");
+  const [size] = useState<number>(10);
+  const [page] = useState<number>(0);
+  const [sort] = useState<string>("");
+  const {
+    data: prizes = [],
+    isError,
+    error,
+  } = useQuery<PrizeInfo[]>({
+    queryKey: ["prizes"],
+    queryFn: () => fetchPrizes({ page, size, sort }),
+    staleTime: 5 * 60 * 1000, // 선택적: 5분간 데이터를 fresh로 유지
+  });
+  if (isError) {
+    toast.error(`오류 발생: ${error}`);
+  }
 
   return (
     <>
       <Suspense fallback={""}>
         <section className="overflow-y-auto h-full scrollbar-hidden">
-          {/* 고정된 높이 및 스크롤 처리 */}
-          {prizeInfoDummyData
-            .slice()
-            .reverse()
-            .map((data) => (
-              <div className="card h-10" key={data.roundId}>
-                {data.roundId}
-              </div>
-            ))}
+          {prizes?.length === 0 ? (
+            <div>
+              <div>당첨 목록이 비어있어요 ㅠ</div>
+              <div>게임하러가기</div>
+            </div>
+          ) : (
+            prizes?.map((prize: PrizeInfo) => (
+              <PrizeItem key={prize.roundId} prizeInfo={prize} />
+            ))
+          )}
         </section>
       </Suspense>
     </>

@@ -22,31 +22,24 @@ export default function HistoryPage() {
   };
 
   return (
-    <div className="flex flex-col h-full scrollbar-hidden relative overflow-hidden">
-      <section className="flex-shrink-0 flex items-end">
-        <div className="typo-title mb-2 z-10">
-          {selected === SelectType.PRIZE ? (
-            <div>
-              <p>My</p>
-              <p>Prize</p>
-            </div>
-          ) : (
-            <div>
-              <p>Game</p>
-              <p>History</p>
-            </div>
-          )}
+    <div className="h-full scrollbar-hidden relative overflow-hidden">
+      <section className="flex-shrink-0 items-end typo-title mb-2">
+        <p>Game</p>
+        <div className="flex justify-between items-end">
+          <p>History</p>
+          <ToggleSwitch
+            isToggled={selected === SelectType.PRIZE}
+            onToggle={handleToggle}
+            label={`${
+              selected === SelectType.HISTORY
+                ? "당첨내역 보기"
+                : "게임 기록 보기"
+            }`}
+          />
         </div>
-        <ToggleSwitch
-          isToggled={selected === SelectType.PRIZE}
-          onToggle={handleToggle}
-          label={`Toggle to ${
-            selected === SelectType.HISTORY ? "Prize" : "History"
-          }`}
-        />
       </section>
 
-      <section className="flex-grow overflow-hidden relative">
+      <section className="flex-grow overflow-y-hidden relative">
         {selected === SelectType.HISTORY ? (
           <div className="history-card">
             <HistoryList />

@@ -17,7 +17,7 @@ export default function Mypage() {
         </div>
         <div className="h-full gap-8"></div>
       </section>
-      <section className="bg-[#353A40] py-5 px-[30px] mx-[-30px]">
+      <section>
         <GifticonSwipe />
       </section>
       <section>
