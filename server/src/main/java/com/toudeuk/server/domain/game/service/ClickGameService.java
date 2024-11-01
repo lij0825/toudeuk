@@ -10,7 +10,10 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.toudeuk.server.domain.game.dto.GameData;
+import com.toudeuk.server.domain.game.entity.event.ClickEvent;
+import com.toudeuk.server.domain.game.kafka.ClickProducer;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -48,13 +51,11 @@ public class ClickGameService {
 	private final ClickGameLogRepository clickGameLogRepository;
 	private final ClickGameRewardLogRepository clickGameRewardLogRepository;
 	private final ApplicationEventPublisher applicationEventPublisher;
+	private final ClickProducer clickProducer;
 
 	// 게임 시작
 	@Transactional
 	public void startGame() {
-		if (clickCacheRepository.isGameCoolTime()) {
-			throw new BaseException(COOL_TIME);
-		}
 		Long lastRound = clickGameRepository.findLastRound().orElse(0L);
 		ClickGame newGame = ClickGame.create(lastRound + 1);
 		clickGameRepository.save(newGame);
@@ -69,7 +70,8 @@ public class ClickGameService {
 			throw new BaseException(COOL_TIME);
 		}
 		if (clickCacheRepository.getGameId() == null) {
-			throw new BaseException(GAME_NOT_FOUND);
+			startGame();
+			return;
 		}
 
 		// * 클릭시 캐쉬 로직 추가 / 유저 조회 -> 캐쉬 업데이트 이렇게 2번 DB에 접근
@@ -97,6 +99,10 @@ public class ClickGameService {
 			saveReward(gameId);
 			clickCacheRepository.deleteAllClickInfo();
 		}
+	}
+
+	public void asyncClick(Long userId) throws JsonProcessingException {
+		clickProducer.occurClickUserId(userId);
 	}
 
 	public GameData.DisplayInfo getGameDisplayData(Long userId) {

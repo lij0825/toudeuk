@@ -1,5 +1,6 @@
 package com.toudeuk.server.domain.game.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.toudeuk.server.domain.game.dto.GameData;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,8 +36,8 @@ public class ClickGameController {
 	 */
 	@PostMapping(value = "/click")
 	@Operation(summary = "클릭", description = "버튼을 클릭합니다.")
-	public SuccessResponse<GameData.DisplayInfo> click(@CurrentUser Long userId) {
-		clickGameService.click(userId);
+	public SuccessResponse<GameData.DisplayInfo> click(@CurrentUser Long userId) throws JsonProcessingException {
+		clickGameService.asyncClick(userId);
 		return SuccessResponse.of(clickGameService.getGameDisplayData(userId));
 	}
 

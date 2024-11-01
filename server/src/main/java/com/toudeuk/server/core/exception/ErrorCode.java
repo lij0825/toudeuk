@@ -44,7 +44,13 @@ public enum ErrorCode {
 	NOT_VALID_BEARER_GRANT_TYPE(401, HttpStatus.UNAUTHORIZED, "인증 타입이 Bearer 타입이 아닙니다."),
 	NOT_EXISTS_AUTHORIZATION(401, HttpStatus.UNAUTHORIZED, "Authorization Header가 빈값입니다."),
 	NOT_ACCESS_TOKEN_TYPE(1003, HttpStatus.UNAUTHORIZED, "해당 토큰은 access token이 아닙니다."),
-	FORBIDDEN_ADMIN(404, HttpStatus.FORBIDDEN, "관리자 Role이 아닙니다.");
+	FORBIDDEN_ADMIN(404, HttpStatus.FORBIDDEN, "관리자 Role이 아닙니다."),
+
+
+
+	// KAFKA
+	KAFKA_PRODUCER_ERROR(5000, HttpStatus.SERVICE_UNAVAILABLE, "카프카 메시지 발행 도중 오류가 발생했습니다."),
+	KAFKA_CONSUMER_ERROR(5001, HttpStatus.SERVICE_UNAVAILABLE, "카프카 메시지 소비 도중 오류가 발생했습니다.");
 
 	private final int code;
 	private final HttpStatus status;
