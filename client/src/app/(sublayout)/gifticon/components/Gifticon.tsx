@@ -40,7 +40,7 @@ export default function Gifticon() {
                 alt={gifticon.itemName}
                 width={180}
                 height={80}
-                className="h-20 rounded-lg w-4/5 absolute top-[-20%] left-1/2 transform -translate-x-1/2" // 80% 너비 및 위로 이동
+                className="object-cover h-20 rounded-lg w-4/5 absolute top-[-20%] left-1/2 transform -translate-x-1/2" // 80% 너비 및 위로 이동
               />
               <p className="text-center mt-12 relative z-10">{gifticon.itemName}</p>{" "}
               {/* p 태그의 상단 마진 조정 */}
