@@ -1,10 +1,10 @@
 "use client";
 
 import { fetchHistories } from "@/apis/historyApi";
+import { ContentInfo } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { Suspense, useState } from "react";
 import { toast } from "react-toastify";
-import { ContentInfo } from "@/types";
 import HistoryItem from "./HistoryItem";
 
 enum SortType {
@@ -20,13 +20,10 @@ export default function HistoryList() {
   // const [sort, setSort] = useState<SortType>(SortType.DEFAULT);
   const [sort] = useState<SortType>(SortType.DEFAULT);
 
-  const {
-    data: history,
-    isError,
-  } = useQuery<ContentInfo[]>({
+  const { data: history, isError } = useQuery<ContentInfo[]>({
     queryKey: ["history", page, sort],
     queryFn: () => fetchHistories({ page, size, sort }),
-    staleTime: 10 * 60 * 1000, // 선택적: 10분간 데이터를 fresh로 유지
+    staleTime: 5 * 60 * 1000, // 선택적: 5분간 데이터를 fresh로 유지
   });
 
   if (isError) {
