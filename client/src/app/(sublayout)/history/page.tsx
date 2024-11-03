@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import HistoryList from "./components/HistoryList";
 import PrizeList from "./components/PrizeList";
 import ToggleSwitch from "./components/ToggleSwitch";
@@ -46,11 +46,15 @@ export default function HistoryPage() {
       <section className="flex-grow relative h-full overflow-y-auto scrollbar-hidden">
         {selected === SelectType.HISTORY ? (
           <div className="history-card p-4 rounded-lg shadow-lg ">
-            <HistoryList />
+            <Suspense fallback={<div>로딩 중...</div>}>
+              <HistoryList />
+            </Suspense>
           </div>
         ) : (
           <div className="prize-card p-4 rounded-lg shadow-lg ">
-            <PrizeList />
+            <Suspense fallback={<div>로딩 중...</div>}>
+              <PrizeList />
+            </Suspense>
           </div>
         )}
       </section>

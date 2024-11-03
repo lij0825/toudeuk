@@ -3,11 +3,11 @@
 import { fetchHistories } from "@/apis/historyApi";
 import { ContentInfo } from "@/types";
 import { useQuery } from "@tanstack/react-query";
-import { Suspense, useState } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
 import HistoryItem from "./HistoryItem";
 
-enum SortType {
+export enum SortType {
   DEFAULT = "",
   GAME_ASC = "round,ASC",
   GAME_DESC = "round,DESC",
@@ -27,23 +27,21 @@ export default function HistoryList() {
   });
 
   if (isError) {
-    toast.error(`오류 발생`);
+    toast.error(`${history}`);
   }
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <div>
-        {history?.length === 0 ? (
-          <div>
-            <div>비어있어요 ㅠ</div>
-            <div>게임하러가기</div>
-          </div>
-        ) : (
-          history?.map((content, index) => (
-            <HistoryItem key={index} content={content} />
-          ))
-        )}
-      </div>
-    </Suspense>
+    <div>
+      {history?.length === 0 ? (
+        <div>
+          <div>비어있어요 ㅠ</div>
+          <div>게임하러가기</div>
+        </div>
+      ) : (
+        history?.map((content, index) => (
+          <HistoryItem key={index} content={content} />
+        ))
+      )}
+    </div>
   );
 }
