@@ -33,6 +33,7 @@ export default function GifticonSwipe() {
   const { data: usergifticons = [], isError } = useQuery<UserGifticonInfo[]>({
     queryKey: ["usergifticons"], // 캐싱 키 설정
     queryFn: fetchUserGifticons,
+    staleTime: 5 * 60 * 1000, // 5분 동안 데이터 fresh 상태 유지
   });
 
   // 에러가 발생했을 때 Toastify로 에러 메시지 표시
@@ -62,6 +63,7 @@ export default function GifticonSwipe() {
               width={100}
               height={100}
               className="rounded-sm object-cover w-full h-full"
+              priority
             />
           </div>
           <div className="text-center mt-2 text-sm text-bold font-noto w-[100px] overflow-hidden text-ellipsis whitespace-nowrap">

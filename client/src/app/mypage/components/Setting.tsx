@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import SettingIcon from "../../../../public/icons/setting.svg";
+import SvgSettingIcon from "./SettingIcon";
 
 interface ModalProps {
   isOpen: boolean;
@@ -22,11 +22,7 @@ export default function SettingButton() {
 
   return (
     <div>
-      <SettingIcon
-        style={{ width: "32px", height: "32px" }}
-        isOpen={isOpen}
-        onClick={handleModalOpen}
-      />
+      <SvgSettingIcon onClick={handleModalOpen} />
       {isOpen && (
         <SettingModal isOpen={isOpen} handleModalOpen={handleModalOpen} />
       )}
@@ -51,6 +47,7 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
     onSuccess: () => {
       toast.success("유저 정보 변경이 완료되었습니다.");
       cache.invalidateQueries({ queryKey: ["user"] });
+      cache.refetchQueries({ queryKey: ["user"] });
     },
     onError: () => {
       toast.error("유저 정보 변경 중 에러가 발생했습니다.");
@@ -118,6 +115,7 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
           </button>
         </section>
 
+        {/* 수정영역 */}
         <section className="typo-body mb-4">
           {isEditing ? (
             <>
@@ -140,11 +138,12 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
 
               {previewImage && (
                 <Image
-                  width={30}
-                  height={30}
+                  width={50}
+                  height={50}
                   src={previewImage}
                   alt="Profile preview"
                   className="w-24 h-24 object-cover rounded-full mt-4"
+                  quality={100}
                 />
               )}
             </>
