@@ -13,7 +13,7 @@ export default function Mypage() {
         <section className="flex-shrink-0">
           <GifticonSwipe />
         </section>
-        <section className="pt-2 pb-4 px-8  flex-grow h-full">
+        <section className="pt-4 pb-4 px-8  flex-grow h-full">
           <MypageList />
         </section>
       </section>

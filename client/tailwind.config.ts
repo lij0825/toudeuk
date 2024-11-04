@@ -10,13 +10,32 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      keyframes: {
+        floating: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-10px)" },
+        },
+        "floating-delayed-1": {
+          "0%, 100%": { transform: "translateY(-10px)" },
+          "50%": { transform: "translateY(0)" },
+        },
+        "floating-delayed-2": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-10px)" },
+        },
+      },
+      animation: {
+        floating: "floating 10s ease-in-out infinite",
+        "floating-delayed-1": "floating-delayed-1 10s ease-in-out infinite",
+        "floating-delayed-2": "floating-delayed-2 10s ease-in-out infinite",
+      },
       colors: {
         background: "#17181C", // 검정 배경으로 고정
         foreground: "#0E0E0E", // 검은 텍스트
         customPink: "#FFADFE",
         customGray: "#0033FF",
         primary: "#0068FE", // 밝은 파란색
-        secondary: "#004DFF", // 밝은 파란색
+        secondary: "#748DA6",
         "secondary-2": "#53B3FF", // 하늘색
         accent: "#FFCE8E", // 밝은 주황색
         "accent-2": "#FEDE53", // 밝은 노랑

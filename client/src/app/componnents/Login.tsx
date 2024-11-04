@@ -38,21 +38,15 @@ export default function Login() {
   //   mutation.mutate(formData);
   // };
 
-
-    const handleKakaoLogin = () => {
+  const handleKakaoLogin = () => {
     // 카카오 로그인 처리 함수 (구현 필요)
     console.log("카카오 로그인", process.env.NEXT_PUBLIC_API_URL);
     window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/oauth2/authorization/kakao?redirect_uri=${process.env.NEXT_PUBLIC_BASE_URL}`;
   };
 
   return (
-    <div className="flex items-center justify-center">
-      <div className="p-8 rounded shadow-md w-full max-w-md">
-        <h1 className="typo-title">터득</h1>
-        <h1 className="typo-title">TouDeuk</h1>
-
-        <div className="mb-4"></div> 
-        {/* <form onSubmit={handleSubmit} className="space-y-4">
+    <div>
+      {/* <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <div>
               <input
@@ -91,15 +85,13 @@ export default function Login() {
           <span className="mx-2 text-gray-500">또는</span>
           <hr className="flex-grow border-gray-300" />
         </div> */}
-        <div className="flex justify-center typo-body">
-          <button
-            onClick={handleKakaoLogin}
-            className="flex items-center justify-center w-full h-10 rounded-md bg-[#FEE500] border border-[#FEE500] text-black hover:bg-[#FEE500] transition duration-200"
-          >
-            Game Start
-          </button>
-        </div>
-      </div>
+
+      <button
+        onClick={handleKakaoLogin}
+        className="flex typo-sub-title font-bold p-3 items-center justify-center w-full h-10 rounded-md bg-[#FEE500] border border-[#FEE500] text-black hover:bg-[#FEE500] transition duration-200"
+      >
+        Game Start
+      </button>
     </div>
   );
 }

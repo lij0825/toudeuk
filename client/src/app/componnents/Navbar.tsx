@@ -3,6 +3,8 @@
 import { ROUTE_URL } from "@/constants/routes";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { CUSTOM_ICON } from "@/constants/customIcons";
+import LottieAnimation from "./LottieAnimation";
 
 export default function Navbar() {
   const [isVisible, setIsVisible] = useState(false); // 네비게이션 바 표시 상태
@@ -20,7 +22,7 @@ export default function Navbar() {
     pathname === ROUTE_URL.GAME ? "bg-white" : "bg-gray-800"
   }`;
 
-  const navClasses = `absolute bottom-0 inset-x-0 w-full p-4 flex justify-center items-center border-t border-gray-200 rounded-t-xl shadow-xl transition-transform transition-opacity duration-300 ${
+  const navClasses = `font-noto absolute bottom-0 inset-x-0 w-full px-8 pb-2 pt-1 flex justify-between gap-1 items-end border-t border-gray-200 shadow-xl transition-transform transition-opacity duration-300 ${
     isVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
   } ${
     pathname === ROUTE_URL.GAME
@@ -73,33 +75,92 @@ export default function Navbar() {
               : "0px 4px 12px rgba(0, 0, 0, 0.15)",
         }}
       >
-        {/* 햄버거 아이콘 */}
         <span className={hamburgerLineClasses}></span>
         <span className={hamburgerLineClasses}></span>
         <span className={hamburgerLineClasses}></span>
       </button>
 
-      {/* 네비게이션 바 - 조건부 렌더링 */}
+      {/* 네비게이션 바 */}
       <nav
         ref={navRef}
         className={navClasses}
         style={{ zIndex: 40, willChange: "transform, opacity" }}
       >
-        <a href={ROUTE_URL.GAME} className="mx-2">
-          게임
-        </a>
-        <a href={ROUTE_URL.HISTORY} className="mx-2">
-          기록
-        </a>
-        <a href={ROUTE_URL.RANK} className="mx-2">
-          랭킹
-        </a>
-        <a href={ROUTE_URL.GIFTICON_SHOP} className="mx-2">
-          기프티콘 샵
-        </a>
-        <a href={ROUTE_URL.MYPAGE} className="mx-2">
-          my
-        </a>
+        <div className="flex flex-col items-end justify-center text-center ">
+          <a
+            href={ROUTE_URL.GIFTICON_SHOP}
+            className="flex flex-col items-center"
+            style={{ textDecoration: "none" }}
+          >
+            <LottieAnimation
+              animationData={CUSTOM_ICON.gamecontroller}
+              loop={1}
+              width={50}
+              height={50}
+            />
+            <span className="text-sm">게임</span>
+          </a>
+        </div>
+        <div className="flex flex-col items-end justify-center text-center ">
+          <a
+            href={ROUTE_URL.GIFTICON_SHOP}
+            className="flex flex-col items-center"
+            style={{ textDecoration: "none" }}
+          >
+            <LottieAnimation
+              animationData={CUSTOM_ICON.history}
+              loop={1}
+              width={45}
+              height={45}
+            />
+            <span className="text-sm">기록</span>
+          </a>
+        </div>
+        <div className="flex flex-col items-end justify-center text-center">
+          <a
+            href={ROUTE_URL.GIFTICON_SHOP}
+            className="flex flex-col items-center"
+            style={{ textDecoration: "none" }}
+          >
+            <LottieAnimation
+              animationData={CUSTOM_ICON.trophy}
+              loop={1}
+              width={50}
+              height={50}
+            />
+            <span className="text-sm">랭킹</span>
+          </a>
+        </div>
+        <div className="flex flex-col items-end justify-center text-center">
+          <a
+            href={ROUTE_URL.GIFTICON_SHOP}
+            className="flex flex-col items-center"
+            style={{ textDecoration: "none" }}
+          >
+            <LottieAnimation
+              animationData={CUSTOM_ICON.ticket1}
+              loop={1}
+              width={50}
+              height={50}
+            />
+            <span className="text-sm">기프티콘</span>
+          </a>
+        </div>
+        <div className="flex flex-col items-end justify-center text-center">
+          <a
+            href={ROUTE_URL.GIFTICON_SHOP}
+            className="flex flex-col items-center"
+            style={{ textDecoration: "none" }}
+          >
+            <LottieAnimation
+              animationData={CUSTOM_ICON.profile}
+              loop={1}
+              width={50}
+              height={50}
+            />
+            <span className="text-sm">마이</span>
+          </a>
+        </div>
       </nav>
     </>
   );

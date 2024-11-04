@@ -14,7 +14,8 @@ interface ModalProps {
   handleModalOpen: () => void;
 }
 
-export default function SettingButton() {
+//실제 아이콘 영역
+export default function ProfileSetting() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const handleModalOpen = () => {
@@ -101,76 +102,74 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+      className="fixed inset-0 z-50 flex items-center bg-white typo-noto justify-center"
       onClick={handleModalOpen}
     >
       <div
-        className="fixed max-w-md w-full md:w-1/2 lg:w-1/3 bg-white bg-opacity-10 backdrop-blur-lg border border-white border-opacity-30 shadow-lg rounded-xl p-6"
+        className="fixed max-w-md w-full md:w-1/3 lg:w-1/4 typo-noto bg-white border border-white border-opacity-30 shadow-lg rounded-xl p-6"
         onClick={(e) => e.stopPropagation()}
       >
-        <section className="typo-body mb-4 flex items-end justify-between">
-          <div className="flex items-end gap-2">
-            <p>My</p>
-            <p>Profile</p>
-          </div>
-          <div onClick={logout}>
-            <p>logout</p>
-          </div>
-          <button
-            onClick={toggleEditMode}
-            className="text-blue-500 hover:text-blue-700"
-          >
-            {isEditing ? "Cancel" : "Edit"}
-          </button>
+        <section className="typo-noto mb-4 flex items-end font-noto justify-between">
+          내 프로필
         </section>
 
         {/* 수정영역 */}
         <section className="typo-body mb-4">
           {isEditing ? (
             <>
-              <label className="block mb-2">Nickname</label>
+              <label className="block mb-2">닉네임</label>
               <input
                 type="text"
-                className="w-full mb-4 p-2 border rounded text-black"
+                className="w-full mb-4 p-2 border rounded text-black placeholder:text-gray-400"
                 value={nickname}
                 onChange={handleNicknameChange}
-                placeholder="Enter your nickname"
+                placeholder="10글자 이내의 한글, 숫자, 영문소문자만 가능합니다."
               />
 
-              <label className="block mb-2">Profile Image</label>
+              <label className="block mb-2">프로필 이미지</label>
               <input
                 type="file"
                 accept="image/*"
-                className="w-full mb-2 p-2 border rounded"
+                className="w-full mb-2 p-2 border rounded placeholder:text-gray-400"
                 onChange={handleImageChange}
+                placeholder="이미지를 선택해주세요"
               />
-
               {previewImage && (
                 <Image
                   width={50}
                   height={50}
                   src={previewImage}
-                  alt="Profile preview"
+                  alt="프로필 미리보기"
                   className="w-24 h-24 object-cover rounded-full mt-4"
                   quality={100}
                 />
               )}
             </>
           ) : (
-            <ul className="list-none space-y-2">
-              <li>
-                <strong>Nickname:</strong> {nickname}
-              </li>
-              <li>
+            <>
+              <div className="list-none max-w-[30px] max-h-[30px] space-y-2 flex">
                 <Image
                   width={30}
                   height={30}
                   src={previewImage}
                   alt="Profile preview"
-                  className="w-24 h-24 object-cover rounded-full mt-4"
+                  className="object-cover rounded-full mt-4"
                 />
-              </li>
-            </ul>
+                <strong>{nickname}</strong> 님
+                <div>
+                  <button
+                    onClick={toggleEditMode}
+                    className="text-blue-500 hover:text-blue-700 w-full"
+                  >
+                    {isEditing ? "취소" : "수정하기"}
+                  </button>
+                </div>
+              </div>
+
+              <div onClick={logout}>
+                <p>로그아웃</p>
+              </div>
+            </>
           )}
         </section>
 
