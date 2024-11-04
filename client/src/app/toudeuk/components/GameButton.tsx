@@ -7,12 +7,17 @@ import { Client, Frame, IFrame, Message, Stomp } from "@stomp/stompjs";
 // import axios from "axios";
 import { useEffect, useState } from "react";
 import SockJS from "sockjs-client";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 export default function GameButton() {
   const [count, setCount] = useState<number>(0);
   const [stompClient, setStompClient] = useState<Client | null>(null);
+
+  const { data: totalClick , isLoading, error } = useQuery<GameInfo>({
+    queryKey: ['count'],
+    queryFn: gameClick
+  })
 
   const mutate = useMutation<GameInfo>({
     mutationFn: () => gameClick(),
@@ -27,6 +32,7 @@ export default function GameButton() {
   const accessToken = sessionStorage.getItem("accessToken");
 
   useEffect(() => {
+    mutate.mutate();
     // accessToken을 sessionStorage에서 가져옵니다.
 
     // ! FIXME : 서버 주소 변경 필요
@@ -43,11 +49,11 @@ export default function GameButton() {
       (frame: IFrame) => {
         console.log("Connected: " + frame);
 
-        // stompClient.publish({
-        //   destination: "/topic/game",
-        //   body: JSON.stringify({}),
-        //   headers: headers,
-        // });
+        stompClient.publish({
+          destination: "/topic/game",
+          body: JSON.stringify({}),
+          headers: headers,
+        });
 
         stompClient.subscribe(
           "/topic/game",
