@@ -89,12 +89,13 @@ public class ClickGameCacheRepository {
 		return 0;
 	}
 
-	public void addTotalClick() {
+	public Long addTotalClick() {
 		Long totalClick = valueOperationsInt.increment(CLICK_TOTAL_KEY);
 		log.info("totalClick : {}", totalClick);
 		if (totalClick == MAX_CLICK) {
 			setGameCoolTime();
 		}
+		return totalClick;
 	}
 
 	public Integer getTotalClick() {
@@ -105,7 +106,7 @@ public class ClickGameCacheRepository {
 	// 클릭 수 click:count
 	public void addUserClick(Long userId) {
 		zSetOperations.incrementScore(CLICK_COUNT_KEY, userId, 1);
-		}
+	}
 
 	public Integer getUserClickCount(Long userId) { // 유저의 클릭 수
 		Double clickCount = zSetOperations.score(CLICK_COUNT_KEY, userId);

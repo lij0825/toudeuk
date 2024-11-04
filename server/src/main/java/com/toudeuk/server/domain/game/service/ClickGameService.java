@@ -64,7 +64,7 @@ public class ClickGameService {
 			Long myRank = clickCacheRepository.getUserRank(userId);
 			Integer myClickCount = clickCacheRepository.getUserClickCount(userId);
 			Long prevUserId = clickCacheRepository.getPrevUserId(myClickCount);
-			Integer prevClickCount = prevUserId == null ? null : clickCacheRepository.getUserClickCount(prevUserId);
+			Integer prevClickCount = prevUserId == null ? -1 : clickCacheRepository.getUserClickCount(prevUserId);
 			Integer totalClick = clickCacheRepository.getTotalClick();
 
 			GameData.DisplayInfoForClicker displayInfoForClicker = GameData.DisplayInfoForClicker.of(
@@ -72,7 +72,7 @@ public class ClickGameService {
 					"RUNNING",
 					myRank.intValue(),
 					myClickCount,
-					null,
+					-1L,
 					prevClickCount,
 					totalClick
 			);
@@ -94,13 +94,17 @@ public class ClickGameService {
 					displayInfoEvery,
 					0,
 					0,
-					null,
+					0L,
 					0,
 					0
 			);
 
 			// 모든 구독자에게 메시지 전송
 			messagingTemplate.convertAndSend("/topic/game", displayInfoEvery);
+
+
+			System.out.println("displayInfoForClicker : " + displayInfoForClicker);
+
 
 			// 특정 구독자에게 메시지 전송
 			messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
@@ -119,7 +123,7 @@ public class ClickGameService {
 					displayInfoEvery,
 					0,
 					0,
-					null,
+					-1L,
 					0,
 					0
 			);
@@ -153,8 +157,8 @@ public class ClickGameService {
 				displayInfoForEvery,
 				1,
 				1,
-				null,
-				null,
+				-1L,
+				0,
 				totalClickCount
 		);
 
@@ -192,8 +196,31 @@ public class ClickGameService {
 
 		// * 클릭 시 레디스 캐쉬 로직
 		clickCacheRepository.addUserClick(userId);
-		clickCacheRepository.addTotalClick();
+		Integer userClickCount = clickCacheRepository.getUserClickCount(userId);
+		Long totalClickCount = clickCacheRepository.addTotalClick();
 		clickCacheRepository.addLog(userId);
+
+		GameData.DisplayInfoForEvery displayInfoForEvery = GameData.DisplayInfoForEvery.of(
+				0L,
+				"RUNNING",
+				totalClickCount.intValue()
+		);
+
+
+		GameData.DisplayInfoForClicker displayInfoForClicker = GameData.DisplayInfoForClicker.of(
+				displayInfoForEvery,
+				0,
+				0,
+				-1L,
+				0,
+				userClickCount
+		);
+
+		// 모든 구독자에게 메시지 전송
+		messagingTemplate.convertAndSend("/topic/game", displayInfoForEvery);
+
+		// 특정 구독자에게 메시지 전송
+		messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
 
 		if (clickCacheRepository.isGameCoolTime()) {
 			Long gameId = clickCacheRepository.getGameId();
