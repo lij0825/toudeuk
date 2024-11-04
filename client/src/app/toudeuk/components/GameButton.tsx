@@ -84,7 +84,7 @@ export default function GameButton() {
       }
     };
   }, []);
-
+    
   const handleClick = async () => {
     // gameClick()
     mutate.mutate();
