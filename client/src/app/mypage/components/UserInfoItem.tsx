@@ -22,7 +22,7 @@ export default function UserInfoItem() {
   return (
     <div className="typo-sub-title">
       <section className="flex align-center pb-8 justify-between">
-        <div className="flex items-cente">
+        <div className="flex items-center">
           <div className="relative w-12 h-12 rounded-lg overflow-hidden mr-4">
             <Image
               src={userInfo?.profileImg || "/default_profile.jpg"}
@@ -39,8 +39,16 @@ export default function UserInfoItem() {
       </section>
       <>
         <Link href={"/point"}>
-          <div className="bg-secondary p-5 rounded-xl text-white">
-            {userInfo ? userInfo.cash : 0}pt
+          <div className="bg-primary p-5 rounded-xl text-white flex items-center">
+            <div>
+              <Image
+                src={"/icons/coin.png"}
+                alt="coin Image"
+                width={34}
+                height={34}
+              />
+            </div>
+            <div className="ml-2">{userInfo ? userInfo.cash : 0}pt</div>
           </div>
         </Link>
       </>
