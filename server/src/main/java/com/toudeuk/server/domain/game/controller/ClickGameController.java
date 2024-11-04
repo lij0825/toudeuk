@@ -1,7 +1,5 @@
 package com.toudeuk.server.domain.game.controller;
 
-import com.toudeuk.server.domain.user.service.JWTService;
-import io.jsonwebtoken.Claims;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.handler.annotation.Header;
@@ -14,12 +12,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.toudeuk.server.core.annotation.CurrentUser;
 import com.toudeuk.server.core.response.SuccessResponse;
 import com.toudeuk.server.domain.game.dto.GameData;
 import com.toudeuk.server.domain.game.dto.HistoryData;
 import com.toudeuk.server.domain.game.service.ClickGameService;
+import com.toudeuk.server.domain.user.service.JWTService;
 
+import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -43,8 +44,9 @@ public class ClickGameController {
 	 */
 	@PostMapping(value = "/click")
 	@Operation(summary = "클릭", description = "버튼을 클릭합니다.")
-	public SuccessResponse<GameData.DisplayInfoForClicker> click(@CurrentUser Long userId) {
-		clickGameService.click(userId);
+	public SuccessResponse<GameData.DisplayInfoForClicker> click(@CurrentUser Long userId) throws
+		JsonProcessingException {
+		clickGameService.asyncClick(userId);
 		return SuccessResponse.of(clickGameService.getGameDisplayData(userId));
 	}
 
@@ -72,7 +74,7 @@ public class ClickGameController {
 	public SuccessResponse<Page<HistoryData.AllInfo>> getHistory(@CurrentUser Long userId, Pageable pageable) {
 		return SuccessResponse.of(clickGameService.getAllHistory(pageable));
 	}
-	
+
 	/**
 	 * 게임 상세 정보 조회
 	 *
@@ -89,7 +91,8 @@ public class ClickGameController {
 	/**
 	 * 유저 게임 정보 조회
 	 *
-	 * @param userId
+	 * @param bearerToken
+	 *
 	 * @return {@link SuccessResponse <Void>}
 	 */
 	// @GetMapping("/history/{userId}")
