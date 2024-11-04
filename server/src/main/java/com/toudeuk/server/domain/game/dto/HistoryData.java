@@ -7,6 +7,7 @@ import com.toudeuk.server.domain.game.entity.RewardType;
 import com.toudeuk.server.domain.user.entity.User;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 public class HistoryData {
 
@@ -53,6 +54,7 @@ public class HistoryData {
 		}
 	}
 
+	@EqualsAndHashCode(callSuper = true)
 	@Data
 	public static class AllInfo extends BaseInfo {
 		private RewardUser winner;
@@ -68,6 +70,7 @@ public class HistoryData {
 		}
 	}
 
+	@EqualsAndHashCode(callSuper = true)
 	@Data
 	public static class DetailInfo extends BaseInfo {
 		private RewardUser winner;

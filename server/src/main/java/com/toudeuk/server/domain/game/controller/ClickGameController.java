@@ -1,9 +1,5 @@
 package com.toudeuk.server.domain.game.controller;
 
-import com.toudeuk.server.domain.user.service.JWTService;
-import io.jsonwebtoken.Claims;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.toudeuk.server.domain.game.dto.GameData;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.handler.annotation.Header;
@@ -16,12 +12,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.toudeuk.server.core.annotation.CurrentUser;
 import com.toudeuk.server.core.response.SuccessResponse;
 import com.toudeuk.server.domain.game.dto.GameData;
 import com.toudeuk.server.domain.game.dto.HistoryData;
 import com.toudeuk.server.domain.game.service.ClickGameService;
+import com.toudeuk.server.domain.user.service.JWTService;
 
+import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -41,11 +40,12 @@ public class ClickGameController {
 	/**
 	 * 사용자 클릭
 	 * @param userId
-	 * @return {@link SuccessResponse<GameData.DisplayInfo>}
+	 * @return {@link SuccessResponse<GameData.DisplayInfoForClicker>}
 	 */
 	@PostMapping(value = "/click")
 	@Operation(summary = "클릭", description = "버튼을 클릭합니다.")
-	public SuccessResponse<GameData.DisplayInfo> click(@CurrentUser Long userId) throws JsonProcessingException {
+	public SuccessResponse<GameData.DisplayInfoForClicker> click(@CurrentUser Long userId) throws
+		JsonProcessingException {
 		clickGameService.asyncClick(userId);
 		return SuccessResponse.of(clickGameService.getGameDisplayData(userId));
 	}
@@ -91,7 +91,8 @@ public class ClickGameController {
 	/**
 	 * 유저 게임 정보 조회
 	 *
-	 * @param userId
+	 * @param bearerToken
+	 *
 	 * @return {@link SuccessResponse <Void>}
 	 */
 	// @GetMapping("/history/{userId}")
@@ -100,7 +101,6 @@ public class ClickGameController {
 	// 	Pageable pageable) {
 	// 	return SuccessResponse.of(clickGameService.getUserGameInfo(userId, pageable));
 	// }
-
 	@MessageMapping("/game")
 	public void sendPublish(@Header("Authorization") String bearerToken) throws Exception {
 		Long userId = resolveToken(bearerToken);
