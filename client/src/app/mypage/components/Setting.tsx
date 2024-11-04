@@ -7,6 +7,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import SvgSettingIcon from "./SettingIcon";
+import { useRouter } from "next/router";
 
 interface ModalProps {
   isOpen: boolean;
@@ -91,6 +92,11 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
     handleModalOpen();
   }
 
+  function logout() {
+    sessionStorage.removeItem("accessToken");
+    window.location.href = "/";
+  }
+
   if (!isOpen) return null;
 
   return (
@@ -106,6 +112,9 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
           <div className="flex items-end gap-2">
             <p>My</p>
             <p>Profile</p>
+          </div>
+          <div onClick={logout}>
+            <p>logout</p>
           </div>
           <button
             onClick={toggleEditMode}
