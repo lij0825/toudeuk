@@ -98,21 +98,4 @@ public class ClickGameController {
 	// 	Pageable pageable) {
 	// 	return SuccessResponse.of(clickGameService.getUserGameInfo(userId, pageable));
 	// }
-
-	@MessageMapping("/game")
-	public void sendPublish(@Header("Authorization") String bearerToken) throws Exception {
-		Long userId = resolveToken(bearerToken);
-
-		clickGameService.checkGame(userId);
-	}
-
-	private Long resolveToken(String bearerToken) {
-		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-			String token = bearerToken.substring(7);
-
-			Claims claims = jwtService.parseClaims(token);
-			return Long.parseLong(claims.getSubject());
-		}
-		return null;
-	}
 }
