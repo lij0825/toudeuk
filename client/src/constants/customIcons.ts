@@ -19,6 +19,7 @@ import history from "../../public/icons/history.json";
 import gamecontroller from "../../public/icons/game-controller.json";
 import profile from "../../public/icons/user.json";
 import emty from "../../public/icons/open-box.json";
+import edit from "../../public/icons/edit.json";
 
 // SVG 파일 Import
 import settingSVG from "../../public/icons/setting.svg";
@@ -43,4 +44,5 @@ export const CUSTOM_ICON = {
   gamecontroller,
   profile,
   emty,
+  edit
 };
