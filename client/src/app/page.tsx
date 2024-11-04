@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import dynamic from "next/dynamic";
-import Login from "./componnents/Login";
+import Login from "./components/Login";
 
 export default function Home() {
   return (
@@ -13,4 +13,3 @@ export default function Home() {
     </div>
   );
 }
- 

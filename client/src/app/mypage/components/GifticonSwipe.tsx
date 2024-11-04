@@ -7,7 +7,7 @@ import { GetServerSideProps } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { toast } from "react-toastify";
-import LottieAnimation from "@/app/componnents/LottieAnimation";
+import LottieAnimation from "@/app/components/LottieAnimation";
 import { CUSTOM_ICON } from "@/constants/customIcons";
 
 export const getServerSideProps: GetServerSideProps = async () => {

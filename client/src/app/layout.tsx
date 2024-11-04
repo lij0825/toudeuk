@@ -5,7 +5,7 @@ import "./globals.css";
 const ClientWrapper = dynamic(() => import("@/providers/ReacQueryProvider"), {
   ssr: false,
 });
-const Navbar = dynamic(() => import("./componnents/Navbar"), { ssr: false });
+const Navbar = dynamic(() => import("./components/Navbar"), { ssr: false });
 
 const APP_NAME = "TouDeuk";
 const APP_DEFAULT_TITLE = "TouDeuk App";
