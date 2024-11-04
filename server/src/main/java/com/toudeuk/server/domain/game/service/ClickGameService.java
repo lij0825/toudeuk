@@ -187,6 +187,10 @@ public class ClickGameService {
 		// * 게임 참가자들의 모든 캐쉬 로그 찍어줘야함
 	}
 
+	public boolean isGameCoolTime() {
+		return clickCacheRepository.isGameCoolTime();
+	}
+
 
 
 	public Page<HistoryData.AllInfo> getAllHistory(Pageable pageable) {

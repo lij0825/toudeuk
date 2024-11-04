@@ -2,6 +2,8 @@ package com.toudeuk.server.domain.user.controller;
 
 import java.util.List;
 
+import com.toudeuk.server.domain.item.service.ItemService;
+import com.toudeuk.server.domain.user.dto.UserItemData;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -40,6 +42,7 @@ public class UserController {
 
 	private final JwtProperties properties;
 	private final UserService userService;
+	private final ItemService itemService;
 
 	/**
 	 * 유저 정보 조회
@@ -119,4 +122,31 @@ public class UserController {
 			properties.getRefreshExpire(), true);
 		return SuccessResponse.of(refreshedToken);
 	}
+
+	/**
+	 * 나의 아이템 목록 조회
+	 *
+	 * @param userId
+	 * @return {@link SuccessResponse<List<UserItemData.UserItemInfo>>}
+	 */
+	@GetMapping(value = "/item")
+	@Operation(summary = "나의 아이템 목록 조회", description = "나의 아이템 목록을 조회합니다.")
+	public SuccessResponse<List<UserItemData.UserItemInfo>> getMyItemList(@CurrentUser Long userId) {
+		return SuccessResponse.of(itemService.getUserItemList(userId));
+	}
+
+	/**
+	 * 아이템 사용
+	 *
+	 * @param userId, userItemId
+	 * @return {@link SuccessResponse<Void>}
+	 */
+	@PostMapping(value = "/item/use")
+	@Operation(summary = "아이템 사용", description = "아이템을 사용합니다.")
+	public SuccessResponse<Void> useItem(@CurrentUser Long userId, @RequestBody UserItemData.Use use) {
+		itemService.useItem(userId, use.getUserItemId());
+		return SuccessResponse.empty();
+	}
+
+
 }
