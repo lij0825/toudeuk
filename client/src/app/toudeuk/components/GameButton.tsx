@@ -49,13 +49,17 @@ export default function GameButton() {
         //   headers: headers,
         // });
 
-        stompClient.subscribe("/topic/game", (message) => {
-          console.log('메시지 전체',message)
-          console.log('메시지 전체',message)
-          console.log('메시지 body',message.body)
-          console.log('메시지 Json 파싱',JSON.parse(message.body))
-          setCount(parseInt(JSON.parse(message.body)['totalClick']));
-        }, headers);
+        stompClient.subscribe(
+          "/topic/game",
+          (message) => {
+            console.log("메시지 전체", message);
+            console.log("메시지 전체", message);
+            console.log("메시지 body", message.body);
+            console.log("메시지 Json 파싱", JSON.parse(message.body));
+            setCount(parseInt(JSON.parse(message.body)["totalClick"]));
+          },
+          headers
+        );
         // stompClient.subscribe(`/topic/game/${userId}`,(message:IMessage) => {
         //   console.log("내 클릭 수 : ",message)
         // })
