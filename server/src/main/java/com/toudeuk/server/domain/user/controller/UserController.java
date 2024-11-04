@@ -5,14 +5,7 @@ import java.util.List;
 import com.toudeuk.server.domain.item.service.ItemService;
 import com.toudeuk.server.domain.user.dto.UserItemData;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.toudeuk.server.core.annotation.CurrentUser;
 import com.toudeuk.server.core.constants.AuthConst;
@@ -133,6 +126,18 @@ public class UserController {
 	@Operation(summary = "나의 아이템 목록 조회", description = "나의 아이템 목록을 조회합니다.")
 	public SuccessResponse<List<UserItemData.UserItemInfo>> getMyItemList(@CurrentUser Long userId) {
 		return SuccessResponse.of(itemService.getUserItemList(userId));
+	}
+
+	/**
+	 * 나의 아이템 상세 조회
+	 *
+	 * @param userId, userItemId
+	 * @return {@link SuccessResponse<UserItemData.UserItemDetail>}
+	 */
+	@GetMapping(value = "/item/detail")
+	@Operation(summary = "나의 아이템 상세 조회", description = "나의 아이템 상세 정보를 조회합니다.")
+	public SuccessResponse<UserItemData.UserItemDetail> getMyItemDetail(@CurrentUser Long userId, @RequestParam Long userItemId) {
+		return SuccessResponse.of(itemService.getUserItemDetail(userId, userItemId));
 	}
 
 	/**
