@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { CUSTOM_ICON } from "@/constants/customIcons";
 import LottieAnimation from "./LottieAnimation";
-import HistoryPage from "./../(sublayout)/history/page";
 
 export default function Navbar() {
   const [isVisible, setIsVisible] = useState(false); // 네비게이션 바 표시 상태

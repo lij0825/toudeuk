@@ -7,14 +7,14 @@ import Image from "next/image";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import SvgSettingIcon from "./SettingIcon";
-import { useRouter } from "next/router";
+import LottieAnimation from "./../../componnents/LottieAnimation";
+import { CUSTOM_ICON } from "@/constants/customIcons";
 
 interface ModalProps {
   isOpen: boolean;
   handleModalOpen: () => void;
 }
 
-//실제 아이콘 영역
 export default function ProfileSetting() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -102,42 +102,87 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center bg-white typo-noto justify-center"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm"
       onClick={handleModalOpen}
     >
       <div
-        className="fixed max-w-md w-full md:w-1/3 lg:w-1/4 typo-noto bg-white border border-white border-opacity-30 shadow-lg rounded-xl p-6"
+        className="relative w-80 bg-white border border-white border-opacity-30 shadow-lg rounded-xl p-6"
         onClick={(e) => e.stopPropagation()}
       >
-        <section className="typo-noto mb-4 flex items-end font-noto justify-between">
+        <section className="text-lg mb-4 flex justify-between items-center">
           내 프로필
+          <div className="flex space-x-2 mt-4">
+            {isEditing ? (
+              <>
+                <button
+                  onClick={() => setIsEditing(false)}
+                  className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg text-sm hover:bg-gray-400 transition duration-150"
+                >
+                  취소
+                </button>
+                <button
+                  onClick={handleSave}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600 transition duration-150"
+                >
+                  저장하기
+                </button>
+              </>
+            ) : (
+              <></>
+            )}
+          </div>
         </section>
 
-        {/* 수정영역 */}
-        <section className="typo-body mb-4">
-          {isEditing ? (
-            <>
-              <label className="block mb-2">닉네임</label>
-              <input
-                type="text"
-                className="w-full mb-4 p-2 border rounded text-black placeholder:text-gray-400"
-                value={nickname}
-                onChange={handleNicknameChange}
-                placeholder="10글자 이내의 한글, 숫자, 영문소문자만 가능합니다."
-              />
+        <section className="mb-4">
+          <div className="flex items-center gap-4">
+            <Image
+              width={50}
+              height={50}
+              src={previewImage}
+              alt="Profile preview"
+              className="object-cover rounded-full"
+            />
+            <strong className="text-base">{nickname}님</strong>
+          </div>
 
-              <label className="block mb-2">프로필 이미지</label>
-              <input
-                type="file"
-                accept="image/*"
-                className="w-full mb-2 p-2 border rounded placeholder:text-gray-400"
-                onChange={handleImageChange}
-                placeholder="이미지를 선택해주세요"
-              />
+          <div className="relative mt-4">
+            <input
+              type="text"
+              className="w-full p-2 h-12 border rounded text-black placeholder:text-gray-400 text-sm pr-10" // Add padding-right for icon space
+              value={nickname}
+              onChange={handleNicknameChange}
+              disabled={!isEditing}
+              placeholder="10글자 이내의 한글, 숫자, 영문소문자만 가능합니다."
+            />
+            {!isEditing && (
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                <LottieAnimation
+                  animationData={CUSTOM_ICON.edit}
+                  loop={true}
+                  width={20}
+                  height={20}
+                  autoplay={true}
+                />
+              </div>
+            )}
+          </div>
+          {isEditing && (
+            <>
+              <div className="relative w-full mt-4">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="absolute inset-0 w-full h-12 opacity-0 cursor-pointer"
+                />
+                <div className="w-full p-2 border rounded bg-gray-100 text-gray-600 text-sm text-center cursor-pointer">
+                  이미지 선택
+                </div>
+              </div>
               {previewImage && (
                 <Image
-                  width={50}
-                  height={50}
+                  width={80}
+                  height={80}
                   src={previewImage}
                   alt="프로필 미리보기"
                   className="w-24 h-24 object-cover rounded-full mt-4"
@@ -145,44 +190,14 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
                 />
               )}
             </>
-          ) : (
-            <>
-              <div className="list-none max-w-[30px] max-h-[30px] space-y-2 flex">
-                <Image
-                  width={30}
-                  height={30}
-                  src={previewImage}
-                  alt="Profile preview"
-                  className="object-cover rounded-full mt-4"
-                />
-                <strong>{nickname}</strong> 님
-                <div>
-                  <button
-                    onClick={toggleEditMode}
-                    className="text-blue-500 hover:text-blue-700 w-full"
-                  >
-                    {isEditing ? "취소" : "수정하기"}
-                  </button>
-                </div>
-              </div>
-
-              <div onClick={logout}>
-                <p>로그아웃</p>
-              </div>
-            </>
           )}
         </section>
-
-        {isEditing && (
-          <section className="typo-body">
-            <button
-              onClick={handleSave}
-              className="w-full bg-blue-500 text-white p-2 rounded mt-4"
-            >
-              Save Changes
-            </button>
-          </section>
-        )}
+        <button
+          onClick={logout}
+          className="bg-red-500 ml-auto px-3 py-1 rounded-lg text-sm bg-gray-500 hover:bg-red-600 text-white w-full"
+        >
+          로그아웃
+        </button>
       </div>
     </div>
   );
