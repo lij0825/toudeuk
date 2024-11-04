@@ -67,6 +67,14 @@ public class ClickGameService {
 			Integer prevClickCount = prevUserId == null ? -1 : clickCacheRepository.getUserClickCount(prevUserId);
 			Integer totalClick = clickCacheRepository.getTotalClick();
 
+			log.info("게임 실행 중이기 떄문에 관련정보들을 발행해야합니다.");
+
+			GameData.DisplayInfoForEvery displayInfoEvery = GameData.DisplayInfoForEvery.of(
+					0L,
+					"RUNNING",
+					totalClick
+			);
+
 			GameData.DisplayInfoForClicker displayInfoForClicker = GameData.DisplayInfoForClicker.of(
 					0L,
 					"RUNNING",
@@ -77,6 +85,10 @@ public class ClickGameService {
 					totalClick
 			);
 
+			System.out.println(displayInfoEvery);
+			System.out.println(displayInfoForClicker);
+
+			messagingTemplate.convertAndSend("/topic/game", displayInfoEvery);
 			messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
 			return;
 		}

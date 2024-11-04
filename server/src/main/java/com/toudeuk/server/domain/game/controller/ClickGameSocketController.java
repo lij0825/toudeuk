@@ -6,20 +6,37 @@ import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RestController;
 
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class ClickGameSocketController {
 
     private final ClickGameService clickGameService;
     private final JWTService jwtService;
 
+    @SendTo("")
+    public void sendStart(){
+    }
+
     @MessageMapping("/game")
     public void sendPublish(@Header("Authorization") String bearerToken) throws Exception {
         Long userId = resolveToken(bearerToken);
+
+        clickGameService.checkGame(userId);
+    }
+
+
+    @MessageMapping("/topic/connect")
+    public void ping(@Header("Authorization") String bearerToken) throws Exception {
+        Long userId = resolveToken(bearerToken);
+
+        System.out.println(userId);
+
 
         clickGameService.checkGame(userId);
     }
