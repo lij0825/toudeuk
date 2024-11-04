@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,6 +51,20 @@ public class UserController {
 	@Operation(summary = "유저 정보 조회", description = "유저 정보를 조회합니다.")
 	public SuccessResponse<UserData.Info> getUserInfo(@CurrentUser Long userId) {
 		return SuccessResponse.of(userService.getUserInfo(userId));
+	}
+
+	/**
+	 * 유저 정보 수정
+	 *
+	 * @param updateInfo
+	 * @return {@link SuccessResponse<Void>}
+	 */
+	@PatchMapping(value = "", consumes = {"multipart/form-data"})
+	@Operation(summary = "유저 정보 수정", description = "유저 정보를 수정합니다.")
+	public SuccessResponse<Void> updateUserInfo(@CurrentUser Long userId,
+		@ModelAttribute UserData.UpdateInfo updateInfo) {
+		userService.updateUserInfo(userId, updateInfo);
+		return SuccessResponse.empty();
 	}
 
 	/**

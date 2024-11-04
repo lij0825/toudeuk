@@ -4,20 +4,17 @@ import { fetchUserInfo } from "@/apis/userInfoApi";
 import { UserInfo } from "@/types/mypageInfo";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
-import { useState } from "react";
 import { HiInformationCircle } from "react-icons/hi";
 import { toast } from "react-toastify";
 
 export default function MyPoint() {
-  const [showInfo, setShowInfo] = useState(false); // 설명 표시 상태
 
   // 설명 토글 함수
   const handleInfoClick = () => {
-    setShowInfo(true);
-    // 3초 후 자동으로 알림을 닫기
-    setTimeout(() => {
-      setShowInfo(false);
-    }, 3000);
+    toast.info('잔여 포인트입니다',{
+      position: "top-center",
+      theme: "light"
+    })
   };
 
   const { data: userInfo, isError } = useQuery<UserInfo>({
@@ -54,12 +51,6 @@ export default function MyPoint() {
           </Link>
         </div>
       </div>
-      {/* 설명 부분 */}
-      {showInfo && (
-        <div className="fixed bottom-4 right-4 bg-blue-500 text-white p-4 rounded shadow-md">
-          <p>잔여 포인트입니다.</p>
-        </div>
-      )}
     </div>
   );
 }

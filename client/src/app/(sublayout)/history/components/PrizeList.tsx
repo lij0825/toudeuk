@@ -1,48 +1,53 @@
 "use client";
 
-import { Suspense } from "react";
-// import { fetchPrizes } from "@/apis/prizeApi";
-// import { useQuery } from "@tanstack/react-query";
-import { PrizeInfo } from "@/types/prize";
-
-const prizeInfoDummyData: PrizeInfo[] = Array.from(
-  { length: 100 },
-  (_, index) => ({
-    roundId: index + 1,
-    date: `2024-10-${(index % 31) + 1}`,
-    point: Math.floor(Math.random() * 200000) + 50000,
-    nickName: `Player${String.fromCharCode(65 + (index % 26))}`,
-    participant: Math.floor(Math.random() * 500) + 50,
-    clicks: Math.floor(Math.random() * 50) + 10,
-    imageSrc: `https://picsum.photos/seed/picsum${index}/150/150`,
-  })
-);
+import { fetchPrizes } from "@/apis/prizeApi";
+import { showToast, ToastType } from "@/app/componnents/Toast";
+import { BaseResponse } from "@/types";
+import { PrizeInfo, PrizeRequest } from "@/types/prize";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import Link from "next/link";
+import { useRef, useState } from "react";
+import PrizeItem from "./PrizeItem";
 
 export default function PrizeList() {
-  // const { data: prizes, isError } = useQuery<PrizeInfo[]>({
-  //   queryKey: ["prizes"],
-  //   queryFn: fetchPrizes,
-  //   staleTime: 5 * 60 * 1000, // 선택적: 5분간 데이터를 fresh로 유지
-  // });
-  // if (isError) {
-  //   toast.error(`오류 발생: ${error}`);
-  // }
+  const [size] = useState<number>(10);
+  const [page] = useState<number>(0);
+  const [sort] = useState<string>("");
+
+  // toast가 이미 호출되었는지 여부를 추적
+  const hasShownToast = useRef(false);
+
+  const { data } = useSuspenseQuery<Partial<BaseResponse<PrizeInfo[]>>>({
+    queryKey: ["prizes"],
+    queryFn: () => fetchPrizes({ page, size, sort } as PrizeRequest),
+    staleTime: 5 * 60 * 1000,
+  });
+
+  // 에러가 발생하면 한 번만 toast를 호출
+  if (!data.success && !hasShownToast.current) {
+    showToast(ToastType.ERROR, data.message || "에러가 발생했습니다.");
+    hasShownToast.current = true; // toast가 한 번만 호출되도록 설정
+  }
+
+  const prizes = data?.data || [];
 
   return (
-    <>
-      <Suspense fallback={""}>
-        <section className="overflow-y-auto h-full scrollbar-hidden">
-          {/* 고정된 높이 및 스크롤 처리 */}
-          {prizeInfoDummyData
-            .slice()
-            .reverse()
-            .map((data) => (
-              <div className="card h-10" key={data.roundId}>
-                {data.roundId}
-              </div>
-            ))}
-        </section>
-      </Suspense>
-    </>
+    <section className="overflow-y-auto h-full scrollbar-hidden">
+      {prizes.length === 0 ? (
+        <div className="flex flex-col items-center justify-center text-black font-noto h-full">
+          <div className="mb-4 text-lg">당첨 내역이 없습니다.</div>
+          <Link
+            href="/toudeuk"
+            className="px-6 py-2 bg-blue-500 text-white rounded-md shadow-lg hover:bg-blue-600 transition-colors duration-200"
+          >
+            게임하러 가기
+          </Link>
+        </div>
+      ) : (
+        prizes.map((prize: PrizeInfo) => (
+          <PrizeItem key={prize.roundId} prizeInfo={prize} />
+        ))
+      )}
+    </section>
   );
 }

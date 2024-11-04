@@ -1,9 +1,15 @@
 package com.toudeuk.server.domain.game.controller;
 
+import com.toudeuk.server.domain.user.service.JWTService;
+import io.jsonwebtoken.Claims;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.toudeuk.server.domain.game.dto.GameData;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.toudeuk.server.core.annotation.CurrentUser;
 import com.toudeuk.server.core.response.SuccessResponse;
+import com.toudeuk.server.domain.game.dto.GameData;
 import com.toudeuk.server.domain.game.dto.HistoryData;
 import com.toudeuk.server.domain.game.service.ClickGameService;
 
@@ -28,6 +35,8 @@ import lombok.extern.slf4j.Slf4j;
 public class ClickGameController {
 
 	private final ClickGameService clickGameService;
+	private final JWTService jwtService;
+	private final SimpMessagingTemplate messagingTemplate;
 
 	/**
 	 * 사용자 클릭
@@ -47,9 +56,9 @@ public class ClickGameController {
 	 */
 	@PostMapping(value = "/start")
 	@Operation(summary = "게임 시작", description = "게임을 시작합니다.")
-	public SuccessResponse<Void> startGame() {
+	public SuccessResponse<Void> startGame(@CurrentUser Long userId) {
 		log.info("게임 시작 컨트롤러");
-		clickGameService.startGame();
+		clickGameService.startGame(userId);
 		return SuccessResponse.empty();
 	}
 
@@ -92,4 +101,20 @@ public class ClickGameController {
 	// 	return SuccessResponse.of(clickGameService.getUserGameInfo(userId, pageable));
 	// }
 
+	@MessageMapping("/game")
+	public void sendPublish(@Header("Authorization") String bearerToken) throws Exception {
+		Long userId = resolveToken(bearerToken);
+
+		clickGameService.checkGame(userId);
+	}
+
+	private Long resolveToken(String bearerToken) {
+		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+			String token = bearerToken.substring(7);
+
+			Claims claims = jwtService.parseClaims(token);
+			return Long.parseLong(claims.getSubject());
+		}
+		return null;
+	}
 }

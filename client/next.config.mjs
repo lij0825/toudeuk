@@ -5,6 +5,7 @@ const withPWA = withPWAInit({
   dest: "public",
   register: true,
   skipWaiting: true,
+  exclude: [({ url }) => new RegExp(`^/($|auth/callback$)`).test(url.pathname)],
 });
 
 const nextConfig = {
@@ -13,6 +14,11 @@ const nextConfig = {
 
   images: {
     remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "cdn-icons-png.flaticon.com",
+        pathname: "/**",
+      },
       {
         protocol: "https",
         hostname: "bizimg.giftishow.com",
@@ -36,6 +42,11 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "mblogthumb-phinf.pstatic.net",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "d2uaylxt6f2ffw.cloudfront.net",
         pathname: "/**",
       },
     ],
@@ -65,4 +76,5 @@ export default withSentryConfig(withPWA(nextConfig), {
   include: "./.next", // 소스맵이 포함된 Next.js 빌드 디렉토리
   urlPrefix: "~/_next", // Sentry에 업로드된 파일 경로가 _next로 시작하도록 설정
   stripPrefix: ["webpack://_N_E/"], // 필요 시 경로에서 특정 프리픽스를 제거
+  debug: process.env.NODE_ENV === "development",
 });

@@ -1,9 +1,9 @@
 package com.toudeuk.server.domain.user.response.impl;
 
-import com.toudeuk.server.domain.user.response.OAuth2Response;
-import com.toudeuk.server.domain.user.entity.ProviderType;
-
 import java.util.Map;
+
+import com.toudeuk.server.domain.user.entity.ProviderType;
+import com.toudeuk.server.domain.user.response.OAuth2Response;
 
 public class GoogleResponse implements OAuth2Response {
 	private final Map<String, Object> attribute;
@@ -33,8 +33,7 @@ public class GoogleResponse implements OAuth2Response {
 	}
 
 	@Override
-	public String getGender() {
-		return "F";
+	public String getProfileImage() {
+		return "";
 	}
-
 }

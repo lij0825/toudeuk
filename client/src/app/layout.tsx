@@ -5,10 +5,11 @@ import "./globals.css";
 const ClientWrapper = dynamic(() => import("@/providers/ReacQueryProvider"), {
   ssr: false,
 });
+const Navbar = dynamic(() => import("./componnents/Navbar"), { ssr: false });
 
 const APP_NAME = "TouDeuk";
 const APP_DEFAULT_TITLE = "TouDeuk App";
-const APP_TITLE_TEMPLATE = "%s - PWA App";
+const APP_TITLE_TEMPLATE = "TouDeuk App-PWA App";
 const APP_DESCRIPTION = "터치를 통해 보상을 획득하세요";
 
 export const metadata: Metadata = {
@@ -52,7 +53,10 @@ export default function RootLayout({
         <meta name="description" content={APP_DESCRIPTION} />
         <meta name="application-name" content={APP_NAME} />
         <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+          name="viewport"
+          content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"
+        />
         <link rel="manifest" href="/manifest.json" />
         {/* OpenGraph */}
         <meta property="og:type" content="website" />
@@ -64,10 +68,11 @@ export default function RootLayout({
         <meta name="twitter:title" content={APP_DEFAULT_TITLE} />
         <meta name="twitter:description" content={APP_DESCRIPTION} />
       </head>
-      <body className="place-items-center">
+      <body className="place-items-center ">
         <ClientWrapper>
-          <main className="bg-background text-foreground max-w-[412px] w-full h-full">
+          <main className="bg-background text-foreground max-w-[412px] w-full h-full relative overflow-hidden">
             {children}
+            <Navbar />
           </main>
         </ClientWrapper>
       </body>
