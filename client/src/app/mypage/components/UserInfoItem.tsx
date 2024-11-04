@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
 import { toast } from "react-toastify";
-import SettingButton from "./Setting";
+import ProfileSetting from "./ProfileSetting";
 
 export default function UserInfoItem() {
   const { data: userInfo, isError } = useQuery<UserInfo>({
@@ -35,7 +35,7 @@ export default function UserInfoItem() {
           </div>
           <span>{userInfo?.nickName}</span>
         </div>
-        <SettingButton />
+        <ProfileSetting />
       </section>
       <>
         <Link href={"/point"}>
