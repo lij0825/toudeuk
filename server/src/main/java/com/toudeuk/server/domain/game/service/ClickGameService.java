@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.toudeuk.server.domain.game.dto.GameData;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -19,11 +20,13 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import com.toudeuk.server.core.exception.BaseException;
 import com.toudeuk.server.domain.game.dto.HistoryData;
 import com.toudeuk.server.domain.game.entity.ClickGame;
 import com.toudeuk.server.domain.game.entity.ClickGameLog;
 import com.toudeuk.server.domain.game.entity.ClickGameRewardLog;
+import com.toudeuk.server.domain.game.kafka.ClickProducer;
 import com.toudeuk.server.domain.game.repository.ClickGameCacheRepository;
 import com.toudeuk.server.domain.game.repository.ClickGameLogRepository;
 import com.toudeuk.server.domain.game.repository.ClickGameRepository;
@@ -48,6 +51,7 @@ public class ClickGameService {
 	private final ClickGameLogRepository clickGameLogRepository;
 	private final ClickGameRewardLogRepository clickGameRewardLogRepository;
 	private final ApplicationEventPublisher applicationEventPublisher;
+	private final ClickProducer clickProducer;
 
 	private final SimpMessagingTemplate messagingTemplate;
 
@@ -199,6 +203,11 @@ public class ClickGameService {
 		}
 	}
 
+	public void asyncClick(Long userId) throws JsonProcessingException {
+		log.info("카프카 클릭 asyncClick userId : {}", userId);
+		clickProducer.occurClickUserId(userId);
+	}
+
 	public GameData.DisplayInfoForClicker getGameDisplayData(Long userId) {
 		Long myRank = clickCacheRepository.getUserRank(userId);
 		Integer myClickCount = clickCacheRepository.getUserClickCount(userId);
@@ -264,7 +273,6 @@ public class ClickGameService {
 
 		List<User> users = userRepository.findAllById(List.of(maxClickUserId, winnerId));
 
-
 		Map<Long, User> userMap = users.stream()
 			.collect(Collectors.toMap(User::getId,
 				Function.identity())); // * Function.identity()은 입력을 그대로 반환하는 함수 User 넣으면 User 반환
@@ -288,8 +296,6 @@ public class ClickGameService {
 
 		// * 게임 참가자들의 모든 캐쉬 로그 찍어줘야함
 	}
-
-
 
 	public Page<HistoryData.AllInfo> getAllHistory(Pageable pageable) {
 
