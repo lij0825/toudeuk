@@ -1,13 +1,8 @@
 package com.toudeuk.server.domain.item.entity;
 
 import com.toudeuk.server.core.entity.TimeEntity;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,7 +24,14 @@ public class Item extends TimeEntity {
 	@Column(name = "item_image")
 	private String image;
 
+	@Column(name = "item_barcode")
+	private String barcode;
+
 	@Column(name = "item_price", nullable = false)
 	private int price;
+
+	@Column(name = "item_type", nullable = false)
+	@Enumerated(EnumType.STRING)
+	private ItemType itemType;
 
 }
