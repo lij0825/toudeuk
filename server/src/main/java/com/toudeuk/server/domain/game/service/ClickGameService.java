@@ -10,23 +10,21 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.toudeuk.server.domain.game.dto.GameData;
-import com.toudeuk.server.domain.game.entity.event.ClickEvent;
-import com.toudeuk.server.domain.game.kafka.ClickProducer;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.toudeuk.server.core.exception.BaseException;
+import com.toudeuk.server.domain.game.dto.GameData;
 import com.toudeuk.server.domain.game.dto.HistoryData;
 import com.toudeuk.server.domain.game.entity.ClickGame;
 import com.toudeuk.server.domain.game.entity.ClickGameLog;
 import com.toudeuk.server.domain.game.entity.ClickGameRewardLog;
+import com.toudeuk.server.domain.game.kafka.ClickProducer;
 import com.toudeuk.server.domain.game.repository.ClickGameCacheRepository;
 import com.toudeuk.server.domain.game.repository.ClickGameLogRepository;
 import com.toudeuk.server.domain.game.repository.ClickGameRepository;
@@ -71,7 +69,7 @@ public class ClickGameService {
 		}
 		if (clickCacheRepository.getGameId() == null) {
 			startGame();
-			return;
+			// return;
 		}
 
 		// * 클릭시 캐쉬 로직 추가 / 유저 조회 -> 캐쉬 업데이트 이렇게 2번 DB에 접근
@@ -102,6 +100,7 @@ public class ClickGameService {
 	}
 
 	public void asyncClick(Long userId) throws JsonProcessingException {
+		log.info("카프카 클릭 asyncClick userId : {}", userId);
 		clickProducer.occurClickUserId(userId);
 	}
 
@@ -112,16 +111,15 @@ public class ClickGameService {
 		Integer prevClickCount = prevUserId == null ? null : clickCacheRepository.getUserClickCount(prevUserId);
 		Integer totalClick = clickCacheRepository.getTotalClick();
 		log.info("myRank : {}, myClickCount : {}, prevUserId : {}, prevClickCount : {}, totalClick : {}",
-				myRank, myClickCount, prevUserId, prevClickCount, totalClick);
+			myRank, myClickCount, prevUserId, prevClickCount, totalClick);
 		return GameData.DisplayInfo.of(
-				myRank.intValue() +1,
-				myClickCount,
-				prevUserId,
-				prevClickCount,
-				totalClick
+			myRank.intValue() + 1,
+			myClickCount,
+			prevUserId,
+			prevClickCount,
+			totalClick
 		);
 	}
-
 
 	@Transactional
 	public void saveLog(Long gameId) {
@@ -168,7 +166,6 @@ public class ClickGameService {
 
 		List<User> users = userRepository.findAllById(List.of(maxClickUserId, winnerId));
 
-
 		Map<Long, User> userMap = users.stream()
 			.collect(Collectors.toMap(User::getId,
 				Function.identity())); // * Function.identity()은 입력을 그대로 반환하는 함수 User 넣으면 User 반환
@@ -192,8 +189,6 @@ public class ClickGameService {
 
 		// * 게임 참가자들의 모든 캐쉬 로그 찍어줘야함
 	}
-
-
 
 	public Page<HistoryData.AllInfo> getAllHistory(Pageable pageable) {
 
