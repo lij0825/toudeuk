@@ -40,6 +40,7 @@ next-env.d.ts
 # service worker
 **/public/precache.*.*.js
 **/public/sw.js
+sw.js
 **/public/workbox-*.js
 **/public/worker-*.js
 **/public/fallback-*.js
