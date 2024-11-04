@@ -2,6 +2,7 @@ package com.toudeuk.server.domain.item.controller;
 
 import java.util.List;
 
+import com.toudeuk.server.domain.user.dto.UserItemData;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -4,10 +4,10 @@ import { gameClick } from "@/apis/gameApi";
 import { GameInfo } from "@/types/game";
 //소켓 연결 또는 SSE 방식으로 touch값 fetch
 import { Client, Frame, IFrame, Message, Stomp } from "@stomp/stompjs";
-import { useMutation } from "@tanstack/react-query";
 // import axios from "axios";
 import { useEffect, useState } from "react";
 import SockJS from "sockjs-client";
+import { useMutation } from "@tanstack/react-query";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 export default function GameButton() {
@@ -48,7 +48,7 @@ export default function GameButton() {
         //   body: JSON.stringify({}),
         //   headers: headers,
         // });
-        
+
         stompClient.subscribe("/topic/game", (message) => {
           console.log('메시지 전체',message)
           console.log('메시지 전체',message)
