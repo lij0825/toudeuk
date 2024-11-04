@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { CUSTOM_ICON } from "@/constants/customIcons";
 import LottieAnimation from "./LottieAnimation";
+import HistoryPage from "./../(sublayout)/history/page";
 
 export default function Navbar() {
   const [isVisible, setIsVisible] = useState(false); // 네비게이션 바 표시 상태
@@ -88,7 +89,7 @@ export default function Navbar() {
       >
         <div className="flex flex-col items-end justify-center text-center ">
           <a
-            href={ROUTE_URL.GIFTICON_SHOP}
+            href={ROUTE_URL.GAME}
             className="flex flex-col items-center"
             style={{ textDecoration: "none" }}
           >
@@ -103,7 +104,7 @@ export default function Navbar() {
         </div>
         <div className="flex flex-col items-end justify-center text-center ">
           <a
-            href={ROUTE_URL.GIFTICON_SHOP}
+            href={ROUTE_URL.HISTORY}
             className="flex flex-col items-center"
             style={{ textDecoration: "none" }}
           >
@@ -118,7 +119,7 @@ export default function Navbar() {
         </div>
         <div className="flex flex-col items-end justify-center text-center">
           <a
-            href={ROUTE_URL.GIFTICON_SHOP}
+            href={ROUTE_URL.RANK}
             className="flex flex-col items-center"
             style={{ textDecoration: "none" }}
           >
@@ -148,7 +149,7 @@ export default function Navbar() {
         </div>
         <div className="flex flex-col items-end justify-center text-center">
           <a
-            href={ROUTE_URL.GIFTICON_SHOP}
+            href={ROUTE_URL.MYPAGE}
             className="flex flex-col items-center"
             style={{ textDecoration: "none" }}
           >
