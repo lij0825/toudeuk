@@ -15,6 +15,11 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
+        protocol: "http",
+        hostname: "k.kakaocdn.net",
+        pathname: "/**",
+      },
+      {
         protocol: "https",
         hostname: "cdn-icons-png.flaticon.com",
         pathname: "/**",

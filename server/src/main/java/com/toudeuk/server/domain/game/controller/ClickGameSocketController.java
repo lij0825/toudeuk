@@ -1,12 +1,11 @@
-package com.toudeuk.server.tmp;
+package com.toudeuk.server.domain.game.controller;
 
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 
+import com.toudeuk.server.domain.game.service.ClickGameService;
 import com.toudeuk.server.domain.user.service.JWTService;
 
 import io.jsonwebtoken.Claims;
@@ -14,28 +13,16 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-public class GameClickController {
+public class ClickGameSocketController {
 
-	private static Integer cnt = 0;
+	private final ClickGameService clickGameService;
 	private final JWTService jwtService;
-	private final SimpMessagingTemplate messagingTemplate;
-
 
 	@MessageMapping("/game")
 	public void sendPublish(@Header("Authorization") String bearerToken) throws Exception {
-		;
 		Long userId = resolveToken(bearerToken);
-		System.out.println(userId + " 유저 아이디 ");
-
-		// 모든 구독자에게 메시지 전송
-		messagingTemplate.convertAndSend("/topic/game", cnt);
-
-		// 특정 구독자에게 메시지 전송
-		messagingTemplate.convertAndSend("/topic/game/" +userId, cnt);
+		clickGameService.checkGame(userId);
 	}
-
-
-
 
 	private Long resolveToken(String bearerToken) {
 		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {

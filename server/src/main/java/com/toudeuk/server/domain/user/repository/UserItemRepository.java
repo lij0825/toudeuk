@@ -10,4 +10,6 @@ import com.toudeuk.server.domain.user.entity.UserItem;
 public interface UserItemRepository extends JpaRepository<UserItem, Long> {
 
 	Optional<List<UserItem>> findByUserId(Long userId);
+
+	Optional<List<UserItem>> findAllByUserId(Long userId);
 }

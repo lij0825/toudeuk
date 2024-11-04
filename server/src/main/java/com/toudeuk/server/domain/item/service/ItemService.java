@@ -2,9 +2,18 @@ package com.toudeuk.server.domain.item.service;
 
 import static com.toudeuk.server.core.exception.ErrorCode.*;
 
+import java.awt.print.Pageable;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
+import com.toudeuk.server.domain.game.dto.HistoryData;
+import com.toudeuk.server.domain.game.entity.ClickGame;
+import com.toudeuk.server.domain.user.dto.UserItemData;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -66,4 +75,27 @@ public class ItemService {
 		user.updateCash(resultCash);
 	}
 
+
+	public List<UserItemData.UserItemInfo> getUserItemList(Long userId) {
+		List<UserItem> userItems = userItemRepository.findAllByUserId(userId)
+				.orElseThrow(() -> new BaseException(USER_ITEM_NOT_FOUND));
+
+		return userItems.stream()
+				.map(UserItemData.UserItemInfo::of)
+				.collect(Collectors.toList());
+	}
+
+	public UserItemData.UserItemDetail getUserItemDetail(Long userId, Long userItemId) {
+		UserItem userItem = userItemRepository.findById(userItemId)
+				.orElseThrow(() -> new BaseException(USER_ITEM_NOT_FOUND));
+
+		return UserItemData.UserItemDetail.of(userItem);
+	}
+
+	@Transactional
+	public void useItem(Long userId, Long userItemId) {
+		UserItem userItem = userItemRepository.findById(userItemId)
+				.orElseThrow(() -> new BaseException(USER_ITEM_NOT_FOUND));
+		userItem.useItem();
+	}
 }

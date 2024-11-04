@@ -1,14 +1,10 @@
 package com.toudeuk.server.domain.game.repository;
 
-import java.lang.reflect.Type;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
-import com.querydsl.core.Tuple;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -18,7 +14,9 @@ import org.springframework.stereotype.Repository;
 
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class ClickGameCacheRepository {
@@ -31,7 +29,6 @@ public class ClickGameCacheRepository {
 
 	private static final long MAX_CLICK = 5; // 12000
 	private static final long COOLTIME_MINUTES = 1; // 5분
-	private static final Logger log = LoggerFactory.getLogger(ClickGameCacheRepository.class);
 
 	@Resource(name = "longRedisTemplate")
 	private ZSetOperations<String, Long> zSetOperations;
@@ -53,11 +50,24 @@ public class ClickGameCacheRepository {
 		valueOperationsLong.set(GAME_ID_KEY, gameId);
 	}
 
+	public boolean existGame(){
+		return valueOperationsLong.get(GAME_ID_KEY) != null;
+	}
+
+	public boolean waitingGameStart(){
+		return valueOperationsLong.get(GAME_ID_KEY) == null;
+	}
+
+
+
+
+
 	public Long getGameId() {
 		return valueOperationsLong.get(GAME_ID_KEY);
 	}
 
 	public void setGameCoolTime() {
+		log.info("setGameCoolTime");
 		LocalDateTime expiredAt = LocalDateTime.now().plusMinutes(COOLTIME_MINUTES);
 		redisTemplate.opsForValue().set(GAME_COOLTIME_KEY, expiredAt.toString(), Duration.ofMinutes(COOLTIME_MINUTES));
 	}
@@ -66,17 +76,26 @@ public class ClickGameCacheRepository {
 		return Boolean.TRUE.equals(redisTemplate.hasKey(GAME_COOLTIME_KEY));
 	}
 
-
-	// 총 클릭수 click:total
-	public void setTotalClick() {
-		valueOperationsInt.set(CLICK_TOTAL_KEY, 0);
+	public Long getGameCoolTime() {
+		return valueOperationsLong.get(GAME_COOLTIME_KEY);
 	}
 
-	public void addTotalClick() {
+
+
+
+	// 총 클릭수 click:total
+	public Integer setTotalClick() {
+		valueOperationsInt.set(CLICK_TOTAL_KEY, 1);
+		return 0;
+	}
+
+	public Long addTotalClick() {
 		Long totalClick = valueOperationsInt.increment(CLICK_TOTAL_KEY);
+		log.info("totalClick : {}", totalClick);
 		if (totalClick == MAX_CLICK) {
 			setGameCoolTime();
 		}
+		return totalClick;
 	}
 
 	public Integer getTotalClick() {
@@ -87,7 +106,7 @@ public class ClickGameCacheRepository {
 	// 클릭 수 click:count
 	public void addUserClick(Long userId) {
 		zSetOperations.incrementScore(CLICK_COUNT_KEY, userId, 1);
-		}
+	}
 
 	public Integer getUserClickCount(Long userId) { // 유저의 클릭 수
 		Double clickCount = zSetOperations.score(CLICK_COUNT_KEY, userId);
@@ -97,11 +116,11 @@ public class ClickGameCacheRepository {
 
 	public Long getUserRank(Long userId) { // 유저의 클릭 랭킹
 		Long rank = zSetOperations.reverseRank(CLICK_COUNT_KEY, userId);
-		return rank == null ? null : rank;
+		return rank == null ? -1 : rank;
 	}
 
 	public Long getPrevUserId(int clickCount) { // 클릭수 기준 앞 등수 유저 아이디
-		Set<Long> longSet = zSetOperations.rangeByScore(CLICK_COUNT_KEY, clickCount+1, Integer.MAX_VALUE, 0, 1);
+		Set<Long> longSet = zSetOperations.rangeByScore(CLICK_COUNT_KEY, clickCount + 1, Integer.MAX_VALUE, 0, 1);
 		return longSet.isEmpty() ? null : longSet.iterator().next();
 	}
 
