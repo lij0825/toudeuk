@@ -116,17 +116,17 @@ public class UserController {
 		return SuccessResponse.of(refreshedToken);
 	}
 
-	/**
-	 * 나의 아이템 목록 조회
-	 *
-	 * @param userId
-	 * @return {@link SuccessResponse<List<UserItemData.UserItemInfo>>}
-	 */
-	@GetMapping(value = "/item")
-	@Operation(summary = "나의 아이템 목록 조회", description = "나의 아이템 목록을 조회합니다.")
-	public SuccessResponse<List<UserItemData.UserItemInfo>> getMyItemList(@CurrentUser Long userId) {
-		return SuccessResponse.of(itemService.getUserItemList(userId));
-	}
+//	/**
+//	 * 나의 아이템 목록 조회
+//	 *
+//	 * @param userId
+//	 * @return {@link SuccessResponse<List<UserItemData.UserItemInfo>>}
+//	 */
+//	@GetMapping(value = "/item")
+//	@Operation(summary = "나의 아이템 목록 조회", description = "나의 아이템 목록을 조회합니다.")
+//	public SuccessResponse<List<UserItemData.UserItemInfo>> getMyItemList(@CurrentUser Long userId) {
+//		return SuccessResponse.of(itemService.getUserItemList(userId));
+//	}
 
 	/**
 	 * 나의 아이템 상세 조회
