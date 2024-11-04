@@ -13,12 +13,14 @@ public class UserData {
 
 	@Data
 	public static class Info {
+		private Long userId;
 		private String nickName;
 		private String profileImg;
 		private int cash;
 
 		public static Info of(User user) {
 			Info info = new Info();
+			info.userId = user.getId();
 			info.nickName = user.getNickname();
 			info.profileImg = user.getProfileImg();
 			info.cash = user.getCash();
