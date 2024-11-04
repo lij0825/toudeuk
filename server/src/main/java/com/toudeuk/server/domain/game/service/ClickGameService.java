@@ -102,6 +102,10 @@ public class ClickGameService {
 			// 모든 구독자에게 메시지 전송
 			messagingTemplate.convertAndSend("/topic/game", displayInfoEvery);
 
+
+			System.out.println("displayInfoForClicker : " + displayInfoForClicker);
+
+
 			// 특정 구독자에게 메시지 전송
 			messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
 
@@ -192,8 +196,31 @@ public class ClickGameService {
 
 		// * 클릭 시 레디스 캐쉬 로직
 		clickCacheRepository.addUserClick(userId);
-		clickCacheRepository.addTotalClick();
+		Integer userClickCount = clickCacheRepository.getUserClickCount(userId);
+		Long totalClickCount = clickCacheRepository.addTotalClick();
 		clickCacheRepository.addLog(userId);
+
+		GameData.DisplayInfoForEvery displayInfoForEvery = GameData.DisplayInfoForEvery.of(
+				0L,
+				"RUNNING",
+				totalClickCount.intValue()
+		);
+
+
+		GameData.DisplayInfoForClicker displayInfoForClicker = GameData.DisplayInfoForClicker.of(
+				displayInfoForEvery,
+				0,
+				0,
+				-1L,
+				0,
+				userClickCount
+		);
+
+		// 모든 구독자에게 메시지 전송
+		messagingTemplate.convertAndSend("/topic/game", displayInfoForEvery);
+
+		// 특정 구독자에게 메시지 전송
+		messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
 
 		if (clickCacheRepository.isGameCoolTime()) {
 			Long gameId = clickCacheRepository.getGameId();

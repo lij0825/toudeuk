@@ -17,7 +17,7 @@ export default function GameButton() {
   const mutate = useMutation<GameInfo>({
     mutationFn: () => gameClick(),
     onSuccess: (data) => {
-      setCount(data.totalClick);
+      // setCount(data.totalClick);
     },
     onError: (error) => {
       console.error("Error updating count:", error);
@@ -43,17 +43,18 @@ export default function GameButton() {
       (frame: IFrame) => {
         console.log("Connected: " + frame);
 
-        stompClient.publish({
-          destination: "/topic/game",
-          body: JSON.stringify({}),
-          headers: headers,
-        });
+        // stompClient.publish({
+        //   destination: "/topic/game",
+        //   body: JSON.stringify({}),
+        //   headers: headers,
+        // });
         
-        stompClient.subscribe("/topic/game", (message: Message) => {
+        stompClient.subscribe("/topic/game", (message) => {
+          console.log('메시지 전체',message)
           console.log('메시지 전체',message)
           console.log('메시지 body',message.body)
-          console.log('메지시 Json 파싱',JSON.parse(message.body))
-          setCount(parseInt(message.body));
+          console.log('메시지 Json 파싱',JSON.parse(message.body))
+          setCount(parseInt(JSON.parse(message.body)['totalClick']));
         }, headers);
         // stompClient.subscribe(`/topic/game/${userId}`,(message:IMessage) => {
         //   console.log("내 클릭 수 : ",message)
