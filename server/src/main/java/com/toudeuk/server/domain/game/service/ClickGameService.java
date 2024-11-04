@@ -178,6 +178,9 @@ public class ClickGameService {
 		}
 		if (clickCacheRepository.getGameId() == null) {
 			throw new BaseException(GAME_NOT_FOUND);
+
+			// TODO : 게임이 없을 때, 게임을 시작하도록 로직 추가
+
 		}
 
 		// * 클릭시 캐쉬 로직 추가 / 유저 조회 -> 캐쉬 업데이트 이렇게 2번 DB에 접근
