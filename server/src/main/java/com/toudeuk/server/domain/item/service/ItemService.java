@@ -85,6 +85,12 @@ public class ItemService {
 				.collect(Collectors.toList());
 	}
 
+	public UserItemData.UserItemDetail getUserItemDetail(Long userId, Long userItemId) {
+		UserItem userItem = userItemRepository.findById(userItemId)
+				.orElseThrow(() -> new BaseException(USER_ITEM_NOT_FOUND));
+
+		return UserItemData.UserItemDetail.of(userItem);
+	}
 
 	@Transactional
 	public void useItem(Long userId, Long userItemId) {
