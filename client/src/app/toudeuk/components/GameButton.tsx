@@ -3,54 +3,68 @@
 import { gameClick } from "@/apis/gameApi";
 import { GameInfo } from "@/types/game";
 //소켓 연결 또는 SSE 방식으로 touch값 fetch
-import { Client, Frame, IFrame, Message, Stomp } from "@stomp/stompjs";
+import {
+  Client,
+  Frame,
+  IFrame,
+  Message,
+  Stomp,
+  StompHeaders,
+} from "@stomp/stompjs";
 // import axios from "axios";
 import { useEffect, useState } from "react";
 import SockJS from "sockjs-client";
-import { useMutation, useQuery } from "@tanstack/react-query";
+// import { useMutation, useQuery } from "@tanstack/react-query";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 export default function GameButton() {
   const [count, setCount] = useState<number>(0);
   const [stompClient, setStompClient] = useState<Client | null>(null);
 
-  const { data: totalClick , isLoading, error } = useQuery<GameInfo>({
-    queryKey: ['count'],
-    queryFn: gameClick
-  })
+  // const {
+  //   data: totalClick,
+  //   isLoading,
+  //   error,
+  // } = useQuery<GameInfo>({
+  //   queryKey: ["count"],
+  //   queryFn: gameClick,
+  // });
 
-  const mutate = useMutation<GameInfo>({
-    mutationFn: () => gameClick(),
-    onSuccess: (data) => {
-      // setCount(data.totalClick);
-    },
-    onError: (error) => {
-      console.error("Error updating count:", error);
-    },
-  });
+  // const mutate = useMutation<GameInfo>({
+  //   mutationFn: () => gameClick(),
+  //   onSuccess: (data) => {
+  //     // setCount(data.totalClick);
+  //   },
+  //   onError: (error) => {
+  //     console.error("Error updating count:", error);
+  //   },
+  // });
 
   const accessToken = sessionStorage.getItem("accessToken");
 
   useEffect(() => {
-    mutate.mutate();
+    // mutate.mutate();
     // accessToken을 sessionStorage에서 가져옵니다.
 
     // ! FIXME : 서버 주소 변경 필요
+    //sockjs로 웹소켓 생성 역할
     const socket = new SockJS(`${BASE_URL}/ws`);
+    //stomp 프로토콜 위에서 sockjs 작동하도록 확장
     const stompClient = Stomp.over(socket);
 
     // 연결 헤더에 accessToken을 추가합니다.
-    const headers = {
+    const headers: StompHeaders = {
       Authorization: `Bearer ${accessToken}`,
     };
 
+    //연결
     stompClient.connect(
       headers,
       (frame: IFrame) => {
-        console.log("Connected: " + frame);
+        console.log("Connected 시도: " + frame);
 
         stompClient.publish({
-          destination: "/topic/game",
+          destination: "/topic/connect",
           body: JSON.stringify({}),
           headers: headers,
         });
@@ -70,6 +84,7 @@ export default function GameButton() {
         //   console.log("내 클릭 수 : ",message)
         // })
       },
+
       (error: Frame | string) => {
         console.error("Connection error: ", error);
       }
@@ -84,11 +99,8 @@ export default function GameButton() {
       }
     };
   }, []);
-    
-  const handleClick = async () => {
-    // gameClick()
-    mutate.mutate();
 
+  const handleClick = async () => {
     if (stompClient) {
       const accessToken = sessionStorage.getItem("accessToken");
       stompClient.publish({
@@ -118,16 +130,15 @@ export default function GameButton() {
     // }
   };
 
-  if (mutate !== undefined) {
-    console.log("111=====================================");
-    console.log("data: ", mutate.data);
-    console.log("222=====================================");
-  }
+  // if (mutate !== undefined) {
+  //   console.log("111=====================================");
+  //   console.log("data: ", mutate.data);
+  //   console.log("222=====================================");
+  // }
 
   return (
     <>
       <div className="relative flex items-center justify-center w-40 h-40">
-        {/* 테두리가 회전하는 버튼 */}
         <div
           data-cy="button"
           onClick={handleClick}
@@ -135,11 +146,12 @@ export default function GameButton() {
         ></div>
 
         {/* 고정된 숫자 */}
-        <span className="z-10 text-3xl text-[#00ff88] hover:text-[#ff00ff] transition-colors duration-300">
+        <span className="z-10 text-3xl text-white">{count}</span>
+        {/* <span className="z-10 text-3xl text-[#00ff88] hover:text-[#ff00ff] transition-colors duration-300">
           {count}
-        </span>
+        </span> */}
       </div>
-      <style jsx>{`
+      {/* <style jsx>{`
         @keyframes spinBorder {
           0% {
             transform: rotate(0deg);
@@ -157,7 +169,7 @@ export default function GameButton() {
         .animate-spin-border {
           animation: spinBorder 2s linear infinite;
         }
-      `}</style>
+      `}</style> */}
     </>
   );
 }

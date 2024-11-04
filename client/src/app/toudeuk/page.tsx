@@ -1,5 +1,3 @@
-"use client";
-
 import GameButton from "./components/GameButton";
 
 export default function Toudeuk() {
