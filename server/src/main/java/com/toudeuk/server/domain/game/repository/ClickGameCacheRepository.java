@@ -53,6 +53,18 @@ public class ClickGameCacheRepository {
 		valueOperationsLong.set(GAME_ID_KEY, gameId);
 	}
 
+	public boolean existGame(){
+		return valueOperationsLong.get(GAME_ID_KEY) != null;
+	}
+
+	public boolean waitingGameStart(){
+		return valueOperationsLong.get(GAME_ID_KEY) == null;
+	}
+
+
+
+
+
 	public Long getGameId() {
 		return valueOperationsLong.get(GAME_ID_KEY);
 	}
@@ -66,10 +78,17 @@ public class ClickGameCacheRepository {
 		return Boolean.TRUE.equals(redisTemplate.hasKey(GAME_COOLTIME_KEY));
 	}
 
+	public Long getGameCoolTime() {
+		return valueOperationsLong.get(GAME_COOLTIME_KEY);
+	}
+
+
+
 
 	// 총 클릭수 click:total
-	public void setTotalClick() {
-		valueOperationsInt.set(CLICK_TOTAL_KEY, 0);
+	public Integer setTotalClick() {
+		valueOperationsInt.set(CLICK_TOTAL_KEY, 1);
+		return 0;
 	}
 
 	public void addTotalClick() {
