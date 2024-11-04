@@ -2,107 +2,78 @@
 
 import { gameClick } from "@/apis/gameApi";
 import { GameInfo } from "@/types/game";
-//소켓 연결 또는 SSE 방식으로 touch값 fetch
-import {
-  Client,
-  Frame,
-  IFrame,
-  Message,
-  Stomp,
-  StompHeaders,
-} from "@stomp/stompjs";
-// import axios from "axios";
+import { Client, Frame, IFrame, Stomp, StompHeaders } from "@stomp/stompjs";
 import { useEffect, useState } from "react";
 import SockJS from "sockjs-client";
-// import { useMutation, useQuery } from "@tanstack/react-query";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export default function GameButton() {
   const [count, setCount] = useState<number>(0);
   const [stompClient, setStompClient] = useState<Client | null>(null);
 
-  // const {
-  //   data: totalClick,
-  //   isLoading,
-  //   error,
-  // } = useQuery<GameInfo>({
-  //   queryKey: ["count"],
-  //   queryFn: gameClick,
-  // });
-
-  // const mutate = useMutation<GameInfo>({
-  //   mutationFn: () => gameClick(),
-  //   onSuccess: (data) => {
-  //     // setCount(data.totalClick);
-  //   },
-  //   onError: (error) => {
-  //     console.error("Error updating count:", error);
-  //   },
-  // });
-
   const accessToken = sessionStorage.getItem("accessToken");
+  // const socket = new SockJS(`${BASE_URL}/ws`);
+  // console.log("Initialized SockJS socket:", socket); // SockJS 초기화 확인
 
   useEffect(() => {
-    // mutate.mutate();
-    // accessToken을 sessionStorage에서 가져옵니다.
+    console.log("useEffect triggered"); // useEffect 시작 확인
+    const stompClient = Stomp.over(() => new SockJS(`${BASE_URL}/ws`)); //재연결 기능을 사용할 수 있음.
+    // const stompClient = Stomp.over(socket);
+    console.log("Initialized Stomp client:", stompClient); // Stomp 클라이언트 초기화 확인
 
-    // ! FIXME : 서버 주소 변경 필요
-    //sockjs로 웹소켓 생성 역할
-    const socket = new SockJS(`${BASE_URL}/ws`);
-    //stomp 프로토콜 위에서 sockjs 작동하도록 확장
-    const stompClient = Stomp.over(socket);
-
-    // 연결 헤더에 accessToken을 추가합니다.
     const headers: StompHeaders = {
       Authorization: `Bearer ${accessToken}`,
     };
+    console.log("Headers set for connection:", headers); // 헤더 설정 확인
 
-    //연결
     stompClient.connect(
       headers,
       (frame: IFrame) => {
-        console.log("Connected 시도: " + frame);
+        console.log("Connected to STOMP broker:", frame); // STOMP 연결 성공
 
         stompClient.publish({
           destination: "/topic/connect",
           body: JSON.stringify({}),
           headers: headers,
         });
+        console.log("Published to /topic/connect"); // /topic/connect 발행 확인
 
         stompClient.subscribe(
           "/topic/game",
           (message) => {
-            console.log("메시지 전체", message);
-            console.log("메시지 전체", message);
-            console.log("메시지 body", message.body);
-            console.log("메시지 Json 파싱", JSON.parse(message.body));
-            setCount(parseInt(JSON.parse(message.body)["totalClick"]));
+            console.log("Received message on /topic/game:", message); // 수신된 전체 메시지 확인
+            console.log("Message body:", message.body); // 메시지 본문 확인
+
+            const parsedData = JSON.parse(message.body);
+            console.log("Parsed message data:", parsedData); // 메시지 파싱 후 데이터 확인
+
+            setCount(parseInt(parsedData["totalClick"]));
           },
           headers
         );
-        // stompClient.subscribe(`/topic/game/${userId}`,(message:IMessage) => {
-        //   console.log("내 클릭 수 : ",message)
-        // })
+        console.log("Subscribed to /topic/game"); // /topic/game 구독 확인
       },
-
       (error: Frame | string) => {
-        console.error("Connection error: ", error);
+        console.error("Connection error:", error); // 연결 실패 시 에러 확인
       }
     );
 
     setStompClient(stompClient);
+    console.log("Stomp client set in state:", stompClient); // Stomp 클라이언트 설정 확인
 
-    // Cleanup on unmount
     return () => {
       if (stompClient) {
-        stompClient.disconnect();
+        stompClient.disconnect(() => {
+          console.log("Disconnected from STOMP broker"); // 연결 해제 확인
+        });
       }
     };
   }, []);
 
   const handleClick = async () => {
+    console.log("Button clicked"); // 버튼 클릭 확인
     if (stompClient) {
-      const accessToken = sessionStorage.getItem("accessToken");
       stompClient.publish({
         destination: "/topic/game",
         body: JSON.stringify({}),
@@ -110,31 +81,9 @@ export default function GameButton() {
           Authorization: `Bearer ${accessToken}`,
         },
       });
+      console.log("Published to /topic/game on click"); // 클릭 시 /topic/game 발행 확인
     }
-    // const accessToken = sessionStorage.getItem("accessToken");
-    // try {
-    //   const response = await axios.post(`${BASE_URL}/api/v1/game/click`, {} ,{
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       "Authorization": `Bearer ${accessToken}`
-    //     }
-    //   }); // 필요한 데이터 추가 가능
-    //   console.log("POST response:", response.data);
-    // } catch (error) {
-    //   console.error("Error sending POST request:", error);
-    // }
-    // try {
-    //   await fetchClick(); // fetchClick 사용
-    // } catch (error) {
-    //   console.error("클릭 요청 실패", error);
-    // }
   };
-
-  // if (mutate !== undefined) {
-  //   console.log("111=====================================");
-  //   console.log("data: ", mutate.data);
-  //   console.log("222=====================================");
-  // }
 
   return (
     <>
@@ -144,32 +93,8 @@ export default function GameButton() {
           onClick={handleClick}
           className="absolute w-40 h-40 rounded-full border-2 border-[#00ff88] hover:border-[#ff00ff] transition-colors duration-300 animate-spin-border"
         ></div>
-
-        {/* 고정된 숫자 */}
         <span className="z-10 text-3xl text-white">{count}</span>
-        {/* <span className="z-10 text-3xl text-[#00ff88] hover:text-[#ff00ff] transition-colors duration-300">
-          {count}
-        </span> */}
       </div>
-      {/* <style jsx>{`
-        @keyframes spinBorder {
-          0% {
-            transform: rotate(0deg);
-            border-color: #00ff88;
-          }
-          50% {
-            border-color: #ff00ff;
-          }
-          100% {
-            transform: rotate(360deg);
-            border-color: #00ff88;
-          }
-        }
-
-        .animate-spin-border {
-          animation: spinBorder 2s linear infinite;
-        }
-      `}</style> */}
     </>
   );
 }
