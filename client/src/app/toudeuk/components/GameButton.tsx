@@ -1,7 +1,7 @@
 "use client";
 
 //소켓 연결 또는 SSE 방식으로 touch값 fetch
-import { Client, Frame, IFrame, IMessage, Stomp } from "@stomp/stompjs";
+import { Client, Frame, IFrame, Message, Stomp } from "@stomp/stompjs";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import SockJS from "sockjs-client";
@@ -30,14 +30,20 @@ export default function GameButton() {
         console.log("Connected: " + frame);
         
         stompClient.publish({
-          destination: "/app/getInitialCount",
+          destination: "/topic/game",
           body: JSON.stringify({}),
           headers: headers
         });
         
-        stompClient.subscribe("/topic/game", (message: IMessage) => {
+        stompClient.subscribe("/topic/game", (message: Message) => {
+          console.log('메시지 전체',message)
+          console.log('메시지 body',message.body)
+          console.log('메지시 Json 파싱',JSON.parse(message.body))
           setCount(parseInt(message.body));
         }, headers);
+        // stompClient.subscribe(`/topic/game/${userId}`,(message:IMessage) => {
+        //   console.log("내 클릭 수 : ",message)
+        // })
       },
       (error: Frame | string) => {
         console.error("Connection error: ", error);
@@ -58,7 +64,7 @@ export default function GameButton() {
     if (stompClient) {
       const accessToken = sessionStorage.getItem('accessToken');
       stompClient.publish({
-        destination: "/app/game",
+        destination: "/topic/game",
         body: JSON.stringify({}),
         headers: {
           Authorization: `Bearer ${accessToken}`
