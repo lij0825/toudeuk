@@ -64,7 +64,7 @@ public class ClickGameService {
 			Long myRank = clickCacheRepository.getUserRank(userId);
 			Integer myClickCount = clickCacheRepository.getUserClickCount(userId);
 			Long prevUserId = clickCacheRepository.getPrevUserId(myClickCount);
-			Integer prevClickCount = prevUserId == null ? null : clickCacheRepository.getUserClickCount(prevUserId);
+			Integer prevClickCount = prevUserId == null ? -1 : clickCacheRepository.getUserClickCount(prevUserId);
 			Integer totalClick = clickCacheRepository.getTotalClick();
 
 			GameData.DisplayInfoForClicker displayInfoForClicker = GameData.DisplayInfoForClicker.of(
@@ -72,7 +72,7 @@ public class ClickGameService {
 					"RUNNING",
 					myRank.intValue(),
 					myClickCount,
-					null,
+					-1L,
 					prevClickCount,
 					totalClick
 			);
@@ -94,7 +94,7 @@ public class ClickGameService {
 					displayInfoEvery,
 					0,
 					0,
-					null,
+					0L,
 					0,
 					0
 			);
@@ -119,7 +119,7 @@ public class ClickGameService {
 					displayInfoEvery,
 					0,
 					0,
-					null,
+					-1L,
 					0,
 					0
 			);
@@ -153,8 +153,8 @@ public class ClickGameService {
 				displayInfoForEvery,
 				1,
 				1,
-				null,
-				null,
+				-1L,
+				0,
 				totalClickCount
 		);
 
