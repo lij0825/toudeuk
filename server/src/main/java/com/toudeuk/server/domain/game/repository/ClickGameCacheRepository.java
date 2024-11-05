@@ -27,7 +27,7 @@ public class ClickGameCacheRepository {
 	private static final String GAME_ID_KEY = "game:id";
 	private static final String GAME_COOLTIME_KEY = "game:cooltime";
 
-	private static final long MAX_CLICK = 5; // 12000
+	private static final long MAX_CLICK = 1000; // 12000
 	private static final long COOLTIME_MINUTES = 1; // 5분
 
 	@Resource(name = "longRedisTemplate")
@@ -50,17 +50,13 @@ public class ClickGameCacheRepository {
 		valueOperationsLong.set(GAME_ID_KEY, gameId);
 	}
 
-	public boolean existGame(){
+	public boolean existGame() {
 		return valueOperationsLong.get(GAME_ID_KEY) != null;
 	}
 
-	public boolean waitingGameStart(){
+	public boolean waitingGameStart() {
 		return valueOperationsLong.get(GAME_ID_KEY) == null;
 	}
-
-
-
-
 
 	public Long getGameId() {
 		return valueOperationsLong.get(GAME_ID_KEY);
@@ -80,17 +76,15 @@ public class ClickGameCacheRepository {
 		return valueOperationsLong.get(GAME_COOLTIME_KEY);
 	}
 
-
-
-
 	// 총 클릭수 click:total
 	public Integer setTotalClick() {
-		valueOperationsInt.set(CLICK_TOTAL_KEY, 1);
+		valueOperationsInt.set(CLICK_TOTAL_KEY, 0);
 		return 0;
 	}
 
 	public Long addTotalClick() {
 		Long totalClick = valueOperationsInt.increment(CLICK_TOTAL_KEY);
+
 		log.info("totalClick : {}", totalClick);
 		if (totalClick == MAX_CLICK) {
 			setGameCoolTime();
@@ -102,10 +96,10 @@ public class ClickGameCacheRepository {
 		return valueOperationsInt.get(CLICK_TOTAL_KEY);
 	}
 
-
 	// 클릭 수 click:count
-	public void addUserClick(Long userId) {
-		zSetOperations.incrementScore(CLICK_COUNT_KEY, userId, 1);
+	public Integer addUserClick(Long userId) {
+		Double score = zSetOperations.incrementScore(CLICK_COUNT_KEY, userId, 1);
+		return score == null ? 1 : score.intValue();
 	}
 
 	public Integer getUserClickCount(Long userId) { // 유저의 클릭 수
@@ -129,6 +123,9 @@ public class ClickGameCacheRepository {
 		return longSet.isEmpty() ? null : longSet.iterator().next();
 	}
 
+	public Set<ZSetOperations.TypedTuple<Long>> getRankingList() {
+		return zSetOperations.reverseRangeByScoreWithScores(CLICK_COUNT_KEY, 0, Integer.MAX_VALUE);
+	}
 
 	// 클릭 순서 click:log
 	public void addLog(Long userId) {
@@ -142,7 +139,6 @@ public class ClickGameCacheRepository {
 	public List<Long> getLog() {
 		return listOperations.range(CLICK_LOG_KEY, 0, MAX_CLICK - 1);
 	}
-
 
 	// 삭제
 	public void deleteAllClickInfo() {

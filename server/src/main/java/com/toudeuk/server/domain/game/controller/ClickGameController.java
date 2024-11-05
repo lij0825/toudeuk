@@ -1,5 +1,6 @@
 package com.toudeuk.server.domain.game.controller;
 
+import com.toudeuk.server.domain.game.dto.RankData;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.handler.annotation.Header;
@@ -25,6 +26,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -87,6 +91,19 @@ public class ClickGameController {
 		Pageable pageable) {
 		return SuccessResponse.of(clickGameService.getHistoryDetail(gameId, pageable));
 	}
+
+	/**
+	 * 게임 랭킹 조회
+	 *
+	 * @param userId, gameId
+	 * @return {@link SuccessResponse <List<Map<String, Object>>>}
+	 */
+	@GetMapping("/rank")
+	@Operation(summary = "게임 랭킹 조회", description = "게임 랭킹을 조회합니다.")
+	public SuccessResponse<RankData.Result> getRanK(@CurrentUser Long userId) {
+		return SuccessResponse.of(clickGameService.getRankingList());
+	}
+
 
 	/**
 	 * 유저 게임 정보 조회

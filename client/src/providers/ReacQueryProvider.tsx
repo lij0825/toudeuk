@@ -43,7 +43,7 @@ export default function ReactQueryProvider({
       <ToastContainer {...toastConfig} />
       {children}
       {process.env.NODE_ENV === "development" && (
-        <ReactQueryDevtools initialIsOpen={false} />
+        <ReactQueryDevtools initialIsOpen={false}/>
       )}
     </QueryClientProvider>
   );
