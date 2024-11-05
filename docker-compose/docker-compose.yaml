@@ -65,7 +65,7 @@ services:
       - "16001:16001"
       - "12000-12009:12000-12009"
     volumes:
-      - ./ngrinder-controller:/opt/ngrinder-controller
+      - /tmp/ngrinder-controller:/opt/ngrinder-controller
   agent:
     container_name: ngrinder-agent
     image: ngrinder/agent:3.5.5
