@@ -107,7 +107,7 @@ export default function Rank() {
   const ranks = [userData, additionalUserData];
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
   const [scrollY, setScrollY] = useState(0);
-  const [numberOfItemsToBrighten, setNumberOfItemsToBrighten] = useState(2); 
+  const [numberOfItemsToBrighten, setNumberOfItemsToBrighten] = useState(2);
 
   // 스크롤 이벤트 핸들러
   const handleScroll = () => {
@@ -170,37 +170,41 @@ export default function Rank() {
   // const numberOfItemsToBrighten = Math.floor(scrollY / 100) * 1 + 6;
 
   return (
-    <div className="flex flex-col items-center justify-center py-10 h-full relative overflow-hidden">
-      <div className="rounded-lg shadow-md w-full max-w-2xl">
-        <h2 className="typo-title font-bold mb-6">Rank</h2>
-        {/* 1위에서 3위까지 큰 카드 */}
-        <div className="flex justify-center mb-4">
-          <div
-            className="bg-blue-500 text-white p-4 rounded-lg mx-2 shadow-md flex flex-col items-center"
-            style={{ width: "180px" }} // 2위 카드 크기 조정
-          >
-            <h2 className="text-2xl">2위</h2>
-            <p className="text-lg">UserTwo</p>
-            <p className="text-xl">1200</p>
+    <>
+      <h2 className="typo-title font-bold mb-6">Rank</h2>
+      <div className="mt-8 h-screen bg-[#FDF4F3] -m-8 rounded-lg">
+
+      
+      <div className="flex flex-col items-center justify-center h-full relative overflow-hidden border-0">
+        <div className="rounded-lg w-full max-w-2xl border-0 m-8">
+          {/* 1위에서 3위까지 큰 카드 */}
+          <div className="flex justify-center rounded-lg mb-4 border-0">
+            <div
+              className="bg-blue-500 text-white p-4 rounded-lg mx-2 shadow-md flex flex-col items-center"
+              style={{ width: "180px" }} // 2위 카드 크기 조정
+            >
+              <h2 className="text-2xl">2위</h2>
+              <p className="text-lg">UserTwo</p>
+              <p className="text-xl">1200</p>
+            </div>
+            <div
+              className="bg-blue-500 text-white p-5 rounded-lg mx-2 shadow-md flex flex-col items-center"
+              style={{ transform: "translateY(-20px)", width: "220px" }} // 1위 카드를 위로 올리고 크기를 조정
+            >
+              <h2 className="text-3xl">1위</h2>
+              <p className="text-lg">UserOne</p>
+              <p className="text-xl">1500</p>
+            </div>
+            <div
+              className="bg-blue-500 text-white p-4 rounded-lg mx-2 shadow-md flex flex-col items-center"
+              style={{ width: "180px" }} // 3위 카드 크기 조정
+            >
+              <h2 className="text-2xl">3위</h2>
+              <p className="text-lg">UserThree</p>
+              <p className="text-xl">1000</p>
+            </div>
           </div>
-          <div
-            className="bg-blue-500 text-white p-5 rounded-lg mx-2 shadow-md flex flex-col items-center"
-            style={{ transform: "translateY(-20px)", width: "220px" }} // 1위 카드를 위로 올리고 크기를 조정
-          >
-            <h2 className="text-3xl">1위</h2>
-            <p className="text-lg">UserOne</p>
-            <p className="text-xl">1500</p>
-          </div>
-          <div
-            className="bg-blue-500 text-white p-4 rounded-lg mx-2 shadow-md flex flex-col items-center"
-            style={{ width: "180px" }} // 3위 카드 크기 조정
-          >
-            <h2 className="text-2xl">3위</h2>
-            <p className="text-lg">UserThree</p>
-            <p className="text-xl">1000</p>
-          </div>
-        </div>
-        {/* <div className="flex justify-center mb-4">
+          {/* <div className="flex justify-center mb-4">
                     {ranks[0].slice(0, 3).map((user) => (
                         <div
                         key={user.rank}
@@ -212,47 +216,49 @@ export default function Rank() {
                         </div>
                         ))}
                         </div> */}
-        <div
-          ref={scrollContainerRef}
-          className="max-h-[520px] overflow-y-auto flex-grow relative scrollbar-hidden">
+          <div
+            ref={scrollContainerRef}
+            className="max-h-[580px] m-8 overflow-y-auto rounded-lg flex-grow relative scrollbar-hidden bg-[#FDF4F3]">
 
-          <div className="grid grid-cols-1 gap-4 w-full max-w-2xl">
-            {ranks[0].slice(3).map((user, index) => (
-              <div
-                key={user.rank}
-                className={`relative p-4 rounded-lg shadow-md flex items-center justify-start  
+            <div className="grid grid-cols-1 gap-4 w-full max-w-2xl">
+              {ranks[0].slice(3).map((user, index) => (
+                <div
+                  key={user.rank}
+                  className={`relative p-4 rounded-lg shadow-md flex items-center justify-start  
                   ${index < numberOfItemsToBrighten
-                  ? "bg-gradient-to-r from-purple-400 to-blue-500 opacity-100"
-                  : "bg-gray-200 opacity-70"
-                  }`} // 기본 클래스
-                style={{
-                  background:
-                    "linear-gradient(98deg, rgba(255, 173, 254, 0.50) -18.39%, rgba(0, 51, 255, 0.50) 113.18%)",
-                  strokeWidth: "2px",
-                  // opacity: getBrightness(index + 3), // 4위부터 밝기 적용
-                  transition: "background-color 0.3s ease, opacity 0.3s ease",
-                  stroke: "rgba(211, 11, 165, 0.78)",
-                  // filter: scrollY > 0 ? `brightness(${1 - scrollY / 1000})` : 'brightness(1)', // 스크롤에 따른 밝기 조절
-                  // border: '2px solid rgba(211, 11, 165, 0.78)', // stroke와 유사하게 보이도록 테두리 추가
-                }}
-              >
-                <h3 className="text-xl w-12 mr-2 text-center font-bold">
-                  {user.rank}
-                </h3>
-                <Image
-                  src={user.image}
-                  alt={`${user.username}의 프로필`}
-                  width="40"
-                  height="40"
-                  className="rounded-full"
-                />
-                <h3 className="text-lg ml-2 font-bold">{user.username}</h3>
-                <h2 className="text-xl ml-auto font-bold">{user.clicks}</h2>
-              </div>
-            ))}
+                      ? "bg-gradient-to-r from-purple-400 to-blue-500 opacity-100"
+                      : "bg-gray-200 opacity-70"
+                    }`} // 기본 클래스
+                  style={{
+                    background:
+                      "linear-gradient(98deg, rgba(255, 173, 254, 0.50) -18.39%, rgba(0, 51, 255, 0.50) 113.18%)",
+                    strokeWidth: "2px",
+                    // opacity: getBrightness(index + 3), // 4위부터 밝기 적용
+                    transition: "background-color 0.3s ease, opacity 0.3s ease",
+                    stroke: "rgba(211, 11, 165, 0.78)",
+                    // filter: scrollY > 0 ? `brightness(${1 - scrollY / 1000})` : 'brightness(1)', // 스크롤에 따른 밝기 조절
+                    // border: '2px solid rgba(211, 11, 165, 0.78)', // stroke와 유사하게 보이도록 테두리 추가
+                  }}
+                >
+                  <h3 className="text-xl w-12 mr-2 text-center font-bold">
+                    {user.rank}
+                  </h3>
+                  <Image
+                    src={user.image}
+                    alt={`${user.username}의 프로필`}
+                    width="40"
+                    height="40"
+                    className="rounded-full"
+                  />
+                  <h3 className="text-lg ml-2 font-bold">{user.username}</h3>
+                  <h2 className="text-xl ml-auto font-bold">{user.clicks}</h2>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }

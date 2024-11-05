@@ -146,10 +146,10 @@ export default function GameButton() {
             height={500}
           /> */}
         </div>
-      </div>
+      {/* </div> */}
 
       {/* 고정된 숫자 */}
-      {/* <span className="z-10 text-3xl text-[#00ff88] hover:text-[#ff00ff] transition-colors duration-300">
+      <span className="z-10 text-3xl text-[#00ff88] hover:text-[#ff00ff] transition-colors duration-300">
           {count}
         </span>
       </div>
@@ -171,7 +171,7 @@ export default function GameButton() {
         .animate-spin-border {
           animation: spinBorder 2s linear infinite;
         }
-      `}</style> */}
+      `}</style>
     </>
   );
 }

@@ -22,7 +22,7 @@ export default function Gifticon() {
       <h2 className="typo-title font-bold mb-6">
         Gifticon <br /> Shop
       </h2>
-      <div className="mt-8">
+      <div className="mt-8 h-screen bg-[#FDF4F3] -m-8 rounded-lg">
         {/* <h2 className="text-xl font-bold mb-4">다른 기프티콘</h2> */}
         <div className="grid grid-cols-2 gap-4">
           {gifticons.map((gifticon) => (
