@@ -53,4 +53,4 @@ sw.js
 # Sentry Config File
 .env.sentry-build-plugin
 
-public/sw.js
+./public/sw.js
