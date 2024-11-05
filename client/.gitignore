@@ -52,3 +52,5 @@ sw.js
 **/public/fallback-*.js
 # Sentry Config File
 .env.sentry-build-plugin
+
+public/sw.js
