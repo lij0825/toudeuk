@@ -8,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -30,11 +31,11 @@ public class ClickGameRewardLog extends TimeEntity {
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id", nullable = false)
+	@JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_click_game_reward_log_user_id"))
 	private User user;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "click_game_id", nullable = false)
+	@JoinColumn(name = "click_game_id", nullable = false,  foreignKey = @ForeignKey(name = "fk_click_game_reward_log_click_game_id"))
 	private ClickGame clickGame;
 
 	@Column(name = "reward", nullable = false)

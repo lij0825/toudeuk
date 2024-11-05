@@ -21,12 +21,16 @@ public class QItem extends EntityPathBase<Item> {
 
     public final com.toudeuk.server.core.entity.QTimeEntity _super = new com.toudeuk.server.core.entity.QTimeEntity(this);
 
+    public final StringPath barcode = createString("barcode");
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final StringPath image = createString("image");
+
+    public final EnumPath<ItemType> itemType = createEnum("itemType", ItemType.class);
 
     public final StringPath name = createString("name");
 
