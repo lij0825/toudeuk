@@ -15,7 +15,7 @@ export enum SortType {
 
 export default function HistoryList() {
   const [page] = useState(0);
-  const size = 6;
+  const size = 10;
   const [sort] = useState<SortType>(SortType.DEFAULT);
 
   const {
@@ -44,7 +44,7 @@ export default function HistoryList() {
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 ">
           {contents?.map((content: ContentInfo, index: number) => (
             <HistoryItem key={index} content={content} />
           ))}

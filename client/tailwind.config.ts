@@ -31,7 +31,6 @@ const config: Config = {
       },
       colors: {
         background: "#17181C", // 검정 배경으로 고정
-        foreground: "#0E0E0E", // 검은 텍스트
         customPink: "#FFADFE",
         customGray: "#0033FF",
         primary: "#0068FE", // 밝은 파란색
