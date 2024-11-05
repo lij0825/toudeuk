@@ -26,6 +26,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+import java.util.Map;
+
 @Slf4j
 @RestController
 @RequestMapping(value = "/api/v1/game")
@@ -87,6 +90,19 @@ public class ClickGameController {
 		Pageable pageable) {
 		return SuccessResponse.of(clickGameService.getHistoryDetail(gameId, pageable));
 	}
+
+	/**
+	 * 게임 랭킹 조회
+	 *
+	 * @param userId, gameId
+	 * @return {@link SuccessResponse <List<Map<String, Object>>>}
+	 */
+	@GetMapping("/rank")
+	@Operation(summary = "게임 랭킹 조회", description = "게임 랭킹을 조회합니다.")
+	public SuccessResponse<List<Map<String, Object>>> getRanK(@CurrentUser Long userId) {
+		return SuccessResponse.of(clickGameService.getRankingList());
+	}
+
 
 	/**
 	 * 유저 게임 정보 조회

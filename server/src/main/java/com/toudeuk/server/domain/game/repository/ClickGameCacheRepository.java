@@ -85,7 +85,7 @@ public class ClickGameCacheRepository {
 	public Long addTotalClick() {
 		Long totalClick = valueOperationsInt.increment(CLICK_TOTAL_KEY);
 		log.info("totalClick : {}", totalClick);
-		if (totalClick == MAX_CLICK) {
+		if (totalClick != null && totalClick == MAX_CLICK) {
 			setGameCoolTime();
 		}
 		return totalClick;
@@ -120,6 +120,10 @@ public class ClickGameCacheRepository {
 	public Long getMaxClickUserId() { // 가장 많이 누른 유저 아이디
 		Set<Long> longSet = zSetOperations.reverseRange(CLICK_COUNT_KEY, 0, 0);
 		return longSet.isEmpty() ? null : longSet.iterator().next();
+	}
+
+	public Set<ZSetOperations.TypedTuple<Long>> getRankingList() {
+		return zSetOperations.reverseRangeByScoreWithScores(CLICK_COUNT_KEY, 0, Integer.MAX_VALUE);
 	}
 
 	// 클릭 순서 click:log
