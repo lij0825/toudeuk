@@ -8,6 +8,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.toudeuk.server.domain.game.dto.RankData;
+import com.toudeuk.server.domain.user.entity.CashLogType;
+import com.toudeuk.server.domain.user.event.CashLogEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -111,11 +113,11 @@ public class ClickGameService {
                     totalClick
             );
 
-            System.out.println(displayInfoEvery);
-            System.out.println(displayInfoForClicker);
-
             messagingTemplate.convertAndSend("/topic/game", displayInfoEvery);
+            log.info("displayInfoEvery : {}", displayInfoEvery);
             messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
+            log.info("displayInfoForClicker : {}", displayInfoForClicker);
+
             return;
         }
 
@@ -237,6 +239,7 @@ public class ClickGameService {
             Long gameId = clickCacheRepository.getGameId();
             saveLog(gameId);
             saveReward(gameId);
+            saveCashLogInGame(gameId);
             // * 완료 게임 삭제
             clickCacheRepository.deleteAllClickInfo();
             // * 다음 게임 생성
@@ -341,6 +344,23 @@ public class ClickGameService {
         // * 게임 참가자들의 모든 캐쉬 로그 찍어줘야함
     }
 
+    @Transactional
+    public void saveCashLogInGame(Long gameId) {
+        ClickGame clickGame = clickGameRepository.findById(gameId)
+                .orElseThrow(() -> new BaseException(GAME_NOT_FOUND));
+        String gameName = "클릭 게임" + clickGame.getRound() + "회차";
+
+        Set<ZSetOperations.TypedTuple<Long>> rankSet = clickCacheRepository.getRankingList();
+        for (ZSetOperations.TypedTuple<Long> ranking : rankSet) {
+            Long userId = ranking.getValue();
+            User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+            int resultCash = user.getCash();
+            int changeCash = ranking.getScore().intValue();
+            applicationEventPublisher.publishEvent(
+                    new CashLogEvent(user, changeCash, resultCash, gameName, CashLogType.GAME));
+        }
+    }
+
     public Page<HistoryData.AllInfo> getAllHistory(Pageable pageable) {
 
         return clickGameRepository.findAllByOrderByIdDesc(pageable).map(
@@ -398,5 +418,7 @@ public class ClickGameService {
         return result;
 
     }
+
+
 
 }

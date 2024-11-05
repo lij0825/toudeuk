@@ -8,7 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchUserGifticons } from "@/apis/gifticonApi";
 import { UserGifticonInfo, ItemType } from "@/types/gifticon";
 import { toast } from "react-toastify";
-import LottieAnimation from "@/app/components/LottieAnimation";
+import dynamic from "next/dynamic";
 import { CUSTOM_ICON } from "@/constants/customIcons";
 
 const ItemColors: Record<ItemType, string> = {
@@ -21,6 +21,8 @@ const ItemColors: Record<ItemType, string> = {
 
 // MyGifticon Component
 export default function MyGifticon() {
+  // LottieAnimation을 동적으로 로드, 안하면 서버사이드 렌더링 오류 발생
+  const LottieAnimation = dynamic(() => import("@/app/components/LottieAnimation"), { ssr: false });
   const router = useRouter();
   const [filter, setFilter] = useState<ItemType>(ItemType.ALL);
 
@@ -61,9 +63,7 @@ export default function MyGifticon() {
                 height={80}
                 autoplay={true}
               />
-              <p className="text-gray-500 font-noto text-md px-4">
-                보유한 기프티콘이 없습니다
-              </p>
+              <p className="text-gray-500 font-noto text-md px-4">보유한 기프티콘이 없습니다</p>
               <button
                 type="button"
                 onClick={() => router.push("/gifticon")}

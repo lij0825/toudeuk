@@ -1,7 +1,7 @@
 "use client";
-import { fetchGifticonList } from '@/apis/gifticonApi';
-import { GifticonInfo } from '@/types/gifticon';
-import { useQuery } from '@tanstack/react-query';
+import { fetchGifticonList } from "@/apis/gifticonApi";
+import { GifticonInfo } from "@/types/gifticon";
+import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -9,16 +9,20 @@ import React from "react";
 export default function Gifticon() {
   // 캐러셀 인덱스 상태
 
-  const { data: gifticons = [], isLoading, error } = useQuery<GifticonInfo[]>({
-    queryKey: ['gifticons'],
+  const {
+    data: gifticons = [],
+    isLoading,
+    error,
+  } = useQuery<GifticonInfo[]>({
+    queryKey: ["gifticons"],
     queryFn: fetchGifticonList,
-  })
+  });
 
   if (isLoading) return <div>로딩 중...</div>;
   if (error) return <div>데이터를 불러오는 중 오류가 발생했습니다.</div>;
 
   return (
-    <div className=''>
+    <div className="">
       <h2 className="typo-title font-bold mb-8 bg-white rounded-lg">
         Gifticon <br /> Shop
       </h2>
@@ -43,7 +47,9 @@ export default function Gifticon() {
                 className="object-cover h-20 rounded-lg w-4/5 absolute top-[-20%] left-1/2 transform -translate-x-1/2" // 80% 너비 및 위로 이동
               />
               <p className="text-center mt-12 relative z-10">
-              {gifticon.itemName.length > 9 ? `${gifticon.itemName.slice(0, 9)}` : gifticon.itemName}  
+                {gifticon.itemName.length > 9
+                  ? `${gifticon.itemName.slice(0, 9)}`
+                  : gifticon.itemName}
               </p>{" "}
               {/* p 태그의 상단 마진 조정 */}
             </Link>

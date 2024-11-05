@@ -19,7 +19,7 @@ public class QUser extends EntityPathBase<User> {
 
     public static final QUser user = new QUser("user");
 
-    public final com.toudeuk.server.core.entity.QTimeEntity _super = new com.toudeuk.server.core.entity.QTimeEntity(this);
+    public final com.toudeuk.server.core.entity.QBaseEntity _super = new com.toudeuk.server.core.entity.QBaseEntity(this);
 
     public final NumberPath<Integer> cash = createNumber("cash", Integer.class);
 
@@ -29,6 +29,9 @@ public class QUser extends EntityPathBase<User> {
     public final StringPath email = createString("email");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
+
+    //inherited
+    public final BooleanPath isDeleted = _super.isDeleted;
 
     public final StringPath name = createString("name");
 
@@ -46,7 +49,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final EnumPath<RoleType> roleType = createEnum("roleType", RoleType.class);
 
-    public final DateTimePath<java.time.LocalDateTime> updatedAt = createDateTime("updatedAt", java.time.LocalDateTime.class);
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
     public final StringPath username = createString("username");
 

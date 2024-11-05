@@ -1,40 +1,19 @@
 "use client";
 
-import { gameClick } from "@/apis/gameApi";
-import { GameInfo } from "@/types/game";
 //소켓 연결 또는 SSE 방식으로 touch값 fetch
-import { Client, Frame, IFrame, Message, Stomp } from "@stomp/stompjs";
+import { Client, Frame, IFrame, Stomp } from "@stomp/stompjs";
 // import axios from "axios";
 import { useEffect, useState } from "react";
 import SockJS from "sockjs-client";
-import { useMutation, useQuery } from "@tanstack/react-query";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 export default function GameButton() {
-  const [count, setCount] = useState<number>(0);
+  const [count, setCount] = useState<number | null>(null);
   const [stompClient, setStompClient] = useState<Client | null>(null);
-
-  const { data: totalClick , isLoading, error } = useQuery<GameInfo>({
-    queryKey: ['count'],
-    queryFn: gameClick
-  })
-
-  const mutate = useMutation<GameInfo>({
-    mutationFn: () => gameClick(),
-    onSuccess: (data) => {
-      // setCount(data.totalClick);
-    },
-    onError: (error) => {
-      console.error("Error updating count:", error);
-    },
-  });
 
   const accessToken = sessionStorage.getItem("accessToken");
 
   useEffect(() => {
-    // mutate.mutate();
-    // accessToken을 sessionStorage에서 가져옵니다.
-
     // ! FIXME : 서버 주소 변경 필요
     const socket = new SockJS(`${BASE_URL}/ws`);
     const stompClient = Stomp.over(socket);
@@ -49,31 +28,20 @@ export default function GameButton() {
       (frame: IFrame) => {
         console.log("Connected: " + frame);
 
-        stompClient.publish({
-          destination: "/topic/game",
-          body: JSON.stringify({}),
-          headers: headers,
-        });
-
         stompClient.subscribe(
           "/topic/game",
           (message) => {
-            console.log("메시지 전체", message);
-            console.log("메시지 body", message.body);
             console.log("메시지 Json 파싱", JSON.parse(message.body));
-            const clicks = JSON.parse(message.body)["totalClick"]
+            const clicks = JSON.parse(message.body)["totalClick"];
             setCount(Number(clicks) || 0);
-            if(message.body){
+            if (message.body) {
               setCount(parseInt(clicks));
-            } else{
-              setCount(0)
+            } else {
+              setCount(0);
             }
           },
           headers
         );
-        // stompClient.subscribe(`/topic/game/${userId}`,(message:IMessage) => {
-        //   console.log("내 클릭 수 : ",message)
-        // })
       },
       (error: Frame | string) => {
         console.error("Connection error: ", error);
@@ -82,52 +50,25 @@ export default function GameButton() {
 
     setStompClient(stompClient);
 
-    // Cleanup on unmount
     return () => {
       if (stompClient) {
         stompClient.disconnect();
       }
     };
   }, []);
-    
-  const handleClick = async () => {
-    // gameClick()
-    mutate.mutate();
 
+  const handleClick = async () => {
     if (stompClient) {
       const accessToken = sessionStorage.getItem("accessToken");
       stompClient.publish({
-        destination: "/topic/game",
+        destination: "/app/game",
         body: JSON.stringify({}),
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
     }
-    // const accessToken = sessionStorage.getItem("accessToken");
-    // try {
-    //   const response = await axios.post(`${BASE_URL}/api/v1/game/click`, {} ,{
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       "Authorization": `Bearer ${accessToken}`
-    //     }
-    //   }); // 필요한 데이터 추가 가능
-    //   console.log("POST response:", response.data);
-    // } catch (error) {
-    //   console.error("Error sending POST request:", error);
-    // }
-    // try {
-    //   await fetchClick(); // fetchClick 사용
-    // } catch (error) {
-    //   console.error("클릭 요청 실패", error);
-    // }
   };
-
-  if (mutate !== undefined) {
-    console.log("111=====================================");
-    console.log("data: ", mutate.data);
-    console.log("222=====================================");
-  }
 
   return (
     <>
@@ -139,11 +80,12 @@ export default function GameButton() {
           className="absolute w-40 h-40 rounded-full border-2 border-[#00ff88] hover:border-[#ff00ff] transition-colors duration-300 animate-spin-border"
         ></div>
 
-        {/* 고정된 숫자 */}
-        <span className="z-10 text-3xl text-[#00ff88] hover:text-[#ff00ff] transition-colors duration-300">
-          {/* {count} */}
-          {isNaN(count) ? '' : count}
-        </span>
+        {/* 수신된 count가 있을 때만 표시 */}
+        {count !== null && (
+          <span className="z-10 text-3xl text-[#00ff88] hover:text-[#ff00ff] transition-colors duration-300">
+            {count}
+          </span>
+        )}
       </div>
       <style jsx>{`
         @keyframes spinBorder {
