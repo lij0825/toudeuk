@@ -1,5 +1,6 @@
 package com.toudeuk.server.domain.game.controller;
 
+import com.toudeuk.server.domain.game.dto.RankData;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.handler.annotation.Header;
@@ -99,7 +100,7 @@ public class ClickGameController {
 	 */
 	@GetMapping("/rank")
 	@Operation(summary = "게임 랭킹 조회", description = "게임 랭킹을 조회합니다.")
-	public SuccessResponse<List<Map<String, Object>>> getRanK(@CurrentUser Long userId) {
+	public SuccessResponse<RankData.Result> getRanK(@CurrentUser Long userId) {
 		return SuccessResponse.of(clickGameService.getRankingList());
 	}
 

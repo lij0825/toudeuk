@@ -7,6 +7,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.toudeuk.server.domain.game.dto.RankData;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -379,23 +380,20 @@ public class ClickGameService {
         ), pageable, 1);
     }
 
-    public List<Map<String, Object>> getRankingList() {
-        Set<ZSetOperations.TypedTuple<Long>> rankingList = clickCacheRepository.getRankingList();
+    public RankData.Result getRankingList() {
+        Set<ZSetOperations.TypedTuple<Long>> rankSet = clickCacheRepository.getRankingList();
 
         Long gameId = clickCacheRepository.getGameId();
 
-        List<Map<String, Object>> result = new ArrayList<>();
-        result.add(Map.of("gameId", gameId));
-
+        List<RankData.RankList> rankList = new ArrayList<>();
         int rank = 1;
-        for (ZSetOperations.TypedTuple<Long> ranking : rankingList) {
-            Map<String, Object> rankMap = new HashMap<>();
-            result.add(Map.of("rank", rank, "userId", ranking.getValue(), "count", ranking.getScore()));
+        for (ZSetOperations.TypedTuple<Long> ranking : rankSet) {
+            rankList.add(RankData.RankList.of(rank, ranking.getValue(), ranking.getScore().intValue()));
             rank++;
         }
-
-        log.info("result : {}", result);
+        RankData.Result result = RankData.Result.of(gameId, rankList);
         return result;
+
     }
 
 }
