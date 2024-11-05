@@ -12,9 +12,9 @@ interface LottieAnimationProps {
   height?: number;
   padding?: string;
   margin?: string;
+  cursor?: string; // cursor 속성을 추가
 }
 
-// 함수 선언식으로 컴포넌트 정의
 function LottieAnimation({
   animationData,
   loop = false,
@@ -23,23 +23,24 @@ function LottieAnimation({
   height = 48,
   padding = "0",
   margin = "0",
+  cursor = "",
 }: LottieAnimationProps) {
   const lottieRef = useRef<LottieRefCurrentProps | null>(null);
 
   const handleClick = () => {
     if (lottieRef.current) {
-      lottieRef.current?.play(); // 클릭 시 재생
+      lottieRef.current.play();
     }
   };
 
   const handleMouseEnter = () => {
-    lottieRef.current?.play(); // 호버 시 재생
+    lottieRef.current?.play();
   };
 
   const handleMouseLeave = () => {
     if (lottieRef.current) {
-      lottieRef.current.stop(); // 애니메이션 정지
-      lottieRef.current.goToAndStop(0, true); // 첫 프레임으로 초기화
+      lottieRef.current.stop();
+      lottieRef.current.goToAndStop(0, true);
     }
   };
 
@@ -48,14 +49,14 @@ function LottieAnimation({
       onClick={handleClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      style={{ width, height, padding, margin, cursor: "pointer" }} // 원하는 크기 설정
+      style={{ width, height, padding, margin, cursor }} // cursor를 style에 반영
     >
       <Lottie
         lottieRef={lottieRef}
         animationData={animationData}
-        loop={loop} // props로 받은 loop 값 사용
-        autoplay={autoplay} // props로 받은 autoplay 값 사용
-        style={{ width: "100%", height: "100%" }} // 부모 div에 맞게 조절
+        loop={loop}
+        autoplay={autoplay}
+        style={{ width: "100%", height: "100%" }}
       />
     </div>
   );

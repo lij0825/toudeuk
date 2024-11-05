@@ -2,29 +2,17 @@
 
 import { fetchUserGifticons } from "@/apis/gifticonApi";
 import { UserGifticonInfo } from "@/types/gifticon";
-import { QueryClient, dehydrate, useQuery } from "@tanstack/react-query";
-import { GetServerSideProps } from "next";
+import { useQuery } from "@tanstack/react-query";
+
 import Image from "next/image";
 import Link from "next/link";
-import { toast } from "react-toastify";
 import LottieAnimation from "@/app/components/LottieAnimation";
 import { CUSTOM_ICON } from "@/constants/customIcons";
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const queryClient = new QueryClient();
-  await queryClient.prefetchQuery({
-    queryKey: ["usergifticons"],
-    queryFn: fetchUserGifticons,
-  });
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
-  };
-};
+
 
 const StorageCard = () => (
-  <div className="w-[120px] h-[150px] p-4 rounded-lg shadow-lg bg-[#CBDCEB] font-noto flex flex-col justify-between">
+  <div className="w-[120px] h-[140px] p-4 rounded-lg shadow-lg bg-[#CBDCEB] font-noto flex flex-col justify-between">
     <div className="text-lg font-bold">
       <p>기프티콘</p>
       <p>보관함</p>
@@ -45,12 +33,11 @@ export default function GifticonSwipe() {
   const { data: usergifticons = [], isError } = useQuery<UserGifticonInfo[]>({
     queryKey: ["usergifticons"],
     queryFn: fetchUserGifticons,
-    staleTime: 5 * 60 * 1000,
   });
 
   if (isError) {
     return (
-      <div className="flex items-center justify-center h-[150px] px-8">
+      <div className="flex items-center justify-center h-[140px] px-8">
         <div className="bg-red-50 rounded-lg w-full h-full flex items-center justify-center p-4">
           <div className="text-center">
             <div className="flex justify-center mb-2">
@@ -81,7 +68,7 @@ export default function GifticonSwipe() {
       </Link>
 
       {usergifticons.length === 0 ? (
-        <div className="flex-1 flex items-center justify-center min-w-[200px] h-[150px] bg-gray-50 rounded-lg">
+        <div className="flex-1 flex items-center justify-center min-w-[200px] h-[140px] bg-gray-50 rounded-lg">
           <div className="text-center">
             <div className="flex justify-center mb-2">
               <LottieAnimation
@@ -104,7 +91,7 @@ export default function GifticonSwipe() {
             href={`/mygifticon/${gifticon.userItemId}`}
             className="shrink-0"
           >
-            <div className="w-[120px] h-[150px] rounded-lg backdrop-blur-lg bg-white/30 shadow-lg flex flex-col justify-between p-4">
+            <div className="w-[120px] h-[140px] rounded-lg backdrop-blur-lg bg-white/30 shadow-lg flex flex-col justify-between p-4">
               <div className="flex justify-center items-center flex-1">
                 <div className="w-[80px] h-[80px] overflow-hidden rounded-sm">
                   <Image
