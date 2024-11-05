@@ -12,7 +12,6 @@ export default function GameButton() {
   const [stompClient, setStompClient] = useState<Client | null>(null);
 
   useEffect(() => {
-    mutate.mutate();
     // accessToken을 sessionStorage에서 가져옵니다.
     const accessToken = sessionStorage.getItem("accessToken");
 
