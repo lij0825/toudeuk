@@ -85,11 +85,6 @@ public class ClickGameCacheRepository {
 	public Long addTotalClick() {
 		Long totalClick = valueOperationsInt.increment(CLICK_TOTAL_KEY);
 
-		if (totalClick == null) {
-			totalClick = getTotalClick().longValue();
-			log.info("totalClick : {}", totalClick);
-		}
-
 		log.info("totalClick : {}", totalClick);
 		if (totalClick == MAX_CLICK) {
 			setGameCoolTime();
