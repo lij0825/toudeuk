@@ -207,6 +207,8 @@ public class ClickGameService {
         Integer userClickCount = clickCacheRepository.addUserClick(userId);
         Long totalClickCount = clickCacheRepository.addTotalClick();
 
+
+
         clickCacheRepository.addLog(userId);
 
         GameData.DisplayInfoForEvery displayInfoForEvery = GameData.DisplayInfoForEvery.of(
