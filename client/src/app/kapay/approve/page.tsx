@@ -13,7 +13,7 @@ const KaPayApprovePage = () => {
 
   return (
     <div
-      className="flex flex-col items-center justify-center"
+      className="flex flex-col items-center justify-center bg-white"
       style={{ height: "calc(100vh - 86px)" }}
     >
       <span className="maplestory text-4xl text-sub2">결제 완료</span>

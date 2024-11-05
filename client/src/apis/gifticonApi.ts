@@ -1,5 +1,9 @@
 import { BaseResponse } from "@/types/Base";
-import { GifticonInfo, UserGifticonInfo } from "@/types/gifticon";
+import {
+  GifticonInfo,
+  UserGifticonInfo,
+  UserGifticonDetailInfo,
+} from "@/types/gifticon";
 import instance from "./clientApi";
 
 export const fetchGifticonList = async (): Promise<GifticonInfo[]> => {
@@ -33,19 +37,18 @@ export const fetchGifticonDetail = async (
 };
 
 export const buyGifticon = async (id: string): Promise<void> => {
-
-    const response = await instance.post<BaseResponse<void>>(
-      `/item/buy`,
-      { "itemId": id }
-    );
-    console.log(response)
-    if (!response.data.success || !response.data.data) {
-      console.log("",response.data);
-      throw new Error(response.data.message);
-    }
-    return response.data.data;
+  const response = await instance.post<BaseResponse<void>>(`/item/buy`, {
+    itemId: id,
+  });
+  console.log(response);
+  if (!response.data.success || !response.data.data) {
+    console.log("", response.data);
+    throw new Error(response.data.message);
+  }
+  return response.data.data;
 };
 
+//기프티콘 사용처리
 export const useGifticon = async (id: string): Promise<void> => {
   const response = await instance.post<BaseResponse<void>>(`/items/use`, {
     userItemId: id,
@@ -73,3 +76,23 @@ export const fetchUserGifticons = async (): Promise<UserGifticonInfo[]> => {
 };
 
 //유저 기프티콘 상세 정보 가져오기
+export const fetchUserGifticonDetail = async (
+  id: string
+): Promise<UserGifticonDetailInfo> => {
+  const response = await instance.get<BaseResponse<UserGifticonDetailInfo>>(
+    `/user/item/detail`,
+    {
+      params: {
+        userItemId: id,
+      },
+    }
+  );
+
+  if (!response.data.success) {
+    throw new Error(response.data.message);
+  }
+  if (!response.data.data) {
+    throw new Error("기프티콘 데이터가 존재하지 않습니다.");
+  }
+  return response.data.data;
+};
