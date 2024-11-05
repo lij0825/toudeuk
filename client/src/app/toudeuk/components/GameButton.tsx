@@ -13,7 +13,7 @@ export default function GameButton() {
 
   useEffect(() => {
     // accessToken을 sessionStorage에서 가져옵니다.
-    const accessToken = sessionStorage.getItem('accessToken');
+    const accessToken = sessionStorage.getItem("accessToken");
 
     // ! FIXME : 서버 주소 변경 필요
     const socket = new SockJS(`${BASE_URL}/ws`);
@@ -21,23 +21,27 @@ export default function GameButton() {
 
     // 연결 헤더에 accessToken을 추가합니다.
     const headers = {
-      Authorization: `Bearer ${accessToken}`
+      Authorization: `Bearer ${accessToken}`,
     };
 
     stompClient.connect(
       headers,
       (frame: IFrame) => {
         console.log("Connected: " + frame);
-        
+
         stompClient.publish({
           destination: "/app/getInitialCount",
           body: JSON.stringify({}),
-          headers: headers
+          headers: headers,
         });
-        
-        stompClient.subscribe("/topic/game", (message: IMessage) => {
-          setCount(parseInt(message.body));
-        }, headers);
+
+        stompClient.subscribe(
+          "/topic/game",
+          (message: IMessage) => {
+            setCount(JSON.parse(message.body)["totalClick"]);
+          },
+          headers
+        );
       },
       (error: Frame | string) => {
         console.error("Connection error: ", error);
@@ -54,25 +58,29 @@ export default function GameButton() {
     };
   }, []);
 
-  const handleClick = async() => {
+  const handleClick = async () => {
     if (stompClient) {
-      const accessToken = sessionStorage.getItem('accessToken');
+      const accessToken = sessionStorage.getItem("accessToken");
       stompClient.publish({
         destination: "/app/game",
         body: JSON.stringify({}),
         headers: {
-          Authorization: `Bearer ${accessToken}`
-        }
+          Authorization: `Bearer ${accessToken}`,
+        },
       });
     }
-    const accessToken = sessionStorage.getItem('accessToken')
+    const accessToken = sessionStorage.getItem("accessToken");
     try {
-      const response = await axios.post(`${BASE_URL}/api/v1/game/click`, {} ,{
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${accessToken}`
+      const response = await axios.post(
+        `${BASE_URL}/api/v1/game/click`,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
-      }); // 필요한 데이터 추가 가능
+      ); // 필요한 데이터 추가 가능
       console.log("POST response:", response.data);
     } catch (error) {
       console.error("Error sending POST request:", error);
