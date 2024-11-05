@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.toudeuk.server.core.entity.BaseEntity;
 import com.toudeuk.server.core.entity.TimeEntity;
 
 import jakarta.persistence.Column;
@@ -29,17 +30,17 @@ import lombok.NoArgsConstructor;
 @Table(
 	name = "users",
 	uniqueConstraints = {
-		@UniqueConstraint(columnNames = "nickname"),
-		@UniqueConstraint(columnNames = "email"),
-		@UniqueConstraint(columnNames = "phoneNumber")
+		@UniqueConstraint(columnNames = "nickname", name = "nickname_unique"),
+		@UniqueConstraint(columnNames = "email", name = "email_unique"),
+		@UniqueConstraint(columnNames = "phoneNumber", name = "phoneNumber_unique"),
 	},
 	indexes = {
-		@Index(columnList = "email"),
+		@Index(columnList = "email", name = "idx_user_email"),
 	}
 )
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User extends TimeEntity {
+public class User extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -71,12 +72,6 @@ public class User extends TimeEntity {
 	@Column(name = "role_type", nullable = false)
 	@Enumerated(EnumType.STRING)
 	private RoleType roleType = RoleType.USER;
-
-	@JsonSerialize(using = LocalDateTimeSerializer.class)
-	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
-	@Column(name = "updated_at")
-	@LastModifiedDate
-	private LocalDateTime updatedAt;
 
 	@Enumerated(EnumType.STRING)
 	private UserStatus userStatus;
