@@ -17,7 +17,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@EnableTransactionManagement
 public class RedisConfig {
 
     @Value("${spring.data.redis.host}")
@@ -53,9 +52,6 @@ public class RedisConfig {
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
-        template.setEnableTransactionSupport(true);
-
-
 
 //         ObjectMapper에 DefaultTyping 설정
         ObjectMapper objectMapper = new ObjectMapper();
@@ -84,7 +80,6 @@ public class RedisConfig {
     public RedisTemplate<String, Long> longRedisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, Long> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
-        template.setEnableTransactionSupport(true);
 
         template.setKeySerializer( new StringRedisSerializer() );
         template.setHashValueSerializer( new GenericToStringSerializer< Long >( Long.class ) );
@@ -96,7 +91,6 @@ public class RedisConfig {
     public RedisTemplate<String, Integer> integerRedisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, Integer> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
-        template.setEnableTransactionSupport(true);
 
         template.setKeySerializer( new StringRedisSerializer() );
         template.setHashValueSerializer( new GenericToStringSerializer< Integer >( Integer.class ) );

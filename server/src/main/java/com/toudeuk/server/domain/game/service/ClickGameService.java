@@ -207,6 +207,8 @@ public class ClickGameService {
         Integer userClickCount = clickCacheRepository.addUserClick(userId);
         Long totalClickCount = clickCacheRepository.addTotalClick();
 
+
+
         clickCacheRepository.addLog(userId);
 
         GameData.DisplayInfoForEvery displayInfoForEvery = GameData.DisplayInfoForEvery.of(
@@ -388,7 +390,9 @@ public class ClickGameService {
         List<RankData.RankList> rankList = new ArrayList<>();
         int rank = 1;
         for (ZSetOperations.TypedTuple<Long> ranking : rankSet) {
-            rankList.add(RankData.RankList.of(rank, ranking.getValue(), ranking.getScore().intValue()));
+            Long userId = ranking.getValue();
+            User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+            rankList.add(RankData.RankList.of(rank, user.getNickname(), user.getProfileImg(), ranking.getScore().intValue()));
             rank++;
         }
         RankData.Result result = RankData.Result.of(gameId, rankList);
