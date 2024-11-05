@@ -18,5 +18,6 @@ export default function useOauth() {
       }
     }
   }, [connect]);
+
   return <div className="">Loading</div>;
 }
