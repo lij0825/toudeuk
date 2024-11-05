@@ -58,42 +58,42 @@ function shouldBypassMiddleware(pathname: string): boolean {
 }
 
 export function middleware(request: NextRequest) {
-  const pathname = request.nextUrl.pathname;
+  // const pathname = request.nextUrl.pathname;
 
-  // Log for debugging
-  console.log("Middleware executing for path:", pathname);
+  // // Log for debugging
+  // console.log("Middleware executing for path:", pathname);
 
-  // Bypass middleware for static assets and API routes
-  if (shouldBypassMiddleware(pathname)) {
-    console.log("Bypassing middleware for:", pathname);
-    return NextResponse.next();
-  }
+  // // Bypass middleware for static assets and API routes
+  // if (shouldBypassMiddleware(pathname)) {
+  //   console.log("Bypassing middleware for:", pathname);
+  //   return NextResponse.next();
+  // }
 
-  // Skip middleware for PWA-specific files
-  if (
-    pathname.includes("sw.js") ||
-    pathname.includes("workbox-") ||
-    pathname.includes("manifest.json")
-  ) {
-    console.log("Bypassing middleware for PWA file:", pathname);
-    return NextResponse.next();
-  }
+  // // Skip middleware for PWA-specific files
+  // if (
+  //   pathname.includes("sw.js") ||
+  //   pathname.includes("workbox-") ||
+  //   pathname.includes("manifest.json")
+  // ) {
+  //   console.log("Bypassing middleware for PWA file:", pathname);
+  //   return NextResponse.next();
+  // }
 
-  // Check authentication specifically for protected routes
-  if (isProtectedRoute(pathname)) {
-    const isLoggedIn = request.cookies.get("refresh-token") !== undefined;
-    console.log(
-      "Auth check for protected path:",
-      pathname,
-      "isLoggedIn:",
-      isLoggedIn
-    );
+  // // Check authentication specifically for protected routes
+  // if (isProtectedRoute(pathname)) {
+  //   const isLoggedIn = request.cookies.get("refresh-token") !== undefined;
+  //   console.log(
+  //     "Auth check for protected path:",
+  //     pathname,
+  //     "isLoggedIn:",
+  //     isLoggedIn
+  //   );
 
-    if (!isLoggedIn) {
-      console.log("Redirecting to home due to no auth");
-      return NextResponse.redirect(new URL("/", request.url));
-    }
-  }
+  //   if (!isLoggedIn) {
+  //     console.log("Redirecting to home due to no auth");
+  //     return NextResponse.redirect(new URL("/", request.url));
+  //   }
+  // }
 
   return NextResponse.next();
 }
