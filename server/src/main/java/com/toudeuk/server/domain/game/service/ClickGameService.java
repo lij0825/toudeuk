@@ -3,10 +3,7 @@ package com.toudeuk.server.domain.game.service;
 import static com.toudeuk.server.core.exception.ErrorCode.*;
 import static com.toudeuk.server.domain.game.entity.RewardType.*;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -14,6 +11,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -379,6 +377,25 @@ public class ClickGameService {
                         allUsers
                 )
         ), pageable, 1);
+    }
+
+    public List<Map<String, Object>> getRankingList() {
+        Set<ZSetOperations.TypedTuple<Long>> rankingList = clickCacheRepository.getRankingList();
+
+        Long gameId = clickCacheRepository.getGameId();
+
+        List<Map<String, Object>> result = new ArrayList<>();
+        result.add(Map.of("gameId", gameId));
+
+        int rank = 1;
+        for (ZSetOperations.TypedTuple<Long> ranking : rankingList) {
+            Map<String, Object> rankMap = new HashMap<>();
+            result.add(Map.of("rank", rank, "userId", ranking.getValue(), "count", ranking.getScore()));
+            rank++;
+        }
+
+        log.info("result : {}", result);
+        return result;
     }
 
 }
