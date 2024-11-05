@@ -33,7 +33,7 @@ const protectedRoutes: string[] = [
   "/rank",
   "/kapay",
   "/mypage",
-  "/toudeuk"
+  "/toudeuk",
   // Add other protected routes here
 ];
 

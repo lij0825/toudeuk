@@ -6,7 +6,6 @@ import { useEffect, useRef, useState } from "react";
 import { CUSTOM_ICON } from "@/constants/customIcons";
 import LottieAnimation from "./LottieAnimation";
 
-
 export default function Navbar() {
   const [isVisible, setIsVisible] = useState(false); // 네비게이션 바 표시 상태
   const pathname = usePathname();
@@ -66,7 +65,7 @@ export default function Navbar() {
       <button
         onClick={toggleNavbar}
         ref={buttonRef}
-        className={`absolute bottom-4 p-3 rounded-md z-40 transition-opacity duration-300 ${buttonPositionClasses} ${
+        className={`absolute bottom-4 p-3 rounded-xl z-40 transition-opacity duration-300 ${buttonPositionClasses} ${
           isVisible ? "opacity-0" : "opacity-100"
         }`}
         style={{
@@ -98,6 +97,7 @@ export default function Navbar() {
               loop={1}
               width={50}
               height={50}
+              cursor="pointer"
             />
             <span className="text-sm">게임</span>
           </a>

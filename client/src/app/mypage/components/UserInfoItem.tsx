@@ -23,7 +23,7 @@ export default function UserInfoItem() {
     <div className="typo-sub-title">
       <section className="flex align-center pb-8 justify-between">
         <div className="flex items-center">
-          <div className="relative w-12 h-12 rounded-lg overflow-hidden mr-4">
+          <div className="relative w-12 h-12 rounded-xl overflow-hidden mr-4">
             <Image
               src={userInfo?.profileImg || "/default_profile.jpg"}
               alt="Profile Image"

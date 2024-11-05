@@ -18,11 +18,11 @@ export default function Gifticon() {
   if (error) return <div>데이터를 불러오는 중 오류가 발생했습니다.</div>;
 
   return (
-    <>
-      <h2 className="typo-title font-bold mb-6">
+    <div className=''>
+      <h2 className="typo-title font-bold mb-8 bg-white rounded-lg">
         Gifticon <br /> Shop
       </h2>
-      <div className="mt-8 h-screen bg-[#FDF4F3] -m-8 rounded-lg">
+      <div className="mt-8 h-screen rounded-lg">
         {/* <h2 className="text-xl font-bold mb-4">다른 기프티콘</h2> */}
         <div className="grid grid-cols-2 gap-4">
           {gifticons.map((gifticon) => (
@@ -42,12 +42,14 @@ export default function Gifticon() {
                 height={80}
                 className="object-cover h-20 rounded-lg w-4/5 absolute top-[-20%] left-1/2 transform -translate-x-1/2" // 80% 너비 및 위로 이동
               />
-              <p className="text-center mt-12 relative z-10">{gifticon.itemName}</p>{" "}
+              <p className="text-center mt-12 relative z-10">
+              {gifticon.itemName.length > 9 ? `${gifticon.itemName.slice(0, 9)}` : gifticon.itemName}  
+              </p>{" "}
               {/* p 태그의 상단 마진 조정 */}
             </Link>
           ))}
         </div>
       </div>
-    </>
+    </div>
   );
 }
