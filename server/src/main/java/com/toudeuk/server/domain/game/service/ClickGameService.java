@@ -198,8 +198,7 @@ public class ClickGameService {
 		user.updateCash(resultCash);
 
 		// * 클릭 시 레디스 캐쉬 로직
-		clickCacheRepository.addUserClick(userId);
-		Integer userClickCount = clickCacheRepository.getUserClickCount(userId);
+		Integer userClickCount = clickCacheRepository.addUserClick(userId);
 		Long totalClickCount = clickCacheRepository.addTotalClick();
 		clickCacheRepository.addLog(userId);
 
@@ -230,6 +229,7 @@ public class ClickGameService {
 			saveLog(gameId);
 			saveReward(gameId);
 			clickCacheRepository.deleteAllClickInfo();
+
 		}
 	}
 

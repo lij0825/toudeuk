@@ -104,8 +104,9 @@ public class ClickGameCacheRepository {
 
 
 	// 클릭 수 click:count
-	public void addUserClick(Long userId) {
-		zSetOperations.incrementScore(CLICK_COUNT_KEY, userId, 1);
+	public Integer addUserClick(Long userId) {
+		Double score = zSetOperations.incrementScore(CLICK_COUNT_KEY, userId, 1);
+		return score == null ? 1 : score.intValue();
 	}
 
 	public Integer getUserClickCount(Long userId) { // 유저의 클릭 수
