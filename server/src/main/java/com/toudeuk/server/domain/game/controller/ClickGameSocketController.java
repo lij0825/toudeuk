@@ -31,9 +31,6 @@ public class ClickGameSocketController {
 	public void sendStart(@Header("Authorization") String bearerToken) throws Exception {
 		Long userId = resolveToken(bearerToken);
 
-		log.info("-====123==============2143================================");
-		log.info("-=====================1234=============================");
-
 		clickGameService.checkGame(userId);
 	}
 
@@ -41,24 +38,9 @@ public class ClickGameSocketController {
     public void sendPublish(@Header("Authorization") String bearerToken) throws Exception {
         Long userId = resolveToken(bearerToken);
 
-        log.info("-==================================================");
-        log.info("-==================================================");
-
         clickGameService.click(userId);
 
     }
-
-	@MessageMapping("/init")
-	public void sendInitPublish(@Header("Authorization") String bearerToken) throws Exception {
-		Long userId = resolveToken(bearerToken);
-
-		log.info("-============================11======================");
-		log.info("-=============================22=====================");
-
-		clickGameService.checkGame(userId);
-
-	}
-
 
 	private Long resolveToken(String bearerToken) {
 		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
