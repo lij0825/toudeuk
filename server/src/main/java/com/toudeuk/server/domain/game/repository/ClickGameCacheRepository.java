@@ -27,7 +27,7 @@ public class ClickGameCacheRepository {
 	private static final String GAME_ID_KEY = "game:id";
 	private static final String GAME_COOLTIME_KEY = "game:cooltime";
 
-	private static final long MAX_CLICK = 5; // 12000
+	private static final long MAX_CLICK = 1000; // 12000
 	private static final long COOLTIME_MINUTES = 1; // 5분
 
 	@Resource(name = "longRedisTemplate")
