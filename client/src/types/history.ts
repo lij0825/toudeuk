@@ -54,7 +54,7 @@ export interface ContentInfo {
   createdAt: string;
   winner: WinnerInfo;
   maxClicker: GameUserInfo;
-  commonFields: CommonFields;
+  // commonFields: CommonFields;
 }
 
 //전체 게임 내역 조회
