@@ -8,8 +8,8 @@ import { Client, Frame, IFrame, Message, Stomp } from "@stomp/stompjs";
 import { useEffect, useState } from "react";
 import SockJS from "sockjs-client";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { CUSTOM_BUTTON } from "@/constants/customButtons";
-import LottieAnimation from "./../../components/LottieAnimation";
+// import { CUSTOM_BUTTON } from "@/constants/customButtons";
+// import LottieAnimation from "./../../components/LottieAnimation";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 export default function GameButton() {
@@ -139,12 +139,12 @@ export default function GameButton() {
           onClick={handleClick}
           className="absolute w-40 h-40 rounded-full border-2 border-[#00ff88] hover:border-[#ff00ff] transition-colors duration-300 animate-spin-border"
         >
-          <LottieAnimation
+          {/* <LottieAnimation
             animationData={CUSTOM_BUTTON.defaultButton2}
             loop={1}
             width={500}
             height={500}
-          />
+          /> */}
         </div>
       </div>
 

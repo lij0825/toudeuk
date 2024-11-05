@@ -1,7 +1,7 @@
 "use client";
 
 import { fetchUserInfo } from "@/apis/userInfoApi";
-import { UserInfo } from "@/types/mypageInfo";
+import { UserInfo } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";

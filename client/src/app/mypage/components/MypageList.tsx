@@ -1,8 +1,12 @@
 "use client";
 
-import { NavItemInfo } from "@/types/mypageInfo";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+
+interface NavItemInfo {
+  label: string;
+  href: string;
+}
 
 export default function MypageList() {
   const router = useRouter();

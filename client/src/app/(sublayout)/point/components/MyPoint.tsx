@@ -1,20 +1,19 @@
 "use client";
 
 import { fetchUserInfo } from "@/apis/userInfoApi";
-import { UserInfo } from "@/types/mypageInfo";
+import { UserInfo } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { HiInformationCircle } from "react-icons/hi";
 import { toast } from "react-toastify";
 
 export default function MyPoint() {
-
   // 설명 토글 함수
   const handleInfoClick = () => {
-    toast.info('잔여 포인트입니다',{
+    toast.info("잔여 포인트입니다", {
       position: "top-center",
-      theme: "light"
-    })
+      theme: "light",
+    });
   };
 
   const { data: userInfo, isError } = useQuery<UserInfo>({
