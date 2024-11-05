@@ -86,7 +86,8 @@ public class ClickGameCacheRepository {
 		Long totalClick = valueOperationsInt.increment(CLICK_TOTAL_KEY);
 
 		if (totalClick == null) {
-			totalClick = setTotalClick().longValue();
+			totalClick = getTotalClick().longValue();
+			log.info("totalClick : {}", totalClick);
 		}
 
 		log.info("totalClick : {}", totalClick);
