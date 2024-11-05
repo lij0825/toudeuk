@@ -20,14 +20,14 @@ public class ClickGameLog extends TimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_click_game_log_user_id"))
     private User user;
 
     @Column(name = "click_order", nullable = false)
     private int order;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "click_game_id", nullable = false)
+    @JoinColumn(name = "click_game_id", nullable = false, foreignKey = @ForeignKey(name = "fk_click_game_log_click_game_id"))
     private ClickGame clickGame;
 
     public static ClickGameLog create(User user, int order, ClickGame clickGame) {
