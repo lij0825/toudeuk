@@ -17,7 +17,7 @@ public class RefreshToken {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_refresh_token_user_id"))
     private User user;
 
     private String refreshToken;
