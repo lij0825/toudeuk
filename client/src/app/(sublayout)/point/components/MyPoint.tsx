@@ -28,25 +28,31 @@ export default function MyPoint() {
   return (
     <div className="flex flex-col items-center justify-center">
       <div
-        className="p-8 rounded-3xl shadow-md w-full max-w-md"
-        style={{
-          background: "linear-gradient(180deg, #353A40 17.2%, #16171B 117.2%)",
-          borderColor: "#4A505B",
-          borderWidth: "2px",
-        }}
+        className="p-8 rounded-3xl shadow-md w-full max-w-md bg-primary"
+      // style={{
+      //   borderColor: "#4A505B",
+      //   borderWidth: "2px",
+      // }}
       >
-        <h2 className="text-3xl font-bold mb-6">내 포인트</h2>
+        <div className="flex items-center mb-6">
+          <h2 className="text-3xl text-white font-bold">내 포인트</h2>
+          <button onClick={handleInfoClick} className="ml-2">
+            <HiInformationCircle className="text-white w-6 h-6" />
+          </button>
+        </div>
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <h3 className="text-3xl font-semibold">{userInfo?.cash}pt</h3>
-            <button onClick={handleInfoClick} className="ml-2">
-              <HiInformationCircle className="text-gray-500 w-6 h-6" />
-            </button>
+            <h3 className="text-3xl text-white font-semibold">{userInfo?.cash}pt</h3>
           </div>
           <Link href="/kapay">
-            <button className="bg-transparent text-white font-semibold py-2 px-4 rounded border border-white transition duration-200 hover:bg-white hover:text-black">
+            <button
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg text-md hover:bg-blue-600 transition duration-150"
+            >
               충전하기
             </button>
+            {/* <button className="bg-transparent text-white font-semibold py-2 px-4 rounded border border-white transition duration-200 hover:bg-white hover:text-black">
+              충전하기
+            </button> */}
           </Link>
         </div>
       </div>

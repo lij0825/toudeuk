@@ -87,6 +87,13 @@ export default function PointList() {
         >
           USE
         </button>
+        {/* <button
+          onClick={() => setFilter("GAME")}
+          className={`px-4 py-2 flex-1 ${filter === "ITEM" ? "bg-white text-black" : "bg-transparent border border-gray-300"
+            }`}
+        >
+          GAME
+        </button> */}
       </div>
 
       {/* 포인트 내역 리스트 */}
