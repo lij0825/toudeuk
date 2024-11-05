@@ -18,6 +18,23 @@ const bypassRoutes: string[] = [
   "/icons",
   "/apis",
   "/favicon.ico",
+  "/fonts",
+  "/default_profile.jpg",
+];
+
+// Protected routes that require authentication
+const protectedRoutes: string[] = [
+  "/mypage",
+  "/settings",
+  "/gifticon",
+  "/history",
+  "/mygifticon",
+  "/point",
+  "/rank",
+  "/kapay",
+  "/mypage",
+  "/toudeuk"
+  // Add other protected routes here
 ];
 
 function isPublicRoute(pathname: string): boolean {
@@ -26,8 +43,14 @@ function isPublicRoute(pathname: string): boolean {
       const regexPattern = route.replace("*", ".*");
       return new RegExp(`^${regexPattern}`).test(pathname);
     }
-    return new RegExp(`^${route.replace(/\/$/, "")}(\/|$)`).test(pathname);
+    return pathname === route || pathname === `${route}/`;
   });
+}
+
+function isProtectedRoute(pathname: string): boolean {
+  return protectedRoutes.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`)
+  );
 }
 
 function shouldBypassMiddleware(pathname: string): boolean {
@@ -56,10 +79,15 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Check authentication for non-public routes
-  if (!isPublicRoute(pathname)) {
+  // Check authentication specifically for protected routes
+  if (isProtectedRoute(pathname)) {
     const isLoggedIn = request.cookies.get("refresh-token") !== undefined;
-    console.log("Auth check for path:", pathname, "isLoggedIn:", isLoggedIn);
+    console.log(
+      "Auth check for protected path:",
+      pathname,
+      "isLoggedIn:",
+      isLoggedIn
+    );
 
     if (!isLoggedIn) {
       console.log("Redirecting to home due to no auth");
@@ -73,7 +101,7 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     // Match all paths except static files
-    "/((?!_next/static|_next/image).*)",
+    "/((?!_next/static|_next/image|favicon.ico).*)",
     // Include service worker and manifest
     "/sw.js",
     "/manifest.json",
