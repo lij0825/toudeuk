@@ -111,11 +111,11 @@ public class ClickGameService {
                     totalClick
             );
 
-            System.out.println(displayInfoEvery);
-            System.out.println(displayInfoForClicker);
-
             messagingTemplate.convertAndSend("/topic/game", displayInfoEvery);
+            log.info("displayInfoEvery : {}", displayInfoEvery);
             messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
+            log.info("displayInfoForClicker : {}", displayInfoForClicker);
+
             return;
         }
 

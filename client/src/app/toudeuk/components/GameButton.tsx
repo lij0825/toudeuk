@@ -11,23 +11,27 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 export default function GameButton() {
-  const [count, setCount] = useState<number>(0);
+  const [count, setCount] = useState<number | null>(null);
   const [stompClient, setStompClient] = useState<Client | null>(null);
 
-  const { data: totalClick , isLoading, error } = useQuery<GameInfo>({
-    queryKey: ['count'],
-    queryFn: gameClick
-  })
+  // const {
+  //   data: totalClick,
+  //   isLoading,
+  //   error,
+  // } = useQuery<GameInfo>({
+  //   queryKey: ["count"],
+  //   queryFn: gameClick,
+  // });
 
-  const mutate = useMutation<GameInfo>({
-    mutationFn: () => gameClick(),
-    onSuccess: (data) => {
-      // setCount(data.totalClick);
-    },
-    onError: (error) => {
-      console.error("Error updating count:", error);
-    },
-  });
+  // const mutate = useMutation<GameInfo>({
+  //   mutationFn: () => gameClick(),
+  //   onSuccess: (data) => {
+  //     // setCount(data.totalClick);
+  //   },
+  //   onError: (error) => {
+  //     console.error("Error updating count:", error);
+  //   },
+  // });
 
   const accessToken = sessionStorage.getItem("accessToken");
 
@@ -49,28 +53,50 @@ export default function GameButton() {
       (frame: IFrame) => {
         console.log("Connected: " + frame);
 
-        stompClient.publish({
-          destination: "/topic/game",
-          body: JSON.stringify({}),
-          headers: headers,
-        });
+        // stompClient.publish({
+        //   destination: "/app/game",
+        //   body: JSON.stringify({}),
+        //   headers: headers,
+        // });
 
         stompClient.subscribe(
           "/topic/game",
           (message) => {
-            console.log("메시지 전체", message);
-            console.log("메시지 body", message.body);
             console.log("메시지 Json 파싱", JSON.parse(message.body));
-            const clicks = JSON.parse(message.body)["totalClick"]
+            const clicks = JSON.parse(message.body)["totalClick"];
             setCount(Number(clicks) || 0);
-            if(message.body){
+            if (message.body) {
               setCount(parseInt(clicks));
-            } else{
-              setCount(0)
+            } else {
+              setCount(0);
             }
           },
           headers
         );
+
+        stompClient.subscribe(
+          "/app/game",
+          (message) => {
+            console.log("메시지 Json 파싱", JSON.parse(message.body));
+            const clicks = JSON.parse(message.body)["totalClick"];
+            setCount(Number(clicks) || 0);
+            if (message.body) {
+              setCount(parseInt(clicks));
+            } else {
+              setCount(0);
+            }
+          },
+          headers
+        );
+
+        // console.log("Sending init message");
+        // stompClient.publish({
+        //   destination: "/app/init",
+        //   body: JSON.stringify({}),
+        //   headers: { Authorization: `Bearer ${accessToken}` },
+        // });
+        // console.log("Init message sent");
+
         // stompClient.subscribe(`/topic/game/${userId}`,(message:IMessage) => {
         //   console.log("내 클릭 수 : ",message)
         // })
@@ -89,15 +115,15 @@ export default function GameButton() {
       }
     };
   }, []);
-    
+
   const handleClick = async () => {
     // gameClick()
-    mutate.mutate();
+    // mutate.mutate();
 
     if (stompClient) {
       const accessToken = sessionStorage.getItem("accessToken");
       stompClient.publish({
-        destination: "/topic/game",
+        destination: "/app/game",
         body: JSON.stringify({}),
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -123,11 +149,11 @@ export default function GameButton() {
     // }
   };
 
-  if (mutate !== undefined) {
-    console.log("111=====================================");
-    console.log("data: ", mutate.data);
-    console.log("222=====================================");
-  }
+  // if (mutate !== undefined) {
+  //   console.log("111=====================================");
+  //   console.log("data: ", mutate.data);
+  //   console.log("222=====================================");
+  // }
 
   return (
     <>
@@ -139,11 +165,12 @@ export default function GameButton() {
           className="absolute w-40 h-40 rounded-full border-2 border-[#00ff88] hover:border-[#ff00ff] transition-colors duration-300 animate-spin-border"
         ></div>
 
-        {/* 고정된 숫자 */}
-        <span className="z-10 text-3xl text-[#00ff88] hover:text-[#ff00ff] transition-colors duration-300">
-          {/* {count} */}
-          {isNaN(count) ? '' : count}
-        </span>
+        {/* 수신된 count가 있을 때만 표시 */}
+        {count !== null && (
+          <span className="z-10 text-3xl text-[#00ff88] hover:text-[#ff00ff] transition-colors duration-300">
+            {count}
+          </span>
+        )}
       </div>
       <style jsx>{`
         @keyframes spinBorder {

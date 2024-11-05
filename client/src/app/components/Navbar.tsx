@@ -24,11 +24,7 @@ export default function Navbar() {
 
   const navClasses = `font-noto absolute bottom-0 inset-x-0 w-full px-8 pb-2 pt-1 flex justify-between gap-1 items-end border-t border-gray-200 shadow-xl transition-transform transition-opacity duration-300 ${
     isVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
-  } ${
-    pathname === ROUTE_URL.GAME
-      ? "bg-gray-800 text-white"
-      : "bg-white text-gray-800"
-  }`;
+  } ${pathname === ROUTE_URL.GAME ? "bg-gray-800 text-white" : "bg-white text-gray-800"}`;
 
   // 햄버거 버튼 클릭 시 네비게이션 바 표시/숨기기 토글
   const toggleNavbar = () => {
@@ -108,12 +104,7 @@ export default function Navbar() {
             className="flex flex-col items-center"
             style={{ textDecoration: "none" }}
           >
-            <LottieAnimation
-              animationData={CUSTOM_ICON.history}
-              loop={1}
-              width={45}
-              height={45}
-            />
+            <LottieAnimation animationData={CUSTOM_ICON.history} loop={1} width={45} height={45} />
             <span className="text-sm">기록</span>
           </a>
         </div>
@@ -123,12 +114,7 @@ export default function Navbar() {
             className="flex flex-col items-center"
             style={{ textDecoration: "none" }}
           >
-            <LottieAnimation
-              animationData={CUSTOM_ICON.trophy}
-              loop={1}
-              width={50}
-              height={50}
-            />
+            <LottieAnimation animationData={CUSTOM_ICON.trophy} loop={1} width={50} height={50} />
             <span className="text-sm">랭킹</span>
           </a>
         </div>
@@ -138,12 +124,7 @@ export default function Navbar() {
             className="flex flex-col items-center"
             style={{ textDecoration: "none" }}
           >
-            <LottieAnimation
-              animationData={CUSTOM_ICON.ticket1}
-              loop={1}
-              width={50}
-              height={50}
-            />
+            <LottieAnimation animationData={CUSTOM_ICON.ticket1} loop={1} width={50} height={50} />
             <span className="text-sm">기프티콘</span>
           </a>
         </div>
@@ -153,12 +134,7 @@ export default function Navbar() {
             className="flex flex-col items-center"
             style={{ textDecoration: "none" }}
           >
-            <LottieAnimation
-              animationData={CUSTOM_ICON.profile}
-              loop={1}
-              width={50}
-              height={50}
-            />
+            <LottieAnimation animationData={CUSTOM_ICON.profile} loop={1} width={50} height={50} />
             <span className="text-sm">마이</span>
           </a>
         </div>

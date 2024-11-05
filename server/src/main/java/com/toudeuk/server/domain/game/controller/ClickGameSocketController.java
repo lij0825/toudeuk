@@ -6,6 +6,7 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -26,9 +27,15 @@ public class ClickGameSocketController {
 	private final JWTService jwtService;
     private final SimpMessagingTemplate messagingTemplate;
 
-    @SendTo("")
-    public void sendStart(){
-    }
+	@SubscribeMapping("/game")
+	public void sendStart(@Header("Authorization") String bearerToken) throws Exception {
+		Long userId = resolveToken(bearerToken);
+
+		log.info("-====123==============2143================================");
+		log.info("-=====================1234=============================");
+
+		clickGameService.checkGame(userId);
+	}
 
     @MessageMapping("/game")
     public void sendPublish(@Header("Authorization") String bearerToken) throws Exception {
@@ -41,16 +48,17 @@ public class ClickGameSocketController {
 
     }
 
+	@MessageMapping("/init")
+	public void sendInitPublish(@Header("Authorization") String bearerToken) throws Exception {
+		Long userId = resolveToken(bearerToken);
 
-    @MessageMapping("/topic/connect")
-    public void ping(@Header("Authorization") String bearerToken) throws Exception {
-        Long userId = resolveToken(bearerToken);
+		log.info("-============================11======================");
+		log.info("-=============================22=====================");
 
-        System.out.println(userId);
+		clickGameService.checkGame(userId);
 
+	}
 
-        clickGameService.checkGame(userId);
-    }
 
 	private Long resolveToken(String bearerToken) {
 		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
