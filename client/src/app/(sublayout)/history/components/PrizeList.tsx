@@ -1,7 +1,7 @@
 "use client";
 
 import { fetchPrizes } from "@/apis/prizeApi";
-import { showToast, ToastType } from "@/app/componnents/Toast";
+import { showToast, ToastType } from "@/app/components/Toast";
 import { BaseResponse } from "@/types";
 import { PrizeInfo, PrizeRequest } from "@/types/prize";
 import { useSuspenseQuery } from "@tanstack/react-query";

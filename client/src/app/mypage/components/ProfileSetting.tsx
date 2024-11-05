@@ -7,7 +7,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import SvgSettingIcon from "./SettingIcon";
-import LottieAnimation from "./../../componnents/LottieAnimation";
+import LottieAnimation from "../../components/LottieAnimation";
 import { CUSTOM_ICON } from "@/constants/customIcons";
 
 interface ModalProps {

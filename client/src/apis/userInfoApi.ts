@@ -1,6 +1,6 @@
 import { BaseResponse } from "@/types/Base";
-import { UserInfo } from "@/types/mypageInfo";
 import instance from "./clientApi";
+import { UserInfo } from "@/types";
 
 //사용자 정보 저장
 export const fetchUserInfo = async (): Promise<UserInfo> => {
