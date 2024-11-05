@@ -29,11 +29,11 @@ export default function GameButton() {
       (frame: IFrame) => {
         console.log("Connected: " + frame);
 
-        stompClient.publish({
-          destination: "/app/getInitialCount",
-          body: JSON.stringify({}),
-          headers: headers,
-        });
+        // stompClient.publish({
+        //   destination: "/app/getInitialCount",
+        //   body: JSON.stringify({}),
+        //   headers: headers,
+        // });
 
         stompClient.subscribe(
           "/topic/game",
@@ -70,21 +70,21 @@ export default function GameButton() {
       });
     }
     const accessToken = sessionStorage.getItem("accessToken");
-    try {
-      const response = await axios.post(
-        `${BASE_URL}/api/v1/game/click`,
-        {},
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      ); // 필요한 데이터 추가 가능
-      console.log("POST response:", response.data);
-    } catch (error) {
-      console.error("Error sending POST request:", error);
-    }
+    // try {
+    //   const response = await axios.post(
+    //     `${BASE_URL}/api/v1/game/click`,
+    //     {},
+    //     {
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //         Authorization: `Bearer ${accessToken}`,
+    //       },
+    //     }
+    //   ); // 필요한 데이터 추가 가능
+    //   console.log("POST response:", response.data);
+    // } catch (error) {
+    //   console.error("Error sending POST request:", error);
+    // }
     // try {
     //   await fetchClick(); // fetchClick 사용
     // } catch (error) {

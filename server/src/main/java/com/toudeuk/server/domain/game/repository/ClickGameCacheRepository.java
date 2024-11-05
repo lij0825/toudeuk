@@ -99,6 +99,8 @@ public class ClickGameCacheRepository {
 	// 클릭 수 click:count
 	public Integer addUserClick(Long userId) {
 		Double score = zSetOperations.incrementScore(CLICK_COUNT_KEY, userId, 1);
+		log.info("score : {}", score);
+
 		return score == null ? 1 : score.intValue();
 	}
 

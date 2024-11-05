@@ -57,6 +57,35 @@ public class ClickGameService {
     @Transactional
     public void checkGame(Long userId) {
 
+        // 쿨타임이면?
+        if (clickCacheRepository.isGameCoolTime()) {
+            Long gameCoolTime = clickCacheRepository.getGameCoolTime();
+            GameData.DisplayInfoForEvery displayInfoEvery = GameData.DisplayInfoForEvery.of(
+                    gameCoolTime,
+                    "COOLTIME",
+                    0
+            );
+
+            GameData.DisplayInfoForClicker displayInfoForClicker = GameData.DisplayInfoForClicker.of(
+                    displayInfoEvery,
+                    0,
+                    0,
+                    0L,
+                    0,
+                    0
+            );
+
+            // 모든 구독자에게 메시지 전송
+            messagingTemplate.convertAndSend("/topic/game", displayInfoEvery);
+
+            System.out.println("displayInfoForClicker : " + displayInfoForClicker);
+
+            // 특정 구독자에게 메시지 전송
+            messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
+
+            return;
+        }
+
         if (clickCacheRepository.existGame()) {
             Long myRank = clickCacheRepository.getUserRank(userId);
             Integer myClickCount = clickCacheRepository.getUserClickCount(userId);
@@ -90,35 +119,6 @@ public class ClickGameService {
             return;
         }
 
-        // 쿨타임이면?
-        if (clickCacheRepository.isGameCoolTime()) {
-            Long gameCoolTime = clickCacheRepository.getGameCoolTime();
-            GameData.DisplayInfoForEvery displayInfoEvery = GameData.DisplayInfoForEvery.of(
-                    gameCoolTime,
-                    "COOLTIME",
-                    0
-            );
-
-            GameData.DisplayInfoForClicker displayInfoForClicker = GameData.DisplayInfoForClicker.of(
-                    displayInfoEvery,
-                    0,
-                    0,
-                    0L,
-                    0,
-                    0
-            );
-
-            // 모든 구독자에게 메시지 전송
-            messagingTemplate.convertAndSend("/topic/game", displayInfoEvery);
-
-            System.out.println("displayInfoForClicker : " + displayInfoForClicker);
-
-            // 특정 구독자에게 메시지 전송
-            messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
-
-            return;
-        }
-
         if (clickCacheRepository.waitingGameStart()) {
             GameData.DisplayInfoForEvery displayInfoEvery = GameData.DisplayInfoForEvery.of(
                     0L,
@@ -140,7 +140,6 @@ public class ClickGameService {
 
             // 특정 구독자에게 메시지 전송
             messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
-
             return;
         }
     }
