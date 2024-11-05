@@ -22,13 +22,15 @@ public class RankData {
     @Data
     public static class RankList {
         private Integer rank;
-        private Long userId;
+        private String nickname;
+        private String profileImageUrl;
         private Integer clickCount;
 
-        public static RankList of(Integer rank, Long userId, Integer clickCount) {
+        public static RankList of(Integer rank, String nickname, String profileImageUrl, Integer clickCount) {
             RankList rankList = new RankList();
             rankList.rank = rank;
-            rankList.userId = userId;
+            rankList.nickname = nickname;
+            rankList.profileImageUrl = profileImageUrl;
             rankList.clickCount = clickCount;
             return rankList;
         }
