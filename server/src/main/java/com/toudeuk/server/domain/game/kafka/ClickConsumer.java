@@ -24,8 +24,8 @@ public class ClickConsumer {
 
     // ! 카프카 소비 설정 완료 , 로직 추가 해야함.
     @KafkaListener(topics = "${consumers.topics.click.name}", groupId = "${consumers.group-id.topics.click.name}")
-    public void consumerClick(ConsumerRecord<String, Object> record) throws IOException {
-        KafkaData.ClickDto clickDto = objectMapper.readValue((JsonParser) record.value(), KafkaData.ClickDto.class);
+    public void consumerClick(ConsumerRecord<String, String> record) throws IOException {
+        KafkaData.ClickDto clickDto = objectMapper.readValue(record.value(), KafkaData.ClickDto.class);
         log.info("clickDto : {}", clickDto);
     }
 
