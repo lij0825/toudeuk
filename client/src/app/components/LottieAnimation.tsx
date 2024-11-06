@@ -1,5 +1,8 @@
-import React, { useRef } from "react";
-import Lottie, { LottieComponentProps, LottieRefCurrentProps } from "lottie-react";
+import React, { useRef, useEffect } from "react";
+import Lottie, {
+  LottieComponentProps,
+  LottieRefCurrentProps,
+} from "lottie-react";
 
 interface LottieAnimationProps {
   animationData: LottieComponentProps["animationData"];
@@ -9,10 +12,11 @@ interface LottieAnimationProps {
   height?: number;
   padding?: string;
   margin?: string;
-  cursor?: string; // cursor 속성을 추가
+  cursor?: string;
+  isSelected?: boolean;
 }
 
-function LottieAnimation({
+export default function LottieAnimation({
   animationData,
   loop = false,
   autoplay = false,
@@ -21,33 +25,23 @@ function LottieAnimation({
   padding = "0",
   margin = "0",
   cursor = "",
+  isSelected = false,
 }: LottieAnimationProps) {
   const lottieRef = useRef<LottieRefCurrentProps | null>(null);
 
-  const handleClick = () => {
+  useEffect(() => {
     if (lottieRef.current) {
-      lottieRef.current.play();
+      if (isSelected) {
+        lottieRef.current.play();
+      } else {
+        lottieRef.current.stop();
+        lottieRef.current.goToAndStop(0, true);
+      }
     }
-  };
-
-  const handleMouseEnter = () => {
-    lottieRef.current?.play();
-  };
-
-  const handleMouseLeave = () => {
-    if (lottieRef.current) {
-      lottieRef.current.stop();
-      lottieRef.current.goToAndStop(0, true);
-    }
-  };
+  }, [isSelected]);
 
   return (
-    <div
-      onClick={handleClick}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      style={{ width, height, padding, margin, cursor }} // cursor를 style에 반영
-    >
+    <div style={{ width, height, padding, margin, cursor }}>
       <Lottie
         lottieRef={lottieRef}
         animationData={animationData}
@@ -58,5 +52,3 @@ function LottieAnimation({
     </div>
   );
 }
-
-export default LottieAnimation;

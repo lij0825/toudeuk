@@ -94,7 +94,7 @@ export default function Login() {
         </div> */}
       <button
         onClick={handleKakaoLogin}
-        className={`flex typo-sub-title font-bold p-3 items-center justify-center w-full h-10 rounded-md bg-[#FEE500] border border-[#FEE500] text-black transition duration-1000
+        className={`flex typo-sub-title font-bold p-3 items-center justify-center w-full h-10 rounded-md bg-[#FEE500] border border-[#FEE500] text-black transition duration-10000
         ${isVisible ? "animate-slide-up" : "opacity-0 translate-y-5"}
       `}
       >

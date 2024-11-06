@@ -98,48 +98,6 @@ const config: Config = {
           height: "100%",
           background: "white",
         },
-        ".card": {
-          display: "flex",
-          alignItems: "center",
-          borderRadius: "1rem",
-          boxShadow: "0 4px 10px rgba(15, 158, 241, 0.2)", // 밝은 파란색 그림자
-          padding: "1rem",
-          width: "100%",
-          background: "linear-gradient(180deg, #FFCE8E 17.2%, #F3F4F6 117.2%)", // 주황색에서 밝은 회색으로의 그라데이션
-          borderWidth: "2px",
-          height: "82px",
-        },
-
-        ".card-selected": {
-          background: "linear-gradient(180deg, #FFCE8E 17.2%, #F3F4F6 117.2%)", // 선택 시에는 조금 더 진한 그라데이션
-          borderColor: "#791EF9", // 보라색 테두리
-          boxShadow: "0 6px 12px rgba(121, 30, 249, 0.3)", // 보라색 그림자
-        },
-        ".circle-icon": {
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          borderRadius: "50%",
-          width: theme("spacing.10"), // 기본 크기 (Tailwind spacing scale 사용)
-          height: theme("spacing.10"),
-          backgroundColor: theme("colors.gray.200"), // 기본 배경색
-          position: "relative",
-        },
-        ".circle-icon-inner": {
-          borderRadius: "50%",
-          width: theme("spacing.5"), // 내부 원 크기
-          height: theme("spacing.5"),
-          backgroundColor: theme("colors.gray.500"), // 기본 내부 원 색상
-        },
-        ".circle-icon-dot": {
-          position: "absolute",
-          top: theme("spacing.1"),
-          right: theme("spacing.1"),
-          width: theme("spacing.2"),
-          height: theme("spacing.2"),
-          borderRadius: "50%",
-          backgroundColor: theme("colors.green.400"), // 기본 작은 원 색상
-        },
         ".common-link": {
           backgroundImage:
             "linear-gradient(to top left, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 70%), linear-gradient(to bottom right, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0) 70%)",

@@ -17,6 +17,11 @@ import {
   default as profile,
   default as user,
 } from "../../public/icons/user.json";
+import chicken from "../../public/icons/chicken.json";
+import coffee from "../../public/icons/hotCoffee.json";
+import voucher from "../../public/icons/paperCash.json";
+import dataset from "../../public/icons/data-set.json";
+import shop from "../../public/icons/Shop.json";
 
 // SVG 파일 Import
 import settingSVG from "../../public/icons/setting.svg";
@@ -37,4 +42,9 @@ export const CUSTOM_ICON = {
   profile,
   emty,
   edit,
+  chicken,
+  coffee,
+  voucher,
+  dataset,
+  shop,
 };
