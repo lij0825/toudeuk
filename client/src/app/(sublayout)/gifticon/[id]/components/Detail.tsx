@@ -50,11 +50,20 @@ export default function Detail() {
 
           {/* 구매하기 버튼 */}
           <button
-            className="mt-8 bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+            className="mt-8 w-full bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors"
             onClick={() => mutation.mutate()}
           >
             구매하기
           </button>
+          {/* 유의사항 */}
+          <div className="text-left mt-4">
+            <p className="font-semibold">▶ 유의사항</p>
+            <p className="text-sm mt-2">
+              - 상기 이미지는 연출된 것으로 실제와 다를 수 있습니다. <br />
+              - 본 상품은 매장 재고 상황에 따라 동일 상품으로 교환이 불가능할 수 있습니다.<br />
+              - 동일 상품 교환이 불가한 경우 다른 상품으로 교환이 가능합니다. (차액 발생 시 차액 지불)<br />
+            </p>
+          </div>
           <ToastContainer />
         </div>
       ) : (
