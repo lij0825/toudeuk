@@ -35,6 +35,7 @@ public enum ErrorCode {
 	REWARD_USER_NOT_FOUND(4002, HttpStatus.NOT_FOUND, "보상 받을 유저를 찾을 수 없습니다."),
 	COOL_TIME(4003, HttpStatus.BAD_REQUEST, "쿨타임입니다."),
 	GAME_LOG_NOT_FOUND(4004, HttpStatus.NOT_FOUND, "게임 로그를 찾을 수 없습니다."),
+	GAME_ALREADY_EXIST(4005, HttpStatus.BAD_REQUEST, "이미 게임이 존재합니다."),
 
 	// KakaoPay
 	KAKAO_PAY_API_ERROR(5000, HttpStatus.BAD_REQUEST, "카카오페이 API 에러가 발생하였습니다."),

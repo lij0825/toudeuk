@@ -147,6 +147,9 @@ public class ClickGameService {
 
     @Transactional
     public void startGame(Long userId) {
+        if (clickCacheRepository.existGame()) {
+            throw new BaseException(GAME_ALREADY_EXIST);
+        }
 
         Long lastRound = clickGameRepository.findLastRound().orElse(0L);
         ClickGame newGame = ClickGame.create(lastRound + 1);
