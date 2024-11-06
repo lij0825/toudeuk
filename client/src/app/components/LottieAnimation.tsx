@@ -1,8 +1,5 @@
 import React, { useRef } from "react";
-import Lottie, {
-  LottieComponentProps,
-  LottieRefCurrentProps,
-} from "lottie-react";
+import Lottie, { LottieComponentProps, LottieRefCurrentProps } from "lottie-react";
 
 interface LottieAnimationProps {
   animationData: LottieComponentProps["animationData"];

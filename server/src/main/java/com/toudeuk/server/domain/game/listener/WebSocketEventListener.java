@@ -11,12 +11,14 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
+import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 
 import java.util.List;
 
-@Component
+@RestController
 @RequiredArgsConstructor
 public class WebSocketEventListener {
 
@@ -25,7 +27,7 @@ public class WebSocketEventListener {
     private final JWTService jwtService;
 
     @EventListener
-    public void handleWebSocketConnectListener(SessionConnectEvent event) {
+    public void handleWebSocketConnectListener(SessionSubscribeEvent event) {
         // 클라이언트가 연결되었을 때 호출됨
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         List<String> authorizationHeaders = headerAccessor.getNativeHeader("Authorization");
