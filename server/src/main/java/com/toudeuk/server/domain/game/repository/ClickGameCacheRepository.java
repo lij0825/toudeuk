@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
+import com.toudeuk.server.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -27,6 +28,8 @@ public class ClickGameCacheRepository {
 	private static final String GAME_ID_KEY = "game:id";
 	private static final String GAME_COOLTIME_KEY = "game:cooltime";
 
+	private static final String USER_CASH_KEY = "cash:";
+
 	private static final long MAX_CLICK = 1000; // 12000
 	private static final long COOLTIME_MINUTES = 1; // 5분
 
@@ -42,8 +45,11 @@ public class ClickGameCacheRepository {
 	@Resource(name = "integerRedisTemplate")
 	private ValueOperations<String, Integer> valueOperationsInt;
 
+
 	@Autowired
 	public RedisTemplate<String, Object> redisTemplate;
+    @Autowired
+    private UserRepository userRepository;
 
 	// 게임 정보 game
 	public void setGameId(Long gameId) {
@@ -148,5 +154,19 @@ public class ClickGameCacheRepository {
 		redisTemplate.delete(CLICK_COUNT_KEY);
 		redisTemplate.delete(CLICK_LOG_KEY);
 		redisTemplate.delete(GAME_ID_KEY);
+	}
+
+	public Integer getUserCash(Long userId) {
+
+
+		Integer userCash = valueOperationsInt.get(USER_CASH_KEY + userId);
+
+		if (userCash == null) {
+			Integer cash = userRepository.findById(userId).get().getCash();
+			valueOperationsInt.set(USER_CASH_KEY + userId, cash);
+			return cash;
+		}
+
+		return userCash;
 	}
 }

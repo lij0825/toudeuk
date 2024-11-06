@@ -8,6 +8,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.toudeuk.server.domain.game.dto.RankData;
+import com.toudeuk.server.domain.game.kafka.dto.ClickDto;
+import com.toudeuk.server.domain.game.kafka.dto.KafkaData;
 import com.toudeuk.server.domain.user.entity.CashLogType;
 import com.toudeuk.server.domain.user.event.CashLogEvent;
 import org.springframework.context.ApplicationEventPublisher;
@@ -79,9 +81,6 @@ public class ClickGameService {
 
             // 모든 구독자에게 메시지 전송
             messagingTemplate.convertAndSend("/topic/game", displayInfoEvery);
-
-            System.out.println("displayInfoForClicker : " + displayInfoForClicker);
-
             // 특정 구독자에게 메시지 전송
             messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
 
@@ -148,6 +147,9 @@ public class ClickGameService {
 
     @Transactional
     public void startGame(Long userId) {
+        if (clickCacheRepository.existGame()) {
+            throw new BaseException(GAME_ALREADY_EXIST);
+        }
 
         Long lastRound = clickGameRepository.findLastRound().orElse(0L);
         ClickGame newGame = ClickGame.create(lastRound + 1);
@@ -251,6 +253,67 @@ public class ClickGameService {
         }
     }
 
+    public void smClick(Long userId) throws JsonProcessingException {
+
+        Integer userCash = clickCacheRepository.getUserCash(userId);
+
+        int result = userCash + CLICK_CASH;
+
+        // 돈없으면 끝
+        if (result < 0) {
+            throw new BaseException(NOT_ENOUGH_CASH);
+        }
+
+        Integer userClickCount = clickCacheRepository.addUserClick(userId);
+        Long totalClickCount = clickCacheRepository.addTotalClick();
+
+
+
+        ClickDto clickDto = new ClickDto(
+                userId,
+                clickCacheRepository.getGameId(),
+                CLICK_CASH,
+                result,
+                "클릭 게임" + clickCacheRepository.getGameId(),
+                CashLogType.GAME);
+
+        clickProducer.occurClickUserId(clickDto);
+
+        GameData.DisplayInfoForEvery displayInfoForEvery = GameData.DisplayInfoForEvery.of(
+                0L,
+                "RUNNING",
+                totalClickCount.intValue()
+        );
+
+        GameData.DisplayInfoForClicker displayInfoForClicker = GameData.DisplayInfoForClicker.of(
+                displayInfoForEvery,
+                0,
+                0,
+                -1L,
+                0,
+                userClickCount
+        );
+
+        // 모든 구독자에게 메시지 전송
+        messagingTemplate.convertAndSend("/topic/game", displayInfoForEvery);
+
+        // 특정 구독자에게 메시지 전송
+        messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
+    }
+
+    // 로그, 캐시 데이터베이스 저장
+//    public void saveData(KafkaData.ClickDto clickDto) {
+//        User user = userRepository.findById(clickDto.getUserId())
+//                .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+//        user.updateCash(clickDto.getResultCash());
+//
+//        Long gameId = clickDto.getGameId();
+//
+//        clickGameLogRepository.save(ClickGameLog.create(user, clickDto.getChangeCash(), clickGameRepository.findById(gameId).orElseThrow(() -> new BaseException(GAME_NOT_FOUND)));
+//
+//    }
+
+
     public void asyncClick(Long userId) throws JsonProcessingException {
         log.info("카프카 클릭 asyncClick userId : {}", userId);
         User user = userRepository.findById(userId)
@@ -261,7 +324,7 @@ public class ClickGameService {
         if (resultCash < 0) {
             throw new BaseException(NOT_ENOUGH_CASH);
         }
-        clickProducer.occurClickUserId(userId);
+//        clickProducer.occurClickUserId(userId);
     }
 
     public GameData.DisplayInfoForClicker getGameDisplayData(Long userId) {

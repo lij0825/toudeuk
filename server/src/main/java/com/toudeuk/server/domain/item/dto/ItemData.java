@@ -2,6 +2,7 @@ package com.toudeuk.server.domain.item.dto;
 
 import com.toudeuk.server.domain.item.entity.Item;
 
+import com.toudeuk.server.domain.item.entity.ItemType;
 import lombok.Data;
 
 public class ItemData {
@@ -12,6 +13,7 @@ public class ItemData {
 		private String itemName;
 		private String itemImage;
 		private int itemPrice;
+		private ItemType itemType;
 
 		public static ItemInfo of(Item item) {
 			ItemInfo itemInfo = new ItemInfo();
@@ -19,6 +21,7 @@ public class ItemData {
 			itemInfo.itemName = item.getName();
 			itemInfo.itemImage = item.getImage();
 			itemInfo.itemPrice = item.getPrice();
+			itemInfo.itemType = item.getItemType();
 			return itemInfo;
 		}
 	}

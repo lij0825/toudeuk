@@ -38,7 +38,10 @@ public class ClickGameSocketController {
     public void sendPublish(@Header("Authorization") String bearerToken) throws Exception {
         Long userId = resolveToken(bearerToken);
 
-        clickGameService.asyncClick(userId);
+//        clickGameService.asyncClick(userId);
+
+		clickGameService.smClick(userId);
+
 
     }
 

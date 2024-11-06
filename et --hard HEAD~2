@@ -1,0 +1,448 @@
+[33m1e9b136[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdevelop[m[33m, [m[1;31morigin/develop[m[33m, [m[1;31morigin/HEAD[m[33m)[m [MERGE]
+[33m23f5aa7[m[33m ([m[1;31morigin/back/feat/clickgame[m[33m, [m[1;32mback/feat/clickgame[m[33m)[m [FIX] ê게임 시작 ì 에러 수정
+[33m2adf0a4[m[33m ([m[1;31morigin/back/feat/item-type[m[33m, [m[1;32mback/feat/item-type[m[33m)[m [FIX] 아이템 타입 반환 추가
+[33m55e9483[m Merge branch 'back/kafka/error/competition' into develop
+[33md9f6ebc[m[33m ([m[1;31morigin/back/kafka/error/competition[m[33m, [m[1;32mback/kafka/error/competition[m[33m)[m [ãCOMPETITION] 양준영
+[33m58210cc[m [COMPETITION]
+[33m9b1a738[m Merge branch 'front/feat/design' into 'develop'
+[33m33aad55[m Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into develop
+[33m916f4be[m [CONFIG] 프로메테우스 설정 변경
+[33m3b2a98b[m[33m ([m[1;31morigin/front/feat/design[m[33m)[m [MERGE] develop pull
+[33m77a4847[m Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into front/feat/design
+[33m2aebf51[m [FIX] 기프티콘 페이지 수정
+[33md0669ba[m Merge branch 'front/fix/touch' into 'develop'
+[33mef543f1[m [FIX] css 수정
+[33mba5e2aa[m [TEST] 유저가 캐시가 부족한 경우 + 카í카프카 메시지 미발행
+[33m24c6548[m Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into develop
+[33m0d9f9e5[m [FIX] 카프카 설정 변경 + 카í프카 ã를 이용하도록 수정
+[33m3a8f178[m Merge branch 'front/fix/touch' into 'develop'
+[33m4ab98ee[m[33m ([m[1;31morigin/front/fix/touch[m[33m)[m [FIX] 포인트 내역 수정
+[33m2b6f6c2[m Merge branch 'front/fix/touch' into 'develop'
+[33m5f955b3[m [FIX] 포인트 내역 페이지 수정
+[33mbedfd94[m Merge branch 'front/fix/touch' into 'develop'
+[33ma46747d[m [FIX] 포인트 내역 수정
+[33mae78db5[m Merge branch 'front/feat/design' into 'develop'
+[33m2ac2074[m Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into front/feat/design
+[33mf4afa60[m [FIX] git ignore 설정 반영
+[33mecbe7ef[m [FIX] middleware 주석 해제
+[33me3e5eaf[m [FIX] 홈화면 버튼 트랜지션
+[33m1b3ab8b[m [FIX] history 반환값 변경에 따른 type 변경 및 ui 변경
+[33m34444fc[m [GIT IGNORE]
+[33mb98b39a[m [MERGE]
+[33m0a7686c[m [GIT IGNORE]
+[33mc45db3c[m [FIX] 소켓 이벤트 리스너 파라미터 타입 수정 SessionConnectEvent -> SessionSubscribeEvent
+[33m2be971f[m Merge remote-tracking branch 'origin/develop' into develop
+[33m1c2d44e[m [FEAT] 초기 클릭 수
+[33me4ba8dc[m[33m ([m[1;31morigin/back/feat/game-cashlog[m[33m)[m [FEAT] 게임 종료 후 캐쉬 로그 저장
+[33m57bc06a[m [FIX] 프로필 편집 페이지 수정
+[33me62989d[m [MERGE]
+[33maf9c88d[m [MERGE]
+[33m01f03b2[m [FEAT] [MERGE]]
+[33ma732abc[m [GIT IGNORE]
+[33mc026dc6[m [FEAT] Http -> Socket(단방향 통신) 에서 Socket -> Socket(양방향 통신)으로 변경
+[33mb0e955c[m Merge branch 'front/feat/design' into 'develop'
+[33mb0c2a0c[m [FIX] 미들웨어 주석 해제
+[33mfde0922[m Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into front/feat/de
+[33m88526ad[m [FEAT] 기프티콘 css 수정
+[33m9736be0[m Merge branch 'front/fix/point' into 'develop'
+[33m8b49b93[m [FIX] css 변경, 랭킹 api 연결
+[33m63a6d51[m t add Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into develop
+[33md94dc4d[m [FIX] NGrinder 설정 변경
+[33m75be86f[m [FIX] MAX_CLICK -> 1000으로 변경
+[33m0d8e1dc[m [HOTFIX] ãnul 반환 문제3
+[33m376dbc1[m [HOTFIX] ãnull 반환 문제2
+[33m06db30b[m [HOTFIX] ãnull 반환 문제
+[33m1862e97[m [ãFIX] 랭킹 사용자 정보 추가
+[33m3cf7b58[m[33m ([m[1;31morigin/back/feat/rank[m[33m, [m[1;32mback/feat/rank[m[33m)[m [FIX]랭킹 반환 데이터 수정
+[33m2415348[m Merge branch 'back/feat/rank' into develop
+[33m8ef65ff[m [FEAT] 랭킹 반환
+[33me8e3a63[m Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into develop
+[33m734b811[m [FIX] css 수정
+[33me4d9619[m Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into develop
+[33m9b531a5[m [HOT FIX] 시크릿 파일 이그노어
+[33m5088a96[m Merge branch 'back/fix/entity' into 'develop'
+[33ma47ad28[m [FIX] Entity 제약조건 이름 추가
+[33m346f538[m [HOTFIX] 도커 카프카 KAFKA_ADVERTISED_LISTENERS 변경
+[33mf727d16[m [HOTFIX] 도커 카프카 포트 번호 변경
+[33m30546c2[m [MERGE]
+[33m211d461[m[33m ([m[1;31morigin/back/feat/redis[m[33m, [m[1;32mback/feat/redis[m[33m)[m [FIX] 레디스 트랜잭션 설정
+[33m73498dc[m [FIX]
+[33md63b137[m [MERGE] branch 'back/feat/config/socket' into develop
+[33ma3dc2e0[m[33m ([m[1;31morigin/back/feat/config/socket[m[33m)[m [FEAT] 재시작 로직 추가
+[33m08adfb8[m Merge branch 'front/feat/design' into 'develop'
+[33m4eba4f2[m [FIX] middleware 수정
+[33m08076c9[m Merge branch 'front/feat/design' into 'develop'
+[33meb66293[m [FEAT] : user type 수정
+[33m2cfc1aa[m [FIX] before merge
+[33m3935fa5[m Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into front/feat/design
+[33m522ba75[m Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into develop
+[33mcf9da5b[m [FEAT] button import 하는 식으로 수정
+[33m7f4594d[m [GIT IGNORE]
+[33m5578e39[m [GIT IGNORE]
+[33m2c3e328[m [GIT IGNORE]
+[33m201d617[m [GIT IGNORE]
+[33m9073b69[m [MERGE]
+[33mf1bcf23[m [FEAT] [MERGE]]
+[33md6a22c0[m [FIX] env URL 수정
+[33meae67bb[m [FIX] env URL 수정
+[33mfeed81a[m [FIX] env 환경 변수 toudeuk.kr로 변경
+[33m8f689c2[m [FIX] gitignore
+[33ma5701f4[m [HOTFIX] SecurityConfig -> setAllowedOrigins url 수정
+[33m2d5260d[m [CONFIG] socket 실시간 초기화 테스트 중
+[33m7f634ac[m Merge branch 'front/feat/design' into 'develop'
+[33mdc24e2c[m [MERGE] merge 위해 pull
+[33madbb323[m [FIX] 프로필 디자인 수정중
+[33m8acab50[m Merge branch 'front/feat/design' into 'develop'
+[33mb927a20[m [FIX] navbar 경로 수정
+[33m062f0f1[m [FIX] navbar 경로 수정
+[33m662a98f[m Merge branch 'front/feat/design' into 'develop'
+[33m162e373[m Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into front/feat/design
+[33m8578313[m [FEAT] home 접속시 border 삭제
+[33m59abda2[m [FIX] 중복 제거
+[33me595a20[m Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into front/feat/design
+[33m352237d[m [FEAT] mypage 디자인 수정
+[33m0b681ee[m [FEAT] 전체 카운트 수
+[33ma1f16bc[m Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into develop
+[33m7ad02c1[m [FEAT] 전체 카운트 수
+[33m87cbd2e[m Merge remote-tracking branch 'origin/develop' into develop
+[33m6ef6dcf[m [FIX] 공백
+[33mb41631a[m Merge branch 'back/feat/useritem-detail' into develop
+[33md1a00b9[m[33m ([m[1;31morigin/back/feat/useritem-detail[m[33m, [m[1;32mback/feat/useritem-detail[m[33m)[m [FEAT] 아이템 컬럼 추가 및 상세 페이지
+[33m1006fcc[m [FIX] application
+[33mdc716e5[m [FEAT]
+[33m12f0cd1[m [FIX] 환경설정 수정
+[33m44dcf31[m [FIX] docker
+[33macc152f[m [FIX] docker kafka port
+[33ma48e9f7[m [FIX]
+[33m080d0a5[m Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into develop
+[33m754233c[m [FIX] gitignore
+[33mdbf0c94[m [MERGE]
+[33m27fb14e[m [FEAT] socket으로 받아온 값을 초기화하도록 수정
+[33m62115ef[m[33m ([m[1;32mback/feat/game-connect[m[33m)[m Merge remote-tracking branch 'origin/develop' into develop
+[33m6b234e8[m [FIX] port
+[33m48992a2[m Merge branch 'back/feat/user-item' into 'develop'
+[33mf77d7ad[m Merge branch 'develop' into 'back/feat/user-item'
+[33m19b2b1f[m [FIX] sw
+[33md07b02a[m[33m ([m[1;31morigin/back/feat/user-item[m[33m)[m [FEAT] 구매한 아이템 반환 및 사용처리
+[33mc0336c1[m [FIX] import
+[33m7085441[m [MERGE] Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into develop
+[33m3c4de0e[m [FIX] 프론트 의존성 추가
+[33mdd230e2[m Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into develop
+[33m42a9d5a[m [fix] socket으로 데이터 전달 할 때 null 값 -> 다른 값이 넘어가도록 수정
+[33md78e8f3[m [FIX] 빌드 오류 수정
+[33m5659d92[m Merge branch 'front/feat/main' into 'develop'
+[33m32103f8[m Merge branch 'develop' into 'front/feat/main'
+[33ma9b389c[m [FIX] 메인 게임 수정
+[33m91c90c7[m [MERGE]브랜치 'back/feat/kafka'을(를) 'develop'(으)로 병합
+[33me9f75a6[m [FEAT] gametype
+[33maa65034[m Merge branch 'develop' into back/feat/kafka
+[33m1532e6d[m [TEST] 카프카 테스트
+[33mb96a08a[m [fix] tmp에 존재하던 socketController 삭제, socketController과 ClickGameController 분리
+[33mc3b266e[m Update server/src/main/java/com/toudeuk/server/domain/game/controller/ClickGameController.java
+[33m0cd02e1[m Merge branch 'develop' into back/feat/kafka
+[33m87b4789[m Merge branch 'back/feat/gamestatus' into 'develop'
+[33m3ba69b2[m [TEST] 카프카 테스트
+[33mdfbea8c[m [feat] 게임 상태에 따른 토픽 메시지 분리(전체사용자, 개별 사용자), 전체사용자 - 게임 상황, 전체 클릭수 조회 | 개별 사용자 - 게임 상황, 개인 클릭 관련 정보 조회
+[33m7aab4a3[m Merge branch 'front/feat/etc' into 'develop'
+[33m9fe5fe4[m [FEAT] 로그아웃 기능 추가
+[33m6eda6dc[m Merge branch 'front/feat/design' into 'develop'
+[33mf57ce31[m Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into front/feat/design
+[33mca7acdd[m [FEAT] middleware 설정하였으나 반영이 잘 안됨
+[33me13ee64[m Merge branch 'front/feat/design' into 'develop'
+[33m2de04a2[m [FEAT] 디자인 수정
+[33m390e40c[m Merge branch 'front/feat/touch' into 'develop'
+[33m7cc69ee[m Merge branch 'front/feat/prize' into 'develop'
+[33mfc54831[m Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into front/feat/prize
+[33mb878cb5[m [FEAT] 프로필 수정
+[33m4ee5d64[m[33m ([m[1;31morigin/back/feat/kafka[m[33m)[m [config] kafka 설정
+[33m3c62699[m [FIX] 포인트 내역 수정
+[33mde08baf[m [feat] Kafka 설정
+[33m18f8924[m [FIX] 포인트 내역 수정
+[33m649d845[m[33m ([m[1;31morigin/back/feat/userupdate[m[33m)[m Merge remote-tracking branch 'origin/develop' into back/feat/userupdate
+[33mcee9e76[m [FEAT] 프로필 이미지 업로드
+[33med740dc[m [FIX] 터치시 요청 수정
+[33m3942582[m Merge branch 'front/fix/user' into 'develop'
+[33mc2bd780[m Merge branch 'develop' into 'front/fix/user'
+[33m4460576[m [FIX] 랭킹 페이지, 포인트 페이지 수정
+[33m96ab498[m Merge branch 'front/feat/prize' into 'develop'
+[33m8ed2767[m [FIX] 빌드 위해 주석처리함
+[33m055619b[m Merge branch 'front/feat/prize' into 'develop'
+[33mc0d1c59[m [FEAT] history 조회
+[33m2d5a34e[m [FEAT] history 조회
+[33m8dd2994[m [FEAT] git ignore 설정 추가
+[33m71f42fe[m Merge branch 'front/feat/prize' into 'develop'
+[33m606e10a[m [FIX] senty silent 설정 변경
+[33mcd5a16e[m [FEAT] env 변수 삭제
+[33mf747fc0[m [FIX] 토큰 수정
+[33mbee8a0d[m [FIX] sentry 설정 변경
+[33mf53b971[m Merge branch 'front/feat/prize' into 'develop'
+[33m940762d[m [FIX] resolve conflict
+[33m56e2e53[m [FEAT] 수상 내역 토글
+[33m8705f54[m [FEAT] 수상 내역 토글
+[33mbb22d9a[m [HOTFIX] 돈이 없어도 구매가 되는 상황 수정
+[33mcdb16f2[m [FEAT] 수정
+[33m17ac1bf[m Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into front/feat/prize
+[33m1bfe440[m [FEAT] 모달창 수정
+[33mae6381c[m [FEAT] 기프티콘 상세 페이지
+[33m12ff1b0[m Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into develop
+[33m2533e51[m [FIX] 외부 이미지 URL - nextconfig 추가
+[33m3b0abea[m Merge branch 'back/feat/display-data' into develop
+[33m86c2023[m[33m ([m[1;31morigin/back/feat/display-data[m[33m)[m [FIX]
+[33m7ca7a9f[m 소켓 수정
+[33mfb25818[m [MERGE]
+[33m4a90626[m [FEAT] Game display data
+[33mb29fc66[m 임시 푸시
+[33me707cac[m Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into develop
+[33ma65bf97[m [FEAT] 백엔드 소켓 수정
+[33ma4b2912[m Merge branch 'front/feat/prize' into 'develop'
+[33m3149493[m[33m ([m[1;31morigin/front/feat/prize[m[33m)[m [FIX] 빌드 확인 후
+[33md24ae54[m Merge branch 'front/feat/prize' into 'develop'
+[33m5eba602[m [feat] history 수정중
+[33mc6b51cd[m [FEAT]: histoires dummy data 수정중
+[33m4bc5a71[m Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into front/feat/prize
+[33m7986d9f[m [FEAT] 클릭 부분 수정
+[33mf738803[m Merge branch 'front/feat/point' into 'develop'
+[33m0e21e76[m[33m ([m[1;31morigin/front/feat/point[m[33m)[m [FEAT] 클릭 부분 수정
+[33m1552164[m [FEAT]: histoires dummy data 수정중
+[33m7fc0fa1[m [FEAT] 기프티콘, 포인트 페이지
+[33m4987299[m [MERGE]
+[33m8d4ca42[m [FEAT] [MERGE]]
+[33mc119e5c[m Merge branch 'back/feat/sockjs' into 'develop'
+[33mc944540[m [FEAT] 프론트 백엔드 소켓연결 시 JWT파싱하여 ID값 얻기
+[33m52f59ba[m [MERGE] 브랜치 'back/feat/item'을(를) 'develop'(으)로 병합
+[33m52666d8[m [FIX] 아이템 상세 조회 API requset 지정
+[33m281a21b[m [FEAT] 아이템 상세 조회
+[33m86191af[m [FIX] 프로퍼티스 주석 제거
+[33m1ad16cc[m [Remove] .idea
+[33m597752f[m [config] 프로메테우스 액츄에이터 타겟 url 재설정
+[33mf772950[m Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into develop
+[33m8f9e6f5[m [merge]
+[33m81c42e0[m [merge]
+[33mf7389f0[m [fix] Successhandler redirectURI /auth/callback 으로 변경
+[33mdc3c357[m Merge branch 'back/feat/monitoring' into 'develop'
+[33mbe74525[m Merge branch 'develop' into 'back/feat/monitoring'
+[33maf7e9f5[m Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into develop
+[33m6e74bfd[m [FEAT] 로그인 경로 수정
+[33m0194455[m Merge branch 'back/feat/game-restriction' into develop
+[33m607a4d0[m[33m ([m[1;31morigin/back/feat/game-restriction[m[33m)[m [FEAT] 게임 제한 사항 적용 및 로그 관리
+[33mb4ef4a6[m[33m ([m[1;31morigin/back/feat/monitoring[m[33m)[m [config]  프로메테우스 그라파나 설정
+[33mc79039a[m Update CustomSuccessHandler.java
+[33m4807b9a[m Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into front/feat/prize
+[33m0fbe745[m [merge]
+[33m755dac6[m [MERGE] branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into front/feat/prize
+[33ma0318ed[m [fix] Oauth2 로그인 수정
+[33m81bfd46[m Merge branch 'back/feat/redis-datatype' into develop
+[33mbcfdd8f[m[33m ([m[1;31morigin/back/feat/redis-datatype[m[33m)[m [FIX] redisTemplate
+[33m4f8777c[m [FIX] kapay fail use client 누락 추가
+[33md8c97e2[m [MERGE] 브랜치 'feat/kakaopay'을(를) 'develop'(으)로 병합
+[33mb21de5d[m [FIX] 서버 환경에서 되게 경로 수정
+[33mf0282f6[m [MERGE] 브랜치 'feat/kakaopay'을(를) 'develop'(으)로 병합
+[33mccde83f[m [FEAT] 카카오 페이 구현 로컬 테스트 완료
+[33ma6edee9[m [FEAT] mypage point 및 개인정보 페이지 모달 추가
+[33m505c760[m Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into front/feat/prize
+[33mc417b06[m [FEAT] mypage point 및 개인정보 페이지 모달 추가
+[33mcb1a467[m Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into develop
+[33m3667458[m [feat] refreshToken 재발급
+[33m2f1f192[m Merge branch 'front/feat/api' into 'develop'
+[33m09443f3[m[33m ([m[1;31morigin/front/feat/api[m[33m)[m [FIX] 로그인 수정
+[33mbd8e5c1[m Merge branch 'front/feat/prize' into 'develop'
+[33m7d3879d[m [FIX] serverside props 적용
+[33m77d118a[m [FIX] mypage 서버사이드렌더링 및 포인트 로드 최적화
+[33m7876b7f[m [config] 프로메테우스, 그라파나 설정
+[33m46f4de4[m [FIX]
+[33m0abe434[m [FIX]
+[33m73d32e9[m [FIX]
+[33m15459bd[m [FIX]
+[33m9af83aa[m [FIX]
+[33m257feb0[m Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into develop
+[33ma22e7c9[m [FIX] 레이아웃 높이 변경
+[33m75ee023[m [FIX]
+[33mac098a8[m [FIX]
+[33m8604f00[m [FIX]
+[33mf487791[m Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into front/feat/api
+[33m5fd2b83[m [FEAT] env 파일 수정
+[33m4f96b96[m Update CustomSuccessHandler.java
+[33m5c34617[m Merge branch 'front/feat/rank' of https://lab.ssafy.com/s11-final/S11P31C202 into front/feat/rank
+[33md52a5aa[m [FEAT] 프론트 api 연결 중
+[33m2be18be[m merge
+[33mdb8531b[m [fix] oauth2 properties, successHandler 수정
+[33me169dc9[m Merge branch 'front/fix/workbox' into 'develop'
+[33mf13b31a[m [FIX] Stop tracking sw.js and Workbox files
+[33m7765131[m Merge branch 'front/feat/mypage' into 'develop'
+[33m3a9a8f2[m Merge branch 'develop' into 'front/feat/mypage'
+[33m9c2c297[m [FEAT] 로그인 구조 변경
+[33mce2a751[m Merge branch 'back/feat/clickgame' into develop
+[33mf7b8de7[m [FIX] 로그 저장
+[33mf89d967[m [MERGE] branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into develop
+[33m68187c8[m [FIX] 웹 소켓 주소 변경
+[33m142ee69[m Merge branch 'front/feat/api' into 'develop'
+[33md3da523[m [FIX] env 파일 수정
+[33m159b0aa[m Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into front/feat/mypage
+[33m3c11f87[m [FEAT] mypage api 연결용 브랜치 생성
+[33m75b6aea[m Merge branch 'front/feat/api' into 'develop'
+[33m7688a8f[m [FEAT] env파일 추가
+[33m4d1f127[m [fix] token Header로 넘어가도록 수정
+[33m3eb3b42[m Merge branch 'back/feat/clickgame' into develop
+[33me608148[m [FIX] redisTemplate
+[33me7c3973[m Merge branch 'front/feat/three' into 'develop'
+[33mf74af5b[m [FEAT] three js 추가 및 sentry env 설정, 빌드확인
+[33m015b233[m [FIX] ClickGameController 로직 수정 및 클릭 로직에 대한 매우 깊은 고민
+[33m367a2f6[m [FEAT] 빌드용 주석 처리 중
+[33m0ea458a[m [FEAT] threejs 추가
+[33m7421705[m [FIX] 임시 dev파일 ddl-auto-create
+[33m0e96031[m gg
+[33m7eda383[m Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into develop
+[33me7c6c45[m g
+[33m7544015[m Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into develop
+[33m27a9383[m [MERGE]
+[33m2273a9f[m Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into develop
+[33m879b23d[m 컴포즈 수정
+[33m56675fe[m Merge branch 'back/fix/oauth2' into 'develop'
+[33mb985c01[m Merge branch 'develop' into 'back/fix/oauth2'
+[33m911dfff[m [MERGE]
+[33m5fa8b95[m[33m ([m[1;31morigin/back/feat/click[m[33m)[m [FIX]
+[33m43a2416[m [FEAT] [MERGE]]
+[33mf1d7e89[m[33m ([m[1;31morigin/back/fix/oauth2[m[33m)[m [feat] CurrentUser DB 조회 없이 userId 값 가져오도록 수정
+[33ma4f85f3[m [FIX] click 메소드 수정
+[33m3b6d6e8[m Merge branch 'back/fix/oauth2' into 'develop'
+[33m43ca99a[m [FEAT] layout 수정
+[33m0ce5d96[m Merge branch 'front/fix/css' into 'develop'
+[33m8f87011[m [FIX] 레이아웃 수정
+[33m1862a07[m [fix] OAuth2 재설정
+[33m1a59fe0[m Merge branch 'front/feat/layout' into 'develop'
+[33mf03c808[m [FEAT] 레이아웃 수정
+[33m3211bfb[m [FEAT] sentry 설치
+[33me1db551[m [fix] Oauth2 재설정을 위한 기존 Oauth2 삭제
+[33m756f2f1[m [FEAT] 디렉토리 구조 수정
+[33mfb99e26[m [FEAT] tailwind custom component 추가 및 기본 레이아웃 변경
+[33m0ed11ba[m Merge branch 'front/feat/layout' into 'develop'
+[33m189e80f[m [FEAT] mypage 레이아웃 수정중
+[33m745f72e[m [FIX] 게임 리워드 타입 추가
+[33mb0d58e1[m Merge branch 'front/feat/css' into 'develop'
+[33mafe91b7[m[33m ([m[1;31morigin/front/feat/css[m[33m)[m [MERGE] 회원, 기프티콘, 포인트, 랭킹 페이지 css 수정
+[33m2b3c813[m [FEAT] 회원, 기프티콘, 포인트, 랭킹 페이지 css 수정
+[33m67dcfa0[m Merge branch 'front/feat/layout' into 'develop'
+[33md584869[m [FEAT] tailwind custom plugin 적용
+[33m0e8975c[m [MERGE] 브랜치 'back/feat/history'을(를) 'develop'(으)로 병합
+[33mc3f3816[m [FEAT] 게임 상세 조회 api 작성 / query 최적화
+[33md1b48a5[m Merge branch 'front/feat/css' into 'develop'
+[33mc8df380[m [FEAT] 배경 css 변경
+[33m5664de7[m Merge branch 'refs/heads/develop' into back/feat/history
+[33m408bfe5[m[33m ([m[1;31morigin/back/feat/history[m[33m)[m Merge branch 'develop' into back/feat/history
+[33m4ad09d0[m [FIX]
+[33m3a97b11[m Merge branch 'back/feat/clickgame' into 'develop'
+[33mf557900[m [FIX}
+[33mb47c376[m [FIX] 순환참조 문제
+[33mde4f713[m [FEAT] 게임 상세 조회 api
+[33mcaaa6b0[m Merge branch 'front/feat/cypress' into 'develop'
+[33m1b3a33b[m [FEAT] 프론트 테스트코드 작성
+[33mbff7076[m [MERGE] 브랜치 'back/feat/history'을(를) 'develop'(으)로 병합
+[33md2b12da[m Merge branch 'develop' into back/feat/history
+[33m0170f4d[m Merge branch 'back/feat/game-running' into develop
+[33m363c14d[m [FEAT] 레디스 캐시
+[33m6bd17fd[m [FEAT] 모든 게임 조회 api
+[33me2c1db4[m Merge branch 'front/feat/gifticon' into 'develop'
+[33m785c558[m [MERGE] 기프티콘 페이지, 웹소켓 연결 구현
+[33m75dbb0b[m [FEAT] 기프티콘 페이지, 웹소켓 연결 구현
+[33mcb460c1[m Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into develop
+[33m6a2f611[m [FIX] post requset에서 param -> body로, currentUser 적용
+[33m1ec2293[m [FEAT] 인증 권한 예외 처리
+[33m27faadc[m Merge branch 'front/test/userinfo' into 'develop'
+[33m2bebdb5[m[33m ([m[1;31morigin/front/test/userinfo[m[33m)[m [TEST] userinfo cypress test 시도
+[33m55238a8[m [FIX] User 유니크 제약조건 수정
+[33m5bcc5b5[m [fix] User - nickname 컬럼명 제약조건 변경, Redis 선언부 수정
+[33m5bd61cd[m [FEAT] redis template
+[33mf445928[m [FEAT] 쿨타임1
+[33maef674f[m Merge branch 'front/feat/mypage' into 'develop'
+[33me473e70[m [FEAT] mypage: 사용자 기프티콘 더미데이터
+[33m841d836[m [FEAT] Ngrinder 설정
+[33m228399d[m [MERGE] 브랜치 'back/feat/items'을(를) 'develop'(으)로 병합
+[33m9794d34[m Merge branch 'front/feat/mypage' into 'develop'
+[33m8486458[m [FEAT] 스웨거 설명
+[33m375ae56[m [FEAT] mypage Userinfo 작성 및 signupInfo로 수정
+[33mac31933[m Merge branch 'front/feat/prize' into 'develop'
+[33m3aae0dd[m [FEAT] 스웨거 설정 (일단 로컬)
+[33m8dc21f7[m [FEAT] 당첨내역 페이지
+[33m6ffb33a[m Merge branch 'back/feat/game-running' into 'develop'
+[33me11fde3[m [FIX] RedisConfig 파일 중복
+[33mb3b813b[m Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into develop
+[33mc9a6bc9[m [fix] CurrentUser 애너테이션을 사용시 쿼리 발생하도록 다시 수정 - Id만 가져오는 작업 실패
+[33m1f4cd10[m Merge branch 'back/feat/game-running' into 'develop'
+[33mb1b6996[m [FEAT] 게임 진행중 - 유저 클릭시 total+1, userclick+1 - 유저 순위 반환 - 앞 순위 userId 반환
+[33m711c6e1[m Merge branch 'back/feat/items' into 'develop'
+[33m9561198[m [MERGE] 병합충돌 해결
+[33m666a864[m Merge branch 'develop' into back/feat/items
+[33me668444[m Merge branch 'back/feat/oauth2' into 'develop'
+[33m1a73642[m Merge branch 'back/feat/socket' into 'develop'
+[33md8954ee[m [FEAT] Socket Test
+[33mf92f13d[m Merge branch 'develop' into back/feat/items
+[33m6bc0fc8[m [MERGE] 병합충돌 해결
+[33m411467e[m Merge branch 'develop' into back/feat/items
+[33mad066e3[m Merge branch 'back/feat/socket' into 'develop'
+[33m68202da[m [feat] CurrentUser 애노테이션 쿼리발생시키지않고, userId 반환하도록 수정
+[33me1d746e[m [FEAT] 소켓 테스트
+[33m823e14e[m Merge branch 'back/feat/oauth2' into 'develop'
+[33md880846[m [fix] redirectURL 수정
+[33me76d9f4[m [FEAT] 유저 아이템 사용 처리
+[33mce20c4c[m [FIX] ExceptionAdvice 추가
+[33md3fc74d[m Merge branch 'back/feat/oauth2' into 'develop'
+[33m33a2520[m Merge branch 'front/feat/gifticon' into 'develop'
+[33m7af960d[m [FEAT] 기프티콘 페이지 진행중
+[33m93cc632[m [feat] OAuth2.0 로그인 구현
+[33m95e15b0[m [FIX] dto 수정
+[33mece45af[m [FEAT] - 캐쉬 로그 조회 - GET user/cash-logs        - 아이템 전체 목록 조회 - GET item/list        - 아이템 구매 - POST item/buy        - 유저가 구매한 아이템 목록 조회 - GET user/items
+[33m9bc5318[m [FIX] 유저 캐쉬 로그 Optional
+[33m90cec4d[m [FEAT] 유저 캐쉬 로그 조회 api
+[33m6b7a767[m[33m ([m[1;31morigin/feat/oauth2[m[33m)[m [FIX] Remove sw.js.map from git tracking
+[33mfa018bf[m [FEAT] 유저 정보 조회 api
+[33m02826f7[m Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into develop
+[33me8b265a[m 설정 및 약간 수정
+[33m00c526d[m [FEAT] gitignore 설정
+[33m1e546a8[m [FEAT] gitignore 수정 및 배경 흰색으로 변경'
+[33m36c1fdb[m [FEAT] map 파일 삭제
+[33m8b95959[m [FEAT] 배경색 white로 수정
+[33m35a7554[m [FEAT] 배경색 white로 수정
+[33ma0cfb03[m Merge branch 'front/feat/point' into 'develop'
+[33m680c81b[m [MERGE] 포인트 내역 페이지
+[33m22452dc[m [FEAT] 포인트 내역 페이지 구현
+[33m9b0658a[m Merge branch 'front/feat/sentry' into 'develop'
+[33m4d265e0[m [FEAT] Cypress 적용 및 mypage UI 일부 수정
+[33mb494e6b[m 도커 컴포즈 설정 및 DB, JPA 프로퍼티스 추가
+[33m2848b36[m [FEAT] cypress 설정중
+[33mf19dd4a[m [FIX]
+[33m0f13d9b[m Merge branch 'back/entity-setting' into 'develop'
+[33m93acf05[m [ERROR]
+[33mc20efc3[m Merge branch 'front/feat/rank' into 'develop'
+[33m9e450b4[m [FEAT] 랭킹 페이지 구현
+[33m329a023[m [MERGE] 브랜치 병합
+[33m7907ac5[m [FIX] tanstack쿼리로 수정
+[33mfb02ec9[m [FEAT] sentry 설정용 브랜치
+[33m277154b[m Merge branch 'front/feat/rank' into 'develop'
+[33m928f627[m [MERGE] rank, 회원기능 수정
+[33me92bee0[m [FEAT] 랭킹 수정중
+[33ma154c1d[m Merge branch 'front/feat/toudeuk' into 'develop'
+[33m48d8b01[m [FEAT] button 생성 후 merge 시도
+[33m64357e9[m [feat] 버튼 생성함
+[33m9f1c253[m Merge branch 'develop' of https://lab.ssafy.com/s11-final/S11P31C202 into front/feat/rank
+[33m026237d[m [FEAT] 랭킹 수정중
+[33mb3199a1[m [FEAT] base response 타입 / 클라이언트 api
+[33mf443b09[m [FEAT] 깃 이그노어 재설정
+[33m5f1bb0b[m [MERGE] 프론트 환경설정 수정
+[33mcb0cbfb[m [FEAT] 랭크 페이지
+[33m644c8b7[m Merge branch 'front/feat/main' into 'develop'
+[33mf245f7a[m [FIX] hydration 오류 수정
+[33m9b62626[m Merge branch 'front/feat/main' into 'develop'
+[33m45af342[m [merge] tanstack 및 pwa 환경 설정 후
+[33md4ced65[m [feat] tanstackquery, pwa manifest 설정
+[33m90c67d5[m Merge branch 'front/feat/user' into 'develop'
+[33ma90b488[m [FEAT] 회원가입, 로그인 레이아웃
+[33mb38c045[m Merge branch 'front/feat/user' into 'develop'
+[33m6d24c9b[m [FEAT] 회원가입 페이지 진행중
+[33maf0dc7d[m Merge branch 'develop'
+[33mbbfa461[m Merge branch 'front/feat/user' into 'develop'
+[33mbac8244[m [FEAT] 프론트 디렉토리 구조 생성
+[33m0146e7c[m [FEAT] : 프론트 프로젝트 시작
+[33md098cb3[m [FIX]
+[33m243b2a5[m [INIT]
+[33m5f08b7b[m [FEAT] gitignore 설정
+[33m5b8bfca[m add README

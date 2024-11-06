@@ -1,5 +1,6 @@
 package com.toudeuk.server.domain.user.dto;
 
+import com.toudeuk.server.domain.item.entity.ItemType;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.toudeuk.server.domain.item.entity.Item;
@@ -58,9 +59,11 @@ public class UserData {
 		private String itemName;
 		private String itemImage;
 		private int itemPrice;
+		private ItemType itemType;
 		// userItem
 		private boolean isUsed;
 		private String createdAt;
+
 
 		public static UserItemInfo of(Long userItemId, Item item, boolean isUsed, String createdAt) {
 			UserItemInfo userItemInfo = new UserItemInfo();
@@ -68,6 +71,7 @@ public class UserData {
 			userItemInfo.itemName = item.getName();
 			userItemInfo.itemImage = item.getImage();
 			userItemInfo.itemPrice = item.getPrice();
+			userItemInfo.itemType = item.getItemType();
 			userItemInfo.isUsed = isUsed;
 			userItemInfo.createdAt = createdAt;
 			return userItemInfo;
