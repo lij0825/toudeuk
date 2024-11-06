@@ -86,7 +86,7 @@ public class ClickGameCacheRepository {
 		Long totalClick = valueOperationsInt.increment(CLICK_TOTAL_KEY);
 
 		log.info("totalClick : {}", totalClick);
-		if (totalClick == MAX_CLICK) {
+		if (totalClick.equals(MAX_CLICK)) {
 			setGameCoolTime();
 		}
 		return totalClick;
