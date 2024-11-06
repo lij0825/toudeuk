@@ -100,8 +100,8 @@ export default function PointList() {
                   {/* <span>{transaction.description}</span> */}
                   <span
                     className={`${transaction.type === "CHARGING"
-                      ? "text-white-500"
-                      : "text-gray-500"
+                      ? "text-red-500"
+                      : "text-blue-500"
                       }`}
                   >
                     {transaction.changeCash.toLocaleString()}P
