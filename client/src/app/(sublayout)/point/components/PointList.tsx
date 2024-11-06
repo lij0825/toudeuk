@@ -98,9 +98,9 @@ export default function PointList() {
 
       {/* 포인트 내역 리스트 */}
       <div
-        className="max-h-[460px] overflow-y-auto flex-grow relative scrollbar-hidden">
-        <div className="grid grid-cols-1 gap-4 w-full max-w-2xl">
-          <ul className="space-y-4">
+        className="max-h-[460px] overflow-y-auto flex-grow relative w-full scrollbar-hidden box-border">
+        {/* <div className="grid grid-cols-1 gap-4 w-full max-w-2xl"> */}
+          <ul className="space-y-4 w-full">
             {filteredHistory?.map((transaction) => (
               <li key={transaction.createdAt} className={`p-4 border rounded-lg `}>
                 <div className="flex justify-between">
@@ -119,7 +119,7 @@ export default function PointList() {
               </li>
             ))}
           </ul>
-        </div>
+        {/* </div> */}
       </div>
     </div>
   );
