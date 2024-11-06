@@ -11,13 +11,16 @@ import { toast } from "react-toastify";
 import dynamic from "next/dynamic";
 import { CUSTOM_ICON } from "@/constants/customIcons";
 
-const ItemColors: Record<ItemType, string> = {
+const ItemTypeColors: Record<ItemType, string> = {
   [ItemType.ALL]: "#9E9E9E", // Neutral gray for "ALL"
   [ItemType.CHICKEN]: "#FF7043", // Warm orange for "CHICKEN"
   [ItemType.COFFEE]: "#795548", // Coffee brown for "COFFEE"
   [ItemType.VOUCHER]: "#FFC107", // Bright yellow for "VOUCHER"
   [ItemType.ETC]: "#4DB6AC", // Teal for "ETC"
 };
+
+
+
 
 // MyGifticon Component
 export default function MyGifticon() {
@@ -53,6 +56,7 @@ export default function MyGifticon() {
       </section>
 
       <section className="flex-grow h-full rounded-xl">
+      {/* 기프티콘이 없을때 */}
         {usergifticons.length === 0 ? (
           <div className="flex flex-1 bg-[#FAF7F0] h-full items-center justify-center rounded-lg">
             <div className="flex flex-col items-center">

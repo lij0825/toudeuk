@@ -1,12 +1,19 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 // import { LoginInfo } from "@/types/auth";
-// import { useState } from "react";
 // import { useMutation } from "@tanstack/react-query";
 // import { loginUser } from "@/apis/userApi";
 // import Link from "next/link";
 
 export default function Login() {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    // 컴포넌트가 마운트되면 애니메이션이 시작됩니다.
+    setIsVisible(true);
+  }, []);
   // const [formData, setFormData] = useState<LoginInfo>({
   //   email: "",
   //   password: "",
@@ -85,10 +92,11 @@ export default function Login() {
           <span className="mx-2 text-gray-500">또는</span>
           <hr className="flex-grow border-gray-300" />
         </div> */}
-
       <button
         onClick={handleKakaoLogin}
-        className="flex typo-sub-title font-bold p-3 items-center justify-center w-full h-10 rounded-md bg-[#FEE500] border border-[#FEE500] text-black hover:bg-[#FEE500] transition duration-200"
+        className={`flex typo-sub-title font-bold p-3 items-center justify-center w-full h-10 rounded-md bg-[#FEE500] border border-[#FEE500] text-black transition duration-1000
+        ${isVisible ? "animate-slide-up" : "opacity-0 translate-y-5"}
+      `}
       >
         Game Start
       </button>

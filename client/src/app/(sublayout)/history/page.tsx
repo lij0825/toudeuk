@@ -11,7 +11,7 @@ enum SelectType {
 }
 
 export default function HistoryPage() {
-  const [selected, setSelected] = useState<SelectType>(SelectType.PRIZE);
+  const [selected, setSelected] = useState<SelectType>(SelectType.HISTORY);
 
   const handleToggle = () => {
     setSelected((prevSelected) =>
@@ -41,17 +41,15 @@ export default function HistoryPage() {
         </div>
       </section>
 
-      <div className="bg-sub-background p-[1px] m-2 flex-shrink-0"></div>
-
       <section className="flex-grow relative h-full overflow-y-auto scrollbar-hidden">
         {selected === SelectType.HISTORY ? (
-          <div className="history-card p-4 rounded-lg shadow-lg ">
+          <div className="rounded-lg">
             <Suspense fallback={<div>로딩 중...</div>}>
               <HistoryList />
             </Suspense>
           </div>
         ) : (
-          <div className="prize-card p-4 rounded-lg shadow-lg ">
+          <div className="rounded-lg">
             <Suspense fallback={<div>로딩 중...</div>}>
               <PrizeList />
             </Suspense>

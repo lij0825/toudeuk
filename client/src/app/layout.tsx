@@ -68,7 +68,7 @@ export default function RootLayout({
         <meta name="twitter:title" content={APP_DEFAULT_TITLE} />
         <meta name="twitter:description" content={APP_DESCRIPTION} />
       </head>
-      <body className="place-items-center ">
+      <body className="place-items-center">
         <ClientWrapper>
           <main className="bg-background max-w-[412px] w-full h-full relative overflow-hidden">
             {children}
