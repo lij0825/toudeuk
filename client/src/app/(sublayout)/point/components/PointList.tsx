@@ -23,8 +23,8 @@ export default function PointList() {
     if (filter === "all") return true;
     if (filter === "ITEM") return transaction.type === "ITEM" || transaction.type === "GAME";
     return transaction.type === filter;
-  }
-  );
+  })
+  .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()); // 최신순 정렬
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -55,10 +55,10 @@ export default function PointList() {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-4">
+    <div className="max-w-xl mx-auto p-4 w-full">
       <h1 className="text-2xl font-bold mb-4">포인트 내역</h1>
       {/* 필터 버튼들 */}
-      <div className="mb-4 flex">
+      <div className="mb-4 flex w-full">
         <button
           onClick={() => setFilter("all")}
           className={`px-4 py-2 flex-1 ${filter === "all" ? "bg-white text-black" : "bg-transparent border border-gray-300"
