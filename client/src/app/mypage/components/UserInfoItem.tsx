@@ -20,10 +20,10 @@ export default function UserInfoItem() {
   }
 
   return (
-    <div className="typo-sub-title">
+    <div>
       <section className="flex align-center pb-8 justify-between">
-        <div className="flex items-center">
-          <div className="relative w-12 h-12 rounded-xl overflow-hidden mr-4">
+        <div className="flex items-center ">
+          <div className="relative w-12 h-12 rounded-xl overflow-hidden mr-2">
             <Image
               src={userInfo?.profileImg || "/default_profile.jpg"}
               alt="Profile Image"
@@ -33,7 +33,9 @@ export default function UserInfoItem() {
               priority
             />
           </div>
-          <span>{userInfo?.nickName}</span>
+          <span className="font-noto text-md text-bold">
+            {userInfo?.nickName}
+          </span>
         </div>
         <ProfileSetting />
       </section>
@@ -48,7 +50,9 @@ export default function UserInfoItem() {
                 height={34}
               />
             </div>
-            <div className="ml-2">{userInfo ? userInfo.cash : 0}pt</div>
+            <div className="ml-2 typo-sub-title">
+              {userInfo ? userInfo.cash : 0}pt
+            </div>
           </div>
         </Link>
       </>

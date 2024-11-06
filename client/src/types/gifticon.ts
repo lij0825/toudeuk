@@ -5,15 +5,6 @@ export interface GifticonInfo {
   itemPrice: number;
 }
 
-export interface UserGifticonInfo {
-  userItemId: number;
-  itemName: string;
-  itemImage: string;
-  itemPrice: number;
-  createdAt: string;
-  used: boolean;
-}
-
 export enum ItemType {
   ALL = "ALL",
   CHICKEN = "CHICKEN",
@@ -29,4 +20,14 @@ export interface UserGifticonDetailInfo {
   itemType: ItemType;
   createdAt: string;
   used: boolean;
+}
+
+export interface UserGifticonInfo {
+  userItemId: number;
+  itemName: string;
+  itemImage: string;
+  itemPrice: number;
+  createdAt: string;
+  used: boolean;
+  itemType: ItemType;
 }

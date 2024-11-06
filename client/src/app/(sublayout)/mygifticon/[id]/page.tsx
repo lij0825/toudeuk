@@ -2,13 +2,13 @@
 
 import Image from "next/image";
 import { toast } from "react-toastify";
-import { fetchUserGifticonDetail, useGifticon } from "@/apis/gifticonApi";
+import { fetchUserGifticonDetail } from "@/apis/gifticonApi";
 import { QueryClient, dehydrate, useQuery } from "@tanstack/react-query";
 import { GetServerSideProps } from "next";
 import { UserGifticonDetailInfo } from "@/types/gifticon";
-//서버사이드 랜더링
+import dayjs from "dayjs";
 
-export default function MygiticonDetail({
+export default function MyGifticonDetail({
   params,
 }: {
   params: { id: string };
@@ -17,11 +17,11 @@ export default function MygiticonDetail({
 
   const getServerSideProps: GetServerSideProps = async () => {
     const queryClient = new QueryClient();
-
     await queryClient.prefetchQuery({
       queryKey: ["usergifticon", id],
       queryFn: () => fetchUserGifticonDetail(id),
     });
+
     return {
       props: {
         dehydratedState: dehydrate(queryClient),
@@ -35,45 +35,87 @@ export default function MygiticonDetail({
   });
 
   if (isError) {
-    toast.error("");
+    toast.error("기프티콘 정보를 불러올 수 없습니다.");
   }
 
+  const expirationDate = dayjs(usergifticon?.createdAt)
+    .add(1, "year")
+    .format("YYYY년 MM월 DD일");
+
   return (
-    <>
+    <div className="min-h-screen flex flex-col font-noto -m-8">
       {usergifticon ? (
-        <div className="flex flex-col items-center">
-          <h1 className="text-2xl font-bold mb-4">{usergifticon.itemName}</h1>
-          <Image
-            src={usergifticon.itemImage}
-            alt={usergifticon.itemName}
-            width={300}
-            height={300}
-            className="rounded-lg shadow-lg"
-          />
-          <Image
-            src={usergifticon.itemBarcode}
-            alt={usergifticon.itemBarcode}
-            width={300}
-            height={300}
-            className="rounded-lg shadow-lg"
-          />
-          {/* 기프티콘 이름 */}
-          <h2 className="text-xl font-semibold mt-4">
-            {usergifticon.itemName} P
-          </h2>
-          {/* 사용완료 버튼 */}
-          <button
-            className="mt-8 bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors"
-            onClick={() =>
-              toast.success(`${usergifticon.itemName} 사용이 완료되었습니다.`)
-            }
-          >
-            사용하기
-          </button>
+        <div className="flex-1 flex flex-col h-screen">
+          {/* 상단 이미지 - 고정 */}
+          <div className="w-full max-w-md p-4 bg-[#FBBD05] flex-shrink-0">
+            <Image
+              src={usergifticon.itemImage}
+              alt={usergifticon.itemName}
+              width={300}
+              height={300}
+              className="w-full h-auto rounded-lg object-cover"
+            />
+          </div>
+
+          {/* 스크롤 가능한 컨텐츠 영역 */}
+          <div className="flex-1 overflow-y-auto">
+            {/* 정보섹션 */}
+            <section className="w-full bg-white flex flex-col items-center">
+              {/* 기프티콘 이름 */}
+              <h1 className="text-[22px] font-semibold mt-5 mb-2 px-8 text-center whitespace-pre-line break-words">
+                {usergifticon.itemName}
+              </h1>
+              {/* 바코드 영역 */}
+              <div className="rounded-lg max-w-md text-center bg-white">
+                <Image
+                  src={usergifticon.itemBarcode}
+                  alt="바코드"
+                  width={150}
+                  height={150}
+                  className="w-full h-auto object-contain"
+                />
+              </div>
+            </section>
+
+            {/* 하단 버튼들 */}
+            <section>
+              <div className="flex justify-between w-full max-w-md space-x-2 my-4 px-4">
+                <button
+                  className="bg-[#FBBD05] text-white font-semibold py-2 px-4 rounded-lg w-1/2 hover:bg-yellow-600"
+                  onClick={() =>
+                    toast.success(`${usergifticon.itemName}이 저장되었습니다.`)
+                  }
+                >
+                  교환권 저장
+                </button>
+                <button
+                  className="bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg w-1/2 hover:bg-blue-600"
+                  onClick={() =>
+                    toast.success(
+                      `${usergifticon.itemName} 사용이 완료되었습니다.`
+                    )
+                  }
+                >
+                  교환권 사용하기
+                </button>
+              </div>
+            </section>
+
+            {/* 유효기간 정보 섹션 */}
+            <section className="w-full flex justify-center mb-4">
+              <div className="w-full max-w-md bg-white text-xs text-center bg-[#EBEBEB] py-2">
+                <p className="text-gray-500">유효기간</p>
+                <p className="">{expirationDate}</p>
+                <p className="text-red-500 mt-1">환불 불가</p>
+              </div>
+            </section>
+          </div>
         </div>
       ) : (
-        <div className="text-center">기프티콘 정보를 불러올 수 없습니다.</div>
+        <div className="flex-1 flex items-center justify-center text-gray-500">
+          기프티콘 정보를 불러올 수 없습니다.
+        </div>
       )}
-    </>
+    </div>
   );
 }

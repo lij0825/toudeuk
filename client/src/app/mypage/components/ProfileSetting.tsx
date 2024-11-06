@@ -42,7 +42,9 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
   const [nickname, setNickname] = useState<string>(user?.nickName || "");
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string>(
-  user?.profileImg ? `${user.profileImg}?${Date.now()}` : "/default_profile.png"
+    user?.profileImg
+      ? `${user.profileImg}?${Date.now()}`
+      : "/default_profile.png"
   );
   //캐시 무효화를 위한 쿼리 파라미터 추가
   //이 이미지를 새로운 요청으로 인식하고 캐시를 무시하고 최신 이미지를 가져옵니다.
@@ -133,12 +135,9 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
                     alt="프로필 미리보기"
                     className="object-cover rounded-full mr-2"
                   />
-                  <strong className="text-base">{nickname}님</strong> 
+                  <strong className="text-base">{nickname}님</strong>
                 </div>
-                <div
-                  className="cursor-pointer"
-                  onClick={toggleEditMode}
-                >
+                <div className="cursor-pointer" onClick={toggleEditMode}>
                   <LottieAnimation
                     animationData={CUSTOM_ICON.edit}
                     loop={true}
@@ -153,29 +152,35 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
         </section>
 
         {isEditing && (
-          <section className="mb-4 space-y-4 text-center">
-            {previewImage && (
-              <div className="w-[60px] h-[60px] overflow-hidden rounded-full">
-
-              <Image
-                width={60}
-                height={60}
-                src={previewImage}
-                alt="프로필 미리보기"
-                className="object-fit"
-                quality={100}
-                />
+          <section className="mb-4 space-y-4">
+            {/* 이미지는 중앙 정렬 유지 */}
+            <div className="flex justify-center">
+              {previewImage && (
+                <div className="w-[60px] h-[60px] overflow-hidden rounded-full">
+                  <Image
+                    width={60}
+                    height={60}
+                    src={previewImage}
+                    alt="프로필 미리보기"
+                    className="object-fit"
+                    quality={100}
+                  />
                 </div>
-            )}
+              )}
+            </div>
+
             <div className="relative">
+              <p className="text-left mb-1">닉네임을 작성하세요</p>
               <input
                 type="text"
                 value={nickname}
                 onChange={handleNicknameChange}
                 placeholder="닉네임은 최대 8글자까지 가능합니다."
-                maxLength={maxNicknameLength + 1} // To visually indicate when limit exceeded
+                maxLength={maxNicknameLength + 1}
                 className={`w-full px-3 py-2 rounded text-gray-600 text-sm border ${
-                  nicknameExceedsLimit ? "border-red-500 focus:border-red-500 focus:ring-red-500" : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                  nicknameExceedsLimit
+                    ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                    : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                 } focus:outline-none focus:ring-1`}
               />
               {nicknameExceedsLimit && (
@@ -185,7 +190,8 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
               )}
             </div>
 
-            <div className="relative w-full">
+            {/* 파일 업로드는 중앙 정렬 유지 */}
+            <div className="relative w-full text-center">
               <input
                 type="file"
                 accept="image/*"
@@ -200,6 +206,7 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
               </p>
             </div>
 
+            {/* 버튼은 중앙 정렬 유지 */}
             <div className="flex justify-center gap-4 mt-4">
               <button
                 onClick={() => setIsEditing(false)}

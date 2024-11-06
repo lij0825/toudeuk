@@ -168,26 +168,30 @@ export default function MyGifticon() {
             </div>
           </div>
         ) : (
-          usergifticons.map((gifticon: UserGifticonInfo) => (
-            <Link
-              key={gifticon.userItemId}
-              href={`/mygifticon/${gifticon.userItemId}`}
-              className="block p-4 rounded-lg mb-4 bg-[#ebebeb] hover:shadow-xl transition-all duration-200 active:scale-95 w-full"
-            >
-              <div className="flex justify-center w-full">
-                <Image
-                  src={gifticon.itemImage}
-                  alt={gifticon.itemName}
-                  width={170}
-                  height={80}
-                  className="h-20 w-full rounded-lg object-cover shadow-sm"
-                />
-              </div>
-              <div className="text-center mt-4 font-semibold text-gray-700">
-                {gifticon.itemName}
-              </div>
-            </Link>
-          ))
+          usergifticons
+            .filter((gifticon) =>
+              filter === ItemType.ALL ? true : gifticon.itemType === filter
+            )
+            .map((gifticon: UserGifticonInfo) => (
+              <Link
+                key={gifticon.userItemId}
+                href={`/mygifticon/${gifticon.userItemId}`}
+                className="block p-4 rounded-lg mb-4 bg-[#ebebeb] hover:shadow-xl transition-all duration-200 active:scale-95 w-full"
+              >
+                <div className="flex justify-center w-full">
+                  <Image
+                    src={gifticon.itemImage}
+                    alt={gifticon.itemName}
+                    width={170}
+                    height={80}
+                    className="h-20 w-full rounded-lg object-cover shadow-sm"
+                  />
+                </div>
+                <div className="text-center mt-4 font-semibold text-gray-700">
+                  {gifticon.itemName}
+                </div>
+              </Link>
+            ))
         )}
       </section>
     </div>
