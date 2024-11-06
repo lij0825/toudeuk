@@ -14,7 +14,7 @@ export default function HistoryPage() {
   const [selected, setSelected] = useState<SelectType>(SelectType.HISTORY);
 
   const handleToggle = () => {
-    setSelected((prevSelected) =>
+    setSelected((prevSelected: SelectType) =>
       prevSelected === SelectType.HISTORY
         ? SelectType.PRIZE
         : SelectType.HISTORY

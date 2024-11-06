@@ -2,7 +2,7 @@
 
 import { fetchHistories } from "@/apis/historyApi";
 import { ContentInfo, HistoriesInfo } from "@/types";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import HistoryItem from "./HistoryItem";
@@ -13,9 +13,11 @@ export enum SortType {
   GAME_DESC = "round,DESC",
 }
 
+const querykey = "histories";
+const size = 10;
+
 export default function HistoryList() {
   const [page] = useState(0);
-  const size = 10;
   const [sort] = useState<SortType>(SortType.DEFAULT);
 
   const {
@@ -23,7 +25,7 @@ export default function HistoryList() {
     isError,
     error,
   } = useQuery<HistoriesInfo>({
-    queryKey: ["histories", page, sort],
+    queryKey: [querykey, page, sort],
     queryFn: () => fetchHistories({ page, size, sort }),
     staleTime: 5 * 60 * 1000,
   });
