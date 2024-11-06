@@ -55,45 +55,38 @@ export default function PointList() {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-4 w-full">
-      <h1 className="text-2xl font-bold mb-4">포인트 내역</h1>
+    <div className="mx-auto w-full">
+      <h1 className="text-2xl pl-4 pt-4 font-bold mb-4">포인트 내역</h1>
       {/* 필터 버튼들 */}
-      <div className="mb-4 flex w-full">
+      <div className="mb-4 flex w-full overflow-hidden">
         <button
           onClick={() => setFilter("all")}
-          className={`px-4 py-2 flex-1 ${filter === "all" ? "bg-white text-black" : "bg-transparent border border-gray-300"
+          className={`px-3 py-2 flex-1 border-b-2 ${filter === "all" ? "text-black border-black" : "text-gray-500 border-gray-300"
             }`}
         >
-          ALL
+          전체
         </button>
         <button
           onClick={() => setFilter("CHARGING")}
-          className={`px-4 py-2 flex-1 ${filter === "CHARGING" ? "bg-white text-black" : "bg-transparent border border-gray-300"
+          className={`px-3 py-2 flex-1 border-b-2 ${filter === "CHARGING" ? "text-black border-black" : "text-gray-500 border-gray-300"
             }`}
         >
-          CHARGE
+          충전
         </button>
         <button
           onClick={() => setFilter("REWARD")}
-          className={`px-4 py-2 flex-1 ${filter === "REWARD" ? "bg-white text-black" : "bg-transparent border border-gray-300"
+          className={`px-3 py-2 flex-1 border-b-2 ${filter === "REWARD" ? "text-black border-black" : "text-gray-500 border-gray-300"
             }`}
         >
-          REWARD
+          보상
         </button>
         <button
           onClick={() => setFilter("ITEM")}
-          className={`px-4 py-2 flex-1 ${filter === "ITEM" ? "bg-white text-black" : "bg-transparent border border-gray-300"
+          className={`px-3 py-2 flex-1 border-b-2 ${filter === "ITEM" ? "text-black border-black" : "text-gray-500 border-gray-300"
             }`}
         >
-          USE
+          사용
         </button>
-        {/* <button
-          onClick={() => setFilter("GAME")}
-          className={`px-4 py-2 flex-1 ${filter === "ITEM" ? "bg-white text-black" : "bg-transparent border border-gray-300"
-            }`}
-        >
-          GAME
-        </button> */}
       </div>
 
       {/* 포인트 내역 리스트 */}
@@ -102,7 +95,7 @@ export default function PointList() {
         {/* <div className="grid grid-cols-1 gap-4 w-full max-w-2xl"> */}
           <ul className="space-y-4 w-full">
             {filteredHistory?.map((transaction) => (
-              <li key={transaction.createdAt} className={`p-4 border rounded-lg `}>
+              <li key={transaction.createdAt} className={`p-4 border shadow-md rounded-lg `}>
                 <div className="flex justify-between">
                   {/* <span>{transaction.description}</span> */}
                   <span
