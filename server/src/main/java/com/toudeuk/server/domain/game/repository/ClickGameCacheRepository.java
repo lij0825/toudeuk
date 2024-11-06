@@ -110,6 +110,11 @@ public class ClickGameCacheRepository {
 		return score == null ? 1 : score.intValue();
 	}
 
+	// 캐시 click:
+	public void spendCash(Long userId) {
+		valueOperationsInt.increment(USER_CASH_KEY + userId, -1);
+	}
+
 	public Integer getUserClickCount(Long userId) { // 유저의 클릭 수
 		Double clickCount = zSetOperations.score(CLICK_COUNT_KEY, userId);
 		log.info("clickCount : {}", zSetOperations.score(CLICK_COUNT_KEY, userId));
@@ -151,9 +156,16 @@ public class ClickGameCacheRepository {
 	// 삭제
 	public void deleteAllClickInfo() {
 		redisTemplate.delete(CLICK_TOTAL_KEY);
+		log.info("redisTemplate.delete(CLICK_TOTAL_KEY);");
+
 		redisTemplate.delete(CLICK_COUNT_KEY);
+		log.info("redisTemplate.delete(CLICK_COUNT_KEY);");
+
 		redisTemplate.delete(CLICK_LOG_KEY);
+		log.info("redisTemplate.delete(CLICK_LOG_KEY);");
+
 		redisTemplate.delete(GAME_ID_KEY);
+		log.info("redisTemplate.delete(GAME_ID_KEY);");
 	}
 
 	public Integer getUserCash(Long userId) {

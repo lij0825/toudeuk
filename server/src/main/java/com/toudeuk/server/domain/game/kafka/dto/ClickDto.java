@@ -16,4 +16,5 @@ public class ClickDto {
     private int resultCash;
     private String cashName; // 게임라운드
     private CashLogType cashLogType;
+    private int totalClickCount;
 }

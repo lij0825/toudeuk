@@ -27,7 +27,7 @@ public class ClickGameSocketController {
 	private final JWTService jwtService;
     private final SimpMessagingTemplate messagingTemplate;
 
-	@SubscribeMapping("/game")
+	@MessageMapping("/health")
 	public void sendStart(@Header("Authorization") String bearerToken) throws Exception {
 		Long userId = resolveToken(bearerToken);
 
