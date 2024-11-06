@@ -253,6 +253,14 @@ public class ClickGameService {
 
     public void asyncClick(Long userId) throws JsonProcessingException {
         log.info("카프카 클릭 asyncClick userId : {}", userId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+
+        int resultCash = user.getCash() + CLICK_CASH;
+
+        if (resultCash < 0) {
+            throw new BaseException(NOT_ENOUGH_CASH);
+        }
         clickProducer.occurClickUserId(userId);
     }
 
