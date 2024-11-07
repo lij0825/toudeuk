@@ -3,9 +3,7 @@ import Gifticon from './components/Gifticon'
 
 const page = () => {
   return (
-    <div>
         <Gifticon />
-    </div>
   )
 }
 

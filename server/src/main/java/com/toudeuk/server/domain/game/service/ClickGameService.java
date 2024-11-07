@@ -3,7 +3,12 @@ package com.toudeuk.server.domain.game.service;
 import static com.toudeuk.server.core.exception.ErrorCode.*;
 import static com.toudeuk.server.domain.game.entity.RewardType.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -28,15 +33,19 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.toudeuk.server.core.exception.BaseException;
 import com.toudeuk.server.domain.game.dto.GameData;
 import com.toudeuk.server.domain.game.dto.HistoryData;
+import com.toudeuk.server.domain.game.dto.RankData;
 import com.toudeuk.server.domain.game.entity.ClickGame;
 import com.toudeuk.server.domain.game.entity.ClickGameLog;
 import com.toudeuk.server.domain.game.entity.ClickGameRewardLog;
 import com.toudeuk.server.domain.game.kafka.ClickProducer;
+import com.toudeuk.server.domain.game.kafka.dto.ClickDto;
 import com.toudeuk.server.domain.game.repository.ClickGameCacheRepository;
 import com.toudeuk.server.domain.game.repository.ClickGameLogRepository;
 import com.toudeuk.server.domain.game.repository.ClickGameRepository;
 import com.toudeuk.server.domain.game.repository.ClickGameRewardLogRepository;
+import com.toudeuk.server.domain.user.entity.CashLogType;
 import com.toudeuk.server.domain.user.entity.User;
+import com.toudeuk.server.domain.user.event.CashLogEvent;
 import com.toudeuk.server.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -517,7 +526,7 @@ public class ClickGameService {
             cashLogRepository.save(rewardCashLog);
             clickGameRewardLogRepository.save(clickGameRewardLog);
         }
-        
+
         // 100단위 클릭자 보상 제공
         long rewardFlag = totalClickCount % 100;
         if(rewardFlag == 0){

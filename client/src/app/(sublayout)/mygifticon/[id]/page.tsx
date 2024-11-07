@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import { toast } from "react-toastify";
-import { fetchUserGifticonDetail } from "@/apis/gifticonApi";
-import { QueryClient, dehydrate, useQuery } from "@tanstack/react-query";
+import { fetchUserGifticonDetail, usedGifticon } from "@/apis/gifticonApi";
+import { QueryClient, dehydrate, useMutation, useQuery } from "@tanstack/react-query";
 import { GetServerSideProps } from "next";
 import { UserGifticonDetailInfo } from "@/types/gifticon";
 import dayjs from "dayjs";
@@ -41,6 +41,23 @@ export default function MyGifticonDetail({
   const expirationDate = dayjs(usergifticon?.createdAt)
     .add(1, "year")
     .format("YYYY년 MM월 DD일");
+
+    const mutation = useMutation({
+      mutationFn: () => usedGifticon(id),
+      onSuccess: () => {
+        toast.success(`사용처리가 완료되었습니다.`);
+      },
+      onError: (error) => {
+        const errorMessage = error instanceof Error ? error.message : "사용 처리 중 오류가 발생했습니다.";
+        if (errorMessage === "success") {
+          // 성공 메시지로 처리
+          toast.success(`${usergifticon?.itemName} 사용이 완료되었습니다.`);
+        } else {
+          // 에러 메시지로 처리
+          toast.error(errorMessage);
+        }
+      },
+    })
 
   return (
     <div className="min-h-screen flex flex-col font-noto -m-8">
@@ -90,11 +107,7 @@ export default function MyGifticonDetail({
                 </button>
                 <button
                   className="bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg w-1/2 hover:bg-blue-600"
-                  onClick={() =>
-                    toast.success(
-                      `${usergifticon.itemName} 사용이 완료되었습니다.`
-                    )
-                  }
+                  onClick={() => mutation.mutate()}
                 >
                   교환권 사용하기
                 </button>

@@ -15,6 +15,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 import com.toudeuk.server.core.constants.AuthConst;
 import com.toudeuk.server.core.exception.BaseException;
 import com.toudeuk.server.core.exception.ErrorCode;
+import com.toudeuk.server.domain.game.repository.ClickGameCacheRepository;
 import com.toudeuk.server.domain.user.dto.UserData;
 import com.toudeuk.server.domain.user.entity.CashLogType;
 import com.toudeuk.server.domain.user.entity.JwtToken;
@@ -39,6 +40,7 @@ public class UserService {
 
 	private final JWTService jwtService;
 	private final AuthCacheRepository authCacheRepository;
+	private final ClickGameCacheRepository clickGameCacheRepository;
 	private final UserRepository userRepository;
 	private final UserItemRepository userItemRepository;
 	private final CashLogRepository cashLogRepository;
@@ -130,6 +132,17 @@ public class UserService {
 		eventPublisher.publishEvent(new S3UploadEvent(user, updateInfo.getProfileImage()));
 
 		userRepository.save(user);
+	}
+
+	@Transactional
+	public void updateCash(Long userId) {
+		
+		Integer userCash = clickGameCacheRepository.getUserCash(userId);
+
+		User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+
+		user.updateCash(userCash);
+
 	}
 
 	//    public Long save(AddUserRequest dto) {
