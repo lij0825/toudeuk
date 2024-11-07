@@ -11,8 +11,10 @@ import com.toudeuk.server.core.exception.ErrorCode;
 import com.toudeuk.server.domain.game.dto.RankData;
 import com.toudeuk.server.domain.game.kafka.dto.ClickDto;
 import com.toudeuk.server.domain.game.kafka.dto.KafkaData;
+import com.toudeuk.server.domain.user.entity.CashLog;
 import com.toudeuk.server.domain.user.entity.CashLogType;
 import com.toudeuk.server.domain.user.event.CashLogEvent;
+import com.toudeuk.server.domain.user.repository.CashLogRepository;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -57,6 +59,7 @@ public class ClickGameService {
     private final ClickProducer clickProducer;
 
     private final SimpMessagingTemplate messagingTemplate;
+    private final CashLogRepository cashLogRepository;
 
     // 게임 시작
     @Transactional
@@ -482,14 +485,21 @@ public class ClickGameService {
 
     @Transactional
     public void saveGameData(ClickDto clickDto) {
-        User user = userRepository.findById(clickDto.getUserId()).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+        Long userId = clickDto.getUserId();
+        User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
 
         ClickGame clickGame = clickGameRepository.findById(clickDto.getGameId()).orElseThrow(() -> new BaseException(GAME_NOT_FOUND));
         Integer totalClickCount = clickDto.getTotalClickCount();
+        int changeCash = clickDto.getChangeCash();
+        int resultCash = clickDto.getResultCash();
+        String cashName = clickDto.getCashName();
         CashLogType cashLogType = clickDto.getCashLogType();
 
+
+        CashLog cashLog = CashLog.create(user, changeCash, resultCash, cashName, cashLogType);
         ClickGameLog clickGameLog = ClickGameLog.create(user, totalClickCount, clickGame);
 
+        cashLogRepository.save(cashLog);
         clickGameLogRepository.save(clickGameLog);
         long rewardFlag = totalClickCount % 100;
         if(rewardFlag == 0){
@@ -501,7 +511,11 @@ public class ClickGameService {
             else {
                 clickGameRewardLog = ClickGameRewardLog.create(user, clickGame, reward, totalClickCount, SECTION);
             }
-            clickGameRewardLogRepository.save(clickGameRewardLog);}
-        user.click();
+
+            CashLog.create(user, reward, resultCash+reward, cashName, CashLogType.REWARD);
+            clickCacheRepository.reward(userId, reward);
+            cashLogRepository.save(cashLog);
+            clickGameRewardLogRepository.save(clickGameRewardLog);
+        }
     }
 }

@@ -185,4 +185,9 @@ public class ClickGameCacheRepository {
 
 		return userCash;
 	}
+
+	// 실시간 보상 제공
+	public void reward(Long userId, int reward) {
+		valueOperationsInt.increment(USER_CASH_KEY + userId, reward);
+	}
 }
