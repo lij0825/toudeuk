@@ -5,6 +5,7 @@ import static com.toudeuk.server.core.exception.ErrorCode.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.toudeuk.server.domain.game.repository.ClickGameCacheRepository;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -51,7 +52,9 @@ public class UserService {
 	}
 
 	public UserData.Info getUserInfo(Long userId) {
-		return UserData.Info.of(userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND)));
+		User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+		Integer userCash = clickGameCacheRepository.getUserCash(userId);
+		return UserData.Info.of(user, userCash);
 	}
 
 	public List<UserData.UserCashLog> getUserCashLogs(Long userId) {
@@ -110,12 +113,14 @@ public class UserService {
 		User user = event.getUser();
 		Integer cash = event.getCash();
 
+
 		User findUser = userRepository.findById(user.getId())
 			.orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+		Integer userCash = clickGameCacheRepository.getUserCash(user.getId());
 
-		findUser.updateCash(findUser.getCash() + cash);
-		eventPublisher.publishEvent(new CashLogEvent(user, cash, findUser.getCash(), "충전", CashLogType.CHARGING));
-		userRepository.save(findUser);
+		clickGameCacheRepository.updateUserCash(user.getId(), cash);
+		eventPublisher.publishEvent(new CashLogEvent(user, cash, userCash + cash, "충전", CashLogType.CHARGING));
+
 	}
 
 	private String getSignOutKey(String username) {

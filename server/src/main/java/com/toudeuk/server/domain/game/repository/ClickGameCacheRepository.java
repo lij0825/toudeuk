@@ -190,4 +190,8 @@ public class ClickGameCacheRepository {
 	public void reward(Long userId, int reward) {
 		valueOperationsInt.increment(USER_CASH_KEY + userId, reward);
 	}
+
+	public void updateUserCash(Long userId, long changeCash) {
+		valueOperationsInt.increment(USER_CASH_KEY + userId, changeCash);
+	}
 }
