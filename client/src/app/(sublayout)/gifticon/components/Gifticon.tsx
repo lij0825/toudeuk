@@ -22,11 +22,14 @@ export default function Gifticon() {
   if (error) return <div>데이터를 불러오는 중 오류가 발생했습니다.</div>;
 
   return (
-    <div className="">
-      <h2 className="typo-title font-bold mb-8 bg-white rounded-lg">
+    <div className="flex flex-col h-full">
+      {/* Gifticon Shop 제목은 고정 */}
+      <h2 className="typo-title flex items-end font-bold mb-8 bg-white rounded-lg flex-shrink-0">
         Gifticon <br /> Shop
       </h2>
-      <div className="mt-8 h-screen rounded-lg">
+      
+      {/* 아래 부분은 스크롤 가능하도록 설정 */}
+      <div className="flex-grow overflow-auto">
         <div className="grid grid-cols-2 gap-4">
           {gifticons.map((gifticon) => (
             <Link

@@ -23,7 +23,13 @@ export default function Detail() {
     },
     onError: (error) => {
       const errorMessage = error instanceof Error ? error.message : "구매 중 오류가 발생했습니다.";
-      toast.error(errorMessage);
+      if (errorMessage === "success") {
+        // 성공 메시지로 처리
+        toast.success(`구매를 성공하였습니다.`);
+      } else {
+        // 에러 메시지로 처리
+        toast.error(errorMessage);
+      }
     },
   });
   if (isLoading) return <div>로딩 중...</div>;
