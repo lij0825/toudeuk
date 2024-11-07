@@ -23,18 +23,5 @@ public class ClickProducer {
 	public void occurClickUserId(ClickDto clickDto) throws JsonProcessingException {
 
 		kafkaTemplate.send(TOPIC_CREATE_INSTANCE, clickDto);
-
-
-
-//		CompletableFuture<SendResult<String, Long>> future = kafkaTemplate.send(TOPIC_CREATE_INSTANCE, userId);
-		// 콜백 메서드 생성 해야함.
-//		future.thenAccept(result -> {
-//			Long value = result.getProducerRecord().value();
-//			log.info("success Kafka message: " + value);
-//		}).exceptionally(ex -> {
-//			log.error("error Kafka message: " + ex.getMessage());
-//			throw new BaseException(ErrorCode.KAFKA_PRODUCER_ERROR);
-//		});
 	}
-
 }

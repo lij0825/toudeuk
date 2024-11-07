@@ -1,17 +1,17 @@
 package com.toudeuk.server.domain.game.kafka;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.toudeuk.server.domain.game.kafka.dto.ClickDto;
-import com.toudeuk.server.domain.game.kafka.dto.KafkaData;
-import com.toudeuk.server.domain.game.service.ClickGameService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.toudeuk.server.domain.game.kafka.dto.ClickDto;
+import com.toudeuk.server.domain.game.service.ClickGameService;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 
 @Service
