@@ -7,6 +7,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.toudeuk.server.core.exception.ErrorCode;
 import com.toudeuk.server.domain.game.dto.RankData;
 import com.toudeuk.server.domain.game.kafka.dto.ClickDto;
 import com.toudeuk.server.domain.game.kafka.dto.KafkaData;
@@ -61,6 +62,11 @@ public class ClickGameService {
     @Transactional
     public void checkGame(Long userId) {
 
+        User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+        Integer userCash = clickCacheRepository.getUserCash(userId);
+        user.setCash(userCash);
+        userRepository.save(user);
+        log.info("======================================checkGame 실행======================================");
         // 쿨타임이면?
         if (clickCacheRepository.isGameCoolTime()) {
             Long gameCoolTime = clickCacheRepository.getGameCoolTime();
@@ -243,7 +249,9 @@ public class ClickGameService {
             saveReward(gameId);
             saveCashLogInGame(gameId);
             // * 완료 게임 삭제
+            log.info("clickCacheRepository.deleteAllClickInfo() 실행 전");
             clickCacheRepository.deleteAllClickInfo();
+            log.info("clickCacheRepository.deleteAllClickInfo() 실행 후");
             // * 다음 게임 생성
             Long lastRound = clickGameRepository.findLastRound().orElse(0L);
             ClickGame newGame = ClickGame.create(lastRound + 1);
@@ -258,16 +266,14 @@ public class ClickGameService {
         Integer userCash = clickCacheRepository.getUserCash(userId);
 
         int result = userCash + CLICK_CASH;
-
         // 돈없으면 끝
         if (result < 0) {
             throw new BaseException(NOT_ENOUGH_CASH);
         }
+        clickCacheRepository.spendCash(userId);
 
         Integer userClickCount = clickCacheRepository.addUserClick(userId);
         Long totalClickCount = clickCacheRepository.addTotalClick();
-
-
 
         ClickDto clickDto = new ClickDto(
                 userId,
@@ -275,7 +281,9 @@ public class ClickGameService {
                 CLICK_CASH,
                 result,
                 "클릭 게임" + clickCacheRepository.getGameId(),
-                CashLogType.GAME);
+                CashLogType.GAME,
+                totalClickCount.intValue()
+                );
 
         clickProducer.occurClickUserId(clickDto);
 
@@ -491,5 +499,27 @@ public class ClickGameService {
     }
 
 
+    @Transactional
+    public void saveGameData(ClickDto clickDto) {
+        User user = userRepository.findById(clickDto.getUserId()).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+        ClickGame clickGame = clickGameRepository.findById(clickDto.getGameId()).orElseThrow(() -> new BaseException(GAME_NOT_FOUND));
+        Integer totalClickCount = clickDto.getTotalClickCount();
+        CashLogType cashLogType = clickDto.getCashLogType();
 
+        ClickGameLog clickGameLog = ClickGameLog.create(user, totalClickCount, clickGame);
+
+        clickGameLogRepository.save(clickGameLog);
+        long rewardFlag = totalClickCount % 100;
+        if(rewardFlag == 0){
+            int reward = totalClickCount / 2;
+            ClickGameRewardLog clickGameRewardLog;
+            if(totalClickCount == 1000){
+                clickGameRewardLog = ClickGameRewardLog.create(user, clickGame, reward, totalClickCount, WINNER);
+            }
+            else {
+                clickGameRewardLog = ClickGameRewardLog.create(user, clickGame, reward, totalClickCount, SECTION);
+            }
+            clickGameRewardLogRepository.save(clickGameRewardLog);}
+        user.click();
+    }
 }

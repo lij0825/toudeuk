@@ -110,4 +110,12 @@ public class User extends BaseEntity {
 	public void updateNickname(String nickname) {
 		this.nickname = nickname;
 	}
+
+	public void click(){
+		this.cash--;
+	}
+
+	public void setCash(Integer cash) {
+		this.cash = cash;
+	}
 }

@@ -2,6 +2,7 @@ package com.toudeuk.server.domain.game.kafka;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.toudeuk.server.domain.game.kafka.dto.ClickDto;
 import com.toudeuk.server.domain.game.kafka.dto.KafkaData;
 import com.toudeuk.server.domain.game.service.ClickGameService;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +26,8 @@ public class ClickConsumer {
     // ! 카프카 소비 설정 완료 , 로직 추가 해야함.
     @KafkaListener(topics = "${consumers.topics.click.name}", groupId = "${consumers.group-id.topics.click.name}")
     public void consumerClick(ConsumerRecord<String, String> record) throws IOException {
-        KafkaData.ClickDto clickDto = objectMapper.readValue(record.value(), KafkaData.ClickDto.class);
-        log.info("clickDto : {}", clickDto);
+        ClickDto clickDto = objectMapper.readValue(record.value(), ClickDto.class);
+        clickGameService.saveGameData(clickDto);
     }
 
 }
