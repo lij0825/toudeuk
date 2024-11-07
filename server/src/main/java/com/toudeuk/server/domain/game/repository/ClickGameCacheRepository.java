@@ -43,6 +43,10 @@ public class ClickGameCacheRepository {
 	@Resource(name = "longRedisTemplate")
 	private ValueOperations<String, Long> valueOperationsLong;
 
+
+	@Resource(name = "StringRedisTemplate")
+	private ValueOperations<String, String> valueOperationsString;
+
 	@Resource(name = "integerRedisTemplate")
 	private ValueOperations<String, Integer> valueOperationsInt;
 
@@ -62,10 +66,6 @@ public class ClickGameCacheRepository {
 		return valueOperationsLong.get(GAME_ID_KEY) != null;
 	}
 
-	public boolean waitingGameStart() {
-		return valueOperationsLong.get(GAME_ID_KEY) == null;
-	}
-
 	public Long getGameId() {
 		return valueOperationsLong.get(GAME_ID_KEY);
 	}
@@ -80,10 +80,8 @@ public class ClickGameCacheRepository {
 		return Boolean.TRUE.equals(redisTemplate.hasKey(GAME_COOLTIME_KEY));
 	}
 
-	public Long getGameCoolTime() {
-		Long coolTime = redisTemplate.getExpire(GAME_COOLTIME_KEY, TimeUnit.SECONDS);
-		log.info("=====================================coolTime :" + coolTime + "========================================");
-		return redisTemplate.getExpire(GAME_COOLTIME_KEY, TimeUnit.SECONDS);
+	public String getGameCoolTime() {
+		return valueOperationsString.get(GAME_COOLTIME_KEY);
 	}
 
 	// 총 클릭수 click:total

@@ -82,7 +82,7 @@ public class ClickGameService {
         log.info("======================================checkGame 실행======================================");
         // 쿨타임이면?
         if (clickCacheRepository.isGameCoolTime()) {
-            Long gameCoolTime = clickCacheRepository.getGameCoolTime();
+            String gameCoolTime = clickCacheRepository.getGameCoolTime();
             GameData.DisplayInfoForEvery displayInfoEvery = GameData.DisplayInfoForEvery.of(
                     gameCoolTime,
                     "COOLTIME",
@@ -119,13 +119,13 @@ public class ClickGameService {
             log.info("게임 실행 중이기 떄문에 관련정보들을 발행해야합니다.");
 
             GameData.DisplayInfoForEvery displayInfoEvery = GameData.DisplayInfoForEvery.of(
-                    0L,
+                    "RUNNING",
                     "RUNNING",
                     totalClick
             );
 
             GameData.DisplayInfoForClicker displayInfoForClicker = GameData.DisplayInfoForClicker.of(
-                    0L,
+                    "RUNNING",
                     "RUNNING",
                     myRank.intValue(),
                     myClickCount,
@@ -144,34 +144,6 @@ public class ClickGameService {
 
             return;
         }
-
-        if (clickCacheRepository.waitingGameStart()) {
-            GameData.DisplayInfoForEvery displayInfoEvery = GameData.DisplayInfoForEvery.of(
-                    0L,
-                    "WAITING",
-                    0
-            );
-
-            GameData.DisplayInfoForClicker displayInfoForClicker = GameData.DisplayInfoForClicker.of(
-                    displayInfoEvery,
-                    0,
-                    0,
-                    -1L,
-                    0,
-                    0
-            );
-
-            // 모든 구독자에게 메시지 전송
-            messagingTemplate.convertAndSend("/topic/game", displayInfoEvery);
-
-            // 특정 구독자에게 메시지 전송
-            messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
-
-
-
-            log.info("======================================쿨타임없고, 게임도없으면 실행======================================");
-            return;
-        }
     }
 
     @Transactional
@@ -187,7 +159,7 @@ public class ClickGameService {
         clickCacheRepository.setGameId(savedGame.getId());
 
         GameData.DisplayInfoForEvery displayInfoForEvery = GameData.DisplayInfoForEvery.of(
-                0L,
+                "RUNNING",
                 "RUNNING",
                 totalClickCount
         );
@@ -215,7 +187,7 @@ public class ClickGameService {
         // 쿨타임이면?
         if (clickCacheRepository.isGameCoolTime()) {
 
-            Long gameCoolTime = clickCacheRepository.getGameCoolTime();
+            String gameCoolTime = clickCacheRepository.getGameCoolTime();
             GameData.DisplayInfoForEvery displayInfoEvery = GameData.DisplayInfoForEvery.of(
                     gameCoolTime,
                     "COOLTIME",
@@ -267,7 +239,7 @@ public class ClickGameService {
         clickProducer.occurClickUserId(clickDto);
 
         GameData.DisplayInfoForEvery displayInfoForEvery = GameData.DisplayInfoForEvery.of(
-                0L,
+                "RUNNING",
                 "RUNNING",
                 totalClickCount.intValue()
         );
@@ -338,7 +310,7 @@ public class ClickGameService {
         log.info("myRank : {}, myClickCount : {}, prevUserId : {}, prevClickCount : {}, totalClick : {}",
                 myRank, myClickCount, prevUserId, prevClickCount, totalClick);
         return GameData.DisplayInfoForClicker.of(
-                0L,
+                "RUNNING",
                 "RUNNING",
                 myRank.intValue() + 1,
                 myClickCount,
@@ -504,7 +476,6 @@ public class ClickGameService {
         int resultCash = clickDto.getResultCash();
         String cashName = clickDto.getCashName();
         CashLogType cashLogType = clickDto.getCashLogType();
-
 
         CashLog cashLog = CashLog.create(user, changeCash, resultCash, cashName, cashLogType);
 
