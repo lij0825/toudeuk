@@ -22,11 +22,11 @@ export default function HistoryPage() {
   };
 
   return (
-    <div className="flex flex-col h-full relative overflow-hidden font-noto">
-      <section className="flex-shrink-0 items-end mb-4 common-link-none bg-accent-2">
+    <div className="flex flex-col h-screen overflow-hidden font-noto">
+      <section className="flex-shrink-0 p-4 bg-accent-2">
         <p className="text-2xl font-bold">게임 기록</p>
         <div className="flex justify-between items-center mt-2">
-          <p className="text-lg font-medium text-gray-400 ">
+          <p className="text-lg font-medium text-gray-400">
             {selected === SelectType.HISTORY ? "게임 히스토리" : "당첨 내역"}
           </p>
           <ToggleSwitch
@@ -41,19 +41,17 @@ export default function HistoryPage() {
         </div>
       </section>
 
-      <section className="flex-grow relative h-full overflow-y-auto scrollbar-hidden">
+      <section className="flex-1 overflow-y-auto">
+        {" "}
+        {/* 스크롤 컨테이너 설정 */}
         {selected === SelectType.HISTORY ? (
-          <div className="rounded-lg">
-            <Suspense fallback={<div>로딩 중...</div>}>
-              <HistoryList />
-            </Suspense>
-          </div>
+          <Suspense fallback={<div className="p-4">로딩 중...</div>}>
+            <HistoryList />
+          </Suspense>
         ) : (
-          <div className="rounded-lg">
-            <Suspense fallback={<div>로딩 중...</div>}>
-              <PrizeList />
-            </Suspense>
-          </div>
+          <Suspense fallback={<div className="p-4">로딩 중...</div>}>
+            <PrizeList />
+          </Suspense>
         )}
       </section>
     </div>
