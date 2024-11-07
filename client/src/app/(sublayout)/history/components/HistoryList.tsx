@@ -17,21 +17,27 @@ export default function HistoryList() {
   const size = 7;
   const queryKey = "histories";
 
-  const { data, fetchNextPage, hasNextPage, isError, error } = useInfiniteQuery(
-    {
-      queryKey: [queryKey],
-      queryFn: ({ pageParam = 0 }: QueryFunctionContext) =>
-        fetchHistories({
-          page: pageParam as number,
-          size,
-          sort: SortType.DEFAULT,
-        }),
-      initialPageParam: 0,
-      getNextPageParam: (lastPage, pages) => lastPage,
-      staleTime: 5 * 60 * 1000,
-      gcTime: 5 * 60 * 1000,
-    }
-  );
+  const {
+    data,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    status,
+  } = useInfiniteQuery({
+    queryKey: [queryKey],
+    queryFn: ({ pageParam }: QueryFunctionContext) =>
+      fetchHistories({
+        page: pageParam as number,
+        size,
+        sort: SortType.DEFAULT,
+      }),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, pages) => lastPage,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 5 * 60 * 1000,
+  });
 
   if (isError) {
     toast.error(`에러가 발생했습니다: ${(error as Error).message}`);
