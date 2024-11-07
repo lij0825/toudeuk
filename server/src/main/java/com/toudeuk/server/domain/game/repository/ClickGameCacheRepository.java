@@ -43,7 +43,6 @@ public class ClickGameCacheRepository {
 	@Resource(name = "longRedisTemplate")
 	private ValueOperations<String, Long> valueOperationsLong;
 
-
 	@Resource(name = "StringRedisTemplate")
 	private ValueOperations<String, String> valueOperationsString;
 
@@ -112,11 +111,6 @@ public class ClickGameCacheRepository {
 		return score == null ? 1 : score.intValue();
 	}
 
-	// 캐시 click:
-	public void spendCash(Long userId) {
-		valueOperationsInt.increment(USER_CASH_KEY + userId, -1);
-	}
-
 	public Integer getUserClickCount(Long userId) { // 유저의 클릭 수
 		Double clickCount = zSetOperations.score(CLICK_COUNT_KEY, userId);
 		log.info("clickCount : {}", zSetOperations.score(CLICK_COUNT_KEY, userId));
@@ -170,6 +164,7 @@ public class ClickGameCacheRepository {
 		log.info("redisTemplate.delete(GAME_ID_KEY);");
 	}
 
+	// 캐시 cash
 	public Integer getUserCash(Long userId) {
 
 
@@ -184,12 +179,14 @@ public class ClickGameCacheRepository {
 		return userCash;
 	}
 
+	public void updateUserCash(Long userId, long changeCash) {
+		valueOperationsInt.increment(USER_CASH_KEY + userId, changeCash);
+	}
+
+
 	// 실시간 보상 제공
 	public void reward(Long userId, int reward) {
 		valueOperationsInt.increment(USER_CASH_KEY + userId, reward);
 	}
 
-	public void updateUserCash(Long userId, long changeCash) {
-		valueOperationsInt.increment(USER_CASH_KEY + userId, changeCash);
-	}
 }

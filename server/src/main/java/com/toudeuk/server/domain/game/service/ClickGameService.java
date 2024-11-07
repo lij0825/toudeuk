@@ -222,7 +222,8 @@ public class ClickGameService {
         if (result < 0) {
             throw new BaseException(NOT_ENOUGH_CASH);
         }
-        clickCacheRepository.spendCash(userId);
+
+        clickCacheRepository.updateUserCash(userId, CLICK_CASH);
 
         Integer userClickCount = clickCacheRepository.addUserClick(userId);
         Long totalClickCount = clickCacheRepository.addTotalClick();
