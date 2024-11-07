@@ -85,6 +85,9 @@ public class ClickGameService {
                     0
             );
 
+
+
+            log.info("======================================쿨타임이면 실행======================================");
             // 모든 구독자에게 메시지 전송
             messagingTemplate.convertAndSend("/topic/game", displayInfoEvery);
             // 특정 구독자에게 메시지 전송
@@ -123,6 +126,9 @@ public class ClickGameService {
             messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
             log.info("displayInfoForClicker : {}", displayInfoForClicker);
 
+
+            log.info("======================================게임중이면 실행======================================");
+
             return;
         }
 
@@ -147,6 +153,10 @@ public class ClickGameService {
 
             // 특정 구독자에게 메시지 전송
             messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
+
+
+
+            log.info("======================================쿨타임없고, 게임도없으면 실행======================================");
             return;
         }
     }
@@ -185,83 +195,39 @@ public class ClickGameService {
         messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
     }
 
-    // 클릭
     @Transactional
-    public void click(Long userId) {
+    public void click(Long userId) throws JsonProcessingException {
+
+
+        // 쿨타임이면?
         if (clickCacheRepository.isGameCoolTime()) {
+
+            Long gameCoolTime = clickCacheRepository.getGameCoolTime();
+            GameData.DisplayInfoForEvery displayInfoEvery = GameData.DisplayInfoForEvery.of(
+                    gameCoolTime,
+                    "COOLTIME",
+                    0
+            );
+
+            GameData.DisplayInfoForClicker displayInfoForClicker = GameData.DisplayInfoForClicker.of(
+                    displayInfoEvery,
+                    0,
+                    0,
+                    0L,
+                    0,
+                    0
+            );
+
+
+
+            log.info("======================================쿨타임이면 실행======================================");
+            // 모든 구독자에게 메시지 전송
+            messagingTemplate.convertAndSend("/topic/game", displayInfoEvery);
+            // 특정 구독자에게 메시지 전송
+            messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
+
             throw new BaseException(COOL_TIME);
         }
-        if (clickCacheRepository.getGameId() == null) {
-            throw new BaseException(GAME_NOT_FOUND);
-
-            // TODO : 게임이 없을 때, 게임을 시작하도록 로직 추가
-
-        }
-
-        // * 클릭시 캐쉬 로직 추가 / 유저 조회 -> 캐쉬 업데이트 이렇게 2번 DB에 접근
-        // * resultCash = 유저의 현재 캐쉬 - 클릭당 캐쉬
-        // * 이건 너무 구려, 그니까 큐를 사용하자
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
-
-        int resultCash = user.getCash() + CLICK_CASH;
-
-        if (resultCash < 0) {
-            throw new BaseException(NOT_ENOUGH_CASH);
-        }
-        user.updateCash(resultCash);
-        // * 캐쉬 로그
-        // * 클릭 시 레디스 캐쉬 로직
-        Integer userClickCount = clickCacheRepository.addUserClick(userId);
-        Long totalClickCount = clickCacheRepository.addTotalClick();
-
-
-
-        clickCacheRepository.addLog(userId);
-
-        GameData.DisplayInfoForEvery displayInfoForEvery = GameData.DisplayInfoForEvery.of(
-                0L,
-                "RUNNING",
-                totalClickCount.intValue()
-        );
-
-        GameData.DisplayInfoForClicker displayInfoForClicker = GameData.DisplayInfoForClicker.of(
-                displayInfoForEvery,
-                0,
-                0,
-                -1L,
-                0,
-                userClickCount
-        );
-
-        // 모든 구독자에게 메시지 전송
-        messagingTemplate.convertAndSend("/topic/game", displayInfoForEvery);
-
-        // 특정 구독자에게 메시지 전송
-        messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
-
-        if (clickCacheRepository.isGameCoolTime()) {
-            log.info("게임 종료");
-            // * 로그 저장
-            Long gameId = clickCacheRepository.getGameId();
-            saveLog(gameId);
-            saveReward(gameId);
-            saveCashLogInGame(gameId);
-            // * 완료 게임 삭제
-            log.info("clickCacheRepository.deleteAllClickInfo() 실행 전");
-            clickCacheRepository.deleteAllClickInfo();
-            log.info("clickCacheRepository.deleteAllClickInfo() 실행 후");
-            // * 다음 게임 생성
-            Long lastRound = clickGameRepository.findLastRound().orElse(0L);
-            ClickGame newGame = ClickGame.create(lastRound + 1);
-            ClickGame savedGame = clickGameRepository.save(newGame);
-            clickCacheRepository.setTotalClick();
-            clickCacheRepository.setGameId(savedGame.getId());
-        }
-    }
-
-    public void smClick(Long userId) throws JsonProcessingException {
 
         Integer userCash = clickCacheRepository.getUserCash(userId);
 
@@ -307,6 +273,21 @@ public class ClickGameService {
 
         // 특정 구독자에게 메시지 전송
         messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
+
+        if (clickCacheRepository.isGameCoolTime()) {
+            log.info("게임 종료");
+
+            // * 완료 게임 삭제
+            log.info("clickCacheRepository.deleteAllClickInfo() 실행 전");
+            clickCacheRepository.deleteAllClickInfo();
+            log.info("clickCacheRepository.deleteAllClickInfo() 실행 후");
+            // * 다음 게임 생성
+            Long lastRound = clickGameRepository.findLastRound().orElse(0L);
+            ClickGame newGame = ClickGame.create(lastRound + 1);
+            ClickGame savedGame = clickGameRepository.save(newGame);
+            clickCacheRepository.setTotalClick();
+            clickCacheRepository.setGameId(savedGame.getId());
+        }
     }
 
     // 로그, 캐시 데이터베이스 저장
@@ -502,6 +483,7 @@ public class ClickGameService {
     @Transactional
     public void saveGameData(ClickDto clickDto) {
         User user = userRepository.findById(clickDto.getUserId()).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+
         ClickGame clickGame = clickGameRepository.findById(clickDto.getGameId()).orElseThrow(() -> new BaseException(GAME_NOT_FOUND));
         Integer totalClickCount = clickDto.getTotalClickCount();
         CashLogType cashLogType = clickDto.getCashLogType();

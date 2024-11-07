@@ -40,7 +40,7 @@ public class ClickGameSocketController {
 
 //        clickGameService.asyncClick(userId);
 
-		clickGameService.smClick(userId);
+		clickGameService.click(userId);
 
 
     }

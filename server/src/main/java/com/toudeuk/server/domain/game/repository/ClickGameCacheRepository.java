@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import com.toudeuk.server.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,7 @@ public class ClickGameCacheRepository {
 	// 게임 정보 game
 	public void setGameId(Long gameId) {
 		valueOperationsLong.set(GAME_ID_KEY, gameId);
+		log.info("Set game id to " + gameId);
 	}
 
 	public boolean existGame() {
@@ -79,7 +81,9 @@ public class ClickGameCacheRepository {
 	}
 
 	public Long getGameCoolTime() {
-		return valueOperationsLong.get(GAME_COOLTIME_KEY);
+		Long coolTime = redisTemplate.getExpire(GAME_COOLTIME_KEY, TimeUnit.SECONDS);
+		log.info("=====================================coolTime :" + coolTime + "========================================");
+		return redisTemplate.getExpire(GAME_COOLTIME_KEY, TimeUnit.SECONDS);
 	}
 
 	// 총 클릭수 click:total
