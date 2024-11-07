@@ -70,6 +70,7 @@ public class ClickGameService {
 
     private final SimpMessagingTemplate messagingTemplate;
     private final CashLogRepository cashLogRepository;
+    private final ClickGameCacheRepository clickGameCacheRepository;
 
     // 게임 시작
     @Transactional
@@ -293,7 +294,8 @@ public class ClickGameService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
 
-        int resultCash = user.getCash() + CLICK_CASH;
+        Integer userCash = clickCacheRepository.getUserCash(userId);
+        int resultCash = userCash + CLICK_CASH;
 
         if (resultCash < 0) {
             throw new BaseException(NOT_ENOUGH_CASH);
@@ -399,8 +401,10 @@ public class ClickGameService {
         for (ZSetOperations.TypedTuple<Long> ranking : rankSet) {
             Long userId = ranking.getValue();
             User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
-            int resultCash = user.getCash();
-            int changeCash = ranking.getScore().intValue();
+            Integer userCash = clickCacheRepository.getUserCash(userId);
+            int changeCash = -ranking.getScore().intValue();
+            int resultCash = userCash + changeCash;
+            clickCacheRepository.updateUserCash(userId, changeCash);
             applicationEventPublisher.publishEvent(
                     new CashLogEvent(user, changeCash, resultCash, gameName, CashLogType.GAME));
         }

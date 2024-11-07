@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import com.toudeuk.server.domain.game.dto.HistoryData;
 import com.toudeuk.server.domain.game.entity.ClickGame;
+import com.toudeuk.server.domain.game.repository.ClickGameCacheRepository;
 import com.toudeuk.server.domain.user.dto.UserItemData;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -41,6 +42,7 @@ public class ItemService {
 	private final ItemRepository itemRepository;
 	private final UserItemRepository userItemRepository;
 	private final UserRepository userRepository;
+	private final ClickGameCacheRepository clickGameCacheRepository;
 
 	public List<ItemData.ItemInfo> getItemList() {
 		return itemRepository.findAll().stream()
@@ -57,13 +59,14 @@ public class ItemService {
  	public void buyItem(Long userId, Long itemId) {
 		User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
 		Item item = itemRepository.findById(itemId).orElseThrow(() -> new BaseException(ITEM_NOT_FOUND));
+		Integer userCash = clickGameCacheRepository.getUserCash(userId);
 
 		UserItem userItem = UserItem.create(user, item);
 
 		userItemRepository.save(userItem);
 
 		int changeCash = -item.getPrice();
-		int resultCash = user.getCash() - item.getPrice();
+		int resultCash = userCash - item.getPrice();
 
 		if (resultCash < 0) {
 			throw new BaseException(NOT_ENOUGH_CASH);
@@ -72,7 +75,7 @@ public class ItemService {
 		applicationEventPublisher.publishEvent(
 			new CashLogEvent(user, changeCash, resultCash, item.getName(), CashLogType.ITEM));
 
-		user.updateCash(resultCash);
+		clickGameCacheRepository.updateUserCash(userId, changeCash);
 	}
 
 
