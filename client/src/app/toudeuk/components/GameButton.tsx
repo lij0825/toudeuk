@@ -29,6 +29,15 @@ export default function GameButton() {
         console.log("Connected: " + frame);
 
         stompClient.subscribe(
+          "/topic/health",
+          (message) => {
+            console.log('메시지 health',message.body)
+          },
+          headers
+        );
+
+
+        stompClient.subscribe(
           "/topic/game",
           (message) => {
             console.log("메시지 Json 파싱", JSON.parse(message.body));
