@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -173,5 +174,11 @@ public class UserController {
 	public SuccessResponse<Void> updateCash(@CurrentUser Long userId) {
 		userService.updateCash(userId);
 		return SuccessResponse.empty();
+	}
+
+	@GetMapping("user-cash/{userId}")
+	@Operation(summary = "유저 캐쉬 조회", description = "유저 캐쉬를 조회합니다.")
+	public SuccessResponse<Integer> getUserCash(@PathVariable Long userId) {
+		return SuccessResponse.of(userService.getUserCash(userId));
 	}
 }

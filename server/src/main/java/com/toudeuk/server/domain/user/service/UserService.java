@@ -150,6 +150,10 @@ public class UserService {
 
 	}
 
+	public Integer getUserCash(Long userId) {
+		return clickGameCacheRepository.getUserCash(userId);
+	}
+
 	//    public Long save(AddUserRequest dto) {
 	//        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 	//
