@@ -79,7 +79,7 @@ public class ClickGameCacheRepository {
 	}
 
 	public Long getGameCoolTime() {
-		return valueOperationsLong.get(GAME_COOLTIME_KEY);
+		return redisTemplate.getExpire(GAME_COOLTIME_KEY);
 	}
 
 	// 총 클릭수 click:total
@@ -180,5 +180,9 @@ public class ClickGameCacheRepository {
 		}
 
 		return userCash;
+	}
+
+	public void updateUserCash(Long userId, long changeCash) {
+		valueOperationsInt.increment(USER_CASH_KEY + userId, changeCash);
 	}
 }

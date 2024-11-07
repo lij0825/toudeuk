@@ -19,12 +19,12 @@ public class UserData {
 		private String profileImg;
 		private int cash;
 
-		public static Info of(User user) {
+		public static Info of(User user, int cash) {
 			Info info = new Info();
 			info.userId = user.getId();
 			info.nickName = user.getNickname();
 			info.profileImg = user.getProfileImg();
-			info.cash = user.getCash();
+			info.cash = cash;
 			return info;
 		}
 	}

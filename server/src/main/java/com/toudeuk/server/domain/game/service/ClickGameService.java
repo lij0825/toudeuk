@@ -57,6 +57,7 @@ public class ClickGameService {
     private final ClickProducer clickProducer;
 
     private final SimpMessagingTemplate messagingTemplate;
+    private final ClickGameCacheRepository clickGameCacheRepository;
 
     // 게임 시작
     @Transactional
@@ -205,12 +206,14 @@ public class ClickGameService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
 
-        int resultCash = user.getCash() + CLICK_CASH;
+        Integer userCash = clickCacheRepository.getUserCash(userId);
+
+        int resultCash = userCash + CLICK_CASH;
 
         if (resultCash < 0) {
             throw new BaseException(NOT_ENOUGH_CASH);
         }
-        user.updateCash(resultCash);
+        clickGameCacheRepository.updateUserCash(userId, CLICK_CASH);
         // * 캐쉬 로그
         // * 클릭 시 레디스 캐쉬 로직
         Integer userClickCount = clickCacheRepository.addUserClick(userId);
@@ -327,7 +330,8 @@ public class ClickGameService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
 
-        int resultCash = user.getCash() + CLICK_CASH;
+        Integer userCash = clickCacheRepository.getUserCash(userId);
+        int resultCash = userCash + CLICK_CASH;
 
         if (resultCash < 0) {
             throw new BaseException(NOT_ENOUGH_CASH);
@@ -433,8 +437,10 @@ public class ClickGameService {
         for (ZSetOperations.TypedTuple<Long> ranking : rankSet) {
             Long userId = ranking.getValue();
             User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
-            int resultCash = user.getCash();
-            int changeCash = ranking.getScore().intValue();
+            Integer userCash = clickCacheRepository.getUserCash(userId);
+            int changeCash = -ranking.getScore().intValue();
+            int resultCash = userCash + changeCash;
+            clickCacheRepository.updateUserCash(userId, changeCash);
             applicationEventPublisher.publishEvent(
                     new CashLogEvent(user, changeCash, resultCash, gameName, CashLogType.GAME));
         }
