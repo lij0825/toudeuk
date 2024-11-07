@@ -131,7 +131,7 @@ export default function Rank() {
             </div>
             <div
               ref={scrollContainerRef}
-              className="max-h-[580px] overflow-y-auto rounded-lg flex-grow relative scrollbar-hidden">
+              className="max-h-[580px] mt-4 overflow-y-auto rounded-lg flex-grow relative scrollbar-hidden">
 
               <div className="grid grid-cols-1 gap-4 w-full max-w-2xl">
                 {ranks.rankList.slice(3,).map((user) => (

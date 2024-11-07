@@ -28,6 +28,23 @@ export default function GameButton() {
       (frame: IFrame) => {
         console.log("Connected: " + frame);
 
+
+        stompClient.subscribe(
+          "/topic/health",
+          (message) => {
+          },
+          headers
+        );
+
+        stompClient.subscribe(
+          "/topic/health",
+          (message) => {
+            console.log('메시지 health',message.body)
+          },
+          headers
+        );
+
+
         stompClient.subscribe(
           "/topic/game",
           (message) => {

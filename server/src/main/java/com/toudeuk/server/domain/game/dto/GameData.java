@@ -6,7 +6,7 @@ public class GameData {
 
     @Data
     public static class DisplayInfoForClicker {
-        private Long coolTime;
+        private String coolTime;
         private String status;
         private Integer myRank;
         private Integer myClickCount;
@@ -15,7 +15,7 @@ public class GameData {
         private Integer totalClick;
 
         public static DisplayInfoForClicker of(
-                Long coolTime,
+                String coolTime,
                 String status,
                 Integer myRank,
                 Integer myClickCount,
@@ -54,12 +54,12 @@ public class GameData {
 
     @Data
     public static class DisplayInfoForEvery {
-        private Long coolTime;
+        private String coolTime;
         private String status;
         private Integer totalClick;
 
         public static GameData.DisplayInfoForEvery of(
-                Long coolTime,
+                String coolTime,
                 String status,
                 Integer totalClick) {
             GameData.DisplayInfoForEvery displayInfo = new GameData.DisplayInfoForEvery();
