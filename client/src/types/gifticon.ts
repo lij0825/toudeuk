@@ -3,6 +3,7 @@ export interface GifticonInfo {
   itemName: string;
   itemImage: string;
   itemPrice: number;
+  itemType: ItemType;
 }
 
 export enum ItemType {
