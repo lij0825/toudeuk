@@ -19,8 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ClickConsumer {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
+    private final ObjectMapper objectMapper;
     private final ClickGameService clickGameService;
 
     // ! 카프카 소비 설정 완료 , 로직 추가 해야함.

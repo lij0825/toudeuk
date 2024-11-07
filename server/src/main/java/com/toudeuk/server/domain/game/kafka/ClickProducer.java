@@ -1,11 +1,11 @@
 package com.toudeuk.server.domain.game.kafka;
 
-import com.toudeuk.server.domain.game.kafka.dto.KafkaClickDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.toudeuk.server.domain.game.kafka.dto.KafkaClickDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class ClickProducer {
+
 	@Value("${producers.topics.click.name}")
 	private String TOPIC_CREATE_INSTANCE;
 
