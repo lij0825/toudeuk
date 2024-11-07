@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import com.toudeuk.server.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,9 @@ public class ClickGameCacheRepository {
 	@Resource(name = "longRedisTemplate")
 	private ValueOperations<String, Long> valueOperationsLong;
 
+	@Resource(name = "StringRedisTemplate")
+	private ValueOperations<String, String> valueOperationsString;
+
 	@Resource(name = "integerRedisTemplate")
 	private ValueOperations<String, Integer> valueOperationsInt;
 
@@ -54,14 +58,11 @@ public class ClickGameCacheRepository {
 	// 게임 정보 game
 	public void setGameId(Long gameId) {
 		valueOperationsLong.set(GAME_ID_KEY, gameId);
+		log.info("Set game id to " + gameId);
 	}
 
 	public boolean existGame() {
 		return valueOperationsLong.get(GAME_ID_KEY) != null;
-	}
-
-	public boolean waitingGameStart() {
-		return valueOperationsLong.get(GAME_ID_KEY) == null;
 	}
 
 	public Long getGameId() {
@@ -72,14 +73,16 @@ public class ClickGameCacheRepository {
 		log.info("setGameCoolTime");
 		LocalDateTime expiredAt = LocalDateTime.now().plusMinutes(COOLTIME_MINUTES);
 		redisTemplate.opsForValue().set(GAME_COOLTIME_KEY, expiredAt.toString(), Duration.ofMinutes(COOLTIME_MINUTES));
+
+
 	}
 
 	public boolean isGameCoolTime() {
 		return Boolean.TRUE.equals(redisTemplate.hasKey(GAME_COOLTIME_KEY));
 	}
 
-	public Long getGameCoolTime() {
-		return valueOperationsLong.get(GAME_COOLTIME_KEY);
+	public String getGameCoolTime() {
+		return valueOperationsString.get(GAME_COOLTIME_KEY);
 	}
 
 	// 총 클릭수 click:total
@@ -108,11 +111,6 @@ public class ClickGameCacheRepository {
 		log.info("score : {}", score);
 
 		return score == null ? 1 : score.intValue();
-	}
-
-	// 캐시 click:
-	public void spendCash(Long userId) {
-		valueOperationsInt.increment(USER_CASH_KEY + userId, -1);
 	}
 
 	public Integer getUserClickCount(Long userId) { // 유저의 클릭 수
@@ -168,6 +166,7 @@ public class ClickGameCacheRepository {
 		log.info("redisTemplate.delete(GAME_ID_KEY);");
 	}
 
+	// 캐시 cash
 	public Integer getUserCash(Long userId) {
 
 
@@ -181,4 +180,15 @@ public class ClickGameCacheRepository {
 
 		return userCash;
 	}
+
+	public void updateUserCash(Long userId, long changeCash) {
+		valueOperationsInt.increment(USER_CASH_KEY + userId, changeCash);
+	}
+
+
+	// 실시간 보상 제공
+	public void reward(Long userId, int reward) {
+		valueOperationsInt.increment(USER_CASH_KEY + userId, reward);
+	}
+
 }

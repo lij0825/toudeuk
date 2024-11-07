@@ -2,10 +2,16 @@ package com.toudeuk.server.domain.user.controller;
 
 import java.util.List;
 
-import com.toudeuk.server.domain.item.service.ItemService;
-import com.toudeuk.server.domain.user.dto.UserItemData;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.toudeuk.server.core.annotation.CurrentUser;
 import com.toudeuk.server.core.constants.AuthConst;
@@ -14,7 +20,9 @@ import com.toudeuk.server.core.exception.ErrorCode;
 import com.toudeuk.server.core.properties.JwtProperties;
 import com.toudeuk.server.core.response.SuccessResponse;
 import com.toudeuk.server.core.util.CookieUtils;
+import com.toudeuk.server.domain.item.service.ItemService;
 import com.toudeuk.server.domain.user.dto.UserData;
+import com.toudeuk.server.domain.user.dto.UserItemData;
 import com.toudeuk.server.domain.user.entity.JwtToken;
 import com.toudeuk.server.domain.user.service.UserService;
 
@@ -116,17 +124,17 @@ public class UserController {
 		return SuccessResponse.of(refreshedToken);
 	}
 
-//	/**
-//	 * 나의 아이템 목록 조회
-//	 *
-//	 * @param userId
-//	 * @return {@link SuccessResponse<List<UserItemData.UserItemInfo>>}
-//	 */
-//	@GetMapping(value = "/item")
-//	@Operation(summary = "나의 아이템 목록 조회", description = "나의 아이템 목록을 조회합니다.")
-//	public SuccessResponse<List<UserItemData.UserItemInfo>> getMyItemList(@CurrentUser Long userId) {
-//		return SuccessResponse.of(itemService.getUserItemList(userId));
-//	}
+	//	/**
+	//	 * 나의 아이템 목록 조회
+	//	 *
+	//	 * @param userId
+	//	 * @return {@link SuccessResponse<List<UserItemData.UserItemInfo>>}
+	//	 */
+	//	@GetMapping(value = "/item")
+	//	@Operation(summary = "나의 아이템 목록 조회", description = "나의 아이템 목록을 조회합니다.")
+	//	public SuccessResponse<List<UserItemData.UserItemInfo>> getMyItemList(@CurrentUser Long userId) {
+	//		return SuccessResponse.of(itemService.getUserItemList(userId));
+	//	}
 
 	/**
 	 * 나의 아이템 상세 조회
@@ -136,7 +144,8 @@ public class UserController {
 	 */
 	@GetMapping(value = "/item/detail")
 	@Operation(summary = "나의 아이템 상세 조회", description = "나의 아이템 상세 정보를 조회합니다.")
-	public SuccessResponse<UserItemData.UserItemDetail> getMyItemDetail(@CurrentUser Long userId, @RequestParam Long userItemId) {
+	public SuccessResponse<UserItemData.UserItemDetail> getMyItemDetail(@CurrentUser Long userId,
+		@RequestParam Long userItemId) {
 		return SuccessResponse.of(itemService.getUserItemDetail(userId, userItemId));
 	}
 
@@ -153,5 +162,16 @@ public class UserController {
 		return SuccessResponse.empty();
 	}
 
-
+	/**
+	 * 유저 캐쉬 업데이트, redis -> db
+	 *
+	 * @param userId
+	 * @return {@link SuccessResponse<Void>}
+	 */
+	@PostMapping(value = "/cash/update")
+	@Operation(summary = "유저 캐쉬 업데이트", description = "유저 캐쉬를 업데이트합니다. redis -> db")
+	public SuccessResponse<Void> updateCash(@CurrentUser Long userId) {
+		userService.updateCash(userId);
+		return SuccessResponse.empty();
+	}
 }

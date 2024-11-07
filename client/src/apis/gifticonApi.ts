@@ -49,8 +49,8 @@ export const buyGifticon = async (id: string): Promise<void> => {
 };
 
 //기프티콘 사용처리
-export const useGifticon = async (id: string): Promise<void> => {
-  const response = await instance.post<BaseResponse<void>>(`/items/use`, {
+export const usedGifticon = async (id: string): Promise<void> => {
+  const response = await instance.post<BaseResponse<void>>(`/user/items/use`, {
     userItemId: id,
   });
   if (!response.data.success) {
@@ -59,6 +59,7 @@ export const useGifticon = async (id: string): Promise<void> => {
   if (!response.data.data) {
     throw new Error(response.data.message);
   }
+  return response.data.data;
 };
 
 //유저 기프티콘 정보 가져오기

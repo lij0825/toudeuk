@@ -1,6 +1,6 @@
 package com.toudeuk.server.domain.game.kafka;
 
-import com.toudeuk.server.domain.game.kafka.dto.ClickDto;
+import com.toudeuk.server.domain.game.kafka.dto.KafkaClickDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -17,11 +17,10 @@ public class ClickProducer {
 	@Value("${producers.topics.click.name}")
 	private String TOPIC_CREATE_INSTANCE;
 
-	private final KafkaTemplate<String, ClickDto> kafkaTemplate;
+	private final KafkaTemplate<String, KafkaClickDto> kafkaTemplate;
 
 	// ! 카프카 발행 설정 완료 , 로직 추가 해야함.
-	public void occurClickUserId(ClickDto clickDto) throws JsonProcessingException {
-
+	public void occurClickUserId(KafkaClickDto clickDto)  {
 		kafkaTemplate.send(TOPIC_CREATE_INSTANCE, clickDto);
 	}
 }

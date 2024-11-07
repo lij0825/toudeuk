@@ -9,7 +9,7 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.toudeuk.dto.ClickDto;
+import com.toudeuk.dto.KafkaClickDto;
 import com.toudeuk.service.ConsumerService;
 
 public class Consumer {
@@ -38,7 +38,7 @@ public class Consumer {
 
 				switch (input) {
 					case "click":
-						ClickDto clickDto = objectMapper.readValue(record.value(), ClickDto.class);
+						KafkaClickDto clickDto = objectMapper.readValue(record.value(), KafkaClickDto.class);
 						consumerService.click(clickDto);
 
 						break;

@@ -3,11 +3,9 @@ package com.toudeuk.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.toudeuk.configuration.ConnectionPool;
-import com.toudeuk.dto.ClickDto;
 
 public class ToudeukDao {
 

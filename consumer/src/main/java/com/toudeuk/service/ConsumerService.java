@@ -1,7 +1,7 @@
 package com.toudeuk.service;
 
 import com.toudeuk.dao.ToudeukDao;
-import com.toudeuk.dto.ClickDto;
+import com.toudeuk.dto.KafkaClickDto;
 import com.toudeuk.enums.RewardType;
 
 public class ConsumerService {
@@ -20,7 +20,7 @@ public class ConsumerService {
 	private final ToudeukDao toudeukDao = ToudeukDao.getInstance();
 
 	// 클릭 했을 때
-	public void click(ClickDto clickDto) {
+	public void click(KafkaClickDto clickDto) {
 
 		System.out.println(clickDto);
 
@@ -31,69 +31,34 @@ public class ConsumerService {
 			clickDto.getTotalClickCount()
 		);
 
-
-		int reward = clickDto.getTotalClickCount() / 2;
-
-		switch (getRewardType(clickDto.getTotalClickCount())) {
-
-			// 첫번째 클릭이면
-			case FIRST:
-				toudeukDao.insertRewardLog(
-					clickDto.getUserId(),
-					clickDto.getGameId(),
-					500,
-					clickDto.getTotalClickCount(),
-					RewardType.FIRST.toString()
-				);
-				break;
-
-			// 마지막 클릭이면
-			case WINNER:
-				toudeukDao.insertRewardLog(
-					clickDto.getUserId(),
-					clickDto.getGameId(),
-					reward,
-					clickDto.getTotalClickCount(),
-					RewardType.WINNER.toString()
-				);
-				break;
-
-			// 중간 보상이면
-			case SECTION:
-				toudeukDao.insertRewardLog(
-					clickDto.getUserId(),
-					clickDto.getGameId(),
-					reward,
-					clickDto.getTotalClickCount(),
-					RewardType.SECTION.toString()
-				);
-				break;
+		// 보상 조건이 없으면 그냥 리턴
+		if (clickDto.getRewardType().equals(RewardType.NONE)) {
+			return ;
 		}
+
+		// 첫번째 보상
+		if (clickDto.equals(RewardType.FIRST)) {
+			toudeukDao.insertRewardLog(
+				clickDto.getUserId(),
+				clickDto.getGameId(),
+				500,
+				clickDto.getTotalClickCount(),
+				RewardType.FIRST.toString());
+			return ;
+		}
+
+
+		// 나머지 보상 마지막 또는 중간중간 보상 어차피 계산값 동일
+		toudeukDao.insertRewardLog(
+			clickDto.getUserId(),
+			clickDto.getGameId(),
+			clickDto.getTotalClickCount() / 2,
+			clickDto.getTotalClickCount(),
+			clickDto.getRewardType().toString());
 	}
+
 
 	// 아이템 샀을 때
 	public void buyItem() {
-
-	}
-
-	// 캐시 충전 했을 때
-
-	//
-
-	public RewardType getRewardType(int totalClickCount) {
-
-		if (totalClickCount == 1) {
-			return RewardType.FIRST;
-		}
-
-		if (totalClickCount == 1000) {
-			return RewardType.WINNER
-		}
-
-		if (totalClickCount % 100 == 0) {
-			return RewardType.SECTION;
-		}
-
-		return null;
 	}
 }
