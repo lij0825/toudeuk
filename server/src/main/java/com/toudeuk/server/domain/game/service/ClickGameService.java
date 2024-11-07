@@ -49,6 +49,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ClickGameService {
 
     private static final int CLICK_CASH = -1;
+    private static final int FIRST_CLICK = 500;
 
     private final ClickGameCacheRepository clickCacheRepository;
     private final ClickGameRepository clickGameRepository;
@@ -497,10 +498,27 @@ public class ClickGameService {
 
 
         CashLog cashLog = CashLog.create(user, changeCash, resultCash, cashName, cashLogType);
+
         ClickGameLog clickGameLog = ClickGameLog.create(user, totalClickCount, clickGame);
 
+        // 캐시 로그 저장
         cashLogRepository.save(cashLog);
+        // 게임 로그 저장
         clickGameLogRepository.save(clickGameLog);
+
+        // 첫번째 클릭자 보상 제공
+        if(totalClickCount == 1){
+
+            ClickGameRewardLog clickGameRewardLog = ClickGameRewardLog.create(user, clickGame, FIRST_CLICK, totalClickCount, SECTION);
+
+            CashLog rewardCashLog = CashLog.create(user, FIRST_CLICK, resultCash + FIRST_CLICK, cashName, CashLogType.REWARD);
+
+            clickCacheRepository.reward(userId, FIRST_CLICK);
+            cashLogRepository.save(rewardCashLog);
+            clickGameRewardLogRepository.save(clickGameRewardLog);
+        }
+        
+        // 100단위 클릭자 보상 제공
         long rewardFlag = totalClickCount % 100;
         if(rewardFlag == 0){
             int reward = totalClickCount / 2;
@@ -512,9 +530,9 @@ public class ClickGameService {
                 clickGameRewardLog = ClickGameRewardLog.create(user, clickGame, reward, totalClickCount, SECTION);
             }
 
-            CashLog.create(user, reward, resultCash+reward, cashName, CashLogType.REWARD);
+            CashLog rewardCashLog = CashLog.create(user, reward, resultCash + reward, cashName, CashLogType.REWARD);
             clickCacheRepository.reward(userId, reward);
-            cashLogRepository.save(cashLog);
+            cashLogRepository.save(rewardCashLog);
             clickGameRewardLogRepository.save(clickGameRewardLog);
         }
     }
