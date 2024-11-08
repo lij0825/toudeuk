@@ -56,7 +56,7 @@ public class HistoryData {
 
 	@EqualsAndHashCode(callSuper = true)
 	@Data
-    public static class AllInfo extends BaseInfo {
+	public static class AllInfo extends BaseInfo {
 		private RewardUser winner;
 		private RewardUser maxClicker;
 
@@ -72,7 +72,7 @@ public class HistoryData {
 
 	@EqualsAndHashCode(callSuper = true)
 	@Data
-    public static class DetailInfo extends BaseInfo {
+	public static class DetailInfo extends BaseInfo {
 		private RewardUser winner;
 		private RewardUser maxClicker;
 		private List<RewardUser> middleRewardUsers;
