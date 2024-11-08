@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { fetchHistoryDetailInfo } from "@/apis/history/historyApi";
@@ -69,9 +71,11 @@ export default function HistoryDetail({ params }: { params: { id: string } }) {
 
   return (
     <>
-      {contents.map((content: DetailContentInfo, index: number) => {
-        <HistoryItem key={index} content={content} />;
-      })}
+      {contents.map((content: DetailContentInfo, index: number) => (
+        <>    
+            <HistoryItem key={index} content={content} />
+        </>
+      ))}
     </>
   );
 }

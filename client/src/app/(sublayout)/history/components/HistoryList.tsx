@@ -6,6 +6,7 @@ import { fetchHistories } from "@/apis/history/historyApi";
 import { ContentInfo, HistoriesInfo, Page } from "@/types";
 import { toast } from "react-toastify";
 import HistoryItem from "./HistoryItem";
+import { useRouter } from "next/navigation";
 
 export enum SortType {
   DEFAULT = "",
@@ -14,24 +15,7 @@ export enum SortType {
 }
 
 export default function HistoryList() {
-  // 좌표값 출력 함수
-  const browserPoint = (event: MouseEvent) => {
-    console.log(`브라우저 좌표 : (${event.pageX}, ${event.pageY})`);
-  };
-  const clientPoint = (event: MouseEvent) => {
-    console.log(`화면 좌표 : (${event.clientX}, ${event.clientY})`);
-  };
-
-  useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
-      browserPoint(e);
-      clientPoint(e);
-    };
-    window.addEventListener("click", handleClick);
-    return () => {
-      window.removeEventListener("click", handleClick);
-    };
-  }, []);
+  const router = useRouter();
 
   // 무한 스크롤 데이터 fetching
   const size = 7;
@@ -41,9 +25,7 @@ export default function HistoryList() {
     data,
     error,
     fetchNextPage,
-    fetchPreviousPage,
     hasNextPage,
-    hasPreviousPage,
     isFetchingNextPage,
     isError,
   } = useInfiniteQuery({
@@ -115,10 +97,14 @@ export default function HistoryList() {
         <div className="grid gap-4">
           {contents.map((content: ContentInfo, index: number) => {
             const isLastItem = index === contents.length - 1;
+            const id = content.clickGameId.toString();
             return (
               <div
                 key={content.clickGameId}
                 ref={isLastItem ? observerRef : null}
+                onClick={() => {
+                  router.push(`/history/${id}`);
+                }}
               >
                 <HistoryItem content={content} />
               </div>
@@ -128,14 +114,6 @@ export default function HistoryList() {
       )}
       {isFetchingNextPage && (
         <div className="text-center text-gray-500">로딩 중...</div>
-      )}
-      {hasPreviousPage && (
-        <button
-          onClick={() => fetchPreviousPage()}
-          className="mt-4 w-full text-center text-blue-500 hover:underline"
-        >
-          이전 페이지 로드
-        </button>
       )}
     </div>
   );
