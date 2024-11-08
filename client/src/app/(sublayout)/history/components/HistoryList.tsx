@@ -61,6 +61,8 @@ export default function HistoryList() {
   const observerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    const targetElement = observerRef.current;
+
     const observer = new IntersectionObserver(
       (entries) => {
         const target = entries[0];
@@ -74,12 +76,12 @@ export default function HistoryList() {
       }
     );
 
-    if (observerRef.current) {
-      observer.observe(observerRef.current);
+    if (targetElement) {
+      observer.observe(targetElement);
     }
 
     return () => {
-      if (observerRef.current) observer.unobserve(observerRef.current);
+      if (targetElement) observer.unobserve(targetElement);
       observer.disconnect();
     };
   }, [hasNextPage, fetchNextPage, isFetchingNextPage]);

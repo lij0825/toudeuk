@@ -33,10 +33,10 @@ export default function PrizeList() {
   // const contents = data?.pages.flatMap((page) => {
 
   // }) || [];
+  //
+  // const { targetRef } = useInfiniteScroll({ fetchNextPage, hasNextPage });
 
-  const { targetRef } = useInfiniteScroll({ fetchNextPage, hasNextPage });
-
-  return <section ref={targetRef}></section>;
+  return <section></section>;
   //     <section className="overflow-y-auto h-full scrollbar-hidden">
 
   //       {contents.length === 0 ? (

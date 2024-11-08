@@ -71,9 +71,10 @@ export default function HistoryDetail({ params }: { params: { id: string } }) {
 
   return (
     <>
+      <div></div>
       {contents.map((content: DetailContentInfo, index: number) => (
-        <>    
-            <HistoryItem key={index} content={content} />
+        <>
+          <HistoryItem key={index} content={content} />
         </>
       ))}
     </>

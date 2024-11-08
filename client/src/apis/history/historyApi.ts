@@ -56,13 +56,18 @@ export const fetchHistoryDetailInfo = async (
     `/game/history/${id}`,
     { params: filteredParams }
   );
-  if (!response.data.success) {
+
+  const data = response.data;
+  if (!data.success) {
     throw new Error(response.data.message);
   }
 
-  if (!response.data.data) {
+  if (!data.data) {
     throw new Error(response.data.message);
   }
 
-  return response.data.data || [];
+  const page = data.data.page;
+  const content = data.data.content;
+
+  return data.data || [];
 };
