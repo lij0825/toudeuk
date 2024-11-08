@@ -70,26 +70,32 @@ public class HistoryData {
 		}
 	}
 
-	@EqualsAndHashCode(callSuper = true)
 	@Data
-	public static class DetailInfo extends BaseInfo {
+	public static class DetailInfo {
+		private RewardUser allUsers;
+
+		public static DetailInfo of(
+			RewardUser allUsers) {
+			DetailInfo detailInfo = new DetailInfo();
+			detailInfo.allUsers = allUsers;
+			return detailInfo;
+		}
+	}
+
+	@Data
+	public static class RewardInfo {
 		private RewardUser winner;
 		private RewardUser maxClicker;
 		private List<RewardUser> middleRewardUsers;
-		private List<RewardUser> allUsers;
 
-		public static DetailInfo of(
-			ClickGame clickGame,
+		public static RewardInfo of(
 			WinnerAndMaxClickerData winnerAndMaxClicker,
-			List<RewardUser> middleRewardUsers,
-			List<RewardUser> allUsers) {
-			DetailInfo detailInfo = new DetailInfo();
-			detailInfo.setCommonFields(clickGame);
-			detailInfo.winner = winnerAndMaxClicker.winner;
-			detailInfo.maxClicker = winnerAndMaxClicker.maxClicker;
-			detailInfo.middleRewardUsers = middleRewardUsers;
-			detailInfo.allUsers = allUsers;
-			return detailInfo;
+			List<RewardUser> middleRewardUsers) {
+			RewardInfo rewardInfo = new RewardInfo();
+			rewardInfo.winner = winnerAndMaxClicker.winner;
+			rewardInfo.maxClicker = winnerAndMaxClicker.maxClicker;
+			rewardInfo.middleRewardUsers = middleRewardUsers;
+			return rewardInfo;
 		}
 	}
 }
