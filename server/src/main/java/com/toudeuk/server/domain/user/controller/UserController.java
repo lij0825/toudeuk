@@ -176,9 +176,4 @@ public class UserController {
 		return SuccessResponse.empty();
 	}
 
-	@GetMapping("user-cash/{userId}")
-	@Operation(summary = "유저 캐쉬 조회", description = "유저 캐쉬를 조회합니다.")
-	public SuccessResponse<Integer> getUserCash(@PathVariable Long userId) {
-		return SuccessResponse.of(userService.getUserCash(userId));
-	}
 }
