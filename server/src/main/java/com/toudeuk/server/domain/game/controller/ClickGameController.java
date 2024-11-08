@@ -1,34 +1,26 @@
 package com.toudeuk.server.domain.game.controller;
 
-import com.toudeuk.server.domain.game.dto.RankData;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.messaging.handler.annotation.Header;
-import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedModel;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.toudeuk.server.core.annotation.CurrentUser;
 import com.toudeuk.server.core.response.SuccessResponse;
-import com.toudeuk.server.domain.game.dto.GameData;
 import com.toudeuk.server.domain.game.dto.HistoryData;
+import com.toudeuk.server.domain.game.dto.RankData;
 import com.toudeuk.server.domain.game.service.ClickGameService;
 import com.toudeuk.server.domain.user.service.JWTService;
 
-import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -75,8 +67,9 @@ public class ClickGameController {
 	 */
 	@GetMapping("/history")
 	@Operation(summary = "모든 게임 정보 조회", description = "모든 게임 정보를 조회합니다.")
-	public SuccessResponse<Page<HistoryData.AllInfo>> getHistory(@CurrentUser Long userId, Pageable pageable) {
-		return SuccessResponse.of(clickGameService.getAllHistory(pageable));
+	public SuccessResponse<PagedModel<HistoryData.AllInfo>> getHistory(@CurrentUser Long userId,
+		@PageableDefault() Pageable pageable) {
+		return SuccessResponse.of(new PagedModel<>(clickGameService.getAllHistory(pageable)));
 	}
 
 	/**
@@ -86,10 +79,10 @@ public class ClickGameController {
 	 */
 	@GetMapping("/history/{gameId}")
 	@Operation(summary = "게임 상세 정보 조회", description = "게임 상세 정보를 조회합니다.")
-	public SuccessResponse<Page<HistoryData.DetailInfo>> getHistoryDetail(@CurrentUser Long userId,
+	public SuccessResponse<PagedModel<HistoryData.DetailInfo>> getHistoryDetail(@CurrentUser Long userId,
 		@PathVariable Long gameId,
 		Pageable pageable) {
-		return SuccessResponse.of(clickGameService.getHistoryDetail(gameId, pageable));
+		return SuccessResponse.of(new PagedModel<>(clickGameService.getHistoryDetail(gameId, pageable)));
 	}
 
 	/**
@@ -103,7 +96,6 @@ public class ClickGameController {
 	public SuccessResponse<RankData.Result> getRanK(@CurrentUser Long userId) {
 		return SuccessResponse.of(clickGameService.getRankingList());
 	}
-
 
 	/**
 	 * 유저 게임 정보 조회
