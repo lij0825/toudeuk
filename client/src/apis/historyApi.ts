@@ -24,6 +24,8 @@ export const fetchHistories = async (
     { params: filteredParams }
   );
   const data = response.data;
+
+  console.log("API Response Data:", response.data);
   if (!data.success) {
     throw new Error(response.data.message);
   }
