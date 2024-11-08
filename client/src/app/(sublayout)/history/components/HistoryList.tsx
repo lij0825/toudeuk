@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { useInfiniteQuery, QueryFunctionContext } from "@tanstack/react-query";
-import { fetchHistories } from "@/apis/historyApi";
+import { fetchHistories } from "@/apis/history/historyApi";
 import { ContentInfo, HistoriesInfo, Page } from "@/types";
 import { toast } from "react-toastify";
 import HistoryItem from "./HistoryItem";
@@ -45,9 +45,7 @@ export default function HistoryList() {
     hasNextPage,
     hasPreviousPage,
     isFetchingNextPage,
-    isLoading,
     isError,
-    isSuccess,
   } = useInfiniteQuery({
     queryKey: [queryKey],
     queryFn: ({ pageParam }) =>

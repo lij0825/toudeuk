@@ -15,7 +15,7 @@ export default function useInfiniteScroll<T>({
   fetchPreviousPage,
   hasPreviousPage,
   enabled = true,
-}: InfiniteScrollParams<T>) {
+}: InfiniteScrollParams<T>): React.RefObject<HTMLDivElement> {
   const targetRef = useRef<HTMLDivElement>(null);
 
   const handleObserver = useCallback(
