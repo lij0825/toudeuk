@@ -1,6 +1,7 @@
 "use client";
 import { useWebSocketStore } from "@/store/useWebSocketStore ";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
+import Loading from "@/app/loading";
 
 export default function useOauth() {
   const connect = useWebSocketStore((state) => state.connect);
@@ -19,5 +20,5 @@ export default function useOauth() {
     }
   }, [connect]);
 
-  return <div className="">Loading</div>;
+  return Loading;
 }

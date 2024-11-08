@@ -39,12 +39,6 @@ export interface GameUserInfo {
   rewardType: RewardType;
 }
 
-// export interface CommonFields {
-//   createdAt: string;
-//   id: number;
-//   round: number;
-// }
-
 //전체 게임 내역 정보
 export interface ContentInfo {
   clickGameId: number;

@@ -1,53 +1,65 @@
 "use client";
 
-import { fetchPrizes } from "@/apis/prizeApi";
-import { showToast, ToastType } from "@/app/components/Toast";
-import { BaseResponse } from "@/types";
-import { PrizeInfo, PrizeRequest } from "@/types/prize";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { HistoriesInfo } from "@/types";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import useInfiniteScroll from "@/hooks/useInfiniteScroll";
+import { fetchHistories } from "@/apis/history/historyApi";
 import Link from "next/link";
-import { useRef, useState } from "react";
-import PrizeItem from "./PrizeItem";
 
 export default function PrizeList() {
-  const [size] = useState<number>(10);
-  const [page] = useState<number>(0);
-  const [sort] = useState<string>("");
+  const size = 10;
+  const queryKey = "prizes";
 
-  // toast가 이미 호출되었는지 여부를 추적
-  const hasShownToast = useRef(false);
+  const { data, fetchNextPage, hasNextPage } = useInfiniteQuery({
+    queryKey: [queryKey],
+    queryFn: ({ pageParam }) =>
+      fetchHistories({
+        page: pageParam as number,
+        size,
+      }),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage: HistoriesInfo) => {
+      const currentPage = lastPage.page.number;
+      const totalPages = lastPage.page.totalPages;
 
-  const { data } = useSuspenseQuery<Partial<BaseResponse<PrizeInfo[]>>>({
-    queryKey: ["prizes"],
-    queryFn: () => fetchPrizes({ page, size, sort } as PrizeRequest),
+      // 0-based 인덱스일 경우, totalPages - 1과 비교
+      return currentPage < totalPages - 1 ? currentPage + 1 : undefined;
+    },
     staleTime: 5 * 60 * 1000,
   });
 
-  // 에러가 발생하면 한 번만 toast를 호출
-  if (!data.success && !hasShownToast.current) {
-    showToast(ToastType.ERROR, data.message || "에러가 발생했습니다.");
-    hasShownToast.current = true; // toast가 한 번만 호출되도록 설정
-  }
+  // const contents =
 
-  const prizes = data?.data || [];
+  // const contents = data?.pages.flatMap((page) => {
 
-  return (
-    <section className="overflow-y-auto h-full scrollbar-hidden">
-      {prizes.length === 0 ? (
-        <div className="flex flex-col items-center justify-center text-black font-noto h-full">
-          <div className="mb-4 text-lg">당첨 내역이 없습니다.</div>
-          <Link
-            href="/toudeuk"
-            className="px-6 py-2 bg-blue-500 text-white rounded-md shadow-lg hover:bg-blue-600 transition-colors duration-200"
-          >
-            게임하러 가기
-          </Link>
-        </div>
-      ) : (
-        prizes.map((prize: PrizeInfo) => (
-          <PrizeItem key={prize.roundId} prizeInfo={prize} />
-        ))
-      )}
-    </section>
-  );
+  // }) || [];
+  //
+  // const { targetRef } = useInfiniteScroll({ fetchNextPage, hasNextPage });
+
+  return <section></section>;
+  //     <section className="overflow-y-auto h-full scrollbar-hidden">
+
+  //       {contents.length === 0 ? (
+  //         <div className="flex flex-col items-center justify-center text-black font-noto h-full">
+  //           <div className="mb-4 text-lg">당첨 내역이 없습니다.</div>
+  //           <Link
+  //             href="/toudeuk"
+  //             className="px-6 py-2 bg-blue-500 text-white rounded-md shadow-lg hover:bg-blue-600 transition-colors duration-200"
+  //           >
+  //             게임하러 가기
+  //           </Link>
+  //         </div>
+  //       ) : (
+
+  // <div ref = {targetRef}>
+  //         {
+
+  // contents.map((content: any) => {
+  //   return (
+  //     <div key={content.roundId} >
+
+  //   </div>
+  //   )
+
+  // }
 }
