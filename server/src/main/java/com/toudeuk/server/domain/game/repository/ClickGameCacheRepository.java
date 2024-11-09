@@ -3,6 +3,7 @@ package com.toudeuk.server.domain.game.repository;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -34,41 +35,31 @@ public class ClickGameCacheRepository {
 	private static final long MAX_CLICK = 1000; // 12000
 	private static final long COOLTIME_MINUTES = 1; // 5분
 
-	@Resource(name = "longRedisTemplate")
-	private ZSetOperations<String, Long> zSetOperations;
-
-	@Resource(name = "longRedisTemplate")
-	private ListOperations<String, Long> listOperations;
-
-	@Resource(name = "longRedisTemplate")
-	private ValueOperations<String, Long> valueOperationsLong;
-
-	@Resource(name = "StringRedisTemplate")
-	private ValueOperations<String, String> valueOperationsString;
-
-	@Resource(name = "integerRedisTemplate")
-	private ValueOperations<String, Integer> valueOperationsInt;
-
 	@Resource(name = "redisTemplate")
-	public ValueOperations<String, String> valueOperations;
+	private ZSetOperations<String, Object> zSetOperations;
+	@Resource(name = "redisTemplate")
+	private ListOperations<String, Object> listOperations;
+	@Resource(name = "redisTemplate")
+	public ValueOperations<String, Object> valueOperations;
 
 	@Autowired
-	public RedisTemplate<String, Object> redisTemplate;
-    @Autowired
-    private UserRepository userRepository;
+	public RedisTemplate<String, String> redisTemplate;
+
+	@Autowired
+	private UserRepository userRepository;
 
 	// 게임 정보 game
 	public void setGameId(Long gameId) {
-		valueOperationsLong.set(GAME_ID_KEY, gameId);
-		log.info("Set game id to " + gameId);
+		valueOperations.set(GAME_ID_KEY, gameId);
 	}
 
 	public boolean existGame() {
-		return valueOperationsLong.get(GAME_ID_KEY) != null;
+		return valueOperations.get(GAME_ID_KEY) != null;
 	}
 
+
 	public Long getGameId() {
-		return valueOperationsLong.get(GAME_ID_KEY);
+		return ((Number)valueOperations.get(GAME_ID_KEY)).longValue();
 	}
 
 	public void setGameCoolTime() {
@@ -84,19 +75,17 @@ public class ClickGameCacheRepository {
 	public LocalDateTime getGameCoolTime() {
 		log.info("valueOperations.get(GAME_COOLTIME_KEY) : " + valueOperations.get(GAME_COOLTIME_KEY));
 
-		{}
-		log.info("LocalDateTime.parse(valueOperations.get(GAME_COOLTIME_KEY) : " + LocalDateTime.parse(valueOperations.get(GAME_COOLTIME_KEY)));
-		return LocalDateTime.parse(valueOperations.get(GAME_COOLTIME_KEY));
+		return LocalDateTime.parse((String)valueOperations.get(GAME_COOLTIME_KEY));
 	}
 
 	// 총 클릭수 click:total
 	public Integer setTotalClick() {
-		valueOperationsInt.set(CLICK_TOTAL_KEY, 0);
+		valueOperations.set(CLICK_TOTAL_KEY, 0);
 		return 0;
 	}
 
 	public Integer addTotalClick() {
-		Long totalClick = valueOperationsInt.increment(CLICK_TOTAL_KEY);
+		Long totalClick = ((Number)valueOperations.increment(CLICK_TOTAL_KEY)).longValue();
 
 		log.info("totalClick : {}", totalClick);
 		if (totalClick.equals(MAX_CLICK)) {
@@ -106,19 +95,19 @@ public class ClickGameCacheRepository {
 	}
 
 	public Integer getTotalClick() {
-		return valueOperationsInt.get(CLICK_TOTAL_KEY);
+		return ((Number)valueOperations.get(CLICK_TOTAL_KEY)).intValue();
 	}
 
 	// 클릭 수 click:count
 	public Integer addUserClick(Long userId) {
-		Double score = zSetOperations.incrementScore(CLICK_COUNT_KEY, userId, 1);
+		Number score = zSetOperations.incrementScore(CLICK_COUNT_KEY, userId, 1);
 		log.info("score : {}", score);
 
 		return score == null ? 1 : score.intValue();
 	}
 
 	public Integer getUserClickCount(Long userId) { // 유저의 클릭 수
-		Double clickCount = zSetOperations.score(CLICK_COUNT_KEY, userId);
+		Number clickCount = zSetOperations.score(CLICK_COUNT_KEY, userId);
 		log.info("clickCount : {}", zSetOperations.score(CLICK_COUNT_KEY, userId));
 		return clickCount == null ? 0 : clickCount.intValue();
 	}
@@ -132,21 +121,38 @@ public class ClickGameCacheRepository {
 	}
 
 	public Long getPrevUserId(int clickCount) { // 클릭수 기준 앞 등수 유저 아이디
-		Set<Long> longSet = zSetOperations.rangeByScore(CLICK_COUNT_KEY, clickCount + 1, Integer.MAX_VALUE, 0, 1);
+
+		Set<Long> longSet = zSetOperations.rangeByScore(CLICK_COUNT_KEY, clickCount + 1, Integer.MAX_VALUE, 0, 1)
+			.stream()
+			.map(item -> ((Number) item).longValue())
+			.collect(Collectors.toSet());
+
 		return longSet.isEmpty() ? null : longSet.iterator().next();
 	}
 
 	public Long getMaxClickUserId() { // 가장 많이 누른 유저 아이디
-		Set<Long> longSet = zSetOperations.reverseRange(CLICK_COUNT_KEY, 0, 0);
+		Set<Long> longSet = zSetOperations.reverseRange(CLICK_COUNT_KEY, 0, 0)
+			.stream()
+			.map(item -> ((Number) item).longValue())
+			.collect(Collectors.toSet());
+
 		return longSet.isEmpty() ? null : longSet.iterator().next();
 	}
 
 	public List<RankData.UserScore> getRankingList() {
 		return zSetOperations.reverseRangeByScoreWithScores(CLICK_COUNT_KEY, 0, Integer.MAX_VALUE, 0, 10)
-				.stream()
-				.map(tuple -> RankData.UserScore.of(
-						valueOperationsString.get(NICKNAME_KEY + tuple.getValue()), tuple.getScore().longValue()))
-				.collect(Collectors.toList());
+			.stream()
+			.map(tuple -> {
+				try {
+					String nickname = valueOperations.get(NICKNAME_KEY + tuple.getValue()).toString();
+					return RankData.UserScore.of(nickname, ((Number)tuple.getScore()).longValue());
+				} catch (Exception e) {
+					log.error("Error processing ranking data: " + e.getMessage());
+					return null;
+				}
+			})
+			.filter(Objects::nonNull)
+			.collect(Collectors.toList());
 	}
 
 	// 클릭 순서 click:log
@@ -155,11 +161,15 @@ public class ClickGameCacheRepository {
 	}
 
 	public Long getWinner() {
-		return listOperations.index(CLICK_LOG_KEY, MAX_CLICK - 1);
+		return ((Number)listOperations.index(CLICK_LOG_KEY, MAX_CLICK - 1)).longValue();
 	}
 
 	public List<Long> getLog() {
-		return listOperations.range(CLICK_LOG_KEY, 0, MAX_CLICK - 1);
+		List<Object> logs = listOperations.range(CLICK_LOG_KEY, 0, MAX_CLICK - 1);
+
+		return logs.stream().map(
+			item -> ((Number)item).longValue()
+		).toList();
 	}
 
 	// 삭제
@@ -181,11 +191,11 @@ public class ClickGameCacheRepository {
 	public Integer getUserCash(Long userId) {
 
 
-		Integer userCash = valueOperationsInt.get(USER_CASH_KEY + userId);
+		Integer userCash = (Integer) valueOperations.get(USER_CASH_KEY + userId);
 
 		if (userCash == null) {
 			Integer cash = userRepository.findById(userId).get().getCash();
-			valueOperationsInt.set(USER_CASH_KEY + userId, cash);
+			valueOperations.set(USER_CASH_KEY + userId, cash);
 			return cash;
 		}
 
@@ -193,20 +203,20 @@ public class ClickGameCacheRepository {
 	}
 
 	public void updateUserCash(Long userId, long changeCash) {
-		valueOperationsInt.increment(USER_CASH_KEY + userId, changeCash);
+		valueOperations.increment(USER_CASH_KEY + userId, changeCash);
 	}
 
 
 	// 실시간 보상 제공
 	public void reward(Long userId, int reward) {
-		valueOperationsInt.increment(USER_CASH_KEY + userId, reward);
+		valueOperations.increment(USER_CASH_KEY + userId, reward);
 	}
 
 	public void setUsername(Long userId, String nickname) {
-		valueOperationsString.set(NICKNAME_KEY + userId, nickname);
+		redisTemplate.opsForValue().set(NICKNAME_KEY + userId.toString(), nickname);
 	}
 
 	public String getUsername(Long userId) {
-		return valueOperationsString.get(NICKNAME_KEY + userId);
+		return redisTemplate.opsForValue().get(NICKNAME_KEY + userId.toString());
 	}
 }

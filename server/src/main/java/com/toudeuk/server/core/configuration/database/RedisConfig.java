@@ -1,6 +1,7 @@
 package com.toudeuk.server.core.configuration.database;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -39,17 +40,12 @@ public class RedisConfig {
         return new LettuceConnectionFactory(redisStandaloneConfiguration);
     }
 
-//    @Bean
-//    public MessageListenerAdapter listenerAdapterChatRoomList(RedisSubscriber subscriber) {
-//        return new MessageListenerAdapter(subscriber, "sendRoomList");
-//    }
-
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
 
-//         ObjectMapper에 DefaultTyping 설정
+        //         ObjectMapper에 DefaultTyping 설정
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
@@ -57,48 +53,14 @@ public class RedisConfig {
         GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(objectMapper);
         template.setDefaultSerializer(serializer);
 
-//        // 일반적인 key : value의 경우 직렬화
+        //        // 일반적인 key : value의 경우 직렬화
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(serializer);
-//
-//        // Hash를 사용할 경우 직렬화
+        //
+        //        // Hash를 사용할 경우 직렬화
         template.setHashKeySerializer(new StringRedisSerializer());
         template.setHashValueSerializer(serializer);
 
         return template;
     }
-    @Bean
-    public RedisTemplate<String, Long> longRedisTemplate(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<String, Long> template = new RedisTemplate<>();
-        template.setConnectionFactory(connectionFactory);
-
-        template.setKeySerializer( new StringRedisSerializer() );
-        template.setHashValueSerializer( new GenericToStringSerializer< Long >( Long.class ) );
-        template.setValueSerializer( new GenericToStringSerializer< Long >( Long.class ) );
-        return template;
-    }
-
-    @Bean
-    public RedisTemplate<String, String> StringRedisTemplate(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<String, String> template = new RedisTemplate<>();
-        template.setConnectionFactory(connectionFactory);
-
-        template.setKeySerializer( new StringRedisSerializer() );
-        template.setHashValueSerializer( new GenericToStringSerializer< String >( String.class ) );
-        template.setValueSerializer( new GenericToStringSerializer< String >( String.class ) );
-        return template;
-    }
-
-    @Bean
-    public RedisTemplate<String, Integer> integerRedisTemplate(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<String, Integer> template = new RedisTemplate<>();
-        template.setConnectionFactory(connectionFactory);
-
-        template.setKeySerializer( new StringRedisSerializer() );
-        template.setHashValueSerializer( new GenericToStringSerializer< Integer >( Integer.class ) );
-        template.setValueSerializer( new GenericToStringSerializer< Integer >( Integer.class ) );
-        return template;
-    }
-
-
 }
