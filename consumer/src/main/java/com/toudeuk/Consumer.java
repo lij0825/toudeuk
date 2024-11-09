@@ -35,7 +35,7 @@ public class Consumer {
 
 
 		while (true) {
-			ConsumerRecords<String, String> records = consumer.poll(500);
+			ConsumerRecords<String, String> records = consumer.poll(100);
 			for (ConsumerRecord<String, String> record : records) {
 				String input = record.topic();
 
