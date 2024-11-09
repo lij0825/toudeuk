@@ -39,8 +39,8 @@ import static com.toudeuk.server.domain.game.entity.RewardType.*;
 @Transactional(readOnly = true)
 public class ClickGameService {
 
-	private static final int CLICK_CASH = -1;
-	private static final int FIRST_CLICK_REWARD = 500;
+    private static final int CLICK_CASH = -1;
+    private static final int FIRST_CLICK_REWARD = 500;
 
     private final ClickGameCacheRepository clickCacheRepository;
     private final ClickGameRepository clickGameRepository;
@@ -50,7 +50,7 @@ public class ClickGameService {
     private final ApplicationEventPublisher applicationEventPublisher;
     private final Producer producer;
 
-	private final SimpMessagingTemplate messagingTemplate;
+    private final SimpMessagingTemplate messagingTemplate;
 
     // 게임 시작
     @Transactional
@@ -78,6 +78,7 @@ public class ClickGameService {
             return displayInfoForClicker;
         }
 
+        clickCacheRepository.setUsername(userId, user.getNickname());
         Integer myRank = clickCacheRepository.getUserRank(userId);
         Integer myClickCount = clickCacheRepository.getUserClickCount(userId);
         Integer totalClick = clickCacheRepository.getTotalClick();
@@ -131,18 +132,20 @@ public class ClickGameService {
         clickCacheRepository.updateUserCash(userId, CLICK_CASH);
 
         Integer userClick = clickCacheRepository.addUserClick(userId);
+        // 최초 클릭자라면 => username이라는 키값을 가지고 있지 않으므로 설정해줘야한다.
+        if(userClick == -1){
+            User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+            String nickname = user.getNickname();
+            clickCacheRepository.setUsername(userId, nickname);
+            userClick = clickCacheRepository.addUserClick(userId);
+        }
+
         Integer totalClick = clickCacheRepository.addTotalClick();
         Integer userRank = clickCacheRepository.getUserRank(userId);
         List<RankData.UserScore> rankingList = clickCacheRepository.getRankingList();
         String latestClicker = clickCacheRepository.getUsername(userId);
         RewardType rewardType = RewardType.from(totalClick);
 
-        if(userClick == 1){
-            User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
-            String nickname = user.getNickname();
-            clickCacheRepository.setUsername(userId, nickname);
-            latestClicker = clickCacheRepository.getUsername(userId);
-        }
         //!  여기서 보상을 결정하고 레디스에 넣는 작업을 끝내야함, 이휴 컨슈머에서는 오로지 MYSQL만 건들도록
         KafkaClickDto clickDto = new KafkaClickDto(
                 userId,
@@ -264,15 +267,15 @@ public class ClickGameService {
         messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
     }
 
-	public Page<HistoryData.DetailLog> getHistoryDetail(Long gameId, Pageable pageable) {
+    public Page<HistoryData.DetailLog> getHistoryDetail(Long gameId, Pageable pageable) {
 
         Page<ClickGameLog> clickGameLogs = clickGameLogRepository.findByGameId(gameId, pageable);
 
         return clickGameLogs.map(clickGameLog ->
-            HistoryData.DetailLog.of(clickGameLog, clickGameLog.getUser())
+                HistoryData.DetailLog.of(clickGameLog, clickGameLog.getUser())
         );
 
-	}
+    }
 
 //    public RankData.Result getRankingList() {
 //        Set<ZSetOperations.TypedTuple<Long>> rankSet = clickCacheRepository.getRankingList();
@@ -323,26 +326,26 @@ public class ClickGameService {
         );
     }
 
-	public HistoryData.RewardInfo getHistoryReward(Long gameId) {
+    public HistoryData.RewardInfo getHistoryReward(Long gameId) {
 
-		ClickGame clickGame = clickGameRepository.findById(gameId).orElseThrow(
-			() -> new BaseException(GAME_NOT_FOUND)
-		);
+        ClickGame clickGame = clickGameRepository.findById(gameId).orElseThrow(
+                () -> new BaseException(GAME_NOT_FOUND)
+        );
 
-		HistoryData.WinnerAndMaxClickerData winnerAndMaxClickerData = clickGameRewardLogRepository.findWinnerAndMaxClickerByClickGameId(
-			clickGame.getId()).orElseThrow(
-			() -> new BaseException(REWARD_USER_NOT_FOUND)
-		);
+        HistoryData.WinnerAndMaxClickerData winnerAndMaxClickerData = clickGameRewardLogRepository.findWinnerAndMaxClickerByClickGameId(
+                clickGame.getId()).orElseThrow(
+                () -> new BaseException(REWARD_USER_NOT_FOUND)
+        );
 
-		List<HistoryData.RewardUser> middleRewardUsers = clickGameRewardLogRepository.findMiddleByClickGameId(gameId)
-			.orElseThrow(() -> new BaseException(REWARD_USER_NOT_FOUND));
+        List<HistoryData.RewardUser> middleRewardUsers = clickGameRewardLogRepository.findMiddleByClickGameId(gameId)
+                .orElseThrow(() -> new BaseException(REWARD_USER_NOT_FOUND));
 
-		return HistoryData.RewardInfo.of(
-			winnerAndMaxClickerData,
-			middleRewardUsers
-		);
+        return HistoryData.RewardInfo.of(
+                winnerAndMaxClickerData,
+                middleRewardUsers
+        );
 
-	}
+    }
     enum GameStatus {
         COOLTIME, RUNNING;
     }

@@ -142,17 +142,9 @@ public class ClickGameCacheRepository {
 	public List<RankData.UserScore> getRankingList() {
 		return zSetOperations.reverseRangeByScoreWithScores(CLICK_COUNT_KEY, 0, Integer.MAX_VALUE, 0, 10)
 			.stream()
-			.map(tuple -> {
-				try {
-					String nickname = valueOperations.get(NICKNAME_KEY + tuple.getValue()).toString();
-					return RankData.UserScore.of(nickname, ((Number)tuple.getScore()).longValue());
-				} catch (Exception e) {
-					log.error("Error processing ranking data: " + e.getMessage());
-					return null;
-				}
-			})
-			.filter(Objects::nonNull)
-			.collect(Collectors.toList());
+			.map(tuple -> RankData.UserScore.of(
+					redisTemplate.opsForValue().get(NICKNAME_KEY + tuple.getValue()), tuple.getScore().longValue()))
+			.toList();
 	}
 
 	// 클릭 순서 click:log
