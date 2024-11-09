@@ -24,6 +24,8 @@ public enum ErrorCode {
 	EXPIRED_REFRESH_TOKEN(2006, HttpStatus.UNAUTHORIZED, "만료된 리프레시 토큰입니다."),
 	INVALID_ACCESS_TOKEN(2008, HttpStatus.UNAUTHORIZED, "유효하지 않은 액세스 토큰입니다."),
 
+	USER_NICKNAME_DUPLICATION(2009, HttpStatus.BAD_REQUEST, "닉네임이 중복되었습니다."),
+
 	// Item
 	ITEM_NOT_FOUND(3000, HttpStatus.NOT_FOUND, "아이템을 찾을 수 없습니다."),
 	USER_ITEM_NOT_FOUND(3001, HttpStatus.NOT_FOUND, "사용자의 아이템을 찾을 수 없습니다."),

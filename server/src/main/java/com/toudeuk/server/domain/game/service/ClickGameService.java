@@ -25,8 +25,8 @@ import com.toudeuk.server.domain.game.entity.ClickGame;
 import com.toudeuk.server.domain.game.entity.ClickGameLog;
 import com.toudeuk.server.domain.game.entity.ClickGameRewardLog;
 import com.toudeuk.server.domain.game.entity.RewardType;
-import com.toudeuk.server.domain.game.kafka.ClickProducer;
-import com.toudeuk.server.domain.game.kafka.dto.KafkaClickDto;
+import com.toudeuk.server.core.kafka.Producer;
+import com.toudeuk.server.core.kafka.dto.KafkaClickDto;
 import com.toudeuk.server.domain.game.repository.ClickGameCacheRepository;
 import com.toudeuk.server.domain.game.repository.ClickGameLogRepository;
 import com.toudeuk.server.domain.game.repository.ClickGameRepository;
@@ -46,13 +46,13 @@ public class ClickGameService {
 	private static final int CLICK_CASH = -1;
 	private static final int FIRST_CLICK_REWARD = 500;
 
-	private final ClickGameCacheRepository clickCacheRepository;
-	private final ClickGameRepository clickGameRepository;
-	private final UserRepository userRepository;
-	private final ClickGameLogRepository clickGameLogRepository;
-	private final ClickGameRewardLogRepository clickGameRewardLogRepository;
-	private final ApplicationEventPublisher applicationEventPublisher;
-	private final ClickProducer clickProducer;
+    private final ClickGameCacheRepository clickCacheRepository;
+    private final ClickGameRepository clickGameRepository;
+    private final UserRepository userRepository;
+    private final ClickGameLogRepository clickGameLogRepository;
+    private final ClickGameRewardLogRepository clickGameRewardLogRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
+    private final Producer producer;
 
 	private final SimpMessagingTemplate messagingTemplate;
 
@@ -190,7 +190,9 @@ public class ClickGameService {
 			clickCacheRepository.reward(userId, reward);
 		}
 
-		clickProducer.occurClickUserId(clickDto);
+
+
+        producer.occurClickUserId(clickDto);
 
 		GameData.DisplayInfoForEvery displayInfoForEvery = GameData.DisplayInfoForEvery.of(
 			"RUNNING",

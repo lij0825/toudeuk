@@ -70,7 +70,7 @@ export default function RootLayout({
       </head>
       <body className="place-items-center">
         <ClientWrapper>
-          <main className="bg-background max-w-[412px] w-full h-full relative overflow-hidden">
+          <main className="bg-white max-w-[412px] w-full h-full relative overflow-hidden">
             {children}
             <Navbar />
           </main>

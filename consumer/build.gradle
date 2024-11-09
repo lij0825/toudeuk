@@ -46,6 +46,8 @@ dependencies {
     //  DB connection
     implementation 'mysql:mysql-connector-java:8.0.28'
 
+    // SLF4J
+    implementation 'org.slf4j:slf4j-simple:1.7.30'
 }
 
 test {

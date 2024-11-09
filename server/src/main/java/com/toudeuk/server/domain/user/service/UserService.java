@@ -132,6 +132,11 @@ public class UserService {
 
 		User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
 
+		// 닉네임 중복 체크
+		if (userRepository.findByNickname(updateInfo.getNickname()).isPresent()) {
+			throw new BaseException(USER_NICKNAME_DUPLICATION);
+		}
+
 		user.updateNickname(updateInfo.getNickname());
 
 		eventPublisher.publishEvent(new S3UploadEvent(user, updateInfo.getProfileImage()));
@@ -152,6 +157,10 @@ public class UserService {
 
 	public Integer getUserCash(Long userId) {
 		return clickGameCacheRepository.getUserCash(userId);
+	}
+
+	public Boolean checkNickname(String nickname) {
+		return userRepository.findByNickname(nickname).isEmpty();
 	}
 
 	//    public Long save(AddUserRequest dto) {
