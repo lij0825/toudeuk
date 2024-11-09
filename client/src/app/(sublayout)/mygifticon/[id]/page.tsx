@@ -116,7 +116,7 @@ export default function MyGifticonDetail({
 
             {/* 유효기간 정보 섹션 */}
             <section className="w-full flex justify-center mb-4">
-              <div className="w-full max-w-md bg-white text-xs text-center bg-[#EBEBEB] py-2">
+              <div className="w-full max-w-md  text-xs text-center bg-[#EBEBEB] py-2">
                 <p className="text-gray-500">유효기간</p>
                 <p className="">{expirationDate}</p>
                 <p className="text-red-500 mt-1">환불 불가</p>

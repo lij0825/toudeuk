@@ -33,6 +33,17 @@ export default function MyGifticon() {
   const { data: usergifticons = [], isError } = useQuery<UserGifticonInfo[]>({
     queryKey: ["usergifticons"],
     queryFn: fetchUserGifticons,
+    select: (data) => {
+      // 배열을 역순으로 복사하고 used가 true인 항목을 마지막으로 정렬
+      return data
+        .slice() // 배열 복사
+        .reverse() // 역순으로 정렬 (가장 최신 항목이 위로)
+        .sort((a, b) => {
+          // used가 false인 항목이 먼저 오게 정렬
+          if (a.used === b.used) return 0; // 둘 다 같으면 순서 유지
+          return a.used ? 1 : -1; // used가 true면 뒤로 보냄
+        });
+    },
   });
 
   if (isError) {
@@ -154,6 +165,7 @@ export default function MyGifticon() {
                 width={80}
                 height={80}
                 autoplay={true}
+                isSelected={true}
               />
               <p className="text-gray-500 text-md px-4">
                 보유한 기프티콘이 없습니다
@@ -174,23 +186,31 @@ export default function MyGifticon() {
             )
             .map((gifticon: UserGifticonInfo) => (
               <Link
-                key={gifticon.userItemId}
-                href={`/mygifticon/${gifticon.userItemId}`}
-                className="block p-4 rounded-lg mb-4 bg-[#ebebeb] hover:shadow-xl transition-all duration-200 active:scale-95 w-full"
-              >
-                <div className="flex justify-center w-full">
-                  <Image
-                    src={gifticon.itemImage}
-                    alt={gifticon.itemName}
-                    width={170}
-                    height={80}
-                    className="h-20 w-full rounded-lg object-cover shadow-sm"
-                  />
-                </div>
-                <div className="text-center mt-4 font-semibold text-gray-700">
-                  {gifticon.itemName}
-                </div>
-              </Link>
+              key={gifticon.userItemId}
+              href={`/mygifticon/${gifticon.userItemId}`}
+              className={`block p-4 rounded-lg mb-4 bg-[#ebebeb] hover:shadow-xl transition-all duration-200 active:scale-95 w-full ${
+                gifticon.used ? "opacity-50" : ""
+              }`}
+              style={{
+                pointerEvents: gifticon.used ? "none" : "auto", 
+              }}
+            >
+              <div className="flex justify-center w-full relative">
+                <Image
+                  src={gifticon.itemImage}
+                  alt={gifticon.itemName}
+                  width={170}
+                  height={80}
+                  className="h-20 w-full rounded-lg object-cover shadow-sm"
+                />
+                {gifticon.used && (
+                  <div className="absolute inset-0 bg-gray-500 opacity-50 rounded-lg" />
+                )}
+              </div>
+              <div className="text-center mt-4 font-semibold text-gray-700">
+                {gifticon.itemName}
+              </div>
+            </Link>
             ))
         )}
       </section>

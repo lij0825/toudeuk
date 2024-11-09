@@ -22,7 +22,7 @@ export default function HistoryPage() {
   };
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden font-noto">
+    <div className="flex flex-col h-full overflow-hidden font-noto">
       <section className="flex-shrink-0 p-4 bg-accent-2">
         <p className="text-2xl font-bold">게임 기록</p>
         <div className="flex justify-between items-center mt-2">
@@ -41,8 +41,7 @@ export default function HistoryPage() {
         </div>
       </section>
 
-      <section className="flex-1 overflow-y-auto">
-        {" "}
+      <section className="flex-1 overflow-y-auto scrollbar-hidden">
         {/* 스크롤 컨테이너 설정 */}
         {selected === SelectType.HISTORY ? (
           <Suspense fallback={<div className="p-4">로딩 중...</div>}>

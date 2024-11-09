@@ -87,7 +87,7 @@ export default function HistoryList() {
   }, [hasNextPage, fetchNextPage, isFetchingNextPage]);
 
   return (
-    <div className="h-full overflow-y-auto p-4 scrollbar-hidden">
+    <div className="p-4">
       {contents.length === 0 ? (
         <div className="text-center text-gray-500">
           <p>비어있어요 ㅠ</p>
