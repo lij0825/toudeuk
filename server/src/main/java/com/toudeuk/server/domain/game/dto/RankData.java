@@ -36,4 +36,17 @@ public class RankData {
         }
     }
 
+    @Data
+    public static class UserScore{
+        private String nickname;
+        private Long score;
+
+        public static UserScore of(String nickname, Long score) {
+            UserScore userScore = new UserScore();
+            userScore.nickname = nickname;
+            userScore.score = score;
+            return userScore;
+        }
+    }
+
 }

@@ -86,17 +86,19 @@ public class ClickGameController {
 		return SuccessResponse.of(new PagedModel<>(clickGameService.getHistoryDetail(gameId, pageable)));
 	}
 
-	/**
+
+	// ! Deprecated - 랭킹페이지
+	/**!
 	 * 게임 랭킹 조회
 	 *
 	 * @param userId, gameId
 	 * @return {@link SuccessResponse <List<Map<String, Object>>>}
 	 */
-	@GetMapping("/rank")
-	@Operation(summary = "게임 랭킹 조회", description = "게임 랭킹을 조회합니다.")
-	public SuccessResponse<RankData.Result> getRanK(@CurrentUser Long userId) {
-		return SuccessResponse.of(clickGameService.getRankingList());
-	}
+//	@GetMapping("/rank")
+//	@Operation(summary = "게임 랭킹 조회", description = "게임 랭킹을 조회합니다.")
+//	public SuccessResponse<RankData.Result> getRanK(@CurrentUser Long userId) {
+//		return SuccessResponse.of(clickGameService.getRankingList());
+//	}
 
 	/**
 	 * 유저 게임 정보 조회
