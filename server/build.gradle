@@ -32,7 +32,6 @@ dependencies {
 
     // JSON Converter
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.11.0'
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
     implementation 'com.fasterxml.jackson.core:jackson-databind'
 
     // TEST
@@ -44,6 +43,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     runtimeOnly 'com.mysql:mysql-connector-j'
+
+    //Java TimeModule
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.0' // Jackson 버전에 맞춰 변경
 
     // Lombok
     compileOnly 'org.projectlombok:lombok'

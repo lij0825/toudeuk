@@ -1,5 +1,7 @@
 package com.toudeuk.server.domain.game.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.toudeuk.server.domain.game.dto.GameData;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedModel;
@@ -38,13 +40,12 @@ public class ClickGameController {
 	//  * @param userId
 	//  * @return {@link SuccessResponse<GameData.DisplayInfoForClicker>}
 	//  */
-	// @PostMapping(value = "/click")
-	// @Operation(summary = "클릭", description = "버튼을 클릭합니다.")
-	// public SuccessResponse<GameData.DisplayInfoForClicker> click(@CurrentUser Long userId) throws
-	// 	JsonProcessingException {
-	// 	clickGameService.asyncClick(userId);
-	// 	return SuccessResponse.of(clickGameService.getGameDisplayData(userId));
-	// }
+	 @PostMapping(value = "/click")
+	 @Operation(summary = "클릭", description = "버튼을 클릭합니다.")
+	 public SuccessResponse<GameData.DisplayInfoForClicker> click(@CurrentUser Long userId) throws
+			 JsonProcessingException {
+	 	return SuccessResponse.of(clickGameService.click(userId));
+	 }
 
 	/**
 	 * 게임 시작
@@ -97,17 +98,19 @@ public class ClickGameController {
 		return SuccessResponse.of(new PagedModel<>(clickGameService.getHistoryDetail(gameId, pageable)));
 	}
 
-	/**
+
+	// ! Deprecated - 랭킹페이지
+	/**!
 	 * 게임 랭킹 조회
 	 *
 	 * @param userId, gameId
 	 * @return {@link SuccessResponse <List<Map<String, Object>>>}
 	 */
-	@GetMapping("/rank")
-	@Operation(summary = "게임 랭킹 조회", description = "게임 랭킹을 조회합니다.")
-	public SuccessResponse<RankData.Result> getRanK(@CurrentUser Long userId) {
-		return SuccessResponse.of(clickGameService.getRankingList());
-	}
+//	@GetMapping("/rank")
+//	@Operation(summary = "게임 랭킹 조회", description = "게임 랭킹을 조회합니다.")
+//	public SuccessResponse<RankData.Result> getRanK(@CurrentUser Long userId) {
+//		return SuccessResponse.of(clickGameService.getRankingList());
+//	}
 
 	/**
 	 * 유저 게임 정보 조회

@@ -5,13 +5,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
+import com.toudeuk.server.domain.game.dto.RankData;
 import com.toudeuk.server.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.ListOperations;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.data.redis.core.ZSetOperations;
+import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Repository;
 
 import jakarta.annotation.Resource;
@@ -28,6 +27,7 @@ public class ClickGameCacheRepository {
 	private static final String CLICK_LOG_KEY = "click:log";
 	private static final String GAME_ID_KEY = "game:id";
 	private static final String GAME_COOLTIME_KEY = "game:cooltime";
+	private static final String NICKNAME_KEY = "user:id:";
 
 	private static final String USER_CASH_KEY = "cash:";
 
@@ -49,6 +49,8 @@ public class ClickGameCacheRepository {
 	@Resource(name = "integerRedisTemplate")
 	private ValueOperations<String, Integer> valueOperationsInt;
 
+	@Resource(name = "redisTemplate")
+	public ValueOperations<String, String> valueOperations;
 
 	@Autowired
 	public RedisTemplate<String, Object> redisTemplate;
@@ -72,17 +74,19 @@ public class ClickGameCacheRepository {
 	public void setGameCoolTime() {
 		log.info("setGameCoolTime");
 		LocalDateTime expiredAt = LocalDateTime.now().plusMinutes(COOLTIME_MINUTES);
-		redisTemplate.opsForValue().set(GAME_COOLTIME_KEY, expiredAt.toString(), Duration.ofMinutes(COOLTIME_MINUTES));
-
-
+		valueOperations.set(GAME_COOLTIME_KEY, expiredAt.toString(), Duration.ofMinutes(COOLTIME_MINUTES));
 	}
 
 	public boolean isGameCoolTime() {
 		return Boolean.TRUE.equals(redisTemplate.hasKey(GAME_COOLTIME_KEY));
 	}
 
-	public String getGameCoolTime() {
-		return valueOperationsString.get(GAME_COOLTIME_KEY);
+	public LocalDateTime getGameCoolTime() {
+		log.info("valueOperations.get(GAME_COOLTIME_KEY) : " + valueOperations.get(GAME_COOLTIME_KEY));
+
+		{}
+		log.info("LocalDateTime.parse(valueOperations.get(GAME_COOLTIME_KEY) : " + LocalDateTime.parse(valueOperations.get(GAME_COOLTIME_KEY)));
+		return LocalDateTime.parse(valueOperations.get(GAME_COOLTIME_KEY));
 	}
 
 	// 총 클릭수 click:total
@@ -91,14 +95,14 @@ public class ClickGameCacheRepository {
 		return 0;
 	}
 
-	public Long addTotalClick() {
+	public Integer addTotalClick() {
 		Long totalClick = valueOperationsInt.increment(CLICK_TOTAL_KEY);
 
 		log.info("totalClick : {}", totalClick);
 		if (totalClick.equals(MAX_CLICK)) {
 			setGameCoolTime();
 		}
-		return totalClick;
+		return totalClick.intValue();
 	}
 
 	public Integer getTotalClick() {
@@ -119,9 +123,12 @@ public class ClickGameCacheRepository {
 		return clickCount == null ? 0 : clickCount.intValue();
 	}
 
-	public Long getUserRank(Long userId) { // 유저의 클릭 랭킹
+	public Integer getUserRank(Long userId) { // 유저의 클릭 랭킹
 		Long rank = zSetOperations.reverseRank(CLICK_COUNT_KEY, userId);
-		return rank == null ? -1 : rank;
+		if(rank == null){
+			return -1;
+		}
+		return rank.intValue() + 1;
 	}
 
 	public Long getPrevUserId(int clickCount) { // 클릭수 기준 앞 등수 유저 아이디
@@ -134,8 +141,12 @@ public class ClickGameCacheRepository {
 		return longSet.isEmpty() ? null : longSet.iterator().next();
 	}
 
-	public Set<ZSetOperations.TypedTuple<Long>> getRankingList() {
-		return zSetOperations.reverseRangeByScoreWithScores(CLICK_COUNT_KEY, 0, Integer.MAX_VALUE);
+	public List<RankData.UserScore> getRankingList() {
+		return zSetOperations.reverseRangeByScoreWithScores(CLICK_COUNT_KEY, 0, Integer.MAX_VALUE, 0, 10)
+				.stream()
+				.map(tuple -> RankData.UserScore.of(
+						valueOperationsString.get(NICKNAME_KEY + tuple.getValue()), tuple.getScore().longValue()))
+				.collect(Collectors.toList());
 	}
 
 	// 클릭 순서 click:log
@@ -191,4 +202,11 @@ public class ClickGameCacheRepository {
 		valueOperationsInt.increment(USER_CASH_KEY + userId, reward);
 	}
 
+	public void setUsername(Long userId, String nickname) {
+		valueOperationsString.set(NICKNAME_KEY + userId, nickname);
+	}
+
+	public String getUsername(Long userId) {
+		return valueOperationsString.get(NICKNAME_KEY + userId);
+	}
 }
