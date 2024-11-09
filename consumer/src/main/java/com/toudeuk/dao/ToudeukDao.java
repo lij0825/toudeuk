@@ -11,9 +11,7 @@ public class ToudeukDao {
 
 	private static ToudeukDao instance;
 
-	private ToudeukDao() {
-
-	}
+	private ToudeukDao() {}
 
 	public static synchronized ToudeukDao getInstance() {
 		if (instance == null) {
@@ -22,81 +20,72 @@ public class ToudeukDao {
 		return instance;
 	}
 
-	public void insertClickLog(Long userId, Long gameId, int totalClickCount) {
-		String sql = """
-			INSERT INTO click_game_log (user_id, click_game_id, click_order, created_at) 
-			VALUES (?, ?, ?, ?)
-			""";
+	public Connection startTransaction() throws SQLException {
+		Connection conn = ConnectionPool.getConnection();
+		conn.setAutoCommit(false);
+		return conn;
+	}
 
-		try (Connection conn = ConnectionPool.getConnection();
-			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	public void commitTransaction(Connection conn) throws SQLException {
+		conn.commit();
+	}
 
+	public void rollbackTransaction(Connection conn) throws SQLException {
+		conn.rollback();
+	}
+
+	public void closeConnection(Connection conn) throws SQLException {
+		if (conn != null) {
+			conn.setAutoCommit(true);
+			conn.close();
+		}
+	}
+
+	public void insertClickLog(Connection conn, Long userId, Long gameId, int totalClickCount) throws SQLException {
+		String sql = "INSERT INTO click_game_log (user_id, click_game_id, click_order, created_at) VALUES (?, ?, ?, ?)";
+		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setLong(1, userId);
 			pstmt.setLong(2, gameId);
 			pstmt.setInt(3, totalClickCount);
 			pstmt.setObject(4, LocalDateTime.now());
-
 			pstmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
 	}
 
-	public void insertRewardLog(Long userId, Long gameId, int reward, int totalClickCount, String string) {
-		String sql = """
-			INSERT INTO click_game_reward_log (user_id, click_game_id, reward, click_count, click_game_reward_type, created_at) 
-			VALUES (?, ?, ?, ?, ?, ?)
-			""";
-
-		try (Connection conn = ConnectionPool.getConnection();
-			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
+	public void insertRewardLog(Connection conn, Long userId, Long gameId, int reward, int totalClickCount, String rewardType) throws SQLException {
+		String sql = "INSERT INTO click_game_reward_log (user_id, click_game_id, reward, click_count, click_game_reward_type, created_at) VALUES (?, ?, ?, ?, ?, ?)";
+		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setLong(1, userId);
 			pstmt.setLong(2, gameId);
 			pstmt.setInt(3, reward);
 			pstmt.setInt(4, totalClickCount);
-			pstmt.setString(5, string);
+			pstmt.setString(5, rewardType);
 			pstmt.setObject(6, LocalDateTime.now());
-
 			pstmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
-
-
 	}
 
+	public void insertUserItem(Connection conn, Long userId, Long itemId) throws SQLException {
+		String sql = "INSERT INTO user_items (user_id, item_id, is_used, created_at, updated_at) VALUES (?, ?, ?, NOW(), NOW())";
+		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.setLong(1, userId);
+			pstmt.setLong(2, itemId);
+			pstmt.setBoolean(3, false);
 
-	//
-	//
-	// public void insertToudeuk(ToudeukDto dto) throws SQLException {
-	// 	String sql = "INSERT INTO toudeuk (field1, field2, field3) VALUES (?, ?, ?)";
-	//
-	//
-	// 	try (Connection conn = ConnectionPool.getConnection();
-	// 		 PreparedStatement pstmt = conn.prepareStatement(sql)) {
-	//
-	// 		pstmt.setString(1, dto.getField1());
-	// 		pstmt.setInt(2, dto.getField2());
-	// 		pstmt.setBoolean(3, dto.isField3());
-	//
-	// 		pstmt.executeUpdate();
-	// 	}
-	// }
-	//
-	//
-	// public void updateToudeuk(ToudeukDto dto) throws SQLException {
-	// 	String sql = "UPDATE toudeuk SET field1 = ?, field2 = ?, field3 = ? WHERE id = ?";
-	//
-	// 	try (Connection conn = ConnectionPool.getConnection();
-	// 		 PreparedStatement pstmt = conn.prepareStatement(sql)) {
-	//
-	// 		pstmt.setString(1, dto.getField1());
-	// 		pstmt.setInt(2, dto.getField2());
-	// 		pstmt.setBoolean(3, dto.isField3());
-	// 		pstmt.setLong(4, dto.getId());
-	//
-	// 		pstmt.executeUpdate();
-	// 	}
-	// }
+			pstmt.executeUpdate();
+		}
+	}
+
+	public void insertCashLog(Connection conn, Long userId, int changeCash, int resultCash, String itemName, String cashLogType) throws SQLException {
+		String sql = "INSERT INTO cash_log (user_id, change_cash, result_cash, cash_name, cash_log_type, created_at) VALUES (?, ?, ?, ?, ?, ?)";
+		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.setLong(1, userId);
+			pstmt.setInt(2, changeCash);
+			pstmt.setInt(3, resultCash);
+			pstmt.setString(4, itemName);
+			pstmt.setString(5, cashLogType);
+			pstmt.setObject(6, LocalDateTime.now());
+			pstmt.executeUpdate();
+		}
+	}
 }

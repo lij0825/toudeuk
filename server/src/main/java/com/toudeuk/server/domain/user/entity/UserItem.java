@@ -1,5 +1,7 @@
 package com.toudeuk.server.domain.user.entity;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import com.toudeuk.server.core.entity.BaseEntity;
 import com.toudeuk.server.domain.item.entity.Item;
 
@@ -37,6 +39,7 @@ public class UserItem extends BaseEntity {
 	private Item item;
 
 	@Column(name = "is_used", nullable = false)
+	@ColumnDefault("false")
 	private boolean isUsed;
 
 	public static UserItem create(User user, Item item) {
