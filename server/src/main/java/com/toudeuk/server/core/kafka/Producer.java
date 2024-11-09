@@ -29,8 +29,7 @@ public class Producer {
 	private final KafkaTemplate<String, KafkaItemBuyDto> itemBuyKafkaTemplate;
 	private final KafkaTemplate<String, KafkaChargingDto> chargingKafkaTemplate;
 
-
-	// ! 카프카 발행 설정 완료 , 로직 추가 해야함.
+	
 	public void occurClickUserId(KafkaClickDto clickDto)  {
 		clickKafkaTemplate.send(CLICK_TOPIC, clickDto);
 	}
