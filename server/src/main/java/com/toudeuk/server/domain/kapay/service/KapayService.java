@@ -6,6 +6,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -14,7 +15,10 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.toudeuk.server.core.exception.BaseException;
 import com.toudeuk.server.core.exception.ErrorCode;
+import com.toudeuk.server.core.kafka.Producer;
+import com.toudeuk.server.core.kafka.dto.KafkaChargingDto;
 import com.toudeuk.server.core.response.ErrorResponse;
 import com.toudeuk.server.domain.kapay.dto.ApproveRequest;
 import com.toudeuk.server.domain.kapay.dto.ApproveResponse;
@@ -22,6 +26,7 @@ import com.toudeuk.server.domain.kapay.dto.ReadyRequest;
 import com.toudeuk.server.domain.kapay.dto.ReadyResponse;
 import com.toudeuk.server.domain.user.entity.User;
 import com.toudeuk.server.domain.user.event.UserPaymentEvent;
+import com.toudeuk.server.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +37,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class KapayService {
 
+	private final Producer producer;
+	private final UserRepository userRepository;
 	@Value("${kakaopay.api.secret.key}")
 	private String kakaopaySecretKey;
 
@@ -119,7 +126,10 @@ public class KapayService {
 
 			if (approveResponse != null) {
 				Integer totalAmount = approveResponse.getAmount().getTotal(); // 결제 금액
-				eventPublisher.publishEvent(new UserPaymentEvent(user, totalAmount));
+
+				//! 충전하는부분 이제 이벤트로 처리 못하지 않을까? 싶슴당? 컨슈머에서 처리하기 때문에
+				producer.occurChargeCash(new KafkaChargingDto(user.getId(), totalAmount, user.getCash() + totalAmount));
+				// eventPublisher.publishEvent(new UserPaymentEvent(user, totalAmount));
 			}
 
 			return ResponseEntity.ok(approveResponse);
@@ -144,5 +154,14 @@ public class KapayService {
 		} catch (Exception ex) {
 			return ResponseEntity.status(500).body(ErrorResponse.of(ErrorCode.SERVER_ERROR, ex.getMessage()));
 		}
+	}
+
+	public void chargeCash(KafkaChargingDto kafkaChargingDto) {
+
+		User user = userRepository.findById(kafkaChargingDto.getUserId()).orElseThrow(
+			() -> new BaseException(ErrorCode.USER_NOT_FOUND)
+		);
+
+		eventPublisher.publishEvent(new UserPaymentEvent(user, kafkaChargingDto.getTotalAmount()));
 	}
 }
