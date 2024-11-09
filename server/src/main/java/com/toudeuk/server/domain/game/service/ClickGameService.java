@@ -323,23 +323,14 @@ public class ClickGameService {
 		messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
 	}
 
-	public Page<HistoryData.DetailInfo> getHistoryDetail(Long gameId, Pageable pageable) {
+	public Page<HistoryData.DetailLog> getHistoryDetail(Long gameId, Pageable pageable) {
 
-		return clickGameLogRepository.findAllByOrderByIdDesc(pageable).map(
-			clickGameLog -> HistoryData.DetailInfo.of(
-				clickGameLog.getUser()
-			)
-		);
+        Page<ClickGameLog> clickGameLogs = clickGameLogRepository.findByGameId(gameId, pageable);
 
-		// 게임 ID에 해당하는 ClickGame 정보를 조회
-		ClickGame clickGame = clickGameRepository.findById(gameId)
-			.orElseThrow(() -> new BaseException(GAME_NOT_FOUND));
+        return clickGameLogs.map(clickGameLog ->
+            HistoryData.DetailLog.of(clickGameLog, clickGameLog.getUser())
+        );
 
-		// 게임 ID에 해당하는 모든 사용자 정보를 페이지네이션하여 조회
-		Page<HistoryData.RewardUser> pagedUsers = clickGameLogRepository.findAllUsersByGameId(gameId, pageable);
-
-		// 조회한 정보를 바탕으로 HistoryData.DetailInfo 객체를 생성하여 페이지로 반환
-		return pagedUsers.map(user -> HistoryData.DetailInfo.of(clickGame, Collections.singletonList(user)));
 	}
 
 	public RankData.Result getRankingList() {

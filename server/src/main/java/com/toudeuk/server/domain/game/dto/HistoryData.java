@@ -3,6 +3,7 @@ package com.toudeuk.server.domain.game.dto;
 import java.util.List;
 
 import com.toudeuk.server.domain.game.entity.ClickGame;
+import com.toudeuk.server.domain.game.entity.ClickGameLog;
 import com.toudeuk.server.domain.game.entity.RewardType;
 import com.toudeuk.server.domain.user.entity.User;
 
@@ -22,6 +23,26 @@ public class HistoryData {
 			winnerAndMaxClicker.maxClicker = maxClicker;
 			return winnerAndMaxClicker;
 		}
+	}
+
+	@Data
+	public static class DetailLog{
+		private Long clickGameId;
+		private String nickname;
+		private String profileImg;
+		private Integer clickOrder;
+		private String createdAt;
+
+		public static DetailLog of(ClickGameLog clickGameLog,User user) {
+			DetailLog detailLog = new DetailLog();
+			detailLog.clickGameId = clickGameLog.getId();
+			detailLog.nickname = user.getName();
+			detailLog.profileImg = user.getProfileImg();
+			detailLog.clickOrder = clickGameLog.getOrder();
+			detailLog.createdAt = clickGameLog.getCreatedAt().toString();
+			return detailLog;
+		}
+
 	}
 
 	@Data
@@ -67,18 +88,6 @@ public class HistoryData {
 			allInfo.winner = winnerAndMaxClicker.winner;
 			allInfo.maxClicker = winnerAndMaxClicker.maxClicker;
 			return allInfo;
-		}
-	}
-
-	@Data
-	public static class DetailInfo {
-		private RewardUser allUsers;
-
-		public static DetailInfo of(
-			RewardUser allUsers) {
-			DetailInfo detailInfo = new DetailInfo();
-			detailInfo.allUsers = allUsers;
-			return detailInfo;
 		}
 	}
 
