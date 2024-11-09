@@ -4,7 +4,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import com.toudeuk.server.domain.game.dto.RankData;
@@ -24,10 +23,9 @@ public class ClickGameCacheRepository {
 
 	private static final String CLICK_TOTAL_KEY = "click:total";
 	private static final String CLICK_COUNT_KEY = "click:count";
-	private static final String CLICK_LOG_KEY = "click:log";
 	private static final String GAME_ID_KEY = "game:id";
 	private static final String GAME_COOLTIME_KEY = "game:cooltime";
-	private static final String NICKNAME_KEY = "user:id:";
+	private static final String NICKNAME_KEY = "nickname:";
 
 	private static final String USER_CASH_KEY = "cash:";
 
@@ -35,7 +33,10 @@ public class ClickGameCacheRepository {
 	private static final long COOLTIME_MINUTES = 1; // 5분
 
 	@Resource(name = "longRedisTemplate")
-	private ZSetOperations<String, Long> zSetOperations;
+	private ZSetOperations<String, Long> zSetOperationsLong;
+
+	@Resource(name = "StringRedisTemplate")
+	private ZSetOperations<String, String> zSetOperationsString;
 
 	@Resource(name = "longRedisTemplate")
 	private ListOperations<String, Long> listOperations;
@@ -111,55 +112,35 @@ public class ClickGameCacheRepository {
 
 	// 클릭 수 click:count
 	public Integer addUserClick(Long userId) {
-		Double score = zSetOperations.incrementScore(CLICK_COUNT_KEY, userId, 1);
+		if(getUsername(userId) == null){
+			return -1;
+		}
+		Double score = zSetOperationsString.incrementScore(CLICK_COUNT_KEY, getUsername(userId), 1);
 		log.info("score : {}", score);
 
 		return score == null ? 1 : score.intValue();
 	}
 
 	public Integer getUserClickCount(Long userId) { // 유저의 클릭 수
-		Double clickCount = zSetOperations.score(CLICK_COUNT_KEY, userId);
-		log.info("clickCount : {}", zSetOperations.score(CLICK_COUNT_KEY, userId));
+		Double clickCount = zSetOperationsString.score(CLICK_COUNT_KEY, getUsername(userId));
+		log.info("clickCount : {}", zSetOperationsString.score(CLICK_COUNT_KEY, getUsername(userId)));
 		return clickCount == null ? 0 : clickCount.intValue();
 	}
 
 	public Integer getUserRank(Long userId) { // 유저의 클릭 랭킹
-		Long rank = zSetOperations.reverseRank(CLICK_COUNT_KEY, userId);
+		Long rank = zSetOperationsString.reverseRank(CLICK_COUNT_KEY, getUsername(userId));
 		if(rank == null){
 			return -1;
 		}
 		return rank.intValue() + 1;
 	}
 
-	public Long getPrevUserId(int clickCount) { // 클릭수 기준 앞 등수 유저 아이디
-		Set<Long> longSet = zSetOperations.rangeByScore(CLICK_COUNT_KEY, clickCount + 1, Integer.MAX_VALUE, 0, 1);
-		return longSet.isEmpty() ? null : longSet.iterator().next();
-	}
-
-	public Long getMaxClickUserId() { // 가장 많이 누른 유저 아이디
-		Set<Long> longSet = zSetOperations.reverseRange(CLICK_COUNT_KEY, 0, 0);
-		return longSet.isEmpty() ? null : longSet.iterator().next();
-	}
 
 	public List<RankData.UserScore> getRankingList() {
-		return zSetOperations.reverseRangeByScoreWithScores(CLICK_COUNT_KEY, 0, Integer.MAX_VALUE, 0, 10)
+		return zSetOperationsString.reverseRangeByScoreWithScores(CLICK_COUNT_KEY, 0, Integer.MAX_VALUE, 0, 10)
 				.stream()
-				.map(tuple -> RankData.UserScore.of(
-						valueOperationsString.get(NICKNAME_KEY + tuple.getValue()), tuple.getScore().longValue()))
+				.map(tuple -> RankData.UserScore.of(tuple.getValue(), tuple.getScore().longValue()))
 				.collect(Collectors.toList());
-	}
-
-	// 클릭 순서 click:log
-	public void addLog(Long userId) {
-		listOperations.rightPush(CLICK_LOG_KEY, userId);
-	}
-
-	public Long getWinner() {
-		return listOperations.index(CLICK_LOG_KEY, MAX_CLICK - 1);
-	}
-
-	public List<Long> getLog() {
-		return listOperations.range(CLICK_LOG_KEY, 0, MAX_CLICK - 1);
 	}
 
 	// 삭제
@@ -170,11 +151,11 @@ public class ClickGameCacheRepository {
 		redisTemplate.delete(CLICK_COUNT_KEY);
 		log.info("redisTemplate.delete(CLICK_COUNT_KEY);");
 
-		redisTemplate.delete(CLICK_LOG_KEY);
-		log.info("redisTemplate.delete(CLICK_LOG_KEY);");
-
 		redisTemplate.delete(GAME_ID_KEY);
 		log.info("redisTemplate.delete(GAME_ID_KEY);");
+
+		deleteByPattern(NICKNAME_KEY + "*");
+		log.info("redisTemplate.delete(NICKNAME_KEY);");
 	}
 
 	// 캐시 cash
@@ -208,5 +189,14 @@ public class ClickGameCacheRepository {
 
 	public String getUsername(Long userId) {
 		return valueOperationsString.get(NICKNAME_KEY + userId);
+	}
+
+	private void deleteByPattern(String pattern) {
+		// 패턴에 맞는 모든 키 조회
+		Set<String> keys = redisTemplate.keys(pattern);
+
+		if (keys != null && !keys.isEmpty()) {
+			redisTemplate.delete(keys);
+		}
 	}
 }
