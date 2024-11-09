@@ -1,23 +1,9 @@
 package com.toudeuk.server.domain.game.service;
 
-import static com.toudeuk.server.core.exception.ErrorCode.*;
-import static com.toudeuk.server.domain.game.entity.RewardType.*;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.toudeuk.server.core.exception.BaseException;
+import com.toudeuk.server.core.kafka.Producer;
+import com.toudeuk.server.core.kafka.dto.KafkaClickDto;
 import com.toudeuk.server.domain.game.dto.GameData;
 import com.toudeuk.server.domain.game.dto.HistoryData;
 import com.toudeuk.server.domain.game.dto.RankData;
@@ -25,17 +11,27 @@ import com.toudeuk.server.domain.game.entity.ClickGame;
 import com.toudeuk.server.domain.game.entity.ClickGameLog;
 import com.toudeuk.server.domain.game.entity.ClickGameRewardLog;
 import com.toudeuk.server.domain.game.entity.RewardType;
-import com.toudeuk.server.core.kafka.Producer;
-import com.toudeuk.server.core.kafka.dto.KafkaClickDto;
 import com.toudeuk.server.domain.game.repository.ClickGameCacheRepository;
 import com.toudeuk.server.domain.game.repository.ClickGameLogRepository;
 import com.toudeuk.server.domain.game.repository.ClickGameRepository;
 import com.toudeuk.server.domain.game.repository.ClickGameRewardLogRepository;
 import com.toudeuk.server.domain.user.entity.User;
 import com.toudeuk.server.domain.user.repository.UserRepository;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.toudeuk.server.core.exception.ErrorCode.*;
+import static com.toudeuk.server.domain.game.entity.RewardType.*;
 
 @Slf4j
 @Service
@@ -43,8 +39,8 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 public class ClickGameService {
 
-    private static final int CLICK_CASH = -1;
-    private static final int FIRST_CLICK_REWARD = 500;
+	private static final int CLICK_CASH = -1;
+	private static final int FIRST_CLICK_REWARD = 500;
 
     private final ClickGameCacheRepository clickCacheRepository;
     private final ClickGameRepository clickGameRepository;
@@ -54,7 +50,7 @@ public class ClickGameService {
     private final ApplicationEventPublisher applicationEventPublisher;
     private final Producer producer;
 
-    private final SimpMessagingTemplate messagingTemplate;
+	private final SimpMessagingTemplate messagingTemplate;
 
     // 게임 시작
     @Transactional
@@ -203,7 +199,8 @@ public class ClickGameService {
         Long userId = clickDto.getUserId();
         User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
 
-        ClickGame clickGame = clickGameRepository.findById(clickDto.getGameId()).orElseThrow(() -> new BaseException(GAME_NOT_FOUND));
+        ClickGame clickGame = clickGameRepository.findById(clickDto.getGameId())
+                .orElseThrow(() -> new BaseException(GAME_NOT_FOUND));
         Integer totalClick = clickDto.getTotalClickCount();
         RewardType rewardType = RewardType.from(totalClick);
 
@@ -267,33 +264,15 @@ public class ClickGameService {
         messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
     }
 
+	public Page<HistoryData.DetailLog> getHistoryDetail(Long gameId, Pageable pageable) {
 
-    public Page<HistoryData.DetailInfo> getHistoryDetail(Long gameId, Pageable pageable) {
+        Page<ClickGameLog> clickGameLogs = clickGameLogRepository.findByGameId(gameId, pageable);
 
-        ClickGame clickGame = clickGameRepository.findById(gameId).orElseThrow(
-                () -> new BaseException(GAME_NOT_FOUND)
+        return clickGameLogs.map(clickGameLog ->
+            HistoryData.DetailLog.of(clickGameLog, clickGameLog.getUser())
         );
 
-        HistoryData.WinnerAndMaxClickerData winnerAndMaxClickerData = clickGameRewardLogRepository.findWinnerAndMaxClickerByClickGameId(
-                clickGame.getId()).orElseThrow(
-                () -> new BaseException(REWARD_USER_NOT_FOUND)
-        );
-
-        List<HistoryData.RewardUser> middleRewardUsers = clickGameRewardLogRepository.findMiddleByClickGameId(gameId)
-                .orElseThrow(() -> new BaseException(REWARD_USER_NOT_FOUND));
-
-        List<HistoryData.RewardUser> allUsers = clickGameLogRepository.findAllUsersByGameId(gameId).orElseThrow(
-                () -> new BaseException(USER_NOT_FOUND));
-
-        return new PageImpl<>(Collections.singletonList(
-                HistoryData.DetailInfo.of(
-                        clickGame,
-                        winnerAndMaxClickerData,
-                        middleRewardUsers,
-                        allUsers
-                )
-        ), pageable, 1);
-    }
+	}
 
 //    public RankData.Result getRankingList() {
 //        Set<ZSetOperations.TypedTuple<Long>> rankSet = clickCacheRepository.getRankingList();
@@ -344,6 +323,26 @@ public class ClickGameService {
         );
     }
 
+	public HistoryData.RewardInfo getHistoryReward(Long gameId) {
+
+		ClickGame clickGame = clickGameRepository.findById(gameId).orElseThrow(
+			() -> new BaseException(GAME_NOT_FOUND)
+		);
+
+		HistoryData.WinnerAndMaxClickerData winnerAndMaxClickerData = clickGameRewardLogRepository.findWinnerAndMaxClickerByClickGameId(
+			clickGame.getId()).orElseThrow(
+			() -> new BaseException(REWARD_USER_NOT_FOUND)
+		);
+
+		List<HistoryData.RewardUser> middleRewardUsers = clickGameRewardLogRepository.findMiddleByClickGameId(gameId)
+			.orElseThrow(() -> new BaseException(REWARD_USER_NOT_FOUND));
+
+		return HistoryData.RewardInfo.of(
+			winnerAndMaxClickerData,
+			middleRewardUsers
+		);
+
+	}
     enum GameStatus {
         COOLTIME, RUNNING;
     }

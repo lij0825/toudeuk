@@ -59,6 +59,18 @@ public class UserController {
 	}
 
 	/**
+	 * 유저 닉네임 중복 확인
+	 *
+	 * @param nickname
+	 * @return {@link SuccessResponse<Boolean>}
+	 */
+	@GetMapping(value = "/nickname/check")
+	@Operation(summary = "유저 닉네임 중복 확인", description = "유저 닉네임 중복을 확인합니다.")
+	public SuccessResponse<Boolean> checkNickname(@RequestParam String nickname) {
+		return SuccessResponse.of(userService.checkNickname(nickname));
+	}
+
+	/**
 	 * 유저 정보 수정
 	 *
 	 * @param updateInfo

@@ -69,8 +69,20 @@ public class ClickGameController {
 	@GetMapping("/history")
 	@Operation(summary = "모든 게임 정보 조회", description = "모든 게임 정보를 조회합니다.")
 	public SuccessResponse<PagedModel<HistoryData.AllInfo>> getHistory(@CurrentUser Long userId,
-		@PageableDefault() Pageable pageable) {
+		 Pageable pageable) {
 		return SuccessResponse.of(new PagedModel<>(clickGameService.getAllHistory(pageable)));
+	}
+
+	/**
+	 * 게임 상세 보상 정보
+	 *
+	 * @param userId, gameId
+	 */
+	@GetMapping("/history/{gameId}/reward")
+	@Operation(summary = "게임 상세 보상 정보", description = "게임 상세 보상 정보")
+	public SuccessResponse<HistoryData.RewardInfo> getHistoryReward(@CurrentUser Long userId,
+		@PathVariable Long gameId) {
+		return SuccessResponse.of(clickGameService.getHistoryReward(gameId));
 	}
 
 	/**
@@ -80,7 +92,7 @@ public class ClickGameController {
 	 */
 	@GetMapping("/history/{gameId}")
 	@Operation(summary = "게임 상세 정보 조회", description = "게임 상세 정보를 조회합니다.")
-	public SuccessResponse<PagedModel<HistoryData.DetailInfo>> getHistoryDetail(@CurrentUser Long userId,
+	public SuccessResponse<PagedModel<HistoryData.DetailLog>> getHistoryDetail(@CurrentUser Long userId,
 		@PathVariable Long gameId,
 		Pageable pageable) {
 		return SuccessResponse.of(new PagedModel<>(clickGameService.getHistoryDetail(gameId, pageable)));
