@@ -132,7 +132,7 @@ public class ClickGameService {
         }
     }
     @Transactional
-    public void click(Long userId) throws JsonProcessingException {
+    public GameData.DisplayInfoForClicker click(Long userId) throws JsonProcessingException {
 
         // 쿨타임이면?
         if (clickCacheRepository.isGameCoolTime()) {
@@ -155,10 +155,10 @@ public class ClickGameService {
 
             // 모든 구독자에게 메시지 전송
             messagingTemplate.convertAndSend("/topic/game", displayInfoEvery);
-            // 특정 구독자에게 메시지 전송
-            messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
+//            ! 특정 구독자에게 메시지 전송 -> Http방식으로 변경
+//            messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
 
-            throw new BaseException(COOL_TIME);
+            return displayInfoForClicker;
         }
 
         Integer userCash = clickCacheRepository.getUserCash(userId);
@@ -217,7 +217,7 @@ public class ClickGameService {
         // 모든 구독자에게 메시지 전송
         messagingTemplate.convertAndSend("/topic/game", displayInfoForEvery);
 
-        // 특정 구독자에게 메시지 전송
+//      ! 특정 구독자에게 메시지 전송 -> Http방식으로 변경
         messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
 
         if (clickCacheRepository.isGameCoolTime()) {
@@ -234,6 +234,8 @@ public class ClickGameService {
             clickCacheRepository.setTotalClick();
             clickCacheRepository.setGameId(savedGame.getId());
         }
+
+        return displayInfoForClicker;
     }
 
     @Transactional
