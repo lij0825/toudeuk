@@ -10,10 +10,7 @@ import java.util.stream.Collectors;
 import com.toudeuk.server.domain.game.dto.RankData;
 import com.toudeuk.server.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.ListOperations;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.data.redis.core.ZSetOperations;
+import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Repository;
 
 import jakarta.annotation.Resource;
@@ -52,6 +49,8 @@ public class ClickGameCacheRepository {
 	@Resource(name = "integerRedisTemplate")
 	private ValueOperations<String, Integer> valueOperationsInt;
 
+	@Resource(name = "redisTemplate")
+	public ValueOperations<String, String> valueOperations;
 
 	@Autowired
 	public RedisTemplate<String, Object> redisTemplate;
@@ -75,17 +74,19 @@ public class ClickGameCacheRepository {
 	public void setGameCoolTime() {
 		log.info("setGameCoolTime");
 		LocalDateTime expiredAt = LocalDateTime.now().plusMinutes(COOLTIME_MINUTES);
-		redisTemplate.opsForValue().set(GAME_COOLTIME_KEY, expiredAt.toString(), Duration.ofMinutes(COOLTIME_MINUTES));
-
-
+		valueOperations.set(GAME_COOLTIME_KEY, expiredAt.toString(), Duration.ofMinutes(COOLTIME_MINUTES));
 	}
 
 	public boolean isGameCoolTime() {
 		return Boolean.TRUE.equals(redisTemplate.hasKey(GAME_COOLTIME_KEY));
 	}
 
-	public String getGameCoolTime() {
-		return valueOperationsString.get(GAME_COOLTIME_KEY);
+	public LocalDateTime getGameCoolTime() {
+		log.info("valueOperations.get(GAME_COOLTIME_KEY) : " + valueOperations.get(GAME_COOLTIME_KEY));
+
+		{}
+		log.info("LocalDateTime.parse(valueOperations.get(GAME_COOLTIME_KEY) : " + LocalDateTime.parse(valueOperations.get(GAME_COOLTIME_KEY)));
+		return LocalDateTime.parse(valueOperations.get(GAME_COOLTIME_KEY));
 	}
 
 	// 총 클릭수 click:total

@@ -3,6 +3,7 @@ package com.toudeuk.server.domain.game.service;
 import static com.toudeuk.server.core.exception.ErrorCode.*;
 import static com.toudeuk.server.domain.game.entity.RewardType.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -66,7 +67,7 @@ public class ClickGameService {
         log.info("======================================checkGame 실행======================================");
         // 쿨타임이면?
         if (clickCacheRepository.isGameCoolTime()) {
-            String gameCoolTime = clickCacheRepository.getGameCoolTime();
+            LocalDateTime gameCoolTime = clickCacheRepository.getGameCoolTime();
             GameData.DisplayInfoForEvery displayInfoEvery = getDisplayInfoEveryAtCoolTime(gameCoolTime);
 
             GameData.DisplayInfoForClicker displayInfoForClicker = getDisplayInfoForClickerAtCoolTime(displayInfoEvery);
@@ -91,7 +92,7 @@ public class ClickGameService {
 
         GameData.DisplayInfoForEvery displayInfoEvery = getDisplayInfoForEveryAtRunning(totalClick,latestClicker, rankingList);
 
-        GameData.DisplayInfoForClicker displayInfoForClicker = getDisplayInfoForClickerAtRunning(displayInfoEvery, myRank, myClickCount, totalClick, NONE);
+        GameData.DisplayInfoForClicker displayInfoForClicker = getDisplayInfoForClickerAtRunning(displayInfoEvery, myRank, myClickCount, NONE);
 
         messagingTemplate.convertAndSend("/topic/game", displayInfoEvery);
         log.info("displayInfoEvery : {}", displayInfoEvery);
@@ -110,7 +111,7 @@ public class ClickGameService {
         // 쿨타임이면?
         if (clickCacheRepository.isGameCoolTime()) {
 
-            String gameCoolTime = clickCacheRepository.getGameCoolTime();
+            LocalDateTime gameCoolTime = clickCacheRepository.getGameCoolTime();
             GameData.DisplayInfoForEvery displayInfoEvery = getDisplayInfoEveryAtCoolTime(gameCoolTime);
 
             GameData.DisplayInfoForClicker displayInfoForClicker = getDisplayInfoForClickerAtCoolTime(displayInfoEvery);
@@ -171,7 +172,7 @@ public class ClickGameService {
 
         GameData.DisplayInfoForEvery displayInfoForEvery = getDisplayInfoForEveryAtRunning(totalClick,latestClicker, rankingList);
 
-        GameData.DisplayInfoForClicker displayInfoForClicker = getDisplayInfoForClickerAtRunning(displayInfoForEvery, userRank, userClick, totalClick.intValue(), rewardType);
+        GameData.DisplayInfoForClicker displayInfoForClicker = getDisplayInfoForClickerAtRunning(displayInfoForEvery, userRank, userClick, rewardType);
 
         // 모든 구독자에게 메시지 전송
         messagingTemplate.convertAndSend("/topic/game", displayInfoForEvery);
@@ -257,7 +258,7 @@ public class ClickGameService {
 
         GameData.DisplayInfoForEvery displayInfoForEvery = getDisplayInfoForEveryAtRunning(totalClick, latestClicker, rankingList);
 
-        GameData.DisplayInfoForClicker displayInfoForClicker = getDisplayInfoForClickerAtRunning(displayInfoForEvery, 1, 1, totalClick, rewardType);
+        GameData.DisplayInfoForClicker displayInfoForClicker = getDisplayInfoForClickerAtRunning(displayInfoForEvery, 1, 1, rewardType);
 
         // 모든 구독자에게 메시지 전송
         messagingTemplate.convertAndSend("/topic/game", displayInfoForEvery);
@@ -312,36 +313,38 @@ public class ClickGameService {
 
     private static GameData.DisplayInfoForEvery getDisplayInfoForEveryAtRunning(Integer totalClick, String latestClicker, List<RankData.UserScore> rankingList) {
         return GameData.DisplayInfoForEvery.of(
-                "RUNNING",
-                "RUNNING",
+                null,
+                GameStatus.RUNNING.toString(),
                 totalClick,
                 latestClicker,
                 rankingList
         );
     }
 
-    private static GameData.DisplayInfoForClicker getDisplayInfoForClickerAtRunning(GameData.DisplayInfoForEvery displayInfoEvery, Integer myRank, Integer myClickCount, Integer totalClick, RewardType rewardType) {
+    private static GameData.DisplayInfoForClicker getDisplayInfoForClickerAtRunning(GameData.DisplayInfoForEvery displayInfoEvery, Integer myRank, Integer myClickCount, RewardType rewardType) {
         return GameData.DisplayInfoForClicker.of(
                 displayInfoEvery,
                 myRank,
                 myClickCount,
-                totalClick,
                 rewardType
         );
     }
 
     private static GameData.DisplayInfoForClicker getDisplayInfoForClickerAtCoolTime(GameData.DisplayInfoForEvery displayInfoEvery) {
-        return getDisplayInfoForClickerAtRunning(displayInfoEvery, 0, 0, 0, NONE);
+        return getDisplayInfoForClickerAtRunning(displayInfoEvery, 0, 0, NONE);
     }
 
-    private static GameData.DisplayInfoForEvery getDisplayInfoEveryAtCoolTime(String gameCoolTime) {
+    private static GameData.DisplayInfoForEvery getDisplayInfoEveryAtCoolTime(LocalDateTime gameCoolTime) {
         return GameData.DisplayInfoForEvery.of(
                 gameCoolTime,
-                "COOLTIME",
+                GameStatus.COOLTIME.toString(),
                 0,
                 "NONE",
                 new ArrayList<>()
         );
     }
 
+    enum GameStatus {
+        COOLTIME, RUNNING;
+    }
 }
