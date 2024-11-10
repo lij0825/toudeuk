@@ -22,37 +22,41 @@ export default function ToggleSwitch({
       <style jsx>{`
         .toggle-container {
           display: flex;
+          flex-direction: column;
           align-items: center;
-          gap: 10px;
+          gap: 4px;
+          margin: 0;
+          padding: 0;
+        }
+        .toggle-label {
+          font-size: 12px;
+          color: #b0b0b0; /* 연한 회색 */
         }
         .toggle-switch {
-          width: 40px;
-          height: 20px;
-          border-radius: 20px;
-          background-color: #9f9f9f;
+          width: 55px;
+          height: 24px;
+          border-radius: 30px;
+          background-color: #a3c8ff;
           position: relative;
           cursor: pointer;
           transition: background-color 0.3s ease;
         }
         .toggle-switch.toggled {
-          background-color: #17181c;
+          background-color: #4a90e2;
         }
         .toggle-knob {
-          width: 16px;
-          height: 16px;
+          width: 20px;
+          height: 20px;
           border-radius: 50%;
-          background-color: #fff;
+          background-color: #ffffff;
           position: absolute;
           top: 2px;
           left: 2px;
           transition: transform 0.3s ease;
+          box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
         }
         .toggle-switch.toggled .toggle-knob {
-          transform: translateX(20px);
-        }
-        .toggle-label {
-          font-size: 16px;
-          color: #ffffff;
+          transform: translateX(30px);
         }
       `}</style>
     </div>

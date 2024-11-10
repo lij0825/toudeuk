@@ -54,18 +54,21 @@ export default function Navbar() {
   };
 
   // 네비게이션 바 외부 클릭 시 숨기기
-  const handleClickOutside = useCallback((event: MouseEvent) => {
-    if (
-      navRef.current &&
-      !navRef.current.contains(event.target as Node) &&
-      buttonRef.current &&
-      !buttonRef.current.contains(event.target as Node)
-    ) {
-      if (!isFixedVisible) {
-        setIsVisible(false);
+  const handleClickOutside = useCallback(
+    (event: MouseEvent) => {
+      if (
+        navRef.current &&
+        !navRef.current.contains(event.target as Node) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target as Node)
+      ) {
+        if (!isFixedVisible) {
+          setIsVisible(false);
+        }
       }
-    }
-  }, [isFixedVisible]);
+    },
+    [isFixedVisible]
+  );
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
@@ -86,7 +89,7 @@ export default function Navbar() {
         onClick={toggleNavbar}
         ref={buttonRef}
         className={`absolute bottom-4 p-3 rounded-xl z-50 transition-opacity duration-300 ${buttonPositionClasses} ${
-          isVisible ? "opacity-0" : "opacity-100"
+          isVisible ? "hidden" : "block" // 햄버거 버튼 숨기기
         }`}
         style={{
           boxShadow:

@@ -23,12 +23,15 @@ export default function HistoryPage() {
 
   return (
     <div className="flex flex-col h-full overflow-hidden font-noto">
-      <section className="flex-shrink-0">
-        <p className="text-2xl font-bold">History</p>
-        <div className="flex justify-between items-center mt-2">
-          <p className="text-lg font-medium text-gray-400">
-            {selected === SelectType.HISTORY ? "게임 히스토리" : "당첨 내역"}
-          </p>
+      <section className="flex-shrink-0 flex items-end w-full mb-2">
+        <div className="flex flex-col mr-2">
+          <p className="text-2xl font-bold typo-title leading-tight">Game</p>
+          <p className="text-2xl font-bold typo-title leading-tight">History</p>
+        </div>
+        <div className="text-lg text-gray-400">
+          {selected === SelectType.HISTORY ? "전체 게임 기록" : "내 당첨 내역"}
+        </div>
+        <div className="ml-auto">
           <ToggleSwitch
             isToggled={selected === SelectType.PRIZE}
             onToggle={handleToggle}
@@ -42,7 +45,6 @@ export default function HistoryPage() {
       </section>
 
       <section className="flex-1 overflow-y-auto scrollbar-hidden">
-        {/* 스크롤 컨테이너 설정 */}
         {selected === SelectType.HISTORY ? (
           <Suspense fallback={<div className="p-4">로딩 중...</div>}>
             <HistoryList />
