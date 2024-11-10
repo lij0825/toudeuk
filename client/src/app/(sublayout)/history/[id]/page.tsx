@@ -22,11 +22,13 @@ export default function HistoryDetail({ params }: { params: { id: string } }) {
   };
   const id = parseInt(params.id);
 
+  //유저 보상 내역들
   const { data: reward } = useQuery({
     queryKey: [queryKey, "reward"],
     queryFn: () => fetchGameRewardHistory(id),
   });
 
+  //전체 클릭 내용 구현
   const {
     data,
     fetchNextPage,

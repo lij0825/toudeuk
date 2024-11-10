@@ -191,9 +191,6 @@ export default function MyGifticon() {
               className={`block p-4 rounded-lg mb-4 bg-[#ebebeb] hover:shadow-xl transition-all duration-200 active:scale-95 w-full ${
                 gifticon.used ? "opacity-50" : ""
               }`}
-              style={{
-                pointerEvents: gifticon.used ? "none" : "auto", 
-              }}
             >
               <div className="flex justify-center w-full relative">
                 <Image

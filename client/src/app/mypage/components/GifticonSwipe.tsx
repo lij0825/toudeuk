@@ -6,10 +6,13 @@ import { useQuery } from "@tanstack/react-query";
 
 import Image from "next/image";
 import Link from "next/link";
-import LottieAnimation from "@/app/components/LottieAnimation";
+import dynamic from "next/dynamic";
 import { CUSTOM_ICON } from "@/constants/customIcons";
 
-
+const LottieAnimation = dynamic(
+  () => import("@/app/components/LottieAnimation"),
+  { ssr: false }
+);
 
 const StorageCard = () => (
   <div className="w-[120px] h-[140px] p-4 rounded-lg shadow-lg bg-[#CBDCEB] font-noto flex flex-col justify-between">

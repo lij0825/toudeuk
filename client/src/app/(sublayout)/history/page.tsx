@@ -23,8 +23,8 @@ export default function HistoryPage() {
 
   return (
     <div className="flex flex-col h-full overflow-hidden font-noto">
-      <section className="flex-shrink-0 p-4 bg-accent-2">
-        <p className="text-2xl font-bold">게임 기록</p>
+      <section className="flex-shrink-0">
+        <p className="text-2xl font-bold">History</p>
         <div className="flex justify-between items-center mt-2">
           <p className="text-lg font-medium text-gray-400">
             {selected === SelectType.HISTORY ? "게임 히스토리" : "당첨 내역"}

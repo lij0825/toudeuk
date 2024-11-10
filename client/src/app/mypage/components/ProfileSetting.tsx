@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { patchUserInfo } from "@/apis/userInfoApi";
 import { UserInfo } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -7,8 +8,13 @@ import Image from "next/image";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import SvgSettingIcon from "./SettingIcon";
-import LottieAnimation from "../../components/LottieAnimation";
 import { CUSTOM_ICON } from "@/constants/customIcons";
+
+const LottieAnimation = dynamic(
+  () => import("@/app/components/LottieAnimation"),
+  { ssr: false }
+);
+
 
 interface ModalProps {
   isOpen: boolean;

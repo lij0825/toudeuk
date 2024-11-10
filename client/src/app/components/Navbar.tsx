@@ -2,15 +2,30 @@
 
 import { ROUTE_URL } from "@/constants/routes";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { CUSTOM_ICON } from "@/constants/customIcons";
-import LottieAnimation from "./LottieAnimation";
+import dynamic from "next/dynamic";
+
+const LottieAnimation = dynamic(
+  () => import("@/app/components/LottieAnimation"),
+  { ssr: false }
+);
 
 export default function Navbar() {
-  const [isVisible, setIsVisible] = useState(false); // 네비게이션 바 표시 상태
   const pathname = usePathname();
+  const [isVisible, setIsVisible] = useState(false); // 네비게이션 바 표시 상태
   const navRef = useRef<HTMLDivElement | null>(null); // 네비게이션 바 참조
   const buttonRef = useRef<HTMLButtonElement | null>(null); // 햄버거 버튼 참조
+
+  // '/mygifticon' 자체는 제외하고, '/mygifticon/...'로 시작하는 경우 항상 고정
+  const isFixedVisible = /^\/mygifticon\/.+/.test(pathname || "");
+
+  useEffect(() => {
+    // 특정 경로일 때 Navbar를 항상 표시 상태로 유지
+    if (isFixedVisible) {
+      setIsVisible(true);
+    }
+  }, [isFixedVisible]);
 
   // 햄버거 버튼 및 네비게이션 바 스타일 상수
   const buttonPositionClasses =
@@ -32,27 +47,32 @@ export default function Navbar() {
 
   // 햄버거 버튼 클릭 시 네비게이션 바 표시/숨기기 토글
   const toggleNavbar = () => {
-    setIsVisible((prev) => !prev);
+    // 특정 경로일 때는 toggle 기능이 작동하지 않도록
+    if (!isFixedVisible) {
+      setIsVisible((prev) => !prev);
+    }
   };
 
   // 네비게이션 바 외부 클릭 시 숨기기
-  const handleClickOutside = (event: MouseEvent) => {
+  const handleClickOutside = useCallback((event: MouseEvent) => {
     if (
       navRef.current &&
       !navRef.current.contains(event.target as Node) &&
       buttonRef.current &&
       !buttonRef.current.contains(event.target as Node)
     ) {
-      setIsVisible(false);
+      if (!isFixedVisible) {
+        setIsVisible(false);
+      }
     }
-  };
+  }, [isFixedVisible]);
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [handleClickOutside]);
 
   // 특정 경로에서 네비게이션 바 숨기기
   if (pathname === ROUTE_URL.HOME || pathname === ROUTE_URL.LOGIN_LOADING) {
@@ -65,7 +85,7 @@ export default function Navbar() {
       <button
         onClick={toggleNavbar}
         ref={buttonRef}
-        className={`absolute bottom-4 p-3 rounded-xl z-40 transition-opacity duration-300 ${buttonPositionClasses} ${
+        className={`absolute bottom-4 p-3 rounded-xl z-50 transition-opacity duration-300 ${buttonPositionClasses} ${
           isVisible ? "opacity-0" : "opacity-100"
         }`}
         style={{
@@ -84,7 +104,7 @@ export default function Navbar() {
       <nav
         ref={navRef}
         className={navClasses}
-        style={{ zIndex: 40, willChange: "transform, opacity" }}
+        style={{ willChange: "transform, opacity" }}
       >
         <div className="flex flex-col items-end justify-center text-center ">
           <a
