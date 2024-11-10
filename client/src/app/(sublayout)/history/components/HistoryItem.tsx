@@ -6,7 +6,7 @@ export default function HistoryItem({ content }: { content: ContentInfo }) {
     <div className="w-full p-3 border border-gray-300 rounded-lg bg-white hover:bg-gray-100 hover:border-blue-400 active:bg-gray-200 transition-all duration-300 cursor-pointer">
       <div className="flex justify-between items-center mb-1">
         <h3 className="text-lg font-bold text-gray-800">
-          Round {content.round}
+          Round {content.clickGameId}
         </h3>
         <p className="text-gray-500 text-sm">
           {new Date(content.createdAt).toLocaleString()}

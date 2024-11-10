@@ -16,7 +16,6 @@ const LottieAnimation = dynamic(
 
 export default function Gifticon() {
   const [filter, setFilter] = useState<ItemType>(ItemType.ALL);
-  
 
   const {
     data: gifticons = [],
@@ -34,7 +33,7 @@ export default function Gifticon() {
   if (error) return <div>데이터를 불러오는 중 오류가 발생했습니다.</div>;
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-full">
       <section className="typo-title flex mb-2 items-end justify-between flex-shrink-0">
         <div>
           <p>Gifticon</p>
@@ -131,40 +130,42 @@ export default function Gifticon() {
           </button>
         </div>
       </section>
-      <section className="flex-grow h-full rounded-xl overflow-y-auto scrollbar-hidden font-noto">
+
+      {/* 판매 목록 */}
+      <section className="flex-grow h-full rounded-xl overflow-y-auto scrollbar-hidden -mx-8 px-8 pb-[42px] font-noto">
         <div className="grid grid-cols-2 gap-4">
           {gifticons
-          .filter((gifticon) =>
-            filter === ItemType.ALL ? true : gifticon.itemType === filter
-          )
-          .map((gifticon) => (
-            <Link
-              key={gifticon.itemId}
-              href={`/gifticon/${gifticon.itemId}`}
-              className="p-4 border rounded-lg relative h-48 my-2 backdrop-blur-lg bg-white/30 shadow-lg flex flex-col items-center"
-              style={{
-                backgroundImage:
-                  "linear-gradient(to top left, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 70%), linear-gradient(to bottom right, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0) 70%)",
-              }}
-            >
-              <div className="relative w-full h-24">
-                <Image
-                  src={gifticon.itemImage}
-                  alt={gifticon.itemName}
-                  fill
-                  className="object-cover rounded-lg"
-                />
-              </div>
-              <p className="text-center mt-4 font-semibold text-sm">
-                {gifticon.itemName.length > 9
-                  ? `${gifticon.itemName.slice(0, 9)}...`
-                  : gifticon.itemName}
-              </p>
-              <p className="text-center text-gray-500 text-sm mt-1">
-                {`${gifticon.itemPrice.toLocaleString()} P`}
-              </p>
-            </Link>
-          ))}
+            .filter((gifticon) =>
+              filter === ItemType.ALL ? true : gifticon.itemType === filter
+            )
+            .map((gifticon) => (
+              <Link
+                key={gifticon.itemId}
+                href={`/gifticon/${gifticon.itemId}`}
+                className="p-4 border rounded-lg relative h-56 my-1 backdrop-blur-lg bg-white/30 flex flex-col items-center transition-transform duration-300 hover:scale-105 hover:bg-white/60 focus:scale-105 active:scale-100"
+                style={{
+                  backgroundImage:
+                    "linear-gradient(to top left, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0) 70%), linear-gradient(to bottom right, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0) 70%)",
+                }}
+              >
+                <div className="relative w-full h-32">
+                  <Image
+                    src={gifticon.itemImage}
+                    alt={gifticon.itemName}
+                    fill
+                    className="object-cover rounded-lg"
+                  />
+                </div>
+                <p className="text-center mt-4 font-semibold text-sm">
+                  {gifticon.itemName.length > 9
+                    ? `${gifticon.itemName.slice(0, 9)}...`
+                    : gifticon.itemName}
+                </p>
+                <p className="text-center text-gray-500 text-sm mt-1">
+                  {`${gifticon.itemPrice.toLocaleString()} P`}
+                </p>
+              </Link>
+            ))}
         </div>
       </section>
     </div>
