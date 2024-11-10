@@ -2,14 +2,26 @@
 
 //소켓 연결 또는 SSE 방식으로 touch값 fetch
 import { Client, Frame, IFrame, Stomp } from "@stomp/stompjs";
-// import axios from "axios";
 import { useEffect, useState } from "react";
 import SockJS from "sockjs-client";
+import dynamic from "next/dynamic";
+import { CUSTOM_ICON } from "@/constants/customIcons";
 
+// const LottieAnimation = dynamic(
+//   () => import("@/app/components/LottieAnimation"),
+//   { ssr: false }
+// );
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 export default function GameButton() {
   const [count, setCount] = useState<number | null>(null);
   const [stompClient, setStompClient] = useState<Client | null>(null);
+
+  const [playAnimation, setPlayAnimation] = useState(false);
+
+  const handleAnimationClick = () => {
+    setPlayAnimation(true);
+    setTimeout(() => setPlayAnimation(false), 1000); // 1초 후에 초기화
+  };
 
   const accessToken = sessionStorage.getItem("accessToken");
 
@@ -28,22 +40,15 @@ export default function GameButton() {
       (frame: IFrame) => {
         console.log("Connected: " + frame);
 
+        stompClient.subscribe("/topic/health", (message) => {}, headers);
 
         stompClient.subscribe(
           "/topic/health",
           (message) => {
+            console.log("메시지 health", message.body);
           },
           headers
         );
-
-        stompClient.subscribe(
-          "/topic/health",
-          (message) => {
-            console.log('메시지 health',message.body)
-          },
-          headers
-        );
-
 
         stompClient.subscribe(
           "/topic/game",
@@ -89,14 +94,24 @@ export default function GameButton() {
 
   return (
     <>
-      <div className="relative flex items-center justify-center w-40 h-40">
+      <div
+        className="relative flex items-center justify-center w-40 h-40 "
+        onClick={handleClick}
+      >
         {/* 테두리가 회전하는 버튼 */}
         <div
           data-cy="button"
-          onClick={handleClick}
           className="absolute w-40 h-40 rounded-full border-2 border-[#00ff88] hover:border-[#ff00ff] transition-colors duration-300 animate-spin-border"
         ></div>
-
+        {/* <div onClick={handleAnimationClick}>
+          <LottieAnimation
+            animationData={CUSTOM_ICON.subLoding}
+            loop={false} // 반복되지 않게 설정
+            width={50}
+            height={50}
+            autoplay={playAnimation} // 클릭 시 한 번만 재생
+          />
+        </div> */}
         {/* 수신된 count가 있을 때만 표시 */}
         {count !== null && (
           <span className="z-10 text-3xl text-[#00ff88] hover:text-[#ff00ff] transition-colors duration-300">

@@ -158,7 +158,7 @@ export default function MyGifticon() {
       <section className="flex-grow h-full rounded-xl overflow-auto scrollbar-hidden font-noto">
         {usergifticons.length === 0 ? (
           <div className="flex flex-1 bg-[#FAF7F0] h-full items-center justify-center rounded-lg border">
-            <div className="flex flex-col items-center border">
+            <div className="flex flex-col items-center">
               <LottieAnimation
                 animationData={CUSTOM_ICON.emty}
                 loop={true}
@@ -167,13 +167,13 @@ export default function MyGifticon() {
                 autoplay={true}
                 isSelected={true}
               />
-              <p className="text-gray-500 text-md px-4">
+              <p className="text-gray-500 text-md px-4 mb-2">
                 보유한 기프티콘이 없습니다
               </p>
               <button
                 type="button"
                 onClick={() => router.push("/gifticon")}
-                className="bg-[#EDDFE0] ml-auto px-3 py-1 rounded-lg text-sm hover:bg-[#FFB38E] text-white w-full border border-yellow-500"
+                className="bg-[#FFB38E] ml-auto px-3 py-1 rounded-lg text-sm hover:bg-[#f9bc9e] text-white w-full"
               >
                 기프티콘 사러가기
               </button>
@@ -186,28 +186,28 @@ export default function MyGifticon() {
             )
             .map((gifticon: UserGifticonInfo) => (
               <Link
-              key={gifticon.userItemId}
-              href={`/mygifticon/${gifticon.userItemId}`}
-              className={`block p-4 rounded-lg mb-4 bg-[#ebebeb] hover:shadow-xl transition-all duration-200 active:scale-95 w-full ${
-                gifticon.used ? "opacity-50" : ""
-              }`}
-            >
-              <div className="flex justify-center w-full relative">
-                <Image
-                  src={gifticon.itemImage}
-                  alt={gifticon.itemName}
-                  width={170}
-                  height={80}
-                  className="h-20 w-full rounded-lg object-cover shadow-sm"
-                />
-                {gifticon.used && (
-                  <div className="absolute inset-0 bg-gray-500 opacity-50 rounded-lg" />
-                )}
-              </div>
-              <div className="text-center mt-4 font-semibold text-gray-700">
-                {gifticon.itemName}
-              </div>
-            </Link>
+                key={gifticon.userItemId}
+                href={`/mygifticon/${gifticon.userItemId}`}
+                className={`block p-4 rounded-lg mb-4 bg-[#ebebeb] hover:shadow-xl transition-all duration-200 active:scale-95 w-full ${
+                  gifticon.used ? "opacity-50" : ""
+                }`}
+              >
+                <div className="flex justify-center w-full relative">
+                  <Image
+                    src={gifticon.itemImage}
+                    alt={gifticon.itemName}
+                    width={170}
+                    height={80}
+                    className="h-20 w-full rounded-lg object-cover shadow-sm"
+                  />
+                  {gifticon.used && (
+                    <div className="absolute inset-0 bg-gray-500 opacity-50 rounded-lg" />
+                  )}
+                </div>
+                <div className="text-center mt-4 font-semibold text-gray-700">
+                  {gifticon.itemName}
+                </div>
+              </Link>
             ))
         )}
       </section>
