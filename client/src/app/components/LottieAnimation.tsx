@@ -30,22 +30,22 @@ export default function LottieAnimation({
   const lottieRef = useRef<LottieRefCurrentProps | null>(null);
 
   useEffect(() => {
-    if (lottieRef.current) {
-      if (isSelected) {
-        lottieRef.current.play();
-      } else {
-        lottieRef.current.stop();
-        lottieRef.current.goToAndStop(0, true);
-      }
+    if (!lottieRef.current) return;
+
+    if (autoplay || isSelected) {
+      lottieRef.current.play();
+    } else {
+      lottieRef.current.stop();
+      lottieRef.current.goToAndStop(0, true);
     }
-  }, [isSelected]);
+  }, [autoplay, isSelected]);
 
   return (
     <div style={{ width, height, padding, margin, cursor }}>
       <Lottie
         lottieRef={lottieRef}
         animationData={animationData}
-        loop={loop}
+        loop={autoplay || (isSelected && loop)}
         autoplay={autoplay}
         style={{ width: "100%", height: "100%" }}
       />

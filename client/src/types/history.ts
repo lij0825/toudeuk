@@ -57,16 +57,21 @@ export interface HistoriesInfo {
 //개별 게임 상세 정보
 export interface DetailContentInfo {
   clickGameId: number;
-  round: number;
+  nickname: string;
+  profileImg: string;
   createdAt: string;
-  winner?: WinnerInfo;
-  maxClicker?: MaxClickerInfo;
-  middleRewardUsers: GameUserInfo[];
-  allUsers: GameUserInfo[];
+  clickOrder : number;
 }
 
 // 개별 게임 정보 조회
 export interface HistoryDetailInfo {
   page: Page;
   content: DetailContentInfo[];
+}
+
+
+export interface HistoryRewardInfo {
+  winner : WinnerInfo;
+  maxClicker :MaxClickerInfo;
+  middleRewardUsers : GameUserInfo;
 }

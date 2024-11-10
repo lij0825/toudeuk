@@ -12,10 +12,11 @@ const Loading = () => {
   return (
     <div className="w-full h-full flex justify-center items-center">
       <LottieAnimation
-        animationData={CUSTOM_ICON.dataset}
+        animationData={CUSTOM_ICON.subLoding}
         loop={true}
         width={300}
         height={300}
+        autoplay={true}
       />
     </div>
   );

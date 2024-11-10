@@ -45,7 +45,7 @@ const config: Config = {
       },
       spacing: {
         td: "30px",
-        "td-x": "30px",
+        "td-x": "2rem",
         "td-y": "2rem",
       },
       fontFamily: {
@@ -97,6 +97,7 @@ const config: Config = {
           width: "100%",
           height: "100%",
           background: "white",
+          position : "relative"
         },
         ".common-link": {
           backgroundImage:

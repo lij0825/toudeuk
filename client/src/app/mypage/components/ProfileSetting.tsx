@@ -1,14 +1,18 @@
-"use client";
-
-import { patchUserInfo } from "@/apis/userInfoApi";
-import { UserInfo } from "@/types";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
-import { useState } from "react";
+import dynamic from "next/dynamic";
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
+import { UserInfo } from "@/types";
+import { patchUserInfo } from "@/apis/userInfoApi";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import SvgSettingIcon from "./SettingIcon";
-import LottieAnimation from "../../components/LottieAnimation";
 import { CUSTOM_ICON } from "@/constants/customIcons";
+import { useNicknameCheck } from "@/apis/user/useNicknameCheck";
+
+const LottieAnimation = dynamic(
+  () => import("@/app/components/LottieAnimation"),
+  { ssr: false }
+);
 
 interface ModalProps {
   isOpen: boolean;
@@ -42,12 +46,10 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
   const [nickname, setNickname] = useState<string>(user?.nickName || "");
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string>(
-    user?.profileImg
-      ? `${user.profileImg}?${Date.now()}`
-      : "/default_profile.png"
+    user?.profileImg ? `${user.profileImg}?${Date.now()}` : "/default_profile.png"
   );
-  //캐시 무효화를 위한 쿼리 파라미터 추가
-  //이 이미지를 새로운 요청으로 인식하고 캐시를 무시하고 최신 이미지를 가져옵니다.
+
+  const { isValid, isChecked, checkNickname, isLoading } = useNicknameCheck(nickname);
 
   const mutation = useMutation({
     mutationFn: (formData: FormData) => patchUserInfo(formData),
@@ -80,6 +82,10 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
   };
 
   function handleSave() {
+    if (!isChecked || !isValid) {
+      toast.error("닉네임 중복 여부를 확인해주세요.");
+      return;
+    }
     if (nickname.length > maxNicknameLength) {
       toast.error("닉네임은 최대 8글자까지 가능합니다.");
       return;
@@ -91,13 +97,7 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
       formData.append("profileImage", profileImage);
     }
 
-    mutation.mutate(formData, {
-      onSuccess: () => {
-        cache.invalidateQueries({ queryKey: ["user"] });
-        handleModalOpen();
-      },
-    });
-
+    mutation.mutate(formData);
     setIsEditing(false);
     handleModalOpen();
   }
@@ -153,7 +153,6 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
 
         {isEditing && (
           <section className="mb-4 space-y-4">
-            {/* 이미지는 중앙 정렬 유지 */}
             <div className="flex justify-center">
               {previewImage && (
                 <div className="w-[60px] h-[60px] overflow-hidden rounded-full">
@@ -171,26 +170,38 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
 
             <div className="relative">
               <p className="text-left mb-1">닉네임을 작성하세요</p>
-              <input
-                type="text"
-                value={nickname}
-                onChange={handleNicknameChange}
-                placeholder="닉네임은 최대 8글자까지 가능합니다."
-                maxLength={maxNicknameLength + 1}
-                className={`w-full px-3 py-2 rounded text-gray-600 text-sm border ${
-                  nicknameExceedsLimit
-                    ? "border-red-500 focus:border-red-500 focus:ring-red-500"
-                    : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                } focus:outline-none focus:ring-1`}
-              />
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={nickname}
+                  onChange={handleNicknameChange}
+                  placeholder="닉네임은 최대 8글자까지 가능합니다."
+                  maxLength={maxNicknameLength + 1}
+                  className={`w-full px-3 py-2 rounded text-gray-600 text-sm border ${
+                    nicknameExceedsLimit
+                      ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                      : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                  } focus:outline-none focus:ring-1`}
+                />
+                <button
+                  onClick={checkNickname}
+                  className="px-3 py-1 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600 transition duration-150"
+                >
+                  중복 체크
+                </button>
+              </div>
               {nicknameExceedsLimit && (
                 <p className="text-xs text-red-500 mt-1">
                   닉네임은 최대 8글자까지 가능합니다.
                 </p>
               )}
+              {!isChecked && (
+                <p className="text-xs text-red-500 mt-1">
+                  닉네임 중복 여부를 확인해주세요.
+                </p>
+              )}
             </div>
 
-            {/* 파일 업로드는 중앙 정렬 유지 */}
             <div className="relative w-full text-center">
               <input
                 type="file"
@@ -206,7 +217,6 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
               </p>
             </div>
 
-            {/* 버튼은 중앙 정렬 유지 */}
             <div className="flex justify-center gap-4 mt-4">
               <button
                 onClick={() => setIsEditing(false)}
@@ -216,7 +226,12 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
               </button>
               <button
                 onClick={handleSave}
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600 transition duration-150"
+                disabled={!isChecked || !isValid || isLoading}
+                className={`px-4 py-2 rounded-lg text-sm text-white transition duration-150 ${
+                  !isChecked || !isValid || isLoading
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-blue-500 hover:bg-blue-600"
+                }`}
               >
                 저장하기
               </button>

@@ -87,16 +87,16 @@ export default function HistoryList() {
   }, [hasNextPage, fetchNextPage, isFetchingNextPage]);
 
   return (
-    <div className="h-full overflow-y-auto p-4 scrollbar-hidden">
+    <div >
       {contents.length === 0 ? (
-        <div className="text-center text-gray-500">
-          <p>비어있어요 ㅠ</p>
+        <div className="text-center text-gray-500 p-4">
+          <p>게임 기록이 없습니다.</p>
           <button className="mt-2 text-blue-500 hover:underline">
             게임하러가기
           </button>
         </div>
       ) : (
-        <div className="grid gap-4">
+        <div className="grid gap-y-4">
           {contents.map((content: ContentInfo, index: number) => {
             const isLastItem = index === contents.length - 1;
             const id = content.clickGameId.toString();

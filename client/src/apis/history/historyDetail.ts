@@ -8,24 +8,23 @@ interface HistoriesParams {
   sort?: string;
 }
 
-// 히스토리 전체 목록 가져오기
-export const fetchHistories = async (
+// 게임당 상세 히스토리 전체 목록 가져오기
+export const fetchHistoryDetailInfo = async (
+  id: number,
   params: HistoriesParams
-): Promise<HistoriesInfo> => {
-  //sort 정보 추가될것 대비
+): Promise<HistoryDetailInfo> => {
   const filteredParams = Object.fromEntries(
     Object.entries(params).filter(
       ([_, value]) => value !== null && value !== ""
     )
   );
 
-  const response = await instance.get<BaseResponse<HistoriesInfo>>(
-    "/game/history",
+  const response = await instance.get<BaseResponse<HistoryDetailInfo>>(
+    `/game/history/${id}`,
     { params: filteredParams }
   );
-  const data = response.data;
 
-  console.log("API Response Data:", response.data);
+  const data = response.data;
   if (!data.success) {
     throw new Error(response.data.message);
   }
@@ -33,11 +32,6 @@ export const fetchHistories = async (
   if (!data.data) {
     throw new Error(response.data.message);
   }
+
   return data.data || [];
 };
-
-// UseQueryResult<History[], AxiosError<ErrorResponse>, number>
-// onError:(error)=>
-//   console.error(error.response.data)
-//  switch error:
-

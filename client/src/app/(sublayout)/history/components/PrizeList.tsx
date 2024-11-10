@@ -4,7 +4,6 @@ import { HistoriesInfo } from "@/types";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 import { fetchHistories } from "@/apis/history/historyApi";
-import Link from "next/link";
 
 export default function PrizeList() {
   const size = 10;

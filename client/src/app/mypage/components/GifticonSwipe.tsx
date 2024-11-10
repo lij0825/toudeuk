@@ -6,10 +6,13 @@ import { useQuery } from "@tanstack/react-query";
 
 import Image from "next/image";
 import Link from "next/link";
-import LottieAnimation from "@/app/components/LottieAnimation";
+import dynamic from "next/dynamic";
 import { CUSTOM_ICON } from "@/constants/customIcons";
 
-
+const LottieAnimation = dynamic(
+  () => import("@/app/components/LottieAnimation"),
+  { ssr: false }
+);
 
 const StorageCard = () => (
   <div className="w-[120px] h-[140px] p-4 rounded-lg shadow-lg bg-[#CBDCEB] font-noto flex flex-col justify-between">
@@ -21,8 +24,8 @@ const StorageCard = () => (
       <LottieAnimation
         animationData={CUSTOM_ICON.ticket}
         loop={true}
-        width={40}
-        height={40}
+        width={70}
+        height={70}
         autoplay={true}
       />
     </div>
@@ -33,6 +36,17 @@ export default function GifticonSwipe() {
   const { data: usergifticons = [], isError } = useQuery<UserGifticonInfo[]>({
     queryKey: ["usergifticons"],
     queryFn: fetchUserGifticons,
+    select: (data) => {
+      // 배열을 역순으로 복사하고 used가 true인 항목을 마지막으로 정렬
+      return data
+        .slice() // 배열 복사
+        .reverse() // 역순으로 정렬 (가장 최신 항목이 위로)
+        .sort((a, b) => {
+          // used가 false인 항목이 먼저 오게 정렬
+          if (a.used === b.used) return 0; // 둘 다 같으면 순서 유지
+          return a.used ? 1 : -1; // used가 true면 뒤로 보냄
+        });
+    },
   });
 
   if (isError) {
@@ -89,7 +103,12 @@ export default function GifticonSwipe() {
           <Link
             key={gifticon.userItemId}
             href={`/mygifticon/${gifticon.userItemId}`}
-            className="shrink-0"
+            className={`shrink-0  ${
+                gifticon.used ? "opacity-50" : ""
+              }`}
+              style={{
+                pointerEvents: gifticon.used ? "none" : "auto", 
+              }}
           >
             <div className="w-[120px] h-[140px] rounded-lg backdrop-blur-lg bg-white/30 shadow-lg flex flex-col justify-between p-4">
               <div className="flex justify-center items-center flex-1">
@@ -99,9 +118,12 @@ export default function GifticonSwipe() {
                     alt={gifticon.itemName}
                     width={80}
                     height={80}
-                    className="object-cover w-full h-full"
+                    className="object-cover w-full h-full relative"
                     priority
                   />
+                      {gifticon.used && (
+                  <div className="absolute inset-0 bg-gray-500 opacity-10 rounded-lg" />
+                )}
                 </div>
               </div>
               <div className="text-center mt-2">

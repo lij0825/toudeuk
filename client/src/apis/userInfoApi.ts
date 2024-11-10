@@ -2,7 +2,7 @@ import { BaseResponse } from "@/types/Base";
 import instance from "./clientApi";
 import { UserInfo } from "@/types";
 
-//사용자 정보 저장
+//사용자 정보 가져오기
 export const fetchUserInfo = async (): Promise<UserInfo> => {
   const response = await instance.get<BaseResponse<UserInfo>>("/user/info");
   const data = response.data;

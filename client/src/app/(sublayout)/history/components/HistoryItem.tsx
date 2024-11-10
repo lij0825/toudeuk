@@ -3,16 +3,16 @@ import Image from "next/image";
 
 export default function HistoryItem({ content }: { content: ContentInfo }) {
   return (
-    <div className="p-3 rounded-lg shadow-md bg-white border border-gray-200 hover:shadow-lg transition-shadow duration-300">
-      <div className="flex justify-between items-center mb-2">
-        <h3 className="text-lg font-bold text-gray-700">
+    <div className="w-full p-3 border border-gray-300 rounded-lg bg-white hover:bg-gray-100 hover:border-blue-400 active:bg-gray-200 transition-all duration-300 cursor-pointer">
+      <div className="flex justify-between items-center mb-1">
+        <h3 className="text-lg font-bold text-gray-800">
           Round {content.round}
         </h3>
-        <p className="text-gray-400 text-sm">
+        <p className="text-gray-500 text-sm">
           {new Date(content.createdAt).toLocaleString()}
         </p>
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
         <UserInfo user={content.winner || null} emoji="🏆" />
         <UserInfo user={content.maxClicker || null} emoji="🔥" />
       </div>
@@ -28,15 +28,15 @@ function UserInfo({
   emoji: string;
 }) {
   return (
-    <div className="flex items-center gap-2 text-gray-800">
+    <div className="flex items-center gap-1 text-gray-800">
       <span className="text-xl">{emoji}</span>
       {user ? (
         <>
           <Image
             src={user.profileImg}
             alt={`${user.nickname}'s profile`}
-            width={24}
-            height={24}
+            width={28}
+            height={28}
             className="rounded-full object-cover border border-gray-300"
           />
           <div>
