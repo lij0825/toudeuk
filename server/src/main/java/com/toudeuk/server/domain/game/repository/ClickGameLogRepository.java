@@ -12,7 +12,7 @@ public interface ClickGameLogRepository extends JpaRepository<ClickGameLog, Long
 
 
 
-	@Query("SELECT c FROM ClickGameLog c WHERE c.id = :gameId")
+	@Query("SELECT c FROM ClickGameLog c WHERE c.clickGame.id = :gameId")
 	Page<ClickGameLog> findByGameId(@Param("gameId") Long gameId, Pageable pageable);
 
 
