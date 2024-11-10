@@ -38,6 +38,7 @@ public enum ErrorCode {
 	COOL_TIME(4003, HttpStatus.BAD_REQUEST, "쿨타임입니다."),
 	GAME_LOG_NOT_FOUND(4004, HttpStatus.NOT_FOUND, "게임 로그를 찾을 수 없습니다."),
 	GAME_ALREADY_EXIST(4005, HttpStatus.BAD_REQUEST, "이미 게임이 존재합니다."),
+	SAVING_GAME_ERROR(4006, HttpStatus.BAD_REQUEST, "게임 저장 중 에러가 발생하였습니다."),
 
 	// KakaoPay
 	KAKAO_PAY_API_ERROR(5000, HttpStatus.BAD_REQUEST, "카카오페이 API 에러가 발생하였습니다."),
