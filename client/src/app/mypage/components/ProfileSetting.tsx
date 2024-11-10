@@ -1,6 +1,6 @@
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
 import { UserInfo } from "@/types";
 import { patchUserInfo } from "@/apis/userInfoApi";
@@ -46,10 +46,14 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
   const [nickname, setNickname] = useState<string>(user?.nickName || "");
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string>(
-    user?.profileImg ? `${user.profileImg}?${Date.now()}` : "/default_profile.png"
+    user?.profileImg
+      ? `${user.profileImg}?${Date.now()}`
+      : "/default_profile.png"
   );
 
-  const { isValid, isChecked, checkNickname, isLoading } = useNicknameCheck(nickname);
+  // 닉네임 중복확인 로직
+  const { isValid, isChecked, checkNickname, isLoading } =
+    useNicknameCheck(nickname);
 
   const mutation = useMutation({
     mutationFn: (formData: FormData) => patchUserInfo(formData),
@@ -167,7 +171,7 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
                 </div>
               )}
             </div>
-
+            {/* 닉네임 작성 */}
             <div className="relative">
               <p className="text-left mb-1">닉네임을 작성하세요</p>
               <div className="flex items-center gap-2">
@@ -177,7 +181,7 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
                   onChange={handleNicknameChange}
                   placeholder="닉네임은 최대 8글자까지 가능합니다."
                   maxLength={maxNicknameLength + 1}
-                  className={`w-full px-3 py-2 rounded text-gray-600 text-sm border ${
+                  className={`w-2/3 px-3 py-2 rounded text-gray-600 text-sm border ${
                     nicknameExceedsLimit
                       ? "border-red-500 focus:border-red-500 focus:ring-red-500"
                       : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
@@ -185,7 +189,7 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
                 />
                 <button
                   onClick={checkNickname}
-                  className="px-3 py-1 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600 transition duration-150"
+                  className="w-1/3 p-2 bg-blue-500 text-white rounded-lg text-xs hover:bg-blue-600 transition duration-150"
                 >
                   중복 체크
                 </button>
@@ -193,6 +197,11 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
               {nicknameExceedsLimit && (
                 <p className="text-xs text-red-500 mt-1">
                   닉네임은 최대 8글자까지 가능합니다.
+                </p>
+              )}
+              {isChecked && !isValid && (
+                <p className="text-xs text-red-500 mt-1">
+                  닉네임이 중복됩니다.
                 </p>
               )}
               {!isChecked && (
