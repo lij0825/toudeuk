@@ -35,7 +35,7 @@ export default function Navbar() {
       ? "left-1/2 transform -translate-x-1/2 bg-gray-800 text-white shadow-lg"
       : "right-4 bg-white text-gray-800 shadow-lg";
 
-  const hamburgerLineClasses = `block w-6 h-0.5 mb-1 transition-all duration-300 ${
+  const hamburgerLineClasses = `block w-5 h-0.5 mb-1 transition-all duration-300 ${
     pathname === ROUTE_URL.GAME ? "bg-white" : "bg-gray-800"
   }`;
 
@@ -91,7 +91,7 @@ export default function Navbar() {
         onClick={toggleNavbar}
         ref={buttonRef}
         className={`absolute bottom-4 p-3 rounded-xl z-50 transition-opacity duration-300 ${buttonPositionClasses} ${
-          isVisible ? "hidden" : "block" // 햄버거 버튼 숨기기
+          isVisible ? "hidden" : "block"
         }`}
         style={{
           boxShadow:
@@ -100,9 +100,11 @@ export default function Navbar() {
               : "0px 4px 12px rgba(0, 0, 0, 0.15)",
         }}
       >
-        <span className={hamburgerLineClasses}></span>
-        <span className={hamburgerLineClasses}></span>
-        <span className={hamburgerLineClasses}></span>
+        <div className="flex flex-col justify-between h-5">
+          <span className={hamburgerLineClasses}></span>
+          <span className={hamburgerLineClasses}></span>
+          <span className={hamburgerLineClasses}></span>
+        </div>
       </button>
 
       {/* 네비게이션 바 */}
@@ -120,8 +122,8 @@ export default function Navbar() {
             <LottieAnimation
               animationData={CUSTOM_ICON.gamecontroller}
               loop={1}
-              width={50}
-              height={50}
+              width={45}
+              height={40}
               cursor="pointer"
             />
             <span className="text-xs">게임</span>

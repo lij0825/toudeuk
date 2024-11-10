@@ -21,8 +21,8 @@ export default function UserInfoItem() {
 
   return (
     <div>
-      <section className="flex align-center pb-8 justify-between">
-        <div className="flex items-center ">
+      <section className="flex align-center pb-4 justify-between">
+        <div className="flex items-center">
           <div className="relative w-12 h-12 rounded-xl overflow-hidden mr-2">
             <Image
               src={userInfo?.profileImg || "/default_profile.jpg"}
@@ -33,11 +33,13 @@ export default function UserInfoItem() {
               priority
             />
           </div>
-          <span className="font-noto text-md text-bold">
+          <span className="font-noto text-lg font-extrabold  ml-2">
             {userInfo?.nickName}
           </span>
         </div>
-        <ProfileSetting />
+        <div>
+          <ProfileSetting />
+        </div>
       </section>
       <>
         <Link href={"/point"}>

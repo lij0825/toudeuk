@@ -61,39 +61,3 @@ export const usedGifticon = async (id: string): Promise<void> => {
   }
   return response.data.data;
 };
-
-//유저 기프티콘 정보 가져오기
-export const fetchUserGifticons = async (): Promise<UserGifticonInfo[]> => {
-  const response = await instance.get<BaseResponse<UserGifticonInfo[]>>(
-    "/user/items"
-  );
-  if (!response.data.success) {
-    throw new Error("기프티콘 정보를 불러오는데 실패했습니다.");
-  }
-  if (!response.data.data) {
-    throw new Error("기프티콘 데이터가 존재하지 않습니다.");
-  }
-  return response.data.data;
-};
-
-//유저 기프티콘 상세 정보 가져오기
-export const fetchUserGifticonDetail = async (
-  id: string
-): Promise<UserGifticonDetailInfo> => {
-  const response = await instance.get<BaseResponse<UserGifticonDetailInfo>>(
-    `/user/item/detail`,
-    {
-      params: {
-        userItemId: id,
-      },
-    }
-  );
-
-  if (!response.data.success) {
-    throw new Error(response.data.message);
-  }
-  if (!response.data.data) {
-    throw new Error("기프티콘 데이터가 존재하지 않습니다.");
-  }
-  return response.data.data;
-};

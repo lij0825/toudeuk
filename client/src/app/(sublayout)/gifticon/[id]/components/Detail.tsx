@@ -46,55 +46,58 @@ export default function Detail() {
     );
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen text-center font-noto -m-8 mb-[72px] overflow-y-auto scrollbar-hidden">
-      {gifticon ? (
-        <div className="flex flex-col items-center max-w-lg w-full space-y-6 px-4">
-          {/* 기프티콘 이미지 */}
-          <div className="w-full h-96 flex justify-center bg-gray-100 rounded-lg overflow-hidden">
-            <Image
-              src={gifticon.itemImage}
-              alt={gifticon.itemName}
-              width={450}
-              height={450}
-              objectFit="contain"
-              className="rounded-lg"
-            />
+    <div className="h-full overflow-y-auto">
+      <div className="flex flex-col items-center justify-center text-center font-noto scrollbar-hidden">
+        {gifticon ? (
+          <div className="space-y-6 -mt-6">
+            {/* 기프티콘 이미지 */}
+            <div className="w-full h-[350px] flex justify-center bg-gray-100 rounded-lg overflow-hidden mt-8">
+              <Image
+                src={gifticon.itemImage}
+                alt={gifticon.itemName}
+                width={450}
+                height={450}
+                objectFit="contain"
+                className="rounded-lg"
+              />
+            </div>
+
+            {/* 기프티콘 이름 */}
+            <h1 className="text-2xl font-extrabold break-words">
+              {gifticon?.itemName}
+            </h1>
+
+            {/* 기프티콘 가격 */}
+            <h2 className="text-xl font-semibold text-gray-700">
+              {gifticon.itemPrice} P
+            </h2>
+
+            {/* 구매하기 버튼 */}
+            <button
+              className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors"
+              onClick={() => mutation.mutate()}
+            >
+              구매하기
+            </button>
+
+            {/* 유의사항 */}
+            <div className="text-left font-noto p-4 w-full bg-amber-50 rounded-lg ">
+              <p className="font-semibold ">▶ 유의사항</p>
+              <p className="text-sm text-gray-600">
+                - 상기 이미지는 연출된 것으로 실제와 다를 수 있습니다. <br />
+                - 본 상품은 매장 재고 상황에 따라 동일 상품으로 교환이 불가능할
+                수 있습니다.
+                <br />- 동일 상품 교환이 불가한 경우 다른 상품으로 교환이
+                가능합니다. (차액 발생 시 차액 지불)
+              </p>
+            </div>
+            <div className="h-[65px]"></div>
+            <ToastContainer />
           </div>
-
-          {/* 기프티콘 이름 */}
-          <h1 className="text-2xl font-extrabold break-words">
-            {gifticon?.itemName}
-          </h1>
-
-          {/* 기프티콘 가격 */}
-          <h2 className="text-xl font-semibold text-gray-700">
-            {gifticon.itemPrice} P
-          </h2>
-
-          {/* 구매하기 버튼 */}
-          <button
-            className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors"
-            onClick={() => mutation.mutate()}
-          >
-            구매하기
-          </button>
-
-          {/* 유의사항 */}
-          <div className="text-left p-4 w-full bg-amber-50 rounded-lg">
-            <p className="font-semibold mb-2">▶ 유의사항</p>
-            <p className="text-sm text-gray-600">
-              - 상기 이미지는 연출된 것으로 실제와 다를 수 있습니다. <br />
-              - 본 상품은 매장 재고 상황에 따라 동일 상품으로 교환이 불가능할 수
-              있습니다.
-              <br />- 동일 상품 교환이 불가한 경우 다른 상품으로 교환이
-              가능합니다. (차액 발생 시 차액 지불)
-            </p>
-          </div>
-          <ToastContainer />
-        </div>
-      ) : (
-        <div className="text-center">기프티콘 정보를 불러올 수 없습니다.</div>
-      )}
+        ) : (
+          <div className="text-center">기프티콘 정보를 불러올 수 없습니다.</div>
+        )}
+      </div>
     </div>
   );
 }

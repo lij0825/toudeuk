@@ -6,7 +6,7 @@ interface SvgSettingIconProps {
 export default function SvgSettingIcon({ onClick }: SvgSettingIconProps) {
   return (
     <SettingIcon
-      style={{ width: "32px", height: "32px", cursor: "pointer" }}
+      style={{ width: "28px", height: "28px", cursor: "pointer" }}
       onClick={onClick}
     />
   );

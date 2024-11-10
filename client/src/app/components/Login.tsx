@@ -2,11 +2,6 @@
 
 import { useEffect, useState } from "react";
 
-// import { LoginInfo } from "@/types/auth";
-// import { useMutation } from "@tanstack/react-query";
-// import { loginUser } from "@/apis/userApi";
-// import Link from "next/link";
-
 export default function Login() {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -14,36 +9,6 @@ export default function Login() {
     // 컴포넌트가 마운트되면 애니메이션이 시작됩니다.
     setIsVisible(true);
   }, []);
-  // const [formData, setFormData] = useState<LoginInfo>({
-  //   email: "",
-  //   password: "",
-  // });
-
-  // const mutation = useMutation({
-  //   mutationFn: loginUser,
-  // });
-
-  //   const mutation = useMutation(loginUser, {
-  //     onSuccess: (data) => {
-  //       // 로그인 성공 시 처리할 로직
-  //       console.log("로그인 성공:", data);
-  //       // 예: 리다이렉션 또는 사용자 데이터 저장
-  //     },
-  //     onError: (error) => {
-  //       // 로그인 실패 시 처리할 로직
-  //       alert(error);
-  //     },
-  //   });
-
-  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value } = e.target;
-  //   setFormData((prev) => ({ ...prev, [name]: value }));
-  // };
-
-  // const handleSubmit = (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   mutation.mutate(formData);
-  // };
 
   const handleKakaoLogin = () => {
     // 카카오 로그인 처리 함수 (구현 필요)
@@ -52,49 +17,10 @@ export default function Login() {
   };
 
   return (
-    <div>
-      {/* <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <div>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                placeholder="ID"
-                onChange={handleChange}
-                className="mt-1 p-2 w-full border border-gray-300 rounded-md bg-transparent"
-                required
-              />
-            </div>
-            <div>
-              <input
-                type="password"
-                name="password"
-                placeholder="PASSWORD"
-                value={formData.password}
-                onChange={handleChange}
-                className="mt-1 p-2 w-full border border-gray-300 rounded-md bg-transparent"
-                required
-              />
-            </div>
-          </div>
-          <div className="flex justify-center items-center typo-body">
-            <button
-              type="submit"
-              className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition"
-            >
-              Login
-            </button>
-          </div>
-        </form>
-        <div className="flex items-center justify-center my-4">
-          <hr className="flex-grow border-gray-300" />
-          <span className="mx-2 text-gray-500">또는</span>
-          <hr className="flex-grow border-gray-300" />
-        </div> */}
+    <div className="w-full">
       <button
         onClick={handleKakaoLogin}
-        className={`flex typo-sub-title font-bold p-3 items-center justify-center w-full h-10 rounded-md bg-[#FEE500] border border-[#FEE500] text-black transition duration-10000
+        className={`flex typo-sub-title font-bold p-2 items-center justify-center w-full rounded-md bg-[#FEE500] text-black transition duration-10000
         ${isVisible ? "animate-slide-up" : "opacity-0 translate-y-5"}
       `}
       >

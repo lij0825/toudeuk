@@ -1,81 +1,86 @@
 interface ToggleSwitchProps {
   isToggled: boolean;
   onToggle: () => void;
-  label?: string;
+  labelLeft: string;
+  labelRight: string;
 }
 
 export default function ToggleSwitch({
   isToggled,
   onToggle,
-  label,
+  labelLeft,
+  labelRight,
 }: ToggleSwitchProps) {
   return (
-    <div className="toggle-container">
-      <div
-        className={`toggle-switch ${isToggled ? "toggled" : ""}`}
-        onClick={onToggle}
-      >
-        {label && (
-          <span
-            className={`toggle-background-label ${isToggled ? "toggled" : ""}`}
-          >
-            {label}
-          </span>
-        )}
-        <div className="toggle-knob"></div>
+    <div className="slider-container">
+      <div className="slider">
+        <div className={`slider-knob ${isToggled ? "right" : "left"}`} />
+        <button
+          className={`slider-item ${!isToggled ? "active" : ""}`}
+          onClick={() => {
+            if (!isToggled) return; // 현재 비활성화된 탭일 때만 onToggle 호출
+            onToggle();
+          }}
+        >
+          {labelLeft}
+        </button>
+        <button
+          className={`slider-item ${isToggled ? "active" : ""}`}
+          onClick={() => {
+            if (isToggled) return; // 현재 비활성화된 탭일 때만 onToggle 호출
+            onToggle();
+          }}
+        >
+          {labelRight}
+        </button>
       </div>
 
       <style jsx>{`
-        .toggle-container {
+        .slider-container {
           display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 4px;
-          margin: 0;
+          justify-content: center;
+          width: 100%;
           padding: 0;
         }
-        .toggle-switch {
-          width: 86px;
-          height: 30px;
-          border-radius: 30px;
-          background-color: #a3c8ff;
-          position: relative;
-          cursor: pointer;
-          transition: background-color 0.3s ease;
+        .slider {
           display: flex;
-          align-items: center;
+          position: relative;
+          width: 100%;
+          max-width: 300px;
+          background-color: #f0f0f0;
+          border-radius: 24px;
           overflow: hidden;
         }
-        .toggle-switch.toggled {
+        .slider-item {
+          flex: 1;
+          padding: 10px 20px;
+          text-align: center;
+          cursor: pointer;
+          font-size: 14px;
+          font-weight: 500;
+          color: #555;
+          background: transparent;
+          z-index: 2;
+          transition: color 0.3s ease;
+        }
+        .slider-item.active {
+          color: #fff;
+          font-weight: bold;
+        }
+        .slider-knob {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          width: 50%;
           background-color: #4a90e2;
+          border-radius: 24px;
+          transition: transform 0.3s ease;
         }
-        .toggle-background-label {
-          position: absolute;
-          font-size: 12px;
-          color: #ffffff;
-          opacity: 0.8;
-          pointer-events: none;
-          transition: all 0.3s ease;
-          right: 8px; /* 기본 상태에서 왼쪽에 위치 */
+        .slider-knob.left {
+          transform: translateX(0%);
         }
-        .toggle-background-label.toggled {
-          right: auto;
-          left: 8px; /* 토글된 상태에서 오른쪽으로 이동 */
-          text-align: right;
-        }
-        .toggle-knob {
-          width: 24px;
-          height: 24px;
-          border-radius: 50%;
-          background-color: #ffffff;
-          position: absolute;
-          top: 3px;
-          left: 3px;
-          transition: transform 0.5s ease;
-          box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        .toggle-switch.toggled .toggle-knob {
-          transform: translateX(55px); /* 토글된 상태에서 오른쪽으로 이동 */
+        .slider-knob.right {
+          transform: translateX(100%);
         }
       `}</style>
     </div>

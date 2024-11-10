@@ -15,7 +15,7 @@ const Loading = () => {
         animationData={CUSTOM_ICON.mainLoading}
         loop={true}
         width={300}
-        height={300}
+        height={250}
         autoplay={true}
       />
     </div>

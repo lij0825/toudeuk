@@ -2,8 +2,14 @@
 
 import Image from "next/image";
 import { toast } from "react-toastify";
-import { fetchUserGifticonDetail, usedGifticon } from "@/apis/gifticonApi";
-import { QueryClient, dehydrate, useMutation, useQuery } from "@tanstack/react-query";
+import { usedGifticon } from "@/apis/gifticonApi";
+import { fetchUserGifticonDetail } from "@/apis/gifticon/useGetUserGifticonDetail";
+import {
+  QueryClient,
+  dehydrate,
+  useMutation,
+  useQuery,
+} from "@tanstack/react-query";
 import { GetServerSideProps } from "next";
 import { UserGifticonDetailInfo } from "@/types/gifticon";
 import dayjs from "dayjs";
@@ -48,7 +54,10 @@ export default function MyGifticonDetail({
       toast.success(`사용처리가 완료되었습니다.`);
     },
     onError: (error) => {
-      const errorMessage = error instanceof Error ? error.message : "사용 처리 중 오류가 발생했습니다.";
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "사용 처리 중 오류가 발생했습니다.";
       if (errorMessage === "success") {
         toast.success(`${usergifticon?.itemName} 사용이 완료되었습니다.`);
       } else {
@@ -58,7 +67,11 @@ export default function MyGifticonDetail({
   });
 
   return (
-    <div className={`h-full flex flex-col overflow-y-auto scrollbar-hidden font-noto -m-8 ${usergifticon?.used ? 'bg-gray-200 opacity-50' : ''}`}>
+    <div
+      className={`h-full flex flex-col overflow-y-auto scrollbar-hidden font-noto -m-8 ${
+        usergifticon?.used ? "bg-gray-200 opacity-50" : ""
+      }`}
+    >
       {usergifticon ? (
         <div className="flex flex-col">
           {/* 상단 이미지 - 고정 */}

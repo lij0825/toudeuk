@@ -12,15 +12,16 @@ enum SelectType {
 
 export default function HistoryPage() {
   const [selected, setSelected] = useState<SelectType>(SelectType.HISTORY);
-
-  // 드래그 스크롤 관련 변수
   const scrollRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef(false);
+  const startX = useRef(0);
   const startY = useRef(0);
-  const scrollTop = useRef(0);
+  const currentTranslateX = useRef(0);
+  const currentTranslateY = useRef(0);
 
+  // 탭 전환 함수
   const handleToggle = () => {
-    setSelected((prevSelected: SelectType) =>
+    setSelected((prevSelected) =>
       prevSelected === SelectType.HISTORY
         ? SelectType.PRIZE
         : SelectType.HISTORY
@@ -28,52 +29,118 @@ export default function HistoryPage() {
   };
 
   // 드래그 시작
-  const handleMouseDown = (e: React.MouseEvent) => {
+  const handleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
     isDragging.current = true;
-    startY.current = e.pageY - (scrollRef.current?.offsetTop || 0);
-    scrollTop.current = scrollRef.current?.scrollTop || 0;
+    startX.current = "touches" in e ? e.touches[0].clientX : e.clientX;
+    startY.current = "touches" in e ? e.touches[0].clientY : e.clientY;
+    if (scrollRef.current) scrollRef.current.style.transition = "none"; // 트랜지션 일시 제거
   };
 
   // 드래그 이동
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging.current || !scrollRef.current) return;
-    const y = e.pageY - (scrollRef.current.offsetTop || 0);
-    const walk = (y - startY.current) * 1.5; // 드래그 속도 조절
-    scrollRef.current.scrollTop = scrollTop.current - walk;
+  const handleMouseMove = (e: React.MouseEvent | React.TouchEvent) => {
+    if (!isDragging.current) return;
+
+    const currentX = "touches" in e ? e.touches[0].clientX : e.clientX;
+    const currentY = "touches" in e ? e.touches[0].clientY : e.clientY;
+
+    const deltaX = currentX - startX.current;
+    const deltaY = currentY - startY.current;
+
+    // x축으로 일정 거리 이상 움직였을 경우에만 탭 전환 인식
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
+      currentTranslateX.current = deltaX;
+      if (scrollRef.current)
+        scrollRef.current.style.transform = `translateX(${deltaX}px)`;
+    }
+    // y축으로 움직였을 경우 스크롤로 인식
+    else if (Math.abs(deltaY) > Math.abs(deltaX)) {
+      currentTranslateY.current = deltaY;
+      if (scrollRef.current) scrollRef.current.scrollTop -= deltaY; // y축 스크롤
+    }
   };
 
   // 드래그 종료
   const handleMouseUp = () => {
+    if (!isDragging.current) return;
     isDragging.current = false;
+
+    const threshold = 100; // x축 전환을 위한 기준 거리
+
+    if (scrollRef.current)
+      scrollRef.current.style.transition = "transform 0.3s ease"; // 트랜지션 복구
+
+    if (
+      currentTranslateX.current > threshold &&
+      selected === SelectType.PRIZE
+    ) {
+      setSelected(SelectType.HISTORY);
+    } else if (
+      currentTranslateX.current < -threshold &&
+      selected === SelectType.HISTORY
+    ) {
+      setSelected(SelectType.PRIZE);
+    }
+
+    resetPosition();
+  };
+
+  // 초기 위치로 리셋
+  const resetPosition = () => {
+    if (scrollRef.current) scrollRef.current.style.transform = "translateX(0)";
+    currentTranslateX.current = 0;
+    currentTranslateY.current = 0;
   };
 
   return (
     <div className="flex flex-col h-full overflow-hidden font-noto">
+      {/* 제목 섹션 */}
       <section className="flex-shrink-0 flex items-end w-full mb-2">
         <div className="flex flex-col mr-2">
           <p className="text-2xl font-bold typo-title leading-tight">Game</p>
           <p className="text-2xl font-bold typo-title leading-tight">History</p>
         </div>
-
-        <div className="mb-1">
-          <ToggleSwitch
-            isToggled={selected === SelectType.PRIZE}
-            onToggle={handleToggle}
-            label={`${
-              selected === SelectType.HISTORY ? "당첨 내역" : "게임 기록"
-            }`}
-          />
-        </div>
       </section>
 
+      {/* 탭 네비게이션 */}
+      <section className="flex-shrink-0 flex items-center justify-center w-full mb-4">
+        <ToggleSwitch
+          isToggled={selected === SelectType.PRIZE}
+          onToggle={handleToggle}
+          labelLeft="게임 기록"
+          labelRight="당첨 내역"
+        />
+      </section>
+
+      {/* 아이콘 설명 (게임 기록 탭 선택 시에만 표시) */}
+      {selected === SelectType.HISTORY && (
+        <div className="icon-description flex justify-center mb-4">
+          <div className="flex items-center mr-4">
+            <span role="img" aria-label="Trophy" className="text-lg mr-1">
+              🏆
+            </span>
+            <span className="text-gray-600">우승자</span>
+          </div>
+          <div className="flex items-center">
+            <span role="img" aria-label="Fire" className="text-lg mr-1">
+              🔥
+            </span>
+            <span className="text-gray-600">최다 클릭자</span>
+          </div>
+        </div>
+      )}
+
+      {/* 탭 내용 */}
       <section
-        className="flex-1 overflow-y-auto scrollbar-hidden"
+        className="relative flex-1 overflow-y-auto scrollbar-hidden"
         ref={scrollRef}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseUp}
         onMouseUp={handleMouseUp}
-        style={{ userSelect: "none" }} // 드래그 중 텍스트 선택 방지
+        onMouseLeave={handleMouseUp}
+        onTouchStart={handleMouseDown}
+        onTouchMove={handleMouseMove}
+        onTouchEnd={handleMouseUp}
+        style={{ userSelect: "none", transition: "transform 0.3s ease" }}
       >
         {selected === SelectType.HISTORY ? (
           <Suspense fallback={<div className="p-4">로딩 중...</div>}>
