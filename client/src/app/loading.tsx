@@ -12,7 +12,7 @@ const Loading = () => {
   return (
     <div className="w-full h-full flex justify-center items-center">
       <LottieAnimation
-        animationData={CUSTOM_ICON.subLoding}
+        animationData={CUSTOM_ICON.mainLoading}
         loop={true}
         width={300}
         height={300}

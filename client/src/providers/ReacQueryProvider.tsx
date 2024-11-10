@@ -40,10 +40,10 @@ export default function ReactQueryProvider({
   };
   return (
     <QueryClientProvider client={queryClient}>
-      <ToastContainer {...toastConfig} />
+      <ToastContainer {...toastConfig} limit={1} />
       {children}
       {process.env.NODE_ENV === "development" && (
-        <ReactQueryDevtools initialIsOpen={false}/>
+        <ReactQueryDevtools initialIsOpen={false} />
       )}
     </QueryClientProvider>
   );

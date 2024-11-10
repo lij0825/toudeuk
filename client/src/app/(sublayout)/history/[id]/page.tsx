@@ -1,54 +1,53 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { fetchHistoryDetailInfo } from "@/apis/history/historyDetail";
 import { fetchGameRewardHistory } from "@/apis/history/rewardhistory";
-import { HistoryDetailInfo, DetailContentInfo, MaxClickerInfo, WinnerInfo, GameUserInfo } from "@/types";
+import {
+  HistoryDetailInfo,
+  DetailContentInfo,
+  MaxClickerInfo,
+  WinnerInfo,
+} from "@/types";
 import { toast } from "react-toastify";
-import HistoryDetailItem from "./components/HistoryDetailInfo";
-import MiddleRewardInfo from "./components/MiddleRewardInfo";
-import MaxClickerInfoCard from "./components/MaxClickerInfo";
-import WinnerInfoCard from "./components/Winnnerinfo";
+import {
+  HistoryDetailItem,
+  MiddleRewardInfo,
+  MaxClickerInfoCard,
+  WinnerInfoCard,
+  NoInfoCard,
+} from "./components";
 
-const size = 7;
+const size = 10;
 const queryKey = "historyDetail";
 
 export default function HistoryDetail({ params }: { params: { id: string } }) {
-  const [isMiddleRewardVisible, setIsMiddleRewardVisible] = useState(false);
-
-  const toggleMiddleReward = () => {
-    setIsMiddleRewardVisible((prev) => !prev);
-  };
   const id = parseInt(params.id);
 
-  //유저 보상 내역들
+  // 유저 보상 내역들
   const { data: reward } = useQuery({
     queryKey: [queryKey, "reward"],
     queryFn: () => fetchGameRewardHistory(id),
   });
 
-  //전체 클릭 내용 구현
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isError,
-  } = useInfiniteQuery({
-    queryKey: [queryKey, id],
-    queryFn: ({ pageParam }) =>
-      fetchHistoryDetailInfo(id, {
-        page: pageParam as number,
-        size,
-      }),
-    initialPageParam: 0,
-    getNextPageParam: (lastPage: HistoryDetailInfo) => {
-      const currentPage = lastPage.page.number;
-      const totalPages = lastPage.page.totalPages;
-      return currentPage < totalPages - 1 ? currentPage + 1 : undefined;
-    },
-  });
+  // 전체 클릭 내용 구현
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isError } =
+    useInfiniteQuery({
+      queryKey: [queryKey, id],
+      queryFn: ({ pageParam }) =>
+        fetchHistoryDetailInfo(id, {
+          page: pageParam as number,
+          size,
+          sort: "Id,desc",
+        }),
+      initialPageParam: 0,
+      getNextPageParam: (lastPage: HistoryDetailInfo) => {
+        const currentPage = lastPage.page.number;
+        const totalPages = lastPage.page.totalPages;
+        return currentPage < totalPages - 1 ? currentPage + 1 : undefined;
+      },
+    });
 
   const observerRef = useRef<HTMLDivElement | null>(null);
 
@@ -68,7 +67,7 @@ export default function HistoryDetail({ params }: { params: { id: string } }) {
       },
       {
         root: null,
-        threshold: 0.1 // 요소가 완전히 화면에 들어올 때 트리거
+        threshold: 0.1,
       }
     );
 
@@ -85,66 +84,70 @@ export default function HistoryDetail({ params }: { params: { id: string } }) {
 
   const contents = data?.pages.flatMap((page) => page.content) || [];
 
-  if (!reward) {
-    return <div>보상내역 없음</div>;
-  }
-
   if (isError) {
     console.error("에러");
   }
 
-
-
+  // 렌더링 영역
   return (
     <div className="flex flex-col h-full">
-      <div className="p-4 mb-6 border-b flex-shrink-0">
-        <h2 className="text-2xl font-bold mb-2">Reward Details</h2>
+      <div className="border-b flex-shrink-0">
+        <section className="mb-2">
+          <h1 className="typo-title">Reward</h1>
+          <h1 className="typo-title">Details</h1>
+        </section>
+
         {/* 우승자 */}
-        <div>
-          <h3 className="text-xl font-semibold mt-4 mb-1">Winner</h3>
-          {reward.winner ? (
-            <WinnerInfoCard user={reward.winner as WinnerInfo} />
+        <section className="flex justify-between items-start space-x-4 font-noto">
+          <div className="w-1/2">
+            {reward?.winner ? (
+              <WinnerInfoCard user={reward.winner as WinnerInfo} />
+            ) : (
+              <NoInfoCard icon="🏆" title="우승자" message="정보가 없습니다" />
+            )}
+          </div>
+
+          {/* 최다 클릭자 */}
+          <div className="w-1/2">
+            {reward?.maxClicker ? (
+              <MaxClickerInfoCard user={reward.maxClicker as MaxClickerInfo} />
+            ) : (
+              <NoInfoCard
+                icon="👆"
+                title="최다 클릭자"
+                message="정보가 없습니다"
+              />
+            )}
+          </div>
+        </section>
+
+        {/* 중간 보상 */}
+        <div className="overflow-x-auto flex py-2 scrollbar-hidden w-full">
+          {Array.isArray(reward?.middleRewardUsers) &&
+          reward.middleRewardUsers.length > 0 ? (
+            <MiddleRewardInfo users={reward.middleRewardUsers} />
           ) : (
-            <p>정보가 없습니다</p>
-          )}
-        </div>
-        {/* 최다 클릭자 */}
-        <div>
-          <h3 className="text-xl font-semibold mb-1">Max Clicker</h3>
-          {reward.maxClicker ? (
-            <MaxClickerInfoCard user={reward.maxClicker as MaxClickerInfo} />
-          ) : (
-            <p>정보가 없습니다</p>
-          )}
-        </div>
-        {/* 중간보상 */}
-        {/* 중간보상 */}
-        <div>
-          <button
-            onClick={toggleMiddleReward}
-            className="text-xl font-semibold mt-4 mb-1 text-blue-500"
-          >
-            Middle Reward Users {isMiddleRewardVisible ? "▲" : "▼"}
-          </button>
-          {isMiddleRewardVisible && (
-            <div>
-              {Array.isArray(reward.middleRewardUsers) && reward.middleRewardUsers.length > 0 ? (
-                reward.middleRewardUsers.map((user: GameUserInfo) => (
-                  <MiddleRewardInfo key={user.nickname} user={user} />
-                ))
-              ) : (
-                <p>정보가 없습니다</p>
-              )}
+            <div className="flex justify-center items-center w-full">
+              <NoInfoCard
+                icon="🎖️"
+                title="중간 보상자"
+                message="정보가 없습니다"
+                className="w-full max-w-md" // 추가된 클래스
+              />
             </div>
           )}
         </div>
       </div>
 
-      {/* 스크롤 영역을 지정 */}
+      {/* 스크롤 영역 */}
+      <h2 className="typo-body my-2 font-extrabold">Click Log</h2>
       <div className="flex-1 overflow-y-auto scrollbar-hidden">
         {contents.map((content: DetailContentInfo, index: number) => (
           <HistoryDetailItem key={index} content={content} />
         ))}
+        {isFetchingNextPage && (
+          <div className="text-center py-4 text-gray-500">Loading more...</div>
+        )}
         <div ref={observerRef} style={{ height: "1px" }} />
       </div>
     </div>

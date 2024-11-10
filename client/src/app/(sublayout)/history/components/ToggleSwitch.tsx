@@ -11,11 +11,17 @@ export default function ToggleSwitch({
 }: ToggleSwitchProps) {
   return (
     <div className="toggle-container">
-      {label && <span className="toggle-label">{label}</span>}
       <div
         className={`toggle-switch ${isToggled ? "toggled" : ""}`}
         onClick={onToggle}
       >
+        {label && (
+          <span
+            className={`toggle-background-label ${isToggled ? "toggled" : ""}`}
+          >
+            {label}
+          </span>
+        )}
         <div className="toggle-knob"></div>
       </div>
 
@@ -28,35 +34,48 @@ export default function ToggleSwitch({
           margin: 0;
           padding: 0;
         }
-        .toggle-label {
-          font-size: 12px;
-          color: #b0b0b0; /* 연한 회색 */
-        }
         .toggle-switch {
-          width: 55px;
-          height: 24px;
+          width: 86px;
+          height: 30px;
           border-radius: 30px;
           background-color: #a3c8ff;
           position: relative;
           cursor: pointer;
           transition: background-color 0.3s ease;
+          display: flex;
+          align-items: center;
+          overflow: hidden;
         }
         .toggle-switch.toggled {
           background-color: #4a90e2;
         }
+        .toggle-background-label {
+          position: absolute;
+          font-size: 12px;
+          color: #ffffff;
+          opacity: 0.8;
+          pointer-events: none;
+          transition: all 0.3s ease;
+          right: 8px; /* 기본 상태에서 왼쪽에 위치 */
+        }
+        .toggle-background-label.toggled {
+          right: auto;
+          left: 8px; /* 토글된 상태에서 오른쪽으로 이동 */
+          text-align: right;
+        }
         .toggle-knob {
-          width: 20px;
-          height: 20px;
+          width: 24px;
+          height: 24px;
           border-radius: 50%;
           background-color: #ffffff;
           position: absolute;
-          top: 2px;
-          left: 2px;
-          transition: transform 0.3s ease;
+          top: 3px;
+          left: 3px;
+          transition: transform 0.5s ease;
           box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
         }
         .toggle-switch.toggled .toggle-knob {
-          transform: translateX(30px);
+          transform: translateX(55px); /* 토글된 상태에서 오른쪽으로 이동 */
         }
       `}</style>
     </div>

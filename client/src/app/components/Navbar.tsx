@@ -17,8 +17,10 @@ export default function Navbar() {
   const navRef = useRef<HTMLDivElement | null>(null); // 네비게이션 바 참조
   const buttonRef = useRef<HTMLButtonElement | null>(null); // 햄버거 버튼 참조
 
-  // '/mygifticon' 자체는 제외하고, '/mygifticon/...'로 시작하는 경우 항상 고정
-  const isFixedVisible = /^\/mygifticon\/.+/.test(pathname || "");
+  // '/mygifticon' 및 '/gifticon' 자체는 제외하고, 하위 경로가 있는 경우 항상 고정
+  const isFixedVisible = /^(\/mygifticon\/.+|\/gifticon\/.+)$/.test(
+    pathname || ""
+  );
 
   useEffect(() => {
     // 특정 경로일 때 Navbar를 항상 표시 상태로 유지
