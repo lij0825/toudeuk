@@ -129,6 +129,14 @@ public class ClickGameCacheRepository {
 				.toList();
 	}
 
+	public List<String> getMaxClickerList(Long maxClick) {
+		return zSetOperations.reverseRangeByScore(CLICK_COUNT_KEY, maxClick, maxClick)
+				.stream()
+				.map(Objects::toString)
+				.toList();
+	}
+
+
 	// 삭제
 	public void deleteAllClickInfo() {
 		redisTemplate.delete(CLICK_TOTAL_KEY);
