@@ -18,18 +18,49 @@ import {
   WinnerInfoCard,
   NoInfoCard,
 } from "./components";
+import dynamic from "next/dynamic";
+import { CUSTOM_ICON } from "@/constants/customIcons";
 
 const size = 10;
 const queryKey = "historyDetail";
 
+const LottieAnimation = dynamic(
+  () => import("@/app/components/LottieAnimation"),
+  { ssr: false }
+);
+
 export default function HistoryDetail({ params }: { params: { id: string } }) {
   const id = parseInt(params.id);
+
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
+  const startY = useRef(0);
+  const scrollTop = useRef(0);
 
   // 유저 보상 내역들
   const { data: reward } = useQuery({
     queryKey: [queryKey, "reward"],
     queryFn: () => fetchGameRewardHistory(id),
   });
+
+  const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
+    isDragging.current = true;
+    startY.current = event.clientY;
+    scrollTop.current = scrollContainerRef.current?.scrollTop || 0;
+    document.body.style.userSelect = "none";
+  };
+
+  const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (isDragging.current && scrollContainerRef.current) {
+      const dy = event.clientY - startY.current;
+      scrollContainerRef.current.scrollTop = scrollTop.current - dy;
+    }
+  };
+
+  const handleMouseUp = () => {
+    isDragging.current = false;
+    document.body.style.userSelect = "auto";
+  };
 
   // 전체 클릭 내용 구현
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isError } =
@@ -126,7 +157,7 @@ export default function HistoryDetail({ params }: { params: { id: string } }) {
                 icon="🎖️"
                 title="중간 보상자"
                 message="정보가 없습니다"
-                className="w-full max-w-md" // 추가된 클래스
+                className="w-full max-w-md"
               />
             </div>
           )}
@@ -135,12 +166,27 @@ export default function HistoryDetail({ params }: { params: { id: string } }) {
 
       {/* 스크롤 영역 */}
       <h2 className="typo-body my-2 font-extrabold">Click Log</h2>
-      <div className="flex-1 overflow-y-auto scrollbar-hidden">
+      <div
+        className="flex-1 overflow-y-auto scrollbar-hidden"
+        ref={scrollContainerRef}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+      >
         {contents.map((content: DetailContentInfo, index: number) => (
           <HistoryDetailItem key={index} content={content} />
         ))}
         {isFetchingNextPage && (
-          <div className="text-center py-4 text-gray-500">Loading more...</div>
+          <div className="flex justify-center items-center">
+            <LottieAnimation
+              animationData={CUSTOM_ICON.mainLoading}
+              loop={1}
+              width={100}
+              height={45}
+              cursor="none"
+            />
+          </div>
         )}
         <div ref={observerRef} style={{ height: "1px" }} />
       </div>

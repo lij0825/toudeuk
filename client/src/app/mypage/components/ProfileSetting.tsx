@@ -51,7 +51,6 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
       : "/default_profile.png"
   );
 
-  // 닉네임 중복확인 로직
   const { isValid, isChecked, checkNickname, isLoading } =
     useNicknameCheck(nickname);
 
@@ -66,12 +65,23 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
     },
   });
 
+  const [isNicknameValid, setIsNicknameValid] = useState<boolean>(true);
+
   function toggleEditMode(): void {
     setIsEditing(!isEditing);
   }
 
   function handleNicknameChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setNickname(e.target.value);
+    const newNickname = e.target.value;
+
+    // 글자 길이와 공백 검사
+    if (newNickname.length > maxNicknameLength || /\s/.test(newNickname)) {
+      setIsNicknameValid(false);
+    } else {
+      setIsNicknameValid(true);
+    }
+
+    setNickname(newNickname);
   }
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,12 +96,8 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
   };
 
   function handleSave() {
-    if (!isChecked || !isValid) {
-      toast.error("닉네임 중복 여부를 확인해주세요.");
-      return;
-    }
-    if (nickname.length > maxNicknameLength) {
-      toast.error("닉네임은 최대 8글자까지 가능합니다.");
+    if (!isChecked || !isValid || !isNicknameValid) {
+      toast.error("닉네임을 확인해주세요.");
       return;
     }
 
@@ -114,6 +120,7 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
   if (!isOpen) return null;
 
   const nicknameExceedsLimit = nickname.length > maxNicknameLength;
+  const hasWhitespace = /\s/.test(nickname);
 
   return (
     <div
@@ -132,14 +139,16 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
             ) : (
               <div className="flex items-center w-full justify-between">
                 <div className="flex items-center">
-                  <Image
-                    width={50}
-                    height={50}
-                    src={previewImage}
-                    alt="프로필 미리보기"
-                    className="object-cover rounded-full mr-2"
-                  />
-                  <strong className="text-base">{nickname}님</strong>
+                  <div className="w-[50px] h-[50px] rounded-full overflow-hidden mr-2">
+                    <Image
+                      width={50}
+                      height={50}
+                      src={previewImage}
+                      alt="프로필 미리보기"
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
+                  <strong className="text-base">{user?.nickName}님</strong>
                 </div>
                 <div className="cursor-pointer" onClick={toggleEditMode}>
                   <LottieAnimation
@@ -159,13 +168,13 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
           <section className="mb-4 space-y-4">
             <div className="flex justify-center">
               {previewImage && (
-                <div className="w-[60px] h-[60px] overflow-hidden rounded-full">
+                <div className="w-[60px] h-[60px] rounded-full overflow-hidden">
                   <Image
                     width={60}
                     height={60}
                     src={previewImage}
                     alt="프로필 미리보기"
-                    className="object-fit"
+                    className="object-cover w-full h-full"
                     quality={100}
                   />
                 </div>
@@ -182,7 +191,7 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
                   placeholder="닉네임은 최대 8글자까지 가능합니다."
                   maxLength={maxNicknameLength + 1}
                   className={`w-2/3 px-3 py-2 rounded text-gray-600 text-sm border ${
-                    nicknameExceedsLimit
+                    nicknameExceedsLimit || hasWhitespace || !isNicknameValid
                       ? "border-red-500 focus:border-red-500 focus:ring-red-500"
                       : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                   } focus:outline-none focus:ring-1`}
@@ -199,9 +208,19 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
                   닉네임은 최대 8글자까지 가능합니다.
                 </p>
               )}
+              {hasWhitespace && (
+                <p className="text-xs text-red-500 mt-1">
+                  닉네임에 공백은 사용할 수 없습니다.
+                </p>
+              )}
               {isChecked && !isValid && (
                 <p className="text-xs text-red-500 mt-1">
                   닉네임이 중복됩니다.
+                </p>
+              )}
+              {isChecked && isValid && (
+                <p className="text-xs text-green-500 mt-1">
+                  닉네임이 중복되지 않습니다.
                 </p>
               )}
               {!isChecked && (
@@ -235,9 +254,11 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
               </button>
               <button
                 onClick={handleSave}
-                disabled={!isChecked || !isValid || isLoading}
+                disabled={
+                  !isChecked || !isValid || isLoading || !isNicknameValid
+                }
                 className={`px-4 py-2 rounded-lg text-sm text-white transition duration-150 ${
-                  !isChecked || !isValid || isLoading
+                  !isChecked || !isValid || isLoading || !isNicknameValid
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-blue-500 hover:bg-blue-600"
                 }`}

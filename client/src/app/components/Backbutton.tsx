@@ -12,11 +12,11 @@ export default function BackButton() {
   return (
     <button
       onClick={handleBack}
-      className="p-2 rounded-full hover:bg-gray-600 transition flex items-center justify-center "
+      className="p-2 rounded-md hover:bg-gray-600 transition flex items-center justify-center "
       style={{
         width: "36px",
         height: "36px",
-        backgroundColor: "rgba(145, 172, 255, 0.8)", // 배경색
+        backgroundColor: "rgba(185, 202, 255, 0.724)", // 배경색
         color: "#ffffff", // 글씨(이모티콘) 흰색
         fontSize: "16px", // 이모티콘 크기 조정
       }}

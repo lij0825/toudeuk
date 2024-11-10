@@ -120,8 +120,8 @@ export default function Navbar() {
             <LottieAnimation
               animationData={CUSTOM_ICON.gamecontroller}
               loop={1}
-              width={50}
-              height={50}
+              width={45}
+              height={45}
               cursor="pointer"
             />
             <span className="text-xs">게임</span>
