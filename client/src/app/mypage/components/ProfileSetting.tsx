@@ -143,7 +143,11 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
                     <Image
                       width={50}
                       height={50}
-                      src={previewImage}
+                      src={
+                        user?.profileImg
+                          ? `${user.profileImg}?${Date.now()}`
+                          : "/default_profile.png"
+                      }
                       alt="프로필 미리보기"
                       className="object-cover w-full h-full"
                     />
