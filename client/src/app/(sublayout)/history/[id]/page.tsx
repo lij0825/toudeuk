@@ -52,12 +52,6 @@ export default function HistoryDetail({ params }: { params: { id: string } }) {
   const observerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (!reward) {
-      toast("보상정보가 없습니다.");
-    }
-  }, [reward]);
-
-  useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         const target = entries[0];
