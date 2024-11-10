@@ -19,6 +19,7 @@ import com.toudeuk.server.domain.user.entity.User;
 import com.toudeuk.server.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.geolatte.geom.M;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,6 +42,7 @@ public class ClickGameService {
 
 	private static final int CLICK_CASH = -1;
 	private static final int FIRST_CLICK_REWARD = 500;
+    private static final int MAX_CLICK_REWARD = 500;
 
     private final ClickGameCacheRepository clickCacheRepository;
     private final ClickGameRepository clickGameRepository;
@@ -181,6 +183,19 @@ public class ClickGameService {
 
         if (clickCacheRepository.isGameCoolTime()) {
             log.info("게임 종료");
+
+            // 최대 클릭 보상
+            try {
+                Long maxClick = rankingList.get(0).getScore();
+                List<String> maxClickerList = clickCacheRepository.getMaxClickerList(maxClick);
+                User maxClicker = clickGameLogRepository.findFirstMaxClicker(maxClickerList).get(0);
+                ClickGame clickGame = clickGameRepository.findById(clickCacheRepository.getGameId()).orElseThrow(() -> new BaseException(SAVING_GAME_ERROR));
+                ClickGameRewardLog clickGameRewardLog = ClickGameRewardLog.create(maxClicker, clickGame, MAX_CLICK_REWARD, maxClick.intValue(), MAX_CLICKER);
+                clickGameRewardLogRepository.save(clickGameRewardLog);
+
+            } catch (Exception e) {
+                throw new BaseException(SAVING_GAME_ERROR);
+            }
 
             // * 완료 게임 삭제
             log.info("clickCacheRepository.deleteAllClickInfo() 실행 전");
