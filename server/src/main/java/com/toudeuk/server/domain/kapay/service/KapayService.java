@@ -6,7 +6,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -156,7 +155,7 @@ public class KapayService {
 		}
 	}
 
-	public void chargeCash(KafkaChargingDto kafkaChargingDto) {
+	public void saveChargeCash(KafkaChargingDto kafkaChargingDto) {
 
 		User user = userRepository.findById(kafkaChargingDto.getUserId()).orElseThrow(
 			() -> new BaseException(ErrorCode.USER_NOT_FOUND)
