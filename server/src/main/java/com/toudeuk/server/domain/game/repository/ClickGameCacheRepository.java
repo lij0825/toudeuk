@@ -5,13 +5,15 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.core.ZSetOperations;
+import org.springframework.stereotype.Repository;
 
 import com.toudeuk.server.domain.game.dto.RankData;
 import com.toudeuk.server.domain.user.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.*;
-import org.springframework.stereotype.Repository;
 
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +38,6 @@ public class ClickGameCacheRepository {
 	@Resource(name = "redisTemplate")
 	private ZSetOperations<String, Object> zSetOperations;
 	@Resource(name = "redisTemplate")
-	private ListOperations<String, Object> listOperations;
-	@Resource(name = "redisTemplate")
 	public ValueOperations<String, Object> valueOperations;
 
 	@Autowired
@@ -54,7 +54,6 @@ public class ClickGameCacheRepository {
 	public boolean existGame() {
 		return valueOperations.get(GAME_ID_KEY) != null;
 	}
-
 
 	public Long getGameId() {
 		return ((Number)valueOperations.get(GAME_ID_KEY)).longValue();
@@ -98,7 +97,7 @@ public class ClickGameCacheRepository {
 
 	// 클릭 수 click:count
 	public Integer addUserClick(Long userId) {
-		if(getUsername(userId) == null){
+		if (getUsername(userId) == null) {
 			return -1;
 		}
 		Number score = zSetOperations.incrementScore(CLICK_COUNT_KEY, getUsername(userId), 1);
@@ -115,27 +114,25 @@ public class ClickGameCacheRepository {
 
 	public Integer getUserRank(Long userId) { // 유저의 클릭 랭킹
 		Long rank = zSetOperations.reverseRank(CLICK_COUNT_KEY, getUsername(userId));
-		if(rank == null){
+		if (rank == null) {
 			return -1;
 		}
 		return rank.intValue() + 1;
 	}
 
-
 	public List<RankData.UserScore> getRankingList() {
 		return zSetOperations.reverseRangeByScoreWithScores(CLICK_COUNT_KEY, 0, Integer.MAX_VALUE, 0, 10)
-				.stream()
-				.map(tuple -> RankData.UserScore.of((String)tuple.getValue(), ((Number)tuple.getScore()).longValue()))
-				.toList();
+			.stream()
+			.map(tuple -> RankData.UserScore.of((String)tuple.getValue(), ((Number)tuple.getScore()).longValue()))
+			.toList();
 	}
 
 	public List<String> getMaxClickerList(Long maxClick) {
 		return zSetOperations.reverseRangeByScore(CLICK_COUNT_KEY, maxClick, maxClick)
-				.stream()
-				.map(Objects::toString)
-				.toList();
+			.stream()
+			.map(Objects::toString)
+			.toList();
 	}
-
 
 	// 삭제
 	public void deleteAllClickInfo() {
@@ -155,8 +152,7 @@ public class ClickGameCacheRepository {
 	// 캐시 cash
 	public Integer getUserCash(Long userId) {
 
-
-		Integer userCash = (Integer) valueOperations.get(USER_CASH_KEY + userId);
+		Integer userCash = (Integer)valueOperations.get(USER_CASH_KEY + userId);
 
 		if (userCash == null) {
 			Integer cash = userRepository.findById(userId).get().getCash();
@@ -170,7 +166,6 @@ public class ClickGameCacheRepository {
 	public void updateUserCash(Long userId, long changeCash) {
 		valueOperations.increment(USER_CASH_KEY + userId, changeCash);
 	}
-
 
 	// 실시간 보상 제공
 	public void reward(Long userId, int reward) {

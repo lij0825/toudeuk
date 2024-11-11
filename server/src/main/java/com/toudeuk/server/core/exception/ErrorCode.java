@@ -25,6 +25,7 @@ public enum ErrorCode {
 	INVALID_ACCESS_TOKEN(2008, HttpStatus.UNAUTHORIZED, "유효하지 않은 액세스 토큰입니다."),
 
 	USER_NICKNAME_DUPLICATION(2009, HttpStatus.BAD_REQUEST, "닉네임이 중복되었습니다."),
+	USER_REWARD_LOG_NOT_FOUND(2010, HttpStatus.NOT_FOUND, "사용자의 보상 로그를 찾을 수 없습니다."),
 
 	// Item
 	ITEM_NOT_FOUND(3000, HttpStatus.NOT_FOUND, "아이템을 찾을 수 없습니다."),
@@ -55,8 +56,6 @@ public enum ErrorCode {
 	NOT_EXISTS_AUTHORIZATION(401, HttpStatus.UNAUTHORIZED, "Authorization Header가 빈값입니다."),
 	NOT_ACCESS_TOKEN_TYPE(1003, HttpStatus.UNAUTHORIZED, "해당 토큰은 access token이 아닙니다."),
 	FORBIDDEN_ADMIN(404, HttpStatus.FORBIDDEN, "관리자 Role이 아닙니다."),
-
-
 
 	// KAFKA
 	KAFKA_PRODUCER_ERROR(5000, HttpStatus.SERVICE_UNAVAILABLE, "카프카 메시지 발행 도중 오류가 발생했습니다."),
