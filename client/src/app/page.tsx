@@ -23,8 +23,8 @@ export default function Home() {
       onClick={handleClick}
       className="relative flex flex-col items-center justify-center w-full h-full bg-white overflow-hidden"
     >
-      <div className="absolute w-full h-full flex flex-col items-center justify-center typo-title">
-        <div>터득</div>
+      <div className="absolute w-full h-full flex flex-col items-center justify-center">
+        <div className="font-noto text-3xl font-extrabold">터득</div>
         <div className="typo-sub-title">Toudeuk</div>
         <div className="relative">
           <LottieAnimation
@@ -38,6 +38,7 @@ export default function Home() {
             <Login />
           </div>
         </div>
+        <div className="text-gray-400 font-noto">터득이란?</div>
       </div>
     </div>
   );

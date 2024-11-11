@@ -4,3 +4,9 @@ export interface UserInfo {
   profileImg: string;
   cash: number;
 }
+
+export interface UserPartialInfo {
+  userId: number;
+  nickName: string;
+  profileImg: string;
+}
