@@ -7,7 +7,6 @@ import { RankInfo } from "@/types";
 import { useMutation } from "@tanstack/react-query";
 import { gameClick } from "@/apis/gameApi";
 import SockJS from "sockjs-client";
-import CurrentRank from "./components/CurrentRank";
 import Ranking from "./components/Ranking";
 import { HiInformationCircle } from "react-icons/hi";
 
@@ -32,12 +31,10 @@ export default function Toudeuk() {
   });
 
   useEffect(() => {
-    // ! FIXME : 서버 주소 변경 필요
     const socket = new SockJS(`${BASE_URL}/ws`);
     const stompClient = Stomp.over(socket);
 
     const accessToken = sessionStorage.getItem("accessToken");
-    // 연결 헤더에 accessToken을 추가합니다.
     const headers = {
       Authorization: `Bearer ${accessToken}`,
     };
@@ -50,17 +47,8 @@ export default function Toudeuk() {
         stompClient.subscribe("/topic/health", (message) => {}, headers);
 
         stompClient.subscribe(
-          "/topic/health",
-          (message) => {
-            console.log("메시지 health", message.body);
-          },
-          headers
-        );
-
-        stompClient.subscribe(
           "/topic/game",
           (message) => {
-            console.log("메시지 Json 파싱", JSON.parse(message.body));
             const data = JSON.parse(message.body);
             setTotalClick(data.totalClick || 0);
             setLatestClicker(data.latestClicker || null);
@@ -101,36 +89,40 @@ export default function Toudeuk() {
     : 0;
 
   return (
-    <div className="items-center h-full w-full overflow-hidden">
-      <section className="float-end w-full p-2">
-        <HiInformationCircle className="text-gray-300 w-6 h-6" />
-      </section>
-
-      {/* 게임 상태에 따른 화면 전환 */}
+    <div className="items-center relative h-full w-full overflow-hidden font-noto bg-[#031926]">
       {status === "RUNNING" ? (
-        <>
-          <h2 className="mt-4 text-lg font-semibold text-[#00ff88]">
-            마지막 클릭자
-          </h2>
-          <p>{latestClicker || "No last clicker yet"}</p>
-          <CurrentRank rank={myRank} />
-          <div
-            className="relative flex items-center justify-center w-40 h-40 "
-            onClick={handleClick}
-          >
-            <GameButton totalClick={totalClick} />
-          </div>
+         <>
+        {/* 최상단 섹션 */}
+          <section className="w-full flex justify-center items-center bg-black p-5">
+            <div className="flex-grow text-white">현재 내 순위 : {myRank}</div>
+            <div className="flex-grow text-white">
+              마지막 클릭자 {latestClicker || "클릭자가 없습니다"}
+            </div>
+            <div className="text-gray-400">
+              <HiInformationCircle className="w-[24px] h-[24px]" />
+            </div>
+          </section>
+          {/* 내용 섹션 */}
+          <div className="flex flex-col items-center justify-center h-full relative">
+            {/* 랭킹 */}
+            <section className="absolute left-4 top-4 h-full z-0 overflow-y-auto scrollbar-hidden">
+              <h3 className="text-xl font-extrabold font-noto text-white mb-2">
+                실시간 랭킹
+              </h3>
+              <Ranking ranking={ranking} />
+            </section>
 
-          <h3 className="mt-4 text-xl font-semibold text-[#00ff88]">랭킹</h3>
-          <Ranking ranking={ranking} />
-          {/* 게임이 진행 중일 때는 현재 화면을 보여줍니다 */}
-          {/* <p>게임이 진행 중입니다.</p> */}
+            {/* 버튼 */}
+            <section
+              className="w-40 h-40 z-50 flex items-center justify-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+              onClick={handleClick}
+            >
+              <GameButton totalClick={totalClick} />
+            </section>
+          </div>
         </>
       ) : (
-        <>
-          {/* 쿨타임이 남아있을 때는 남은 시간을 보여줍니다 */}
-          <p>다음 라운드까지 {remainingTime}초 남았습니다.</p>
-        </>
+        <p>다음 라운드까지 {remainingTime}초 남았습니다.</p>
       )}
     </div>
   );
