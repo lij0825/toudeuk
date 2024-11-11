@@ -66,6 +66,8 @@ export default function Toudeuk() {
             setLatestClicker(data.latestClicker || null);
             setStatus(data.status || null);
             setRanking(data.rank || []);
+
+            const coolTimeDate = new Date(data.coolTime);
             setCoolTime(data.coolTime || null);
           },
           headers
@@ -90,6 +92,7 @@ export default function Toudeuk() {
       mutation.mutate();
     }
   };
+
   const remainingTime = coolTime ? Math.max(0, Math.floor((coolTime.getTime() - new Date().getTime()) / 1000)) : 0;
 
 
