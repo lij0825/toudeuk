@@ -10,6 +10,7 @@ import java.util.List;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.toudeuk.server.core.exception.BaseException;
 import com.toudeuk.server.core.kafka.Producer;
 import com.toudeuk.server.core.kafka.dto.KafkaClickDto;
+import com.toudeuk.server.core.kafka.dto.KafkaGameCashLogDto;
 import com.toudeuk.server.domain.game.dto.GameData;
 import com.toudeuk.server.domain.game.dto.HistoryData;
 import com.toudeuk.server.domain.game.dto.RankData;
@@ -29,7 +31,10 @@ import com.toudeuk.server.domain.game.repository.ClickGameCacheRepository;
 import com.toudeuk.server.domain.game.repository.ClickGameLogRepository;
 import com.toudeuk.server.domain.game.repository.ClickGameRepository;
 import com.toudeuk.server.domain.game.repository.ClickGameRewardLogRepository;
+import com.toudeuk.server.domain.user.entity.CashLog;
+import com.toudeuk.server.domain.user.entity.CashLogType;
 import com.toudeuk.server.domain.user.entity.User;
+import com.toudeuk.server.domain.user.repository.CashLogRepository;
 import com.toudeuk.server.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -54,6 +59,8 @@ public class ClickGameService {
     private final Producer producer;
 
 	private final SimpMessagingTemplate messagingTemplate;
+    private final KafkaTemplate kafkaTemplate;
+    private final CashLogRepository cashLogRepository;
 
     // 게임 시작
     @Transactional
@@ -149,10 +156,11 @@ public class ClickGameService {
         String latestClicker = clickCacheRepository.getUsername(userId);
         RewardType rewardType = RewardType.from(totalClick);
 
+        Long gameId = clickCacheRepository.getGameId();
         //!  여기서 보상을 결정하고 레디스에 넣는 작업을 끝내야함, 이휴 컨슈머에서는 오로지 MYSQL만 건들도록
         KafkaClickDto clickDto = new KafkaClickDto(
                 userId,
-                clickCacheRepository.getGameId(),
+                gameId,
                 totalClick.intValue(),
                 rewardType
         );
@@ -182,23 +190,27 @@ public class ClickGameService {
 //      ! 특정 구독자에게 메시지 전송 -> Http방식으로 변경
 //        messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
 
+
         if (rewardType.equals(WINNER)) {
             clickCacheRepository.setGameCoolTime();
             log.info("게임 종료");
 
+            // * 카프카로 유저들 클릭수 전송
+
+            List<KafkaGameCashLogDto> allClickCounts = clickCacheRepository.getAllClickCounts(gameId);
+
+            producer.occurGameCashLog(allClickCounts);
 
             // 최대 클릭 보상
-            try {
-                Long maxClick = rankingList.get(0).getScore();
-                List<String> maxClickerList = clickCacheRepository.getMaxClickerList(maxClick);
-                User maxClicker = clickGameLogRepository.findFirstMaxClicker(maxClickerList).get(0);
-                ClickGame clickGame = clickGameRepository.findById(clickCacheRepository.getGameId()).orElseThrow(() -> new BaseException(SAVING_GAME_ERROR));
-                ClickGameRewardLog clickGameRewardLog = ClickGameRewardLog.create(maxClicker, clickGame, MAX_CLICK_REWARD, maxClick.intValue(), MAX_CLICKER);
-                clickGameRewardLogRepository.save(clickGameRewardLog);
+            Long maxClick = rankingList.get(0).getScore();
+            List<String> maxClickerList = clickCacheRepository.getMaxClickerList(maxClick);
+            User maxClicker = clickGameLogRepository.findFirstMaxClicker(maxClickerList).get(0);
+            ClickGame clickGame = clickGameRepository.findById(gameId).orElseThrow(() -> new BaseException(SAVING_GAME_ERROR));
+            ClickGameRewardLog clickGameRewardLog = ClickGameRewardLog.create(maxClicker, clickGame, MAX_CLICK_REWARD, maxClick.intValue(), MAX_CLICKER);
+            clickGameRewardLogRepository.save(clickGameRewardLog);
+            clickCacheRepository.reward(maxClicker.getId(), MAX_CLICK_REWARD);
 
-            } catch (Exception e) {
-                throw new BaseException(SAVING_GAME_ERROR);
-            }
+            //! 게임 종료시 유저 캐시로그들 저장하기
 
 
             // * 완료 게임 삭제
@@ -215,6 +227,23 @@ public class ClickGameService {
 
         return displayInfoForClicker;
     }
+
+    @Transactional
+    public void saveGameCashLog(List<KafkaGameCashLogDto> gameCashLogs) {
+        List<CashLog> cashLogs = gameCashLogs.stream()
+            .map(gameCashLogDto ->
+                CashLog.create(
+                    userRepository.findById(gameCashLogDto.getUserId())
+                        .orElseThrow(() -> new BaseException(USER_NOT_FOUND)),
+                    gameCashLogDto.getChangeCash(),
+                    gameCashLogDto.getResultCash(),
+                    "게임 " + gameCashLogDto.getGameId() + "회차",
+                    CashLogType.GAME
+                )).toList();
+
+        cashLogRepository.saveAll(cashLogs);
+    }
+
 
     @Transactional
     public void saveGameData(KafkaClickDto clickDto) {
@@ -331,4 +360,6 @@ public class ClickGameService {
 			middleRewardUsers
 		);
 	}
+
+
 }

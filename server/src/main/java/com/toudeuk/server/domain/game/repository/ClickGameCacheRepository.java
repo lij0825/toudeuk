@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.toudeuk.server.core.kafka.dto.KafkaGameCashLogDto;
 import com.toudeuk.server.domain.game.dto.RankData;
 import com.toudeuk.server.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,6 @@ public class ClickGameCacheRepository {
 	private static final String GAME_ID_KEY = "game:id";
 	private static final String GAME_COOLTIME_KEY = "game:cooltime";
 	private static final String NICKNAME_KEY = "nickname:";
-
 	private static final String USER_CASH_KEY = "cash:";
 
 	private static final long MAX_CLICK = 1000; // 12000
@@ -84,11 +84,6 @@ public class ClickGameCacheRepository {
 
 	public Integer addTotalClick() {
 		Long totalClick = ((Number)valueOperations.increment(CLICK_TOTAL_KEY)).longValue();
-
-		// log.info("totalClick : {}", totalClick);
-		// if (totalClick.equals(MAX_CLICK)) {
-		// 	setGameCoolTime();
-		// }
 		return totalClick.intValue();
 	}
 
@@ -124,16 +119,16 @@ public class ClickGameCacheRepository {
 
 	public List<RankData.UserScore> getRankingList() {
 		return zSetOperations.reverseRangeByScoreWithScores(CLICK_COUNT_KEY, 0, Integer.MAX_VALUE, 0, 10)
-				.stream()
-				.map(tuple -> RankData.UserScore.of((String)tuple.getValue(), ((Number)tuple.getScore()).longValue()))
-				.toList();
+			.stream()
+			.map(tuple -> RankData.UserScore.of((String)tuple.getValue(), ((Number)tuple.getScore()).longValue()))
+			.toList();
 	}
 
 	public List<String> getMaxClickerList(Long maxClick) {
 		return zSetOperations.reverseRangeByScore(CLICK_COUNT_KEY, maxClick, maxClick)
-				.stream()
-				.map(Objects::toString)
-				.toList();
+			.stream()
+			.map(Objects::toString)
+			.toList();
 	}
 
 
@@ -179,6 +174,7 @@ public class ClickGameCacheRepository {
 
 	public void setUsername(Long userId, String nickname) {
 		redisTemplate.opsForValue().set(NICKNAME_KEY + userId.toString(), nickname);
+		redisTemplate.opsForValue().set(NICKNAME_KEY + nickname, userId.toString());
 	}
 
 	public String getUsername(Long userId) {
@@ -193,4 +189,23 @@ public class ClickGameCacheRepository {
 			redisTemplate.delete(keys);
 		}
 	}
+
+	public List<KafkaGameCashLogDto> getAllClickCounts(Long gameId) {
+		Set<ZSetOperations.TypedTuple<String>> userCountTuple = redisTemplate.opsForZSet()
+			.rangeWithScores(CLICK_COUNT_KEY, 0, -1);
+
+		return userCountTuple.stream()
+			.map(tuple -> {
+				Long userId = Long.parseLong(
+					redisTemplate.opsForValue().get(NICKNAME_KEY + tuple.getValue().replaceAll("^\"|\"$", "")));
+
+				return new KafkaGameCashLogDto(
+					userId,
+					-tuple.getScore().intValue(),
+					getUserCash(userId) - tuple.getScore().intValue(),
+					gameId);
+			})
+			.collect(Collectors.toList());
+	}
 }
+
