@@ -4,8 +4,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.toudeuk.configuration.ConnectionPool;
+import com.toudeuk.dto.KafkaGameCashLogDto;
+import com.toudeuk.enums.CashLogType;
 
 public class ToudeukDao {
 
@@ -88,4 +91,32 @@ public class ToudeukDao {
 			pstmt.executeUpdate();
 		}
 	}
+
+	public void insertCashLogBatch(Connection conn, List<KafkaGameCashLogDto> gameCashLogs) throws SQLException {
+		String sql = "INSERT INTO cash_log (user_id, change_cash, result_cash, cash_name, cash_log_type, created_at) VALUES (?, ?, ?, ?, ?, ?)";
+		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			int count = 0;
+			for (KafkaGameCashLogDto gameCashLog : gameCashLogs) {
+				pstmt.setLong(1, gameCashLog.getUserId());
+				pstmt.setInt(2, gameCashLog.getChangeCash());
+				pstmt.setInt(3, gameCashLog.getResultCash());
+				pstmt.setString(4, "게임 " + gameCashLog.getGameId() + "회차");
+				pstmt.setString(5, CashLogType.GAME.toString());
+				pstmt.setObject(6, LocalDateTime.now());
+				pstmt.addBatch();
+				count++;
+
+				if (count % 1000 == 0) {
+					pstmt.executeBatch();
+					pstmt.clearBatch();
+				}
+			}
+
+			// 남은 배치 처리
+			if (count % 1000 != 0) {
+				pstmt.executeBatch();
+			}
+		}
+	}
+
 }

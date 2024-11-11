@@ -1,20 +1,20 @@
 package com.toudeuk.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.toudeuk.enums.RewardType;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @ToString
-public class KafkaClickDto {
-
-    private Long userId;
-    private Long gameId;
-    private int totalClickCount;
-    private RewardType rewardType;
+public class KafkaGameCashLogDto {
+	Long userId;
+	int changeCash;
+	int resultCash;
+	Long gameId;
 }

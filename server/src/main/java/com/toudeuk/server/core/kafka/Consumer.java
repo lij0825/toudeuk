@@ -31,33 +31,38 @@ public class Consumer {
     private final ItemService itemService;
     private final KapayService kapayService;
 
-    @KafkaListener(topics = "${consumers.topics.click.name}", groupId = "${consumers.group-id.topics.click.name}")
-    public void consumerClick(ConsumerRecord<String, String> record) throws IOException {
-        KafkaClickDto clickDto = objectMapper.readValue(record.value(), KafkaClickDto.class);
-        clickGameService.saveGameData(clickDto);
-    }
-
-    @KafkaListener(topics = "${consumers.topics.item-buy.name}", groupId = "${consumers.group-id.topics.click.name}")
-    public void consumerItemBuy(ConsumerRecord<String, String> record) throws IOException {
-        KafkaItemBuyDto kafkaItemBuyDto = objectMapper.readValue(record.value(), KafkaItemBuyDto.class);
-        log.info("kafkaItemBuyDto : {}", kafkaItemBuyDto);
-
-        itemService.saveItemBuyData(kafkaItemBuyDto);
-    }
-
-    @KafkaListener(topics = "${consumers.topics.charge-cash.name}", groupId = "${consumers.group-id.topics.click.name}")
-    public void consumeChargeCash(ConsumerRecord<String, String> record) throws IOException {
-        KafkaChargingDto kafkaChargingDto = objectMapper.readValue(record.value(), KafkaChargingDto.class);
-        log.info("kafkaChargingDto : {}", kafkaChargingDto);
-
-        kapayService.saveChargeCash(kafkaChargingDto);
-    }
-
-    @KafkaListener(topics = "${consumers.topics.game-cash-log.name}", groupId = "${consumers.group-id.topics.click.name}")
-    public void consumeGameCashLog(ConsumerRecord<String, String> record) throws IOException {
-        JavaType type = objectMapper.getTypeFactory().constructCollectionType(List.class, KafkaGameCashLogDto.class);
-        List<KafkaGameCashLogDto> gameCashLogs = objectMapper.readValue(record.value(), type);
-
-        clickGameService.saveGameCashLog(gameCashLogs);
-    }
+    // @KafkaListener(topics = "${consumers.topics.click.name}", groupId = "${consumers.group-id.topics.click.name}")
+    // public void consumerClick(ConsumerRecord<String, String> record) throws IOException {
+    //     KafkaClickDto clickDto = objectMapper.readValue(record.value(), KafkaClickDto.class);
+    //     clickGameService.saveGameData(clickDto);
+    // }
+    //
+    // @KafkaListener(topics = "${consumers.topics.item-buy.name}", groupId = "${consumers.group-id.topics.click.name}")
+    // public void consumerItemBuy(ConsumerRecord<String, String> record) throws IOException {
+    //     KafkaItemBuyDto kafkaItemBuyDto = objectMapper.readValue(record.value(), KafkaItemBuyDto.class);
+    //     log.info("kafkaItemBuyDto : {}", kafkaItemBuyDto);
+    //
+    //     itemService.saveItemBuyData(kafkaItemBuyDto);
+    // }
+    //
+    // @KafkaListener(topics = "${consumers.topics.charge-cash.name}", groupId = "${consumers.group-id.topics.click.name}")
+    // public void consumeChargeCash(ConsumerRecord<String, String> record) throws IOException {
+    //     KafkaChargingDto kafkaChargingDto = objectMapper.readValue(record.value(), KafkaChargingDto.class);
+    //     log.info("kafkaChargingDto : {}", kafkaChargingDto);
+    //
+    //     kapayService.saveChargeCash(kafkaChargingDto);
+    // }
+    //
+    // @KafkaListener(topics = "${consumers.topics.game-cash-log.name}", groupId = "${consumers.group-id.topics.click.name}")
+    // public void consumeGameCashLog(ConsumerRecord<String, String> record) throws IOException {
+    //
+    //     JavaType type = objectMapper.getTypeFactory().constructCollectionType(List.class, KafkaGameCashLogDto.class);
+    //     List<KafkaGameCashLogDto> gameCashLogs = objectMapper.readValue(record.value(), type);
+    //
+    //     log.info("!=============================!");
+    //     log.info("!=============================!");
+    //     log.info("!=============================!");
+    //     log.info("!=============================!");
+    //     // clickGameService.saveGameCashLog(gameCashLogs);
+    // }
 }

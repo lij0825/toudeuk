@@ -3,12 +3,14 @@ package com.toudeuk.service;
 import com.toudeuk.dao.ToudeukDao;
 import com.toudeuk.dto.KafkaChargingDto;
 import com.toudeuk.dto.KafkaClickDto;
+import com.toudeuk.dto.KafkaGameCashLogDto;
 import com.toudeuk.dto.KafkaItemBuyDto;
 import com.toudeuk.enums.CashLogType;
 import com.toudeuk.enums.RewardType;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 @FunctionalInterface
 interface TransactionCallback {
@@ -32,7 +34,6 @@ public class ConsumerService {
 	// 클릭 했을 때
 	public void click(KafkaClickDto clickDto) {
 		executeInTransaction(conn -> {
-			System.out.println(clickDto);
 
 			// 게임 로그 저장
 			toudeukDao.insertClickLog(conn, clickDto.getUserId(), clickDto.getGameId(), clickDto.getTotalClickCount());
@@ -70,6 +71,12 @@ public class ConsumerService {
 		});
 	}
 
+	// 게임 캐시 로그
+	public void gameCashLog(List<KafkaGameCashLogDto> gameCashLogs) {
+		executeInTransaction(conn -> {
+			toudeukDao.insertCashLogBatch(conn, gameCashLogs);
+		});
+	}
 
 
 	private void executeInTransaction(TransactionCallback callback) {
