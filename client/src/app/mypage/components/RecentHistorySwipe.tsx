@@ -37,7 +37,7 @@ export default function RecentHistoriesCarousel() {
 
       return () => clearInterval(interval);
     }
-  }, [recentHistories?.content?.length]);
+  }, [recentHistories?.content?.length, recentHistories?.content]);
 
   if (isLoading) {
     return <p>Loading...</p>;
@@ -95,7 +95,7 @@ export default function RecentHistoriesCarousel() {
     >
       <div
         key={currentIndex} // currentIndex가 변경될 때마다 컴포넌트 재렌더링
-        className="carousel-card w-full bg-[#BBF2C4] rounded-lg flex flex-col items-center justify-center p-2 transition-transform duration-500 transform"
+        className="carousel-card w-full bg-[#d3ffdee5] rounded-lg flex flex-col items-center justify-center p-2 transition-transform duration-500 transform"
         style={{
           animation: "flipUp 1s ease-in-out",
         }}
@@ -104,12 +104,12 @@ export default function RecentHistoriesCarousel() {
         }}
       >
         <section className="flex items-center font-semibold space-x-2">
-          <div className="text-lg">{currentGame.clickGameId}회차</div>
+          <div className="text-md">{currentGame.clickGameId}회차</div>
           <div className="text-sm">
             {new Date(currentGame.createdAt).toLocaleDateString()}
           </div>
         </section>
-        <div className="text-sm mb-1">
+        <div className="text-sm">
           ✨ 우승자: {currentGame.winner?.nickname || "정보 없음"}
         </div>
         <div className="text-sm">

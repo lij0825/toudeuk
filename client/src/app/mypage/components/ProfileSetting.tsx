@@ -1,3 +1,5 @@
+'use client'
+
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { useState } from "react";
@@ -5,7 +7,6 @@ import { toast } from "react-toastify";
 import { UserInfo } from "@/types";
 import { patchUserInfo } from "@/apis/userInfoApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import SvgSettingIcon from "./SettingIcon";
 import { CUSTOM_ICON } from "@/constants/customIcons";
 import { useNicknameCheck } from "@/apis/user/useNicknameCheck";
 
@@ -28,7 +29,9 @@ export default function ProfileSetting() {
 
   return (
     <div>
-      <SvgSettingIcon onClick={handleModalOpen} />
+      <div onClick={handleModalOpen}>
+      <Image src="/icons/setting.svg" alt="Icon" width="25" height="25" />
+      </div>
       {isOpen && (
         <SettingModal isOpen={isOpen} handleModalOpen={handleModalOpen} />
       )}
@@ -276,7 +279,7 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
         {!isEditing && (
           <button
             onClick={logout}
-            className="bg-red-500 mt-6 px-3 py-1 rounded-lg text-sm text-white w-full hover:bg-red-600 transition duration-150"
+            className="bg-red-500 mt-6 px-3 py-1 rounded-md text-sm text-white w-full hover:bg-red-600 transition duration-150"
           >
             로그아웃
           </button>
