@@ -4,9 +4,10 @@ import static com.toudeuk.server.core.exception.ErrorCode.*;
 import static com.toudeuk.server.domain.game.entity.RewardType.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
+import com.toudeuk.server.domain.click.entity.Click;
+import com.toudeuk.server.domain.click.repository.ClickRepository;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -61,6 +62,7 @@ public class ClickGameService {
 	private final SimpMessagingTemplate messagingTemplate;
     private final KafkaTemplate kafkaTemplate;
     private final CashLogRepository cashLogRepository;
+    private final ClickRepository clickRepository;
 
     // 게임 시작
     @Transactional
@@ -131,32 +133,62 @@ public class ClickGameService {
             return displayInfoForClicker;
         }
 
-        Integer userCash = clickCacheRepository.getUserCash(userId);
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new BaseException(USER_NOT_FOUND));
+
+        int userCash = user.getCash();
+
+//        Integer userCash = clickCacheRepository.getUserCash(userId);
 
         int result = userCash + CLICK_CASH;
         // 돈없으면 끝
         if (result < 0) {
             throw new BaseException(NOT_ENOUGH_CASH);
         }
+//        clickCacheRepository.updateUserCash(userId, CLICK_CASH);
+        user.click();
 
-        clickCacheRepository.updateUserCash(userId, CLICK_CASH);
 
-        Integer userClick = clickCacheRepository.addUserClick(userId);
-        // 최초 클릭자라면 => username이라는 키값을 가지고 있지 않으므로 설정해줘야한다.
-        if(userClick == -1){
-            User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
-            String nickname = user.getNickname();
-            clickCacheRepository.setUsername(userId, nickname);
-            userClick = clickCacheRepository.addUserClick(userId);
-        }
+        ClickGame clickGame = clickGameRepository.findLatestGame().orElseThrow(() -> new BaseException(GAME_NOT_FOUND));
 
-        Integer totalClick = clickCacheRepository.addTotalClick();
-        Integer userRank = clickCacheRepository.getUserRank(userId);
-        List<RankData.UserScore> rankingList = clickCacheRepository.getRankingList();
-        String latestClicker = clickCacheRepository.getUsername(userId);
+        Click click = clickRepository.findByUserAndClickGame(user, clickGame)
+                .orElseGet(() -> {
+                    // Click 엔티티가 없으면 생성하여 저장
+                    Click newClick = Click.of(user, clickGame);
+                    return clickRepository.save(newClick);
+                });
+        Integer userClick = click.plusCount();
+        clickGame.plusTotalCount();
+
+
+//        Integer userClick = clickCacheRepository.addUserClick(userId);
+//        // 최초 클릭자라면 => username이라는 키값을 가지고 있지 않으므로 설정해줘야한다.
+//        if(userClick == -1){
+//            User user2 = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+//            String nickname = user.getNickname();
+//            clickCacheRepository.setUsername(userId, nickname);
+//            userClick = clickCacheRepository.addUserClick(userId);
+//        }
+
+//        Integer totalClick = clickCacheRepository.addTotalClick();
+//        Integer userRank = clickCacheRepository.getUserRank(userId);
+//        List<RankData.UserScore> rankingList = clickCacheRepository.getRankingList();
+//        String latestClicker = clickCacheRepository.getUsername(userId);
+//        RewardType rewardType = RewardType.from(totalClick);
+
+        Integer totalClick = clickGame.getTotalCount();
+        Integer userRank = clickRepository.findUserRankInGame(clickGame, user).orElseThrow(() -> new BaseException(RANK_ERROR));
+
+        List<Click> rank = clickRepository.findRank(clickGame);
+        List<RankData.UserScore> rankingList = rank.stream()
+                .map(rankClick -> RankData.UserScore.of(rankClick.getUser().getNickname(), rankClick.getCount().longValue()))
+                .toList();
+        String latestClicker = user.getNickname();
         RewardType rewardType = RewardType.from(totalClick);
 
-        Long gameId = clickCacheRepository.getGameId();
+
+//        Long gameId = clickCacheRepository.getGameId();
+        Long gameId = clickGame.getId();
         //!  여기서 보상을 결정하고 레디스에 넣는 작업을 끝내야함, 이휴 컨슈머에서는 오로지 MYSQL만 건들도록
         KafkaClickDto clickDto = new KafkaClickDto(
                 userId,
@@ -178,7 +210,8 @@ public class ClickGameService {
         }
 
 
-        producer.occurClickUserId(clickDto);
+//        producer.occurClickUserId(clickDto);
+        saveGameData(clickDto);
 
         GameData.DisplayInfoForEvery displayInfoForEvery = GameData.DisplayInfoForEvery.getDisplayInfoForEveryAtRunning(totalClick,latestClicker, rankingList);
 
@@ -205,7 +238,7 @@ public class ClickGameService {
             Long maxClick = rankingList.get(0).getScore();
             List<String> maxClickerList = clickCacheRepository.getMaxClickerList(maxClick);
             User maxClicker = clickGameLogRepository.findFirstMaxClicker(maxClickerList).get(0);
-            ClickGame clickGame = clickGameRepository.findById(gameId).orElseThrow(() -> new BaseException(SAVING_GAME_ERROR));
+            ClickGame clickGame2 = clickGameRepository.findById(gameId).orElseThrow(() -> new BaseException(SAVING_GAME_ERROR));
             ClickGameRewardLog clickGameRewardLog = ClickGameRewardLog.create(maxClicker, clickGame, MAX_CLICK_REWARD, maxClick.intValue(), MAX_CLICKER);
             clickGameRewardLogRepository.save(clickGameRewardLog);
             clickCacheRepository.reward(maxClicker.getId(), MAX_CLICK_REWARD);

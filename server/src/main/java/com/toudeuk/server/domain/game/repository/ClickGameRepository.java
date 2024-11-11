@@ -19,4 +19,8 @@ public interface ClickGameRepository extends JpaRepository<ClickGame, Long> {
 
 	@Query("SELECT MAX(cg.round) FROM ClickGame cg")
 	Optional<Long> findLastRound();
+
+	// 최신 ClickGame 엔티티 가져오기
+	@Query("SELECT c FROM ClickGame c ORDER BY c.id DESC LIMIT 1")
+	Optional<ClickGame> findLatestGame();
 }

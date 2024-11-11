@@ -27,10 +27,18 @@ public class ClickGame extends TimeEntity {
 	@Column(name = "click_game_round", nullable = false)
 	private Long round;
 
+	@Column(name = "click_game_round", nullable = false)
+	private Integer totalCount;
+
 	public static ClickGame create(Long round) {
 		ClickGame clickGame = new ClickGame();
 		clickGame.round = round;
+		clickGame.totalCount = 0;
 		return clickGame;
+	}
+
+	public void plusTotalCount(){
+		this.totalCount++;
 	}
 
 }

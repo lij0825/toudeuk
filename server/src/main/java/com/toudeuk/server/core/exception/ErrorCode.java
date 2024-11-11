@@ -59,8 +59,11 @@ public enum ErrorCode {
 
 	// KAFKA
 	KAFKA_PRODUCER_ERROR(5000, HttpStatus.SERVICE_UNAVAILABLE, "카프카 메시지 발행 도중 오류가 발생했습니다."),
-	KAFKA_CONSUMER_ERROR(5001, HttpStatus.SERVICE_UNAVAILABLE, "카프카 메시지 소비 도중 오류가 발생했습니다.");
+	KAFKA_CONSUMER_ERROR(5001, HttpStatus.SERVICE_UNAVAILABLE, "카프카 메시지 소비 도중 오류가 발생했습니다."),
 
+
+	//Click
+	RANK_ERROR(6000, HttpStatus.NOT_FOUND, "랭크 조회 도중 오류가 발생했습니다.");
 	private final int code;
 	private final HttpStatus status;
 	private final String message;
