@@ -1,6 +1,7 @@
 package com.toudeuk;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -8,9 +9,11 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toudeuk.dto.KafkaChargingDto;
 import com.toudeuk.dto.KafkaClickDto;
+import com.toudeuk.dto.KafkaGameCashLogDto;
 import com.toudeuk.dto.KafkaItemBuyDto;
 import com.toudeuk.service.ConsumerService;
 
@@ -31,7 +34,7 @@ public class Consumer {
 		configs.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 
 		KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(configs);
-		consumer.subscribe(Arrays.asList("click", "item-buy", "charge-cash"));
+		consumer.subscribe(Arrays.asList("click", "item-buy", "charge-cash", "game-cash-log"));
 
 
 		while (true) {
@@ -40,6 +43,12 @@ public class Consumer {
 				String input = record.topic();
 
 				switch (input) {
+					case "game-cash-log":
+						JavaType type = objectMapper.getTypeFactory().constructCollectionType(List.class, KafkaGameCashLogDto.class);
+						List<KafkaGameCashLogDto> gameCashLogs = objectMapper.readValue(record.value(), type);
+						System.out.println(gameCashLogs);
+						consumerService.gameCashLog(gameCashLogs);
+						break;
 					case "click":
 						KafkaClickDto clickDto = objectMapper.readValue(record.value(), KafkaClickDto.class);
 						System.out.println(clickDto);

@@ -55,9 +55,14 @@ public class Consumer {
 
     @KafkaListener(topics = "${consumers.topics.game-cash-log.name}", groupId = "${consumers.group-id.topics.click.name}")
     public void consumeGameCashLog(ConsumerRecord<String, String> record) throws IOException {
+
         JavaType type = objectMapper.getTypeFactory().constructCollectionType(List.class, KafkaGameCashLogDto.class);
         List<KafkaGameCashLogDto> gameCashLogs = objectMapper.readValue(record.value(), type);
 
-        clickGameService.saveGameCashLog(gameCashLogs);
+        log.info("!=============================!");
+        log.info("!=============================!");
+        log.info("!=============================!");
+        log.info("!=============================!");
+        // clickGameService.saveGameCashLog(gameCashLogs);
     }
 }

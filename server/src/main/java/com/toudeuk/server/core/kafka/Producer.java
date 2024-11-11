@@ -51,6 +51,7 @@ public class Producer {
 	}
 
 	public void occurGameCashLog(List<KafkaGameCashLogDto> gameCashLogs) {
+
 		gameCashLogKafkaTemplate.send(GAME_CASH_LOG_TOPIC, gameCashLogs);
 	}
 }
