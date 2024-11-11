@@ -63,6 +63,6 @@ public class Consumer {
         log.info("!=============================!");
         log.info("!=============================!");
         log.info("!=============================!");
-        // clickGameService.saveGameCashLog(gameCashLogs);
+        clickGameService.saveGameCashLog(gameCashLogs);
     }
 }

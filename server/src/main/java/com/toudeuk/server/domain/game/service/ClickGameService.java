@@ -81,8 +81,8 @@ public class ClickGameService {
             log.info("======================================쿨타임이면 실행======================================");
             // 모든 구독자에게 메시지 전송
             messagingTemplate.convertAndSend("/topic/game", displayInfoEvery);
-//            // 특정 구독자에게 메시지 전송
-//            messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
+            // 특정 구독자에게 메시지 전송
+            // messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
 
             return displayInfoForClicker;
         }
@@ -102,8 +102,8 @@ public class ClickGameService {
 
         messagingTemplate.convertAndSend("/topic/game", displayInfoEvery);
         log.info("displayInfoEvery : {}", displayInfoEvery);
-//            messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
-//            log.info("displayInfoForClicker : {}", displayInfoForClicker);
+        // messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
+        // log.info("displayInfoForClicker : {}", displayInfoForClicker);
 
 
         log.info("======================================게임중이면 실행======================================");
@@ -124,8 +124,8 @@ public class ClickGameService {
 
             // 모든 구독자에게 메시지 전송
             messagingTemplate.convertAndSend("/topic/game", displayInfoEvery);
-//            ! 특정 구독자에게 메시지 전송 -> Http방식으로 변경
-//            messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
+            // ! 특정 구독자에게 메시지 전송 -> Http방식으로 변경
+            // messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
 
             return displayInfoForClicker;
         }
@@ -177,7 +177,10 @@ public class ClickGameService {
         }
 
 
-        producer.occurClickUserId(clickDto);
+        // producer.occurClickUserId(clickDto);
+        // ! 카프카 사용안하느 버전 >>>
+        saveGameData(clickDto);
+        // !  <<<
 
         GameData.DisplayInfoForEvery displayInfoForEvery = GameData.DisplayInfoForEvery.getDisplayInfoForEveryAtRunning(totalClick,latestClicker, rankingList);
 
@@ -186,8 +189,8 @@ public class ClickGameService {
         // 모든 구독자에게 메시지 전송
         messagingTemplate.convertAndSend("/topic/game", displayInfoForEvery);
 
-//      ! 특정 구독자에게 메시지 전송 -> Http방식으로 변경
-//        messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
+        // ! 특정 구독자에게 메시지 전송 -> Http방식으로 변경
+        // messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
 
 
         if (rewardType.equals(WINNER)) {
@@ -198,7 +201,12 @@ public class ClickGameService {
 
             List<KafkaGameCashLogDto> allClickCounts = clickCacheRepository.getAllClickCounts(gameId);
 
-            producer.occurGameCashLog(allClickCounts);
+            // producer.occurGameCashLog(allClickCounts);
+            // ! 카프카 사용안하는 버전 >>>
+            saveGameCashLog(allClickCounts);
+            // ! <<<
+
+
 
             // 최대 클릭 보상
             Long maxClick = rankingList.get(0).getScore();
@@ -210,7 +218,6 @@ public class ClickGameService {
             clickCacheRepository.reward(maxClicker.getId(), MAX_CLICK_REWARD);
 
             //! 게임 종료시 유저 캐시로그들 저장하기
-
 
             // * 완료 게임 삭제
             log.info("clickCacheRepository.deleteAllClickInfo() 실행 전");
@@ -246,6 +253,7 @@ public class ClickGameService {
 
     @Transactional
     public void saveGameData(KafkaClickDto clickDto) {
+
         Long userId = clickDto.getUserId();
         User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
 

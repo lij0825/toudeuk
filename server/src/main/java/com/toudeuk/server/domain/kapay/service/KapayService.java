@@ -126,8 +126,11 @@ public class KapayService {
 			if (approveResponse != null) {
 				Integer totalAmount = approveResponse.getAmount().getTotal(); // 결제 금액
 
-				//! 충전하는부분 이제 이벤트로 처리 못하지 않을까? 싶슴당? 컨슈머에서 처리하기 때문에
-				producer.occurChargeCash(new KafkaChargingDto(user.getId(), totalAmount, user.getCash() + totalAmount));
+				// ! 충전하는부분 이제 이벤트로 처리 못하지 않을까? 싶슴당? 컨슈머에서 처리하기 때문에
+				// producer.occurChargeCash(new KafkaChargingDto(user.getId(), totalAmount, user.getCash() + totalAmount));
+				// ! 카프카 안쓰는 버전 >>>
+				saveChargeCash(new KafkaChargingDto(user.getId(), totalAmount, user.getCash() + totalAmount));
+				// ! <<<
 				// eventPublisher.publishEvent(new UserPaymentEvent(user, totalAmount));
 			}
 

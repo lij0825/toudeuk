@@ -108,7 +108,10 @@ public class ItemService {
 			CashLogType.ITEM);
 
 		// 카프카로 보내기
-		producer.occurItemBuy(kafkaItemBuyDto);
+		// producer.occurItemBuy(kafkaItemBuyDto);
+		// ! 카프카 안쓰는 버전 >>>
+		saveItemBuyData(kafkaItemBuyDto);
+		// ! <<<
 
 
 		//! 이 부분들이 컨슈머에서 작업 되도록
