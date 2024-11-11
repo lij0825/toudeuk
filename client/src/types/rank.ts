@@ -1,11 +1,9 @@
 export interface RankInfo {
-    rank: number;
     nickname: string;
-    clickCount: number;
-    profileImageUrl: string;
+    score: number;
 }
 
-export interface RanksInfo {
-    gameId: string;
-    rankList: RankInfo[];
-}
+// export interface RanksInfo {
+//     gameId: string;
+//     rankList: RankInfo[];
+// }
