@@ -24,7 +24,10 @@ import dataset from "../../public/icons/data-set.json";
 import shop from "../../public/icons/Shop.json";
 import mainLoading from "../../public/icons/LoadingAnimation.json";
 import subLoding from "../../public/icons/Loading.json";
-import Loading from "../../public/icons/Loading.gif";
+import MainLogin from "../../public/icons/CircleTransition.json";
+import littleLoading from "../../public/icons/circle-loading-balls.json";
+import mainCircle from "../../public/icons/circle.json";
+import downArrow from "../../public/icons/down-arrow.json";
 
 // SVG 파일 Import
 import settingSVG from "../../public/icons/setting.svg";
@@ -52,5 +55,8 @@ export const CUSTOM_ICON = {
   shop,
   mainLoading,
   subLoding,
-  Loading,
+  MainLogin,
+  littleLoading,
+  mainCircle,
+  downArrow
 };

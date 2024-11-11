@@ -9,6 +9,7 @@ import { gameClick } from "@/apis/gameApi";
 import SockJS from "sockjs-client";
 import CurrentRank from "./components/CurrentRank";
 import Ranking from "./components/Ranking";
+import { HiInformationCircle } from "react-icons/hi";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -16,7 +17,7 @@ export default function Toudeuk() {
   const [totalClick, setTotalClick] = useState<number>(0);
   const [stompClient, setStompClient] = useState<Client | null>(null);
 
-  const [latestClicker, setLatestClicker] = useState<string>('');
+  const [latestClicker, setLatestClicker] = useState<string>("");
   const [myRank, setMyRank] = useState<number>(0);
   const [ranking, setRanking] = useState<RankInfo[]>([]);
   const [status, setStatus] = useState<string | null>(null);
@@ -25,17 +26,16 @@ export default function Toudeuk() {
   const mutation = useMutation({
     mutationFn: () => gameClick(),
     onSuccess: (data) => {
-      setMyRank(data.myRank)
-      console.log(data)
-    }
-  })
+      setMyRank(data.myRank);
+      console.log(data);
+    },
+  });
 
-  
   useEffect(() => {
     // ! FIXME : 서버 주소 변경 필요
     const socket = new SockJS(`${BASE_URL}/ws`);
     const stompClient = Stomp.over(socket);
-    
+
     const accessToken = sessionStorage.getItem("accessToken");
     // 연결 헤더에 accessToken을 추가합니다.
     const headers = {
@@ -47,7 +47,7 @@ export default function Toudeuk() {
       (frame: IFrame) => {
         console.log("Connected: " + frame);
 
-        stompClient.subscribe("/topic/health", (message) => { }, headers);
+        stompClient.subscribe("/topic/health", (message) => {}, headers);
 
         stompClient.subscribe(
           "/topic/health",
@@ -90,15 +90,25 @@ export default function Toudeuk() {
       mutation.mutate();
     }
   };
-  const remainingTime = coolTime ? Math.max(0, Math.floor((coolTime.getTime() - new Date().getTime()) / 1000)) : 0;
-
+  const remainingTime = coolTime
+    ? Math.max(
+        0,
+        Math.floor((coolTime.getTime() - new Date().getTime()) / 1000)
+      )
+    : 0;
 
   return (
-    <div className="flex flex-col items-center justify-center h-full overflow-hidden">
+    <div className="items-center h-full w-full overflow-hidden">
+      <section className="float-end w-full p-2">
+        <HiInformationCircle className="text-gray-300 w-6 h-6" />
+      </section>
+
       {/* 게임 상태에 따른 화면 전환 */}
       {status === "RUNNING" ? (
         <>
-          <h2 className="mt-4 text-lg font-semibold text-[#00ff88]">마지막 클릭자</h2>
+          <h2 className="mt-4 text-lg font-semibold text-[#00ff88]">
+            마지막 클릭자
+          </h2>
           <p>{latestClicker || "No last clicker yet"}</p>
           <CurrentRank rank={myRank} />
           <div
