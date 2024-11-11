@@ -73,7 +73,7 @@ public class ClickGameCacheRepository {
 	public LocalDateTime getGameCoolTime() {
 		log.info("valueOperations.get(GAME_COOLTIME_KEY) : " + valueOperations.get(GAME_COOLTIME_KEY));
 
-		return LocalDateTime.parse((String)valueOperations.get(GAME_COOLTIME_KEY));
+		return LocalDateTime.parse((String)Objects.requireNonNull(valueOperations.get(GAME_COOLTIME_KEY)));
 	}
 
 	// 총 클릭수 click:total
@@ -197,7 +197,7 @@ public class ClickGameCacheRepository {
 
 				return new KafkaGameCashLogDto(
 					userId,
-					-tuple.getScore().intValue(),
+					-Objects.requireNonNull(tuple.getScore()).intValue(),
 					getUserCash(userId) - tuple.getScore().intValue(),
 					gameId);
 			})
