@@ -8,6 +8,8 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import com.toudeuk.server.core.exception.BaseException;
+import com.toudeuk.server.core.exception.ErrorCode;
 import com.toudeuk.server.domain.game.dto.RankData;
 import com.toudeuk.server.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,7 +145,8 @@ public class ClickGameCacheRepository {
 		return zSetOperations.reverseRangeByScoreWithScores(CLICK_COUNT_KEY, 0, Integer.MAX_VALUE, 0, 10)
 			.stream()
 			.map(tuple -> RankData.UserScore.of(
-					redisTemplate.opsForValue().get(NICKNAME_KEY + tuple.getValue()), tuple.getScore().longValue()))
+                    String.valueOf(userRepository.findById(Long.parseLong(tuple.getValue().toString())).orElseThrow(
+									() -> new BaseException(ErrorCode.USER_NOT_FOUND)).getNickname()), tuple.getScore().longValue()))
 			.toList();
 	}
 
