@@ -37,26 +37,10 @@ export default function GifticonSwipe() {
     isLoading,
   } = useFetchUserGifticon();
 
-  // const { data: usergifticons = [], isError } = useQuery<UserGifticonInfo[]>({
-  //   queryKey: ["usergifticons"],
-  //   queryFn: fetchUserGifticons,
-  //   select: (data) => {
-  //     // 배열을 역순으로 복사하고 used가 true인 항목을 마지막으로 정렬
-  //     return data
-  //       .slice() // 배열 복사
-  //       .reverse() // 역순으로 정렬 (가장 최신 항목이 위로)
-  //       .sort((a, b) => {
-  //         // used가 false인 항목이 먼저 오게 정렬
-  //         if (a.used === b.used) return 0; // 둘 다 같으면 순서 유지
-  //         return a.used ? 1 : -1; // used가 true면 뒤로 보냄
-  //       });
-  //   },
-  // });
-
   if (isError) {
     return (
       <div className="flex items-center justify-center h-[140px] px-8">
-        <div className="bg-red-50 rounded-lg w-full h-full flex items-center justify-center p-4">
+        <div className="bg-red-50 rounded-md w-full h-full flex items-center justify-center p-4">
           <div className="text-center">
             <div className="flex justify-center mb-2">
               <LottieAnimation

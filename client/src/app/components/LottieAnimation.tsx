@@ -8,8 +8,8 @@ interface LottieAnimationProps {
   animationData: LottieComponentProps["animationData"];
   loop?: boolean | number;
   autoplay?: boolean;
-  width?: number;
-  height?: number;
+  width?: number | string;
+  height?: number | string;
   padding?: string;
   margin?: string;
   cursor?: string;

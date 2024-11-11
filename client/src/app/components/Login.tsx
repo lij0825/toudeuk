@@ -3,13 +3,6 @@
 import { useEffect, useState } from "react";
 
 export default function Login() {
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    // 컴포넌트가 마운트되면 애니메이션이 시작됩니다.
-    setIsVisible(true);
-  }, []);
-
   const handleKakaoLogin = () => {
     // 카카오 로그인 처리 함수 (구현 필요)
     console.log("카카오 로그인", process.env.NEXT_PUBLIC_API_URL);
@@ -17,14 +10,14 @@ export default function Login() {
   };
 
   return (
-    <div className="w-full">
+    <div className="flex justify-center items-center min-w-[150px] min-h-[150px]  rounded-full bg-[#FEE500]">
       <button
         onClick={handleKakaoLogin}
-        className={`flex typo-sub-title font-bold p-2 items-center justify-center w-full rounded-md bg-[#FEE500] text-black transition duration-10000
-        ${isVisible ? "animate-slide-up" : "opacity-0 translate-y-5"}
+        className={`typo-title font-bold h-full w-full p-2
       `}
       >
-        Game Start
+        <p>Game</p>
+        <p>Start</p>
       </button>
     </div>
   );
