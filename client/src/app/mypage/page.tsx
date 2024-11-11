@@ -11,8 +11,8 @@ const RecentHistoriesCarousel = dynamic(
 export default function Mypage() {
   return (
     <div className="bg-sub-background h-full flex flex-col">
-      <section className="bg-white">
-        <section className="px-8 pt-8 pb-1 flex-shrink-0">
+      <section className="bg-white pb-2">
+        <section className="px-8 pt-8 pb-2 flex-shrink-0">
           <UserInfoItem />
         </section>
         <GifticonSwipe />
@@ -22,7 +22,7 @@ export default function Mypage() {
         <section className="py-2 flex-shrink-0 px-8">
           <RecentHistoriesCarousel />
         </section>
-        <section className="py-2 pb-2 px-8 flex-grow h-full">
+        <section className="py-2 pb-4 px-8 flex-grow h-full">
           <MypageList />
         </section>
       </section>

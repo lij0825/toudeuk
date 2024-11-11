@@ -27,15 +27,15 @@ export default function MypageList() {
         onClick={() => handleClick(navItems[0].href)}
       >
         <div className="z-10">
-          <div className="text-xl font-bold">게임 기록</div>
-          <div className="text-sm text-secondary">게임 기록 및 당첨내역</div>
+          <div className="text-2xl font-bold">게임 기록</div>
+          <div className="text-md text-secondary">게임 기록 및 당첨내역</div>
         </div>
-        <div className="absolute bottom-2 right-2 w-[100px] h-[100px] animate-floating-delayed-1">
+        <div className="absolute bottom-2 right-2 w-[150px] h-[150px] animate-floating-delayed-1">
           <Image
             src={"/icons/clock.png"}
             alt={"history icon"}
-            width={100}
-            height={100}
+            width={150}
+            height={150}
             className="rounded-sm w-full h-full object-contain"
             priority
           />
@@ -46,15 +46,15 @@ export default function MypageList() {
         onClick={() => handleClick(navItems[1].href)}
       >
         <div className="z-10">
-          <div className="text-xl font-bold">기프티콘 샵</div>
-          <div className="text-sm text-white">포인트로 구매하기</div>
+          <div className="text-2xl font-bold">기프티콘 샵</div>
+          <div className="text-md text-white">포인트로 구매하기</div>
         </div>
-        <div className="absolute bottom-1 right-2 w-[130px] h-[130px] animate-floating-delayed-2">
+        <div className="absolute bottom-4 right-2 w-[150px] h-[150px] animate-floating-delayed-2">
           <Image
             src={"/icons/party-popper-with-confetti.png"}
             alt={"gifticon icon"}
-            width={130}
-            height={130}
+            width={150}
+            height={150}
             className="rounded-sm w-full h-full object-contain"
             priority
           />
