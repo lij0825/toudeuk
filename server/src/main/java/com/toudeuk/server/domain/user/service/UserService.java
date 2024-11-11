@@ -5,7 +5,6 @@ import static com.toudeuk.server.core.exception.ErrorCode.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.toudeuk.server.domain.game.repository.ClickGameCacheRepository;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -113,7 +112,6 @@ public class UserService {
 		User user = event.getUser();
 		Integer cash = event.getCash();
 
-
 		User findUser = userRepository.findById(user.getId())
 			.orElseThrow(() -> new BaseException(USER_NOT_FOUND));
 		Integer userCash = clickGameCacheRepository.getUserCash(user.getId());
@@ -146,7 +144,7 @@ public class UserService {
 
 	@Transactional
 	public void updateCash(Long userId) {
-		
+
 		Integer userCash = clickGameCacheRepository.getUserCash(userId);
 
 		User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
@@ -161,6 +159,10 @@ public class UserService {
 
 	public Boolean checkNickname(String nickname) {
 		return userRepository.findByNickname(nickname).isEmpty();
+	}
+
+	public List<UserData.UserRewardLog> getUserRewardLogs(Long userId) {
+		return null;
 	}
 
 	//    public Long save(AddUserRequest dto) {
