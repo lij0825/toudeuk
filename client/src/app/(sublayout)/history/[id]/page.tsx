@@ -10,7 +10,6 @@ import {
   MaxClickerInfo,
   WinnerInfo,
 } from "@/types";
-import { toast } from "react-toastify";
 import {
   HistoryDetailItem,
   MiddleRewardInfo,
