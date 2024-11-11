@@ -5,7 +5,10 @@ import static com.toudeuk.server.core.exception.ErrorCode.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +33,7 @@ import com.toudeuk.server.domain.user.repository.CashLogRepository;
 import com.toudeuk.server.domain.user.repository.UserItemRepository;
 import com.toudeuk.server.domain.user.repository.UserRepository;
 
+import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,6 +42,15 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserService {
+
+	private static final String CLICK_COUNT_KEY = "click:count";
+	private static final String NICKNAME_KEY = "nickname:";
+
+	@Resource(name = "redisTemplate")
+	private ZSetOperations<String, Object> zSetOperations;
+
+	@Autowired
+	public RedisTemplate<String, String> redisTemplate;
 
 	private final JWTService jwtService;
 	private final AuthCacheRepository authCacheRepository;
@@ -129,19 +142,48 @@ public class UserService {
 
 	@Transactional
 	public void updateUserInfo(Long userId, UserData.UpdateInfo updateInfo) {
-
-		User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+		User user = userRepository.findById(userId)
+			.orElseThrow(() -> new BaseException(USER_NOT_FOUND));
 
 		// 닉네임 중복 체크
 		if (userRepository.findByNickname(updateInfo.getNickname()).isPresent()) {
 			throw new BaseException(USER_NICKNAME_DUPLICATION);
 		}
 
-		user.updateNickname(updateInfo.getNickname());
+		String oldNickname = user.getNickname();
+		String newNickname = updateInfo.getNickname();
 
+		// 닉네임 업데이트
+		user.updateNickname(newNickname);
+
+		// Redis 업데이트
+		updateRedisNicknameMapping(userId, oldNickname, newNickname);
+
+		// S3 이미지 업로드 이벤트 발행
 		eventPublisher.publishEvent(new S3UploadEvent(user, updateInfo.getProfileImage()));
 
 		userRepository.save(user);
+	}
+
+	private void updateRedisNicknameMapping(Long userId, String oldNickname, String newNickname) {
+		// 기존 닉네임 키 삭제
+		redisTemplate.delete(NICKNAME_KEY + userId);
+		redisTemplate.delete(NICKNAME_KEY + oldNickname);
+
+		// 새로운 닉네임 키 저장
+		redisTemplate.opsForValue().set(NICKNAME_KEY + userId.toString(), newNickname);
+		redisTemplate.opsForValue().set(NICKNAME_KEY + newNickname, userId.toString());
+
+		// SortedSet 내 닉네임 업데이트
+		Double userClickScore = zSetOperations.score(CLICK_COUNT_KEY, oldNickname);
+
+		if (userClickScore != null) {
+			// 기존 닉네임 제거
+			zSetOperations.remove(CLICK_COUNT_KEY, oldNickname);
+
+			// 새 닉네임으로 클릭 점수 재설정
+			zSetOperations.add(CLICK_COUNT_KEY, newNickname, userClickScore);
+		}
 	}
 
 	@Transactional
