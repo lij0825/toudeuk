@@ -59,17 +59,17 @@ public class ClickGameService {
 	@Transactional
 	public GameData.DisplayInfoForClicker checkGame(Long userId) {
 
-		User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
-		Integer userCash = clickCacheRepository.getUserCash(userId);
-		user.setCash(userCash);
-		userRepository.save(user);
-		log.info("======================================checkGame 실행======================================");
-		// 쿨타임이면?
-		if (clickCacheRepository.isGameCoolTime()) {
-			LocalDateTime gameCoolTime = clickCacheRepository.getGameCoolTime();
-			GameData.DisplayInfoForEvery displayInfoEvery = getDisplayInfoEveryAtCoolTime(gameCoolTime);
+        User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+        Integer userCash = clickCacheRepository.getUserCash(userId);
+        user.setCash(userCash);
+        userRepository.save(user);
+        log.info("======================================checkGame 실행======================================");
+        // 쿨타임이면?
+        if (clickCacheRepository.isGameCoolTime()) {
+            LocalDateTime gameCoolTime = clickCacheRepository.getGameCoolTime();
+            GameData.DisplayInfoForEvery displayInfoEvery = GameData.DisplayInfoForEvery.getDisplayInfoEveryAtCoolTime(gameCoolTime);
 
-			GameData.DisplayInfoForClicker displayInfoForClicker = getDisplayInfoForClickerAtCoolTime(displayInfoEvery);
+            GameData.DisplayInfoForClicker displayInfoForClicker = GameData.DisplayInfoForClicker.getDisplayInfoForClickerAtCoolTime(displayInfoEvery);
 
 			log.info("======================================쿨타임이면 실행======================================");
 			// 모든 구독자에게 메시지 전송
@@ -89,11 +89,9 @@ public class ClickGameService {
 
 		log.info("게임 실행 중이기 떄문에 관련정보들을 발행해야합니다.");
 
-		GameData.DisplayInfoForEvery displayInfoEvery = getDisplayInfoForEveryAtRunning(totalClick, latestClicker,
-			rankingList);
+        GameData.DisplayInfoForEvery displayInfoEvery = GameData.DisplayInfoForEvery.getDisplayInfoForEveryAtRunning(totalClick,latestClicker, rankingList);
 
-		GameData.DisplayInfoForClicker displayInfoForClicker = getDisplayInfoForClickerAtRunning(displayInfoEvery,
-			myRank, myClickCount, NONE);
+        GameData.DisplayInfoForClicker displayInfoForClicker = GameData.DisplayInfoForClicker.getDisplayInfoForClickerAtRunning(displayInfoEvery, myRank, myClickCount, NONE);
 
 		messagingTemplate.convertAndSend("/topic/game", displayInfoEvery);
 		log.info("displayInfoEvery : {}", displayInfoEvery);
@@ -111,10 +109,10 @@ public class ClickGameService {
 		// 쿨타임이면?
 		if (clickCacheRepository.isGameCoolTime()) {
 
-			LocalDateTime gameCoolTime = clickCacheRepository.getGameCoolTime();
-			GameData.DisplayInfoForEvery displayInfoEvery = getDisplayInfoEveryAtCoolTime(gameCoolTime);
+            LocalDateTime gameCoolTime = clickCacheRepository.getGameCoolTime();
+            GameData.DisplayInfoForEvery displayInfoEvery = GameData.DisplayInfoForEvery.getDisplayInfoEveryAtCoolTime(gameCoolTime);
 
-			GameData.DisplayInfoForClicker displayInfoForClicker = getDisplayInfoForClickerAtCoolTime(displayInfoEvery);
+            GameData.DisplayInfoForClicker displayInfoForClicker = GameData.DisplayInfoForClicker.getDisplayInfoForClickerAtCoolTime(displayInfoEvery);
 
 			// 모든 구독자에게 메시지 전송
 			messagingTemplate.convertAndSend("/topic/game", displayInfoEvery);
@@ -170,11 +168,9 @@ public class ClickGameService {
 
 		producer.occurClickUserId(clickDto);
 
-		GameData.DisplayInfoForEvery displayInfoForEvery = getDisplayInfoForEveryAtRunning(totalClick, latestClicker,
-			rankingList);
+        GameData.DisplayInfoForEvery displayInfoForEvery = GameData.DisplayInfoForEvery.getDisplayInfoForEveryAtRunning(totalClick,latestClicker, rankingList);
 
-		GameData.DisplayInfoForClicker displayInfoForClicker = getDisplayInfoForClickerAtRunning(displayInfoForEvery,
-			userRank, userClick, rewardType);
+        GameData.DisplayInfoForClicker displayInfoForClicker = GameData.DisplayInfoForClicker.getDisplayInfoForClickerAtRunning(displayInfoForEvery, userRank, userClick, rewardType);
 
 		// 모든 구독자에게 메시지 전송
 		messagingTemplate.convertAndSend("/topic/game", displayInfoForEvery);
@@ -182,19 +178,19 @@ public class ClickGameService {
 		//      ! 특정 구독자에게 메시지 전송 -> Http방식으로 변경
 		//        messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
 
-		if (clickCacheRepository.isGameCoolTime()) {
-			log.info("게임 종료");
+        if (rewardType.equals(WINNER)) {
+            clickCacheRepository.setGameCoolTime();
+            log.info("게임 종료");
 
-			// 최대 클릭 보상
-			try {
-				Long maxClick = rankingList.get(0).getScore();
-				List<String> maxClickerList = clickCacheRepository.getMaxClickerList(maxClick);
-				User maxClicker = clickGameLogRepository.findFirstMaxClicker(maxClickerList).get(0);
-				ClickGame clickGame = clickGameRepository.findById(clickCacheRepository.getGameId())
-					.orElseThrow(() -> new BaseException(SAVING_GAME_ERROR));
-				ClickGameRewardLog clickGameRewardLog = ClickGameRewardLog.create(maxClicker, clickGame,
-					MAX_CLICK_REWARD, maxClick.intValue(), MAX_CLICKER);
-				clickGameRewardLogRepository.save(clickGameRewardLog);
+
+            // 최대 클릭 보상
+            try {
+                Long maxClick = rankingList.get(0).getScore();
+                List<String> maxClickerList = clickCacheRepository.getMaxClickerList(maxClick);
+                User maxClicker = clickGameLogRepository.findFirstMaxClicker(maxClickerList).get(0);
+                ClickGame clickGame = clickGameRepository.findById(clickCacheRepository.getGameId()).orElseThrow(() -> new BaseException(SAVING_GAME_ERROR));
+                ClickGameRewardLog clickGameRewardLog = ClickGameRewardLog.create(maxClicker, clickGame, MAX_CLICK_REWARD, maxClick.intValue(), MAX_CLICKER);
+                clickGameRewardLogRepository.save(clickGameRewardLog);
 
 			} catch (Exception e) {
 				throw new BaseException(SAVING_GAME_ERROR);
@@ -274,11 +270,9 @@ public class ClickGameService {
 		clickCacheRepository.setGameId(savedGame.getId());
 		RewardType rewardType = from(totalClick);
 
-		GameData.DisplayInfoForEvery displayInfoForEvery = getDisplayInfoForEveryAtRunning(totalClick, latestClicker,
-			rankingList);
+        GameData.DisplayInfoForEvery displayInfoForEvery = GameData.DisplayInfoForEvery.getDisplayInfoForEveryAtRunning(totalClick, latestClicker, rankingList);
 
-		GameData.DisplayInfoForClicker displayInfoForClicker = getDisplayInfoForClickerAtRunning(displayInfoForEvery, 1,
-			1, rewardType);
+        GameData.DisplayInfoForClicker displayInfoForClicker = GameData.DisplayInfoForClicker.getDisplayInfoForClickerAtRunning(displayInfoForEvery, 1, 1, rewardType);
 
 		// 모든 구독자에게 메시지 전송
 		messagingTemplate.convertAndSend("/topic/game", displayInfoForEvery);
@@ -313,42 +307,6 @@ public class ClickGameService {
 	//        RankData.Result result = RankData.Result.of(gameId, rankList);
 	//        return result;
 
-	private static GameData.DisplayInfoForEvery getDisplayInfoForEveryAtRunning(Integer totalClick,
-		String latestClicker, List<RankData.UserScore> rankingList) {
-		return GameData.DisplayInfoForEvery.of(
-			null,
-			GameStatus.RUNNING.toString(),
-			totalClick,
-			latestClicker,
-			rankingList
-		);
-	}
-
-	private static GameData.DisplayInfoForClicker getDisplayInfoForClickerAtRunning(
-		GameData.DisplayInfoForEvery displayInfoEvery, Integer myRank, Integer myClickCount, RewardType rewardType) {
-		return GameData.DisplayInfoForClicker.of(
-			displayInfoEvery,
-			myRank,
-			myClickCount,
-			rewardType
-		);
-	}
-
-	private static GameData.DisplayInfoForClicker getDisplayInfoForClickerAtCoolTime(
-		GameData.DisplayInfoForEvery displayInfoEvery) {
-		return getDisplayInfoForClickerAtRunning(displayInfoEvery, 0, 0, NONE);
-	}
-
-	private static GameData.DisplayInfoForEvery getDisplayInfoEveryAtCoolTime(LocalDateTime gameCoolTime) {
-		return GameData.DisplayInfoForEvery.of(
-			gameCoolTime,
-			GameStatus.COOLTIME.toString(),
-			0,
-			"NONE",
-			new ArrayList<>()
-		);
-	}
-
 	public HistoryData.RewardInfo getHistoryReward(Long gameId) {
 
 		ClickGame clickGame = clickGameRepository.findById(gameId).orElseThrow(
@@ -367,10 +325,5 @@ public class ClickGameService {
 			winnerAndMaxClickerData,
 			middleRewardUsers
 		);
-
-	}
-
-	enum GameStatus {
-		COOLTIME, RUNNING;
 	}
 }
