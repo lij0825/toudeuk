@@ -57,7 +57,6 @@ public class ClickGameService {
     private final ClickGameRewardLogRepository clickGameRewardLogRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
     private final Producer producer;
-
 	private final SimpMessagingTemplate messagingTemplate;
     private final KafkaTemplate kafkaTemplate;
     private final CashLogRepository cashLogRepository;
