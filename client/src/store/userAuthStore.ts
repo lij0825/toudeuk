@@ -13,6 +13,7 @@ export const useAuthStore = create(
       setAccessToken: (accessToken) => {
         set({ accessToken });
       },
+      clearAccessToken: () => set({ accessToken: null }), 
     }),
     {
       name: "auth-store",

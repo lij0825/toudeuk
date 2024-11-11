@@ -24,20 +24,20 @@ export default function Ranking({ ranking }: RankingProps) {
                 exit={{ y: 20, opacity: 0 }}
                 layout
                 transition={{ duration: 0.3 }}
-                className="text-sm p-4 mb-2 border rounded-lg shadow-xl"
+                className="text-xs mb-2 shadow-xl"
                 style={{
+                  borderRadius: '2px',
                   background: `rgba(255, 255, 255, ${
                     0.15 + (10 - index) * 0.03
                   })`, // 더 투명한 배경
+                  padding : '4px',
                   color: `rgba(255, 255, 255, ${0.85 + (10 - index) * 0.015})`, // 상위 순위일수록 더 밝게
                   boxShadow: "0 8px 24px rgba(0, 0, 0, 0.2)", // 그림자를 조금 줄여 자연스럽게
                   border: "1px solid rgba(255, 255, 255, 0.1)", // 은은한 테두리
-                  borderRadius: "18px",
-                  padding: "14px",
                   backdropFilter: "blur(15px) saturate(180%)", // 블러와 채도 증가로 더 선명한 글래스모피즘 느낌
                 }}
               >
-                <span className="font-bold">{index + 1}위</span> {user.nickname}{" "}
+                <span className="font-bold text-xs">{index + 1}위</span> {user.nickname}{" "}
                 - {user.score}
               </motion.li>
             ))}
