@@ -15,7 +15,9 @@ import org.springframework.transaction.event.TransactionalEventListener;
 import com.toudeuk.server.core.constants.AuthConst;
 import com.toudeuk.server.core.exception.BaseException;
 import com.toudeuk.server.core.exception.ErrorCode;
+import com.toudeuk.server.domain.game.entity.ClickGameRewardLog;
 import com.toudeuk.server.domain.game.repository.ClickGameCacheRepository;
+import com.toudeuk.server.domain.game.repository.ClickGameRewardLogRepository;
 import com.toudeuk.server.domain.user.dto.UserData;
 import com.toudeuk.server.domain.user.entity.CashLogType;
 import com.toudeuk.server.domain.user.entity.JwtToken;
@@ -42,6 +44,7 @@ public class UserService {
 	private final AuthCacheRepository authCacheRepository;
 	private final ClickGameCacheRepository clickGameCacheRepository;
 	private final UserRepository userRepository;
+	private final ClickGameRewardLogRepository clickGameRewardLogRepository;
 	private final UserItemRepository userItemRepository;
 	private final CashLogRepository cashLogRepository;
 	private final ApplicationEventPublisher eventPublisher;
@@ -157,11 +160,24 @@ public class UserService {
 		return clickGameCacheRepository.getUserCash(userId);
 	}
 
-	public Boolean checkNickname(String nickname) {
-		return userRepository.findByNickname(nickname).isEmpty();
+	public Boolean checkNickname(Long userId, String nickname) {
+
+		// 현재 닉네임이랑 중복되는 닉네임이 없으면 true
+		User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+
+		if (userRepository.findByNickname(nickname).isEmpty()) {
+			return true;
+		} else {
+			return user.getNickname().equals(nickname);
+		}
 	}
 
 	public List<UserData.UserRewardLog> getUserRewardLogs(Long userId) {
+
+		List<ClickGameRewardLog> clickGameRewardLogs = clickGameRewardLogRepository.findAllByUserId(userId).orElseThrow(
+			() -> new BaseException(USER_REWARD_LOG_NOT_FOUND)
+		);
+
 		return null;
 	}
 
