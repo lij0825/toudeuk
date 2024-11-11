@@ -12,7 +12,7 @@ export default function Mypage() {
   return (
     <div className="bg-sub-background h-full flex flex-col">
       <section className="bg-white">
-        <section className="px-8 pt-8 pb-2 flex-shrink-0">
+        <section className="px-8 pt-8 pb-1 flex-shrink-0">
           <UserInfoItem />
         </section>
         <GifticonSwipe />
