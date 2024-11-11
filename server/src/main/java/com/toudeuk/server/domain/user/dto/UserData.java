@@ -1,9 +1,11 @@
 package com.toudeuk.server.domain.user.dto;
 
-import com.toudeuk.server.domain.item.entity.ItemType;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.toudeuk.server.domain.game.entity.ClickGameRewardLog;
+import com.toudeuk.server.domain.game.entity.RewardType;
 import com.toudeuk.server.domain.item.entity.Item;
+import com.toudeuk.server.domain.item.entity.ItemType;
 import com.toudeuk.server.domain.user.entity.CashLog;
 import com.toudeuk.server.domain.user.entity.CashLogType;
 import com.toudeuk.server.domain.user.entity.User;
@@ -64,7 +66,6 @@ public class UserData {
 		private boolean isUsed;
 		private String createdAt;
 
-
 		public static UserItemInfo of(Long userItemId, Item item, boolean isUsed, String createdAt) {
 			UserItemInfo userItemInfo = new UserItemInfo();
 			userItemInfo.userItemId = userItemId;
@@ -75,6 +76,22 @@ public class UserData {
 			userItemInfo.isUsed = isUsed;
 			userItemInfo.createdAt = createdAt;
 			return userItemInfo;
+		}
+	}
+
+	@Data
+	public static class UserRewardLog {
+
+		private Long clickGameId; // 라운드
+		private Integer reward;
+		private RewardType rewardType;
+
+		public static UserRewardLog of(ClickGameRewardLog clickGameRewardLog) {
+			UserRewardLog userRewardLog = new UserRewardLog();
+			userRewardLog.clickGameId = clickGameRewardLog.getClickGame().getId();
+			userRewardLog.reward = clickGameRewardLog.getReward();
+			userRewardLog.rewardType = clickGameRewardLog.getRewardType();
+			return userRewardLog;
 		}
 	}
 

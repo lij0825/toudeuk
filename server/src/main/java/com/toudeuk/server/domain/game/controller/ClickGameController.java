@@ -1,9 +1,6 @@
 package com.toudeuk.server.domain.game.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.toudeuk.server.domain.game.dto.GameData;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedModel;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,10 +9,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.toudeuk.server.core.annotation.CurrentUser;
 import com.toudeuk.server.core.response.SuccessResponse;
+import com.toudeuk.server.domain.game.dto.GameData;
 import com.toudeuk.server.domain.game.dto.HistoryData;
-import com.toudeuk.server.domain.game.dto.RankData;
 import com.toudeuk.server.domain.game.service.ClickGameService;
 import com.toudeuk.server.domain.user.service.JWTService;
 
@@ -35,17 +33,17 @@ public class ClickGameController {
 	private final JWTService jwtService;
 	private final SimpMessagingTemplate messagingTemplate;
 
-	// /**
-	//  * 사용자 클릭
-	//  * @param userId
-	//  * @return {@link SuccessResponse<GameData.DisplayInfoForClicker>}
-	//  */
-	 @PostMapping(value = "/click")
-	 @Operation(summary = "클릭", description = "버튼을 클릭합니다.")
-	 public SuccessResponse<GameData.DisplayInfoForClicker> click(@CurrentUser Long userId) throws
-			 JsonProcessingException {
-	 	return SuccessResponse.of(clickGameService.click(userId));
-	 }
+	/**
+	 * 사용자 클릭
+	 * @param userId
+	 * @return {@link SuccessResponse<GameData.DisplayInfoForClicker>}
+	 */
+	@PostMapping(value = "/click")
+	@Operation(summary = "클릭", description = "버튼을 클릭합니다.")
+	public SuccessResponse<GameData.DisplayInfoForClicker> click(@CurrentUser Long userId) throws
+		JsonProcessingException {
+		return SuccessResponse.of(clickGameService.click(userId));
+	}
 
 	/**
 	 * 게임 시작
@@ -69,7 +67,7 @@ public class ClickGameController {
 	@GetMapping("/history")
 	@Operation(summary = "모든 게임 정보 조회", description = "모든 게임 정보를 조회합니다.")
 	public SuccessResponse<PagedModel<HistoryData.AllInfo>> getHistory(@CurrentUser Long userId,
-		 Pageable pageable) {
+		Pageable pageable) {
 		return SuccessResponse.of(new PagedModel<>(clickGameService.getAllHistory(pageable)));
 	}
 
@@ -98,7 +96,6 @@ public class ClickGameController {
 		return SuccessResponse.of(new PagedModel<>(clickGameService.getHistoryDetail(gameId, pageable)));
 	}
 
-
 	// ! Deprecated - 랭킹페이지
 	/**!
 	 * 게임 랭킹 조회
@@ -106,11 +103,11 @@ public class ClickGameController {
 	 * @param userId, gameId
 	 * @return {@link SuccessResponse <List<Map<String, Object>>>}
 	 */
-//	@GetMapping("/rank")
-//	@Operation(summary = "게임 랭킹 조회", description = "게임 랭킹을 조회합니다.")
-//	public SuccessResponse<RankData.Result> getRanK(@CurrentUser Long userId) {
-//		return SuccessResponse.of(clickGameService.getRankingList());
-//	}
+	//	@GetMapping("/rank")
+	//	@Operation(summary = "게임 랭킹 조회", description = "게임 랭킹을 조회합니다.")
+	//	public SuccessResponse<RankData.Result> getRanK(@CurrentUser Long userId) {
+	//		return SuccessResponse.of(clickGameService.getRankingList());
+	//	}
 
 	/**
 	 * 유저 게임 정보 조회

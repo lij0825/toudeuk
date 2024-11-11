@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -66,8 +65,8 @@ public class UserController {
 	 */
 	@GetMapping(value = "/nickname/check")
 	@Operation(summary = "유저 닉네임 중복 확인", description = "유저 닉네임 중복을 확인합니다.")
-	public SuccessResponse<Boolean> checkNickname(@RequestParam String nickname) {
-		return SuccessResponse.of(userService.checkNickname(nickname));
+	public SuccessResponse<Boolean> checkNickname(@CurrentUser Long userId, @RequestParam String nickname) {
+		return SuccessResponse.of(userService.checkNickname(userId, nickname));
 	}
 
 	/**
@@ -188,4 +187,15 @@ public class UserController {
 		return SuccessResponse.empty();
 	}
 
+	/**
+	 * 내가 받은 모든 보상 내역
+	 *
+	 * @param userId
+	 * @return {@link SuccessResponse<List<UserData.UserRewardLog>>}
+	 */
+	@GetMapping(value = "/reward-logs")
+	@Operation(summary = "내가 받은 모든 보상 내역", description = "내가 받은 모든 보상 내역을 조회합니다.")
+	public SuccessResponse<List<UserData.UserRewardLog>> getUserRewardLogs(@CurrentUser Long userId) {
+		return SuccessResponse.of(userService.getUserRewardLogs(userId));
+	}
 }
