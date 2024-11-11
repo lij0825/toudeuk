@@ -39,7 +39,7 @@ export default function Navbar() {
     pathname === ROUTE_URL.GAME ? "bg-white" : "bg-gray-800"
   }`;
 
-  const navClasses = `pb-1 font-noto absolute bottom-0 inset-x-0 w-full px-8 flex justify-between gap-1 items-end border-t border-gray-200 shadow-xl transition-transform transition-opacity duration-300 ${
+  const navClasses = `pb-1 font-noto absolute bottom-0 inset-x-0 w-full mx-auto flex gap-10 items-end justify-center border-t border-gray-200 gap-1 shadow-xl transition-transform transition-opacity duration-300 ${
     isVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
   } ${
     pathname === ROUTE_URL.GAME
@@ -142,21 +142,6 @@ export default function Navbar() {
               height={40}
             />
             <span className="text-xs">기록</span>
-          </a>
-        </div>
-        <div className="flex flex-col items-end justify-center text-center">
-          <a
-            href={ROUTE_URL.RANK}
-            className="flex flex-col items-center"
-            style={{ textDecoration: "none" }}
-          >
-            <LottieAnimation
-              animationData={CUSTOM_ICON.trophy}
-              loop={1}
-              width={45}
-              height={45}
-            />
-            <span className="text-xs">랭킹</span>
           </a>
         </div>
         <div className="flex flex-col items-end justify-center text-center">

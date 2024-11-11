@@ -1,24 +1,36 @@
 "use client";
-import { useWebSocketStore } from "@/store/useWebSocketStore ";
-import { useEffect } from "react";
-import Loading from "@/app/loading";
 
-export default function useOauth() {
-  const connect = useWebSocketStore((state) => state.connect);
+import { useEffect, useState } from "react";
+import Loading from "@/app/loading";
+import useGetUserInfo from "@/apis/user/useGetchUserInfo";
+
+export default function OauthPage() {
+  const [isLogin, setIsLogin] = useState<boolean>(false);
+  const [token, setToken] = useState<string | null>(null);
+
   useEffect(() => {
     if (typeof window !== "undefined") {
-      // 클라이언트 측에서만 실행
       const params = new URLSearchParams(window.location.search);
-      const token = params.get("accessToken");
-      console.log(token);
+      const accessToken = params.get("accessToken");
 
-      if (token) {
-        sessionStorage.setItem("accessToken", token);
-        connect(token);
-        window.location.href = "/toudeuk";
+      if (accessToken) {
+        sessionStorage.setItem("accessToken", accessToken);
+        setToken(accessToken); // 토큰 설정
+        setIsLogin(true);
       }
     }
-  }, [connect]);
+  }, []);
 
-  return Loading;
+  // token이 있을 때만 useGetUserInfo 쿼리를 실행하고 로딩 상태를 확인
+  const { data, isLoading } = useGetUserInfo(token);
+
+  useEffect(() => {
+    if (isLogin && data && !isLoading) {
+      window.location.href = "/toudeuk";
+    } else {
+      window.location.href = "/";
+    }
+  }, [isLogin, data, isLoading]);
+
+  return <Loading />;
 }

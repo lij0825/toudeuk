@@ -17,6 +17,7 @@ body {
 html,
 body {
   height: 100%;
+  touch-action: manipulation;
 }
 
 /* Gilroy Light 폰트 */
@@ -101,5 +102,61 @@ body {
     box-shadow: 0 0 20px #fff, 20px 0 80px #f0f, -20px 0 80px #0ff,
       inset 0 0 50px #fff, inset -50px 0 80px #f0f, inset 50px 0 80px #0ff,
       inset -50px 0 300px #f0f, inset 50px 0 300px #0ff;
+  }
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translateY(100%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
+}
+
+@keyframes flipUp {
+  0% {
+    transform: rotateX(-180deg) scale(0.85);
+    opacity: 0;
+  }
+  10% {
+    transform: rotateX(-162deg) scale(0.88);
+    opacity: 0.1;
+  }
+  20% {
+    transform: rotateX(-144deg) scale(0.9);
+    opacity: 0.2;
+  }
+  30% {
+    transform: rotateX(-126deg) scale(0.92);
+    opacity: 0.4;
+  }
+  40% {
+    transform: rotateX(-108deg) scale(0.94);
+    opacity: 0.6;
+  }
+  50% {
+    transform: rotateX(-90deg) scale(0.96);
+    opacity: 0.7;
+  }
+  60% {
+    transform: rotateX(-72deg) scale(0.98);
+    opacity: 0.8;
+  }
+  70% {
+    transform: rotateX(-54deg) scale(1);
+    opacity: 0.9;
+  }
+  80% {
+    transform: rotateX(-36deg) scale(1);
+    opacity: 0.95;
+  }
+  90% {
+    transform: rotateX(-18deg) scale(1);
+    opacity: 0.98;
+  }
+  100% {
+    transform: rotateX(0deg) scale(1);
+    opacity: 1;
   }
 }

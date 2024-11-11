@@ -43,7 +43,7 @@ export default function UserInfoItem() {
       </section>
       <>
         <Link href={"/point"}>
-          <div className="bg-primary p-5 rounded-xl text-white flex items-center">
+          <div className="bg-primary px-5 py-4 rounded-md text-white flex items-center">
             <div>
               <Image
                 src={"/icons/coin.png"}
