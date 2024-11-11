@@ -65,8 +65,8 @@ public class UserController {
 	 */
 	@GetMapping(value = "/nickname/check")
 	@Operation(summary = "유저 닉네임 중복 확인", description = "유저 닉네임 중복을 확인합니다.")
-	public SuccessResponse<Boolean> checkNickname(@RequestParam String nickname) {
-		return SuccessResponse.of(userService.checkNickname(nickname));
+	public SuccessResponse<Boolean> checkNickname(@CurrentUser Long userId, @RequestParam String nickname) {
+		return SuccessResponse.of(userService.checkNickname(userId, nickname));
 	}
 
 	/**

@@ -15,7 +15,6 @@ import org.springframework.transaction.event.TransactionalEventListener;
 import com.toudeuk.server.core.constants.AuthConst;
 import com.toudeuk.server.core.exception.BaseException;
 import com.toudeuk.server.core.exception.ErrorCode;
-import com.toudeuk.server.domain.game.entity.ClickGameRewardLog;
 import com.toudeuk.server.domain.game.repository.ClickGameCacheRepository;
 import com.toudeuk.server.domain.game.repository.ClickGameRewardLogRepository;
 import com.toudeuk.server.domain.user.dto.UserData;
@@ -174,11 +173,12 @@ public class UserService {
 
 	public List<UserData.UserRewardLog> getUserRewardLogs(Long userId) {
 
-		List<ClickGameRewardLog> clickGameRewardLogs = clickGameRewardLogRepository.findAllByUserId(userId).orElseThrow(
-			() -> new BaseException(USER_REWARD_LOG_NOT_FOUND)
-		);
+		return clickGameRewardLogRepository.findAllByUserId(userId).orElseThrow(
+				() -> new BaseException(USER_REWARD_LOG_NOT_FOUND)
+			).stream()
+			.map(UserData.UserRewardLog::of)
+			.collect(Collectors.toList());
 
-		return null;
 	}
 
 	//    public Long save(AddUserRequest dto) {

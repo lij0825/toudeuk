@@ -2,6 +2,7 @@ package com.toudeuk.server.domain.user.dto;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.toudeuk.server.domain.game.entity.ClickGameRewardLog;
 import com.toudeuk.server.domain.game.entity.RewardType;
 import com.toudeuk.server.domain.item.entity.Item;
 import com.toudeuk.server.domain.item.entity.ItemType;
@@ -85,11 +86,11 @@ public class UserData {
 		private Integer reward;
 		private RewardType rewardType;
 
-		public static UserRewardLog of(Long clickGameId, Integer reward, RewardType rewardType) {
+		public static UserRewardLog of(ClickGameRewardLog clickGameRewardLog) {
 			UserRewardLog userRewardLog = new UserRewardLog();
-			userRewardLog.clickGameId = clickGameId;
-			userRewardLog.reward = reward;
-			userRewardLog.rewardType = rewardType;
+			userRewardLog.clickGameId = clickGameRewardLog.getClickGame().getId();
+			userRewardLog.reward = clickGameRewardLog.getReward();
+			userRewardLog.rewardType = clickGameRewardLog.getRewardType();
 			return userRewardLog;
 		}
 	}
