@@ -19,7 +19,7 @@ const useGetUserInfo = (
   token: string | null
 ): UseQueryResult<UserInfo, Error> => {
   return useQuery<UserInfo, Error>({
-    queryKey: ["userInfo"],
+    queryKey: ["user"],
     queryFn: () => fetchUserInfo(),
     staleTime: 5000, // 데이터가 신선한 상태로 유지되는 시간
     enabled: !!token,
