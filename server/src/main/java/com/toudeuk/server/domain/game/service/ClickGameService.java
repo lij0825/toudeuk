@@ -1,5 +1,19 @@
 package com.toudeuk.server.domain.game.service;
 
+import static com.toudeuk.server.core.exception.ErrorCode.*;
+import static com.toudeuk.server.domain.game.entity.RewardType.*;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.toudeuk.server.core.exception.BaseException;
 import com.toudeuk.server.core.kafka.Producer;
@@ -17,22 +31,9 @@ import com.toudeuk.server.domain.game.repository.ClickGameRepository;
 import com.toudeuk.server.domain.game.repository.ClickGameRewardLogRepository;
 import com.toudeuk.server.domain.user.entity.User;
 import com.toudeuk.server.domain.user.repository.UserRepository;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.geolatte.geom.M;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.toudeuk.server.core.exception.ErrorCode.*;
-import static com.toudeuk.server.domain.game.entity.RewardType.*;
 
 @Slf4j
 @Service
@@ -66,9 +67,9 @@ public class ClickGameService {
         // 쿨타임이면?
         if (clickCacheRepository.isGameCoolTime()) {
             LocalDateTime gameCoolTime = clickCacheRepository.getGameCoolTime();
-            GameData.DisplayInfoForEvery displayInfoEvery = getDisplayInfoEveryAtCoolTime(gameCoolTime);
+            GameData.DisplayInfoForEvery displayInfoEvery = GameData.DisplayInfoForEvery.getDisplayInfoEveryAtCoolTime(gameCoolTime);
 
-            GameData.DisplayInfoForClicker displayInfoForClicker = getDisplayInfoForClickerAtCoolTime(displayInfoEvery);
+            GameData.DisplayInfoForClicker displayInfoForClicker = GameData.DisplayInfoForClicker.getDisplayInfoForClickerAtCoolTime(displayInfoEvery);
 
 
             log.info("======================================쿨타임이면 실행======================================");
@@ -89,9 +90,9 @@ public class ClickGameService {
 
         log.info("게임 실행 중이기 떄문에 관련정보들을 발행해야합니다.");
 
-        GameData.DisplayInfoForEvery displayInfoEvery = getDisplayInfoForEveryAtRunning(totalClick,latestClicker, rankingList);
+        GameData.DisplayInfoForEvery displayInfoEvery = GameData.DisplayInfoForEvery.getDisplayInfoForEveryAtRunning(totalClick,latestClicker, rankingList);
 
-        GameData.DisplayInfoForClicker displayInfoForClicker = getDisplayInfoForClickerAtRunning(displayInfoEvery, myRank, myClickCount, NONE);
+        GameData.DisplayInfoForClicker displayInfoForClicker = GameData.DisplayInfoForClicker.getDisplayInfoForClickerAtRunning(displayInfoEvery, myRank, myClickCount, NONE);
 
         messagingTemplate.convertAndSend("/topic/game", displayInfoEvery);
         log.info("displayInfoEvery : {}", displayInfoEvery);
@@ -111,9 +112,9 @@ public class ClickGameService {
         if (clickCacheRepository.isGameCoolTime()) {
 
             LocalDateTime gameCoolTime = clickCacheRepository.getGameCoolTime();
-            GameData.DisplayInfoForEvery displayInfoEvery = getDisplayInfoEveryAtCoolTime(gameCoolTime);
+            GameData.DisplayInfoForEvery displayInfoEvery = GameData.DisplayInfoForEvery.getDisplayInfoEveryAtCoolTime(gameCoolTime);
 
-            GameData.DisplayInfoForClicker displayInfoForClicker = getDisplayInfoForClickerAtCoolTime(displayInfoEvery);
+            GameData.DisplayInfoForClicker displayInfoForClicker = GameData.DisplayInfoForClicker.getDisplayInfoForClickerAtCoolTime(displayInfoEvery);
 
             // 모든 구독자에게 메시지 전송
             messagingTemplate.convertAndSend("/topic/game", displayInfoEvery);
@@ -171,9 +172,9 @@ public class ClickGameService {
 
         producer.occurClickUserId(clickDto);
 
-        GameData.DisplayInfoForEvery displayInfoForEvery = getDisplayInfoForEveryAtRunning(totalClick,latestClicker, rankingList);
+        GameData.DisplayInfoForEvery displayInfoForEvery = GameData.DisplayInfoForEvery.getDisplayInfoForEveryAtRunning(totalClick,latestClicker, rankingList);
 
-        GameData.DisplayInfoForClicker displayInfoForClicker = getDisplayInfoForClickerAtRunning(displayInfoForEvery, userRank, userClick, rewardType);
+        GameData.DisplayInfoForClicker displayInfoForClicker = GameData.DisplayInfoForClicker.getDisplayInfoForClickerAtRunning(displayInfoForEvery, userRank, userClick, rewardType);
 
         // 모든 구독자에게 메시지 전송
         messagingTemplate.convertAndSend("/topic/game", displayInfoForEvery);
@@ -181,8 +182,10 @@ public class ClickGameService {
 //      ! 특정 구독자에게 메시지 전송 -> Http방식으로 변경
 //        messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
 
-        if (clickCacheRepository.isGameCoolTime()) {
+        if (rewardType.equals(WINNER)) {
+            clickCacheRepository.setGameCoolTime();
             log.info("게임 종료");
+
 
             // 최대 클릭 보상
             try {
@@ -196,6 +199,7 @@ public class ClickGameService {
             } catch (Exception e) {
                 throw new BaseException(SAVING_GAME_ERROR);
             }
+
 
             // * 완료 게임 삭제
             log.info("clickCacheRepository.deleteAllClickInfo() 실행 전");
@@ -271,9 +275,9 @@ public class ClickGameService {
         clickCacheRepository.setGameId(savedGame.getId());
         RewardType rewardType = from(totalClick);
 
-        GameData.DisplayInfoForEvery displayInfoForEvery = getDisplayInfoForEveryAtRunning(totalClick, latestClicker, rankingList);
+        GameData.DisplayInfoForEvery displayInfoForEvery = GameData.DisplayInfoForEvery.getDisplayInfoForEveryAtRunning(totalClick, latestClicker, rankingList);
 
-        GameData.DisplayInfoForClicker displayInfoForClicker = getDisplayInfoForClickerAtRunning(displayInfoForEvery, 1, 1, rewardType);
+        GameData.DisplayInfoForClicker displayInfoForClicker = GameData.DisplayInfoForClicker.getDisplayInfoForClickerAtRunning(displayInfoForEvery, 1, 1, rewardType);
 
         // 모든 구독자에게 메시지 전송
         messagingTemplate.convertAndSend("/topic/game", displayInfoForEvery);
@@ -308,39 +312,6 @@ public class ClickGameService {
 //        RankData.Result result = RankData.Result.of(gameId, rankList);
 //        return result;
 
-    private static GameData.DisplayInfoForEvery getDisplayInfoForEveryAtRunning(Integer totalClick, String latestClicker, List<RankData.UserScore> rankingList) {
-        return GameData.DisplayInfoForEvery.of(
-                null,
-                GameStatus.RUNNING.toString(),
-                totalClick,
-                latestClicker,
-                rankingList
-        );
-    }
-
-    private static GameData.DisplayInfoForClicker getDisplayInfoForClickerAtRunning(GameData.DisplayInfoForEvery displayInfoEvery, Integer myRank, Integer myClickCount, RewardType rewardType) {
-        return GameData.DisplayInfoForClicker.of(
-                displayInfoEvery,
-                myRank,
-                myClickCount,
-                rewardType
-        );
-    }
-
-    private static GameData.DisplayInfoForClicker getDisplayInfoForClickerAtCoolTime(GameData.DisplayInfoForEvery displayInfoEvery) {
-        return getDisplayInfoForClickerAtRunning(displayInfoEvery, 0, 0, NONE);
-    }
-
-    private static GameData.DisplayInfoForEvery getDisplayInfoEveryAtCoolTime(LocalDateTime gameCoolTime) {
-        return GameData.DisplayInfoForEvery.of(
-                gameCoolTime,
-                GameStatus.COOLTIME.toString(),
-                0,
-                "NONE",
-                new ArrayList<>()
-        );
-    }
-
 	public HistoryData.RewardInfo getHistoryReward(Long gameId) {
 
 		ClickGame clickGame = clickGameRepository.findById(gameId).orElseThrow(
@@ -359,9 +330,5 @@ public class ClickGameService {
 			winnerAndMaxClickerData,
 			middleRewardUsers
 		);
-
 	}
-    enum GameStatus {
-        COOLTIME, RUNNING;
-    }
 }
