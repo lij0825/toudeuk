@@ -77,9 +77,10 @@ public class UserController {
 	 */
 	@PatchMapping(value = "", consumes = {"multipart/form-data"})
 	@Operation(summary = "유저 정보 수정", description = "유저 정보를 수정합니다.")
-	public SuccessResponse<UserData.ChangeInfo> updateUserInfo(@CurrentUser Long userId,
+	public SuccessResponse<Void> updateUserInfo(@CurrentUser Long userId,
 		@ModelAttribute UserData.UpdateInfo updateInfo) {
-		return SuccessResponse.of(userService.updateUserInfo(userId, updateInfo));
+		userService.updateUserInfo(userId, updateInfo);
+		return SuccessResponse.empty();
 	}
 
 	/**
