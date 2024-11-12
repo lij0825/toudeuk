@@ -18,7 +18,7 @@ export default function Navbar() {
   const buttonRef = useRef<HTMLButtonElement | null>(null); // 햄버거 버튼 참조
 
   // '/mygifticon' 및 '/gifticon' 자체는 제외하고, 하위 경로가 있는 경우 항상 고정
-  const isFixedVisible = /^(\/mygifticon\/.+|\/gifticon\/.+)$/.test(
+  const isFixedVisible = /^(\/mygifticon\/.+|\/gifticon\/.+|\/toudeuk)$/.test(
     pathname || ""
   );
 
@@ -39,7 +39,7 @@ export default function Navbar() {
     pathname === ROUTE_URL.GAME ? "bg-white" : "bg-gray-800"
   }`;
 
-  const navClasses = `pb-1 font-noto z-50 absolute bottom-0 inset-x-0 w-full mx-auto flex gap-10 items-end justify-center border-t border-gray-200 gap-1 shadow-xl transition-transform transition-opacity duration-300 ${
+  const navClasses = `pb-2 font-noto z-50 absolute bottom-0 inset-x-0 w-full mx-auto flex gap-10 items-end justify-center border-t border-gray-200 gap-1 shadow-xl transition-transform transition-opacity duration-300 ${
     isVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
   } ${
     pathname === ROUTE_URL.GAME
@@ -123,10 +123,10 @@ export default function Navbar() {
               animationData={CUSTOM_ICON.gamecontroller}
               loop={1}
               width={45}
-              height={40}
+              height={45}
               cursor="pointer"
             />
-            <span className="text-xs">게임</span>
+            <span className="text-xs mt-1">게임</span>
           </a>
         </div>
         <div className="flex flex-col items-end justify-center text-center ">
