@@ -102,7 +102,7 @@ public class User extends BaseEntity {
 		this.nickname = nickname;
 	}
 
-	public void click(){
+	public void useCash(){
 		this.cash--;
 	}
 

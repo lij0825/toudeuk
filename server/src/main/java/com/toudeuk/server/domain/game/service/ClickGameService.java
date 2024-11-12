@@ -70,8 +70,8 @@ public class ClickGameService {
 
         User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
         Integer userCash = clickCacheRepository.getUserCash(userId);
-        user.setCash(userCash);
-        userRepository.save(user);
+//        user.setCash(userCash);
+//        userRepository.save(user);
         log.info("======================================checkGame 실행======================================");
         // 쿨타임이면?
         if (clickCacheRepository.isGameCoolTime()) {
@@ -95,7 +95,7 @@ public class ClickGameService {
         Integer myClickCount = clickCacheRepository.getUserClickCount(userId);
         Integer totalClick = clickCacheRepository.getTotalClick();
         String latestClicker = clickCacheRepository.getUsername(userId);
-        List<RankData.UserScore> rankingList = clickCacheRepository.getRankingList();
+        List<RankData.UserScore> rankingList = null;
 
         log.info("게임 실행 중이기 떄문에 관련정보들을 발행해야합니다.");
 
@@ -146,7 +146,8 @@ public class ClickGameService {
             throw new BaseException(NOT_ENOUGH_CASH);
         }
 //        clickCacheRepository.updateUserCash(userId, CLICK_CASH);
-        user.click();
+        user.useCash();
+        userRepository.save(user);
 
 
         ClickGame clickGame = clickGameRepository.findLatestGame().orElseThrow(() -> new BaseException(GAME_NOT_FOUND));
@@ -157,9 +158,6 @@ public class ClickGameService {
                     Click newClick = Click.of(user, clickGame);
                     return clickRepository.save(newClick);
                 });
-        Integer userClick = click.plusCount();
-        clickGame.plusTotalCount();
-
 
 //        Integer userClick = clickCacheRepository.addUserClick(userId);
 //        // 최초 클릭자라면 => username이라는 키값을 가지고 있지 않으므로 설정해줘야한다.
@@ -212,6 +210,10 @@ public class ClickGameService {
 
 //        producer.occurClickUserId(clickDto);
         saveGameData(clickDto);
+
+        Integer userClick = click.plusCount();
+        clickGame.plusTotalCount();
+        clickGameRepository.save(clickGame);
 
         GameData.DisplayInfoForEvery displayInfoForEvery = GameData.DisplayInfoForEvery.getDisplayInfoForEveryAtRunning(totalClick,latestClicker, rankingList);
 

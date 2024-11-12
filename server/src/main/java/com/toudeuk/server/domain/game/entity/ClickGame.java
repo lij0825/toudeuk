@@ -27,7 +27,7 @@ public class ClickGame extends TimeEntity {
 	@Column(name = "click_game_round", nullable = false)
 	private Long round;
 
-	@Column(name = "click_game_round", nullable = false)
+	@Column(name = "click_game_total_count", nullable = false)
 	private Integer totalCount;
 
 	public static ClickGame create(Long round) {

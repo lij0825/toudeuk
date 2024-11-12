@@ -21,10 +21,10 @@ public class Click {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_click_user_id"))
+    @JoinColumn(name = "click_game", nullable = false, foreignKey = @ForeignKey(name = "fk_click_click_game"))
     private ClickGame clickGame;
 
-    @Column(name = "click_game_round", nullable = false)
+    @Column(name = "click_count", nullable = false)
     private Integer count;
 
     public static Click of(User user, ClickGame clickGame) {
