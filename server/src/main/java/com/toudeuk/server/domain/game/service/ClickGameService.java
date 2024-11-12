@@ -134,6 +134,7 @@ public class ClickGameService {
             return displayInfoForClicker;
         }
 
+        ClickGame clickGame = clickGameRepository.findLatestGameWithPessimisticLock().orElseThrow(() -> new BaseException(GAME_NOT_FOUND));
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new BaseException(USER_NOT_FOUND));
 
@@ -151,7 +152,6 @@ public class ClickGameService {
         userRepository.save(user);
 
 
-        ClickGame clickGame = clickGameRepository.findLatestGameWithPessimisticLock().orElseThrow(() -> new BaseException(GAME_NOT_FOUND));
 
         Click click = clickRepository.findByUserAndClickGame(user, clickGame)
                 .orElseGet(() -> {
