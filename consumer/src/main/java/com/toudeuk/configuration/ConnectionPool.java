@@ -11,7 +11,7 @@ public class ConnectionPool {
 
 	static {
 		HikariConfig config = new HikariConfig();
-		config.setJdbcUrl("jdbc:mysql://localhost:3306/toudeuk");
+		config.setJdbcUrl("jdbc:mysql://43.203.141.23:3306/toudeuk");
 		config.setUsername("toudeuk");
 		config.setPassword("toudeuk");
 		config.setMaximumPoolSize(10);

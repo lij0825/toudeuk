@@ -266,6 +266,9 @@ public class ClickGameService {
 			ClickGameRewardLog clickGameRewardLog = ClickGameRewardLog.create(user, clickGame, FIRST_CLICK_REWARD,
 				totalClick, SECTION);
 			clickGameRewardLogRepository.save(clickGameRewardLog);
+			cashLogRepository.save(
+				CashLog.create(user, FIRST_CLICK_REWARD, user.getCash() + FIRST_CLICK_REWARD, clickGame.getRound() + "회차 게임 " + totalClick +  "번째 클릭자", CashLogType.REWARD)
+			);
 		}
 
 		// 중간 클릭자, 우승자
@@ -274,6 +277,9 @@ public class ClickGameService {
 			ClickGameRewardLog clickGameRewardLog = ClickGameRewardLog.create(user, clickGame, reward, totalClick,
 				clickDto.getRewardType());
 			clickGameRewardLogRepository.save(clickGameRewardLog);
+			cashLogRepository.save(
+				CashLog.create(user, reward, user.getCash() + reward, clickGame.getRound() + "회차 게임 " + totalClick +  "번째 클릭자", CashLogType.REWARD)
+			);
 		}
 	}
 

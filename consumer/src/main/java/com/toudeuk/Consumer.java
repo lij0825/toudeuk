@@ -27,9 +27,10 @@ public class Consumer {
 	public static void main(String[] args) throws JsonProcessingException {
 
 		Properties configs = new Properties();
-		configs.put("bootstrap.servers", "localhost:9092");
+		configs.put("bootstrap.servers", "43.203.141.23:9092");
 		configs.put("session.timeout.ms", "10000");
 		configs.put("group.id", "toudeuk");
+		configs.put("auto.offset.reset", "earliest");
 		configs.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 		configs.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 

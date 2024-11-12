@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Client, Frame, IFrame, Stomp } from "@stomp/stompjs";
 import { RankInfo } from "@/types";
 import { useMutation } from "@tanstack/react-query";
@@ -15,7 +15,8 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function Toudeuk() {
   const [totalClick, setTotalClick] = useState<number>(0);
-  const [stompClient, setStompClient] = useState<Client | null>(null);
+  // const [stompClient, setStompClient] = useState<Client | null>(null);
+  const stompClientRef = useRef<Client | null>(null);
 
   const [latestClicker, setLatestClicker] = useState<string>("");
   const [myRank, setMyRank] = useState<number>(0);
@@ -35,8 +36,13 @@ export default function Toudeuk() {
   });
 
   useEffect(() => {
+    console.log(userInfo?.nickName)
+    if(stompClientRef.current) return;
+    
     const socket = new SockJS(`${BASE_URL}/ws`);
-    const stompClient = Stomp.over(socket);
+    const stompClient = Stomp.over(() => socket);
+    stompClientRef.current = stompClient;
+    
 
     const accessToken = sessionStorage.getItem("accessToken");
     const headers = {
@@ -60,8 +66,15 @@ export default function Toudeuk() {
             setStatus(data.status || null);
             setRanking(data.rank || []);
 
+            const myRankIndex = data.rank.findIndex(
+              (rankInfo: RankInfo) => rankInfo.nickname === userInfo?.nickName
+            );
+        
+            // 순위는 배열 인덱스가 0부터 시작하므로, myRank는 +1을 해야 합니다.
+            setMyRank(myRankIndex >= 0 ? myRankIndex + 1 : 0);
+
             const coolTimeDate = new Date(data.coolTime);
-            setCoolTime(data.coolTime || null);
+            setCoolTime(coolTimeDate || null);
           },
           headers
         );
@@ -71,17 +84,18 @@ export default function Toudeuk() {
       }
     );
 
-    setStompClient(stompClient);
+    // setStompClient(stompClient);
 
     return () => {
-      if (stompClient) {
-        stompClient.disconnect();
+      if (stompClientRef.current) {
+        stompClientRef.current.deactivate();
+        stompClientRef.current = null;
       }
     };
   }, []);
 
   const handleClick = async () => {
-    if (stompClient) {
+    if (stompClientRef.current) {
       mutation.mutate();
     }
   };

@@ -59,10 +59,6 @@ public class Consumer {
         JavaType type = objectMapper.getTypeFactory().constructCollectionType(List.class, KafkaGameCashLogDto.class);
         List<KafkaGameCashLogDto> gameCashLogs = objectMapper.readValue(record.value(), type);
 
-        log.info("!=============================!");
-        log.info("!=============================!");
-        log.info("!=============================!");
-        log.info("!=============================!");
-        // clickGameService.saveGameCashLog(gameCashLogs);
+        clickGameService.saveGameCashLog(gameCashLogs);
     }
 }
