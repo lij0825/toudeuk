@@ -117,7 +117,7 @@ public class ClickGameService {
     @Transactional
     public GameData.DisplayInfoForClicker click(Long userId) throws JsonProcessingException {
 
-        log.info("==========================================Only-MySQL==========================================");
+        log.info("==========================================Only-MySQL-비관락==========================================");
         // 쿨타임이면?
         if (clickCacheRepository.isGameCoolTime()) {
 
@@ -151,7 +151,7 @@ public class ClickGameService {
         userRepository.save(user);
 
 
-        ClickGame clickGame = clickGameRepository.findLatestGame().orElseThrow(() -> new BaseException(GAME_NOT_FOUND));
+        ClickGame clickGame = clickGameRepository.findLatestGameWithPessimisticLock().orElseThrow(() -> new BaseException(GAME_NOT_FOUND));
 
         Click click = clickRepository.findByUserAndClickGame(user, clickGame)
                 .orElseGet(() -> {
