@@ -14,14 +14,20 @@ export const fetchUserInfo = async (): Promise<UserInfo> => {
 };
 
 // 사용자 정보 업데이트
-export const patchUserInfo = async (formData: FormData): Promise<void> => {
-  const response = await instance.patch<BaseResponse<void>>("/user", formData, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+export const patchUserInfo = async (
+  formData: FormData
+): Promise<Partial<UserInfo>> => {
+  const response = await instance.patch<BaseResponse<Partial<UserInfo>>>(
+    "/user",
+    formData,
+    {
+      headers: { "Content-Type": "multipart/form-data" },
+    }
+  );
 
   const data = response.data;
-  console.log(data);
 
-  if (!data.success) throw new Error(data.message || "업데이트 실패");
+  if (!data.success || !data.data)
+    throw new Error(data.message || "업데이트 실패");
   return data.data;
 };

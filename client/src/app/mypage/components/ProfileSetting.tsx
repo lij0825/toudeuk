@@ -6,7 +6,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { UserInfo } from "@/types";
 import { patchUserInfo } from "@/apis/userInfoApi";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { CUSTOM_ICON } from "@/constants/customIcons";
 import { useNicknameCheck } from "@/apis/user/useNicknameCheck";
 import { useUserInfoStore } from "@/store/userInfoStore";
@@ -44,6 +44,7 @@ export default function ProfileSetting() {
 //수정 모달창 내용
 function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
   const userProfile = useUserInfoStore((state) => state.userInfo);
+  const { setUserInfo } = useUserInfoStore();
 
   const cache = useQueryClient();
   const user = cache.getQueryData<UserInfo>(["user"]);
@@ -61,6 +62,7 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
   );
 
   //닉네임 유효성 관련 로직들
+  const [isNicknameChanged, setIsNicknameChanged] = useState(false); //닉네임 수정여부 확인//프로필 이미지 변경 관련
   const [isNicknameValid, setIsNicknameValid] = useState<boolean>(true); //닉네임유효성검사
   const [isNumericOnly, setIsNumericOnly] = useState(false); //숫자로만 되어있는가?
   const [nicknameExceedsLimit, setNicknameExceedsLimit] = useState(false); //길이를 초과하는가?
@@ -73,9 +75,13 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
   //닉네임 변경 요청 Mutation
   const mutation = useMutation({
     mutationFn: (formData: FormData) => patchUserInfo(formData),
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success("유저 정보 변경이 완료되었습니다.");
       cache.invalidateQueries({ queryKey: ["user"] });
+      setUserInfo({
+        nickName: data.nickName,
+        profileImg: data.profileImg,
+      });
     },
     onError: () => {
       toast.error("유저 정보 변경 중 에러가 발생했습니다.");
@@ -94,7 +100,7 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
     setNicknameExceedsLimit(newNickname.length > maxNicknameLength);
     setHasWhitespace(/\s/.test(newNickname));
     setIsNumericOnly(/^\d+$/.test(newNickname));
-
+    setIsNicknameChanged(newNickname !== userProfile?.nickName);
     // 글자 길이와 공백 검사
     // 유효한 닉네임일 경우 isNicknameValid 업데이트
     setIsNicknameValid(
@@ -120,7 +126,7 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
 
   //저장 로직
   function handleSave() {
-    if (!isChecked || !isValid || !isNicknameValid) {
+    if (isNicknameChanged && (!isChecked || !isValid || !isNicknameValid)) {
       toast.error("닉네임을 확인해주세요.");
       return;
     }
@@ -292,10 +298,24 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
               <button
                 onClick={handleSave}
                 disabled={
-                  !isChecked || !isValid || isLoading || !isNicknameValid
+                  isNicknameChanged
+                    ? !isChecked ||
+                      !isNumericOnly ||
+                      !isValid ||
+                      !isNicknameValid ||
+                      isLoading
+                    : isLoading
                 }
                 className={`px-4 py-2 rounded-lg text-sm text-white transition duration-150 ${
-                  !isChecked || !isValid || isLoading || !isNicknameValid
+                  isNicknameChanged
+                    ? !isChecked ||
+                      !isNumericOnly ||
+                      !isValid ||
+                      !isNicknameValid ||
+                      isLoading
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-blue-500 hover:bg-blue-600"
+                    : isLoading
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-blue-500 hover:bg-blue-600"
                 }`}
