@@ -26,17 +26,16 @@ export default function MypageList() {
         className="flex-1 h-1/2 bg-[#F5EFFF] p-4 rounded-lg flex cursor-pointer relative overflow-hidden mb-4"
         onClick={() => handleClick(navItems[0].href)}
       >
-        <div className="">
+        <div>
           <div className="text-lg font-bold">게임 기록</div>
           <div className="text-sm text-secondary">게임 기록 및 당첨내역</div>
         </div>
-        <div className="absolute bottom-0 right-2 w-[100px] h-[100px] animate-floating-delayed-1">
+        <div className="absolute bottom-0 right-2 w-[75%] h-[75%] max-w-[100px] max-h-[100px] animate-floating-delayed-1">
           <Image
             src={"/icons/clock.png"}
             alt={"history icon"}
-            width={150}
-            height={150}
-            className="rounded-sm w-full h-full object-contain"
+            fill
+            className="rounded-sm object-contain"
             priority
           />
         </div>
@@ -45,17 +44,16 @@ export default function MypageList() {
         className="flex-1 h-1/2 bg-[#FF8A8A] p-4 rounded-lg flex cursor-pointer relative overflow-hidden"
         onClick={() => handleClick(navItems[1].href)}
       >
-        <div className="">
+        <div>
           <div className="text-lg font-bold">기프티콘 샵</div>
           <div className="text-sm text-white">포인트로 구매하기</div>
         </div>
-        <div className="absolute bottom-2 right-2 w-[100px] h-[100px] animate-floating-delayed-2">
+        <div className="absolute bottom-2 right-2 w-[75%] h-[75%] max-w-[100px] max-h-[100px] animate-floating-delayed-2">
           <Image
             src={"/icons/party-popper-with-confetti.png"}
             alt={"gifticon icon"}
-            width={150}
-            height={150}
-            className="rounded-sm w-full h-full object-contain"
+            fill
+            className="rounded-sm object-contain"
             priority
           />
         </div>
