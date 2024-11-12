@@ -15,6 +15,7 @@ export enum RewardType {
   MAX_CLICKER = "MAX_CLICKER",
   WINNER = "WINNER",
   SECTION = "SECTION",
+  FIRST = "FIRST",
   NON = "NONE",
 }
 
@@ -30,6 +31,13 @@ export interface MaxClickerInfo {
   profileImg: string;
   clickCount: number;
   rewardType: RewardType.MAX_CLICKER;
+}
+
+export interface FirstClickerInfo {
+  nickname: string;
+  profileImg: string;
+  clickCount: number;
+  rewardType: RewardType.FIRST;
 }
 
 export interface GameUserInfo {
@@ -73,5 +81,6 @@ export interface HistoryDetailInfo {
 export interface HistoryRewardInfo {
   winner : WinnerInfo;
   maxClicker :MaxClickerInfo;
-  middleRewardUsers : GameUserInfo;
+  middleRewardUsers : GameUserInfo[];
+  firstClicker: FirstClickerInfo;
 }
