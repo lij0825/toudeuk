@@ -267,7 +267,7 @@ public class ClickGameService {
 				totalClick, SECTION);
 			clickGameRewardLogRepository.save(clickGameRewardLog);
 			cashLogRepository.save(
-				CashLog.create(user, FIRST_CLICK_REWARD, user.getCash() + FIRST_CLICK_REWARD, clickGame.getRound() + "회차 게임 " + totalClick +  "번째 클릭자", CashLogType.GAME)
+				CashLog.create(user, FIRST_CLICK_REWARD, user.getCash() + FIRST_CLICK_REWARD, clickGame.getRound() + "회차 게임 " + totalClick +  "번째 클릭자", CashLogType.REWARD)
 			);
 		}
 
@@ -278,7 +278,7 @@ public class ClickGameService {
 				clickDto.getRewardType());
 			clickGameRewardLogRepository.save(clickGameRewardLog);
 			cashLogRepository.save(
-				CashLog.create(user, reward, user.getCash() + reward, clickGame.getRound() + "회차 게임 " + totalClick +  "번째 클릭자", CashLogType.GAME)
+				CashLog.create(user, reward, user.getCash() + reward, clickGame.getRound() + "회차 게임 " + totalClick +  "번째 클릭자", CashLogType.REWARD)
 			);
 		}
 	}
