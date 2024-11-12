@@ -4,8 +4,6 @@ import { useEffect, useState } from "react";
 
 export default function Login() {
   const handleKakaoLogin = () => {
-    // 카카오 로그인 처리 함수 (구현 필요)
-    console.log("카카오 로그인", process.env.NEXT_PUBLIC_API_URL);
     window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/oauth2/authorization/kakao?redirect_uri=${process.env.NEXT_PUBLIC_BASE_URL}`;
   };
 
