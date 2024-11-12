@@ -8,11 +8,13 @@
   box-sizing: border-box;
 }
 
+/* 탄성스크롤/ 줌 액션 방지 */
 body {
   margin: 0;
   padding: 0;
   background-color: #c6daf9;
   touch-action: pan-x pan-y;
+  overscroll-behavior: none;
 }
 
 html,
