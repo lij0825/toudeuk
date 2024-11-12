@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import useGetRecentHistories from "@/apis/history/useRecentHistory";
-import { useRouter } from "next/navigation";
 
 export default function RecentHistoriesCarousel() {
   const router = useRouter();
@@ -44,7 +45,25 @@ export default function RecentHistoriesCarousel() {
   }
 
   if (!recentHistories?.content || recentHistories.content.length === 0) {
-    return <div className="text-gray-500">No recent games found.</div>;
+    return (
+      <div
+        className="carousel-card w-full font-noto bg-blue-300 rounded-lg flex flex-col items-center justify-center p-2"
+        style={{
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div className="text-gray-500 mb-1">최근 진행된 게임이 없어요</div>
+        <Link
+          href="/toudeuk"
+          className="px-2 text-sm py-1 bg-blue-500 text-white rounded-md  hover:bg-blue-600 transition-colors duration-200"
+        >
+          게임하러 가기
+        </Link>
+      </div>
+    );
   }
 
   const handleMouseDown = (e: React.MouseEvent) => {

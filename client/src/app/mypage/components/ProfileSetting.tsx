@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { UserInfo } from "@/types";
 import { patchUserInfo } from "@/apis/userInfoApi";
@@ -72,16 +72,22 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
   const { isValid, isChecked, checkNickname, isLoading } =
     useNicknameCheck(nickname);
 
-  //닉네임 변경 요청 Mutation
+  // 닉네임 변경 요청 Mutation
   const mutation = useMutation({
     mutationFn: (formData: FormData) => patchUserInfo(formData),
     onSuccess: (data) => {
+      console.log("mutate 반환", data);
       toast.success("유저 정보 변경이 완료되었습니다.");
       cache.invalidateQueries({ queryKey: ["user"] });
-      setUserInfo({
-        nickName: data.nickName,
-        profileImg: data.profileImg,
-      });
+      const userData = {
+        nickName: data.nickname, // 변경된 속성명
+        profileImg: data.profileImage,
+      };
+      setUserInfo(userData);
+      console.log(
+        "세션스토리지에 저장된 userInfo",
+        sessionStorage.getItem("userInfo")
+      );
     },
     onError: () => {
       toast.error("유저 정보 변경 중 에러가 발생했습니다.");
@@ -137,6 +143,8 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
       formData.append("profileImage", profileImage);
     }
 
+    console.log("요청보내는 data ", formData);
+
     mutation.mutate(formData);
     setIsEditing(false);
     handleModalOpen();
@@ -175,7 +183,7 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
                       height={50}
                       src={
                         userProfile?.profileImg
-                          ? `${userProfile?.profileImg}?${Date.now()}`
+                          ? `${userProfile?.profileImg}`
                           : "/default_profile.png"
                       }
                       alt="프로필 미리보기"
@@ -300,7 +308,7 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
                 disabled={
                   isNicknameChanged
                     ? !isChecked ||
-                      !isNumericOnly ||
+                      isNumericOnly ||
                       !isValid ||
                       !isNicknameValid ||
                       isLoading
@@ -309,7 +317,7 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
                 className={`px-4 py-2 rounded-lg text-sm text-white transition duration-150 ${
                   isNicknameChanged
                     ? !isChecked ||
-                      !isNumericOnly ||
+                      isNumericOnly ||
                       !isValid ||
                       !isNicknameValid ||
                       isLoading

@@ -1,6 +1,11 @@
 import { BaseResponse } from "@/types/Base";
 import instance from "./clientApi";
-import { UserInfo } from "@/types";
+import { UserInfo, UserPartialInfo } from "@/types";
+
+interface UpdateInfo {
+  nickname: string;
+  profileImage: string;
+}
 
 //사용자 정보 가져오기
 export const fetchUserInfo = async (): Promise<UserInfo> => {
@@ -16,8 +21,8 @@ export const fetchUserInfo = async (): Promise<UserInfo> => {
 // 사용자 정보 업데이트
 export const patchUserInfo = async (
   formData: FormData
-): Promise<Partial<UserInfo>> => {
-  const response = await instance.patch<BaseResponse<Partial<UserInfo>>>(
+): Promise<UpdateInfo> => {
+  const response = await instance.patch<BaseResponse<UpdateInfo>>(
     "/user",
     formData,
     {

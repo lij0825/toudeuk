@@ -15,8 +15,8 @@ export const useUserInfoStore = create<UserInfoStore>()(
       setUserInfo: (data) =>
         set((state) => ({
           userInfo: {
-            ...state.userInfo,
-            ...data, // 새로운 데이터만 덮어씌우기
+            ...state.userInfo, // 기존 상태 유지
+            ...data, // 새로운 데이터 덮어쓰기
           },
         })),
       clearUserInfo: () => set({ userInfo: null }),
@@ -24,6 +24,8 @@ export const useUserInfoStore = create<UserInfoStore>()(
     {
       name: "userInfo",
       storage: createJSONStorage(() => sessionStorage),
+      partialize: (state) => ({ userInfo: state.userInfo }), // userInfo 전체 저장
+      version: 0,
     }
   )
 );
