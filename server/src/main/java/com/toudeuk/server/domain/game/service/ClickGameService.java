@@ -271,7 +271,7 @@ public class ClickGameService {
 		// 첫번째 클릭자 보상
 		if (rewardType.equals(FIRST)) {
 			ClickGameRewardLog clickGameRewardLog = ClickGameRewardLog.create(user, clickGame, FIRST_CLICK_REWARD,
-				totalClick, SECTION);
+				totalClick, FIRST);
 			clickGameRewardLogRepository.save(clickGameRewardLog);
 			cashLogRepository.save(
 				CashLog.create(user, FIRST_CLICK_REWARD, user.getCash() + FIRST_CLICK_REWARD,
