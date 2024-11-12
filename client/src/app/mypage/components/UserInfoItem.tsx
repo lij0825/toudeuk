@@ -7,8 +7,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import ProfileSetting from "./ProfileSetting";
+import { useUserInfoStore } from "@/store/userInfoStore";
 
 export default function UserInfoItem() {
+  const userProfile = useUserInfoStore((state) => state.userInfo);
+
   const { data: userInfo, isError } = useQuery<UserInfo>({
     queryKey: ["user"], // 캐싱 키 설정
     queryFn: fetchUserInfo,
@@ -23,9 +26,9 @@ export default function UserInfoItem() {
     <div>
       <section className="flex align-center pb-4 justify-between">
         <div className="flex items-center">
-          <div className="relative w-12 h-12 rounded-xl overflow-hidden mr-2">
+          <div className="relative w-12 h-12 rounded-full overflow-hidden mr-2">
             <Image
-              src={userInfo?.profileImg || "/default_profile.jpg"}
+              src={userProfile?.profileImg || "/default_profile.jpg"}
               alt="Profile Image"
               fill
               className="object-cover"
@@ -34,7 +37,7 @@ export default function UserInfoItem() {
             />
           </div>
           <span className="font-noto text-lg font-extrabold  ml-2">
-            {userInfo?.nickName}
+            {userProfile?.nickName}
           </span>
         </div>
         <div>

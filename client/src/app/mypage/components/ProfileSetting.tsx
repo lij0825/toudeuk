@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import Image from "next/image";
 import dynamic from "next/dynamic";
@@ -9,12 +9,14 @@ import { patchUserInfo } from "@/apis/userInfoApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CUSTOM_ICON } from "@/constants/customIcons";
 import { useNicknameCheck } from "@/apis/user/useNicknameCheck";
+import { useUserInfoStore } from "@/store/userInfoStore";
 
 const LottieAnimation = dynamic(
   () => import("@/app/components/LottieAnimation"),
   { ssr: false }
 );
 
+//설정창 모달 오픈
 interface ModalProps {
   isOpen: boolean;
   handleModalOpen: () => void;
@@ -30,7 +32,7 @@ export default function ProfileSetting() {
   return (
     <div>
       <div onClick={handleModalOpen}>
-      <Image src="/icons/setting.svg" alt="Icon" width="25" height="25" />
+        <Image src="/icons/setting.svg" alt="Icon" width="25" height="25" />
       </div>
       {isOpen && (
         <SettingModal isOpen={isOpen} handleModalOpen={handleModalOpen} />
@@ -39,14 +41,18 @@ export default function ProfileSetting() {
   );
 }
 
+//수정 모달창 내용
 function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
+  const userProfile = useUserInfoStore((state) => state.userInfo);
+
   const cache = useQueryClient();
   const user = cache.getQueryData<UserInfo>(["user"]);
   const maxSize = 5 * 1024 * 1024;
   const maxNicknameLength = 8;
 
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [nickname, setNickname] = useState<string>(user?.nickName || "");
+  const [isEditing, setIsEditing] = useState<boolean>(false); //편집여부 확인을 위함//모달창
+  //프로필 관련
+  const [nickname, setNickname] = useState<string>(userProfile?.nickName || ""); //닉네임
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string>(
     user?.profileImg
@@ -54,9 +60,17 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
       : "/default_profile.png"
   );
 
+  //닉네임 유효성 관련 로직들
+  const [isNicknameValid, setIsNicknameValid] = useState<boolean>(true); //닉네임유효성검사
+  const [isNumericOnly, setIsNumericOnly] = useState(false); //숫자로만 되어있는가?
+  const [nicknameExceedsLimit, setNicknameExceedsLimit] = useState(false); //길이를 초과하는가?
+  const [hasWhitespace, setHasWhitespace] = useState(false); //공백이 있는가?
+
+  //닉네임 중복검사
   const { isValid, isChecked, checkNickname, isLoading } =
     useNicknameCheck(nickname);
 
+  //닉네임 변경 요청 Mutation
   const mutation = useMutation({
     mutationFn: (formData: FormData) => patchUserInfo(formData),
     onSuccess: () => {
@@ -68,25 +82,31 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
     },
   });
 
-  const [isNicknameValid, setIsNicknameValid] = useState<boolean>(true);
-
   function toggleEditMode(): void {
     setIsEditing(!isEditing);
   }
 
+  //닉네임 수정시 유효성 검사
   function handleNicknameChange(e: React.ChangeEvent<HTMLInputElement>) {
     const newNickname = e.target.value;
 
+    // 닉네임 유효성 검사
+    setNicknameExceedsLimit(newNickname.length > maxNicknameLength);
+    setHasWhitespace(/\s/.test(newNickname));
+    setIsNumericOnly(/^\d+$/.test(newNickname));
+
     // 글자 길이와 공백 검사
-    if (newNickname.length > maxNicknameLength || /\s/.test(newNickname)) {
-      setIsNicknameValid(false);
-    } else {
-      setIsNicknameValid(true);
-    }
+    // 유효한 닉네임일 경우 isNicknameValid 업데이트
+    setIsNicknameValid(
+      newNickname.length <= maxNicknameLength &&
+        !/\s/.test(newNickname) &&
+        !/^\d+$/.test(newNickname)
+    );
 
     setNickname(newNickname);
   }
 
+  //이미지 변경시 유효성 검사
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && file.size > maxSize) {
@@ -98,6 +118,7 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
     }
   };
 
+  //저장 로직
   function handleSave() {
     if (!isChecked || !isValid || !isNicknameValid) {
       toast.error("닉네임을 확인해주세요.");
@@ -122,12 +143,10 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
 
   if (!isOpen) return null;
 
-  const nicknameExceedsLimit = nickname.length > maxNicknameLength;
-  const hasWhitespace = /\s/.test(nickname);
-
+  //모달 창
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm font-noto"
       onClick={handleModalOpen}
     >
       <div
@@ -137,26 +156,31 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
         <section className="text-lg mb-2">
           <div className="mb-4">내 프로필</div>
           <div className="flex space-x-2 items-center justify-between">
+            {/* 편집 모드 */}
             {isEditing ? (
               <></>
             ) : (
               <div className="flex items-center w-full justify-between">
                 <div className="flex items-center">
+                  {/* 수정완료된 프로필은 store 구독 */}
                   <div className="w-[50px] h-[50px] rounded-full overflow-hidden mr-2">
                     <Image
                       width={50}
                       height={50}
                       src={
-                        user?.profileImg
-                          ? `${user.profileImg}?${Date.now()}`
+                        userProfile?.profileImg
+                          ? `${userProfile?.profileImg}?${Date.now()}`
                           : "/default_profile.png"
                       }
                       alt="프로필 미리보기"
                       className="object-cover w-full h-full"
                     />
                   </div>
-                  <strong className="text-base">{user?.nickName}님</strong>
+                  <strong className="text-base">
+                    {userProfile?.nickName}님
+                  </strong>
                 </div>
+                {/* 편집 아이콘 */}
                 <div className="cursor-pointer" onClick={toggleEditMode}>
                   <LottieAnimation
                     animationData={CUSTOM_ICON.edit}
@@ -210,6 +234,7 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
                   중복 체크
                 </button>
               </div>
+              {/* 로직 */}
               {nicknameExceedsLimit && (
                 <p className="text-xs text-red-500 mt-1">
                   닉네임은 최대 8글자까지 가능합니다.
@@ -233,6 +258,11 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
               {!isChecked && (
                 <p className="text-xs text-red-500 mt-1">
                   닉네임 중복 여부를 확인해주세요.
+                </p>
+              )}
+              {isNumericOnly && (
+                <p className="text-xs text-red-500 mt-1">
+                  닉네임은 숫자로만 구성될 수 없습니다.
                 </p>
               )}
             </div>
@@ -279,7 +309,7 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
         {!isEditing && (
           <button
             onClick={logout}
-            className="bg-red-500 mt-6 px-3 py-1 rounded-md text-sm text-white w-full hover:bg-red-600 transition duration-150"
+            className="bg-red-500 mt-6 px-3 py-1 rounded-sm text-sm text-white w-full hover:bg-red-600 transition duration-150"
           >
             로그아웃
           </button>

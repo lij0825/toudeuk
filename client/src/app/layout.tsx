@@ -63,10 +63,9 @@ export default function RootLayout({
         <meta property="og:site_name" content={APP_NAME} />
         <meta property="og:title" content={APP_DEFAULT_TITLE} />
         <meta property="og:description" content={APP_DESCRIPTION} />
-        {/* Twitter */}
-        <meta name="twitter:card" content="summary" />
-        <meta name="twitter:title" content={APP_DEFAULT_TITLE} />
-        <meta name="twitter:description" content={APP_DESCRIPTION} />
+        <meta property="og:image" content="/appicon/toudeuk_512.png" />
+        <meta property="og:image:width" content="800" />
+        <meta property="og:image:height" content="400" />
       </head>
       <body className="place-items-center">
         <ClientWrapper>
