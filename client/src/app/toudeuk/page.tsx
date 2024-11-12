@@ -9,7 +9,7 @@ import SockJS from "sockjs-client";
 import Image from "next/image";
 import { HiInformationCircle } from "react-icons/hi";
 import { useUserInfoStore } from "@/store/userInfoStore";
-import { CurrentRank, GameButton, GameEnd, GameStart, Ranking } from "./components"
+import { CurrentRank, GameButton, GameEnd, GameStart, Ranking } from "./components";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -54,7 +54,7 @@ export default function Toudeuk() {
           "/topic/game",
           (message) => {
             const data = JSON.parse(message.body);
-            console.log(data)
+            console.log(data);
             setTotalClick(data.totalClick || 0);
             setLatestClicker(data.latestClicker || null);
             setStatus(data.status || null);
@@ -87,10 +87,7 @@ export default function Toudeuk() {
   };
 
   const remainingTime = coolTime
-    ? Math.max(
-        0,
-        Math.floor((coolTime.getTime() - new Date().getTime()) / 1000)
-      )
+    ? Math.max(0, Math.floor((coolTime.getTime() - new Date().getTime()) / 1000))
     : 0;
 
   return (
@@ -121,23 +118,16 @@ export default function Toudeuk() {
                   />
                 )}
               </div>
-              <div className="font-bold">
-              내 현재 랭킹 {myRank}
-              </div>
+              <div className="font-bold">내 현재 랭킹 {myRank}</div>
             </div>
             <div className="flex-grow flex text-white">
-              <div className="font-semibold mr-2">
-              마지막 클릭자 
-              </div>
-              <div>
-              {latestClicker || "클릭자가 없습니다"}
-              </div>
+              <div className="font-semibold mr-2">마지막 클릭자</div>
+              <div>{latestClicker || "클릭자가 없습니다"}</div>
             </div>
-          
           </section>
           {/* 내용 섹션 */}
           <div className="flex flex-col items-center justify-center h-full relative">
-          <div className="text-gray-400 absolute left-4 top-4">
+            <div className="text-gray-400 absolute left-4 top-4">
               <HiInformationCircle className="w-[32px] h-[32px]" />
             </div>
             {/* 랭킹 */}
@@ -147,7 +137,6 @@ export default function Toudeuk() {
               </h3>
               <Ranking ranking={ranking} />
             </section>
-
             {/* 버튼 */}
             <section
               className="w-40 h-40 z-50 flex items-center justify-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
