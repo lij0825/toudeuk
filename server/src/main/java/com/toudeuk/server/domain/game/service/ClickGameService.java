@@ -367,7 +367,7 @@ public class ClickGameService {
 			() -> new BaseException(GAME_NOT_FOUND)
 		);
 
-		HistoryData.WinnerAndMaxClickerData winnerAndMaxClickerData = clickGameRewardLogRepository.findWinnerAndMaxClickerByClickGameId(
+		HistoryData.WinnerAndMaxClickerAndFirstClickerData winnerAndMaxClickerAndFirstClicker = clickGameRewardLogRepository.findWinnerAndMaxClickerByClickGameId(
 			clickGame.getId()).orElseThrow(
 			() -> new BaseException(REWARD_USER_NOT_FOUND)
 		);
@@ -376,7 +376,7 @@ public class ClickGameService {
 			.orElseThrow(() -> new BaseException(REWARD_USER_NOT_FOUND));
 
 		return HistoryData.RewardInfo.of(
-			winnerAndMaxClickerData,
+			winnerAndMaxClickerAndFirstClicker,
 			middleRewardUsers
 		);
 	}
