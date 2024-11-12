@@ -38,7 +38,6 @@ export default function Home() {
             <Login />
           </div>
         </div>
-        <div className="text-gray-400 font-noto">터득이란?</div>
       </div>
     </div>
   );
