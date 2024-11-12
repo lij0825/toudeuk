@@ -23,6 +23,8 @@ export default function Toudeuk() {
   const [ranking, setRanking] = useState<RankInfo[]>([]);
   const [status, setStatus] = useState<string | null>(null);
   const [coolTime, setCoolTime] = useState<Date | null>(null);
+  const [remainingTime, setRemainingTime] = useState<number>(0);
+  const [remainingMilliseconds, setRemainingMilliseconds] = useState<number>(0);
 
   //상단바 렌더링을 위한 정보
   const userInfo = useUserInfoStore((state) => state.userInfo);
@@ -34,6 +36,29 @@ export default function Toudeuk() {
       console.log(data);
     },
   });
+
+  useEffect(() => {
+    if (coolTime) {
+      const interval = setInterval(() => {
+        const now = new Date();
+        const timeLeft = coolTime.getTime() - now.getTime();
+        
+        if (timeLeft <= 0) {
+          setRemainingTime(0);
+          setRemainingMilliseconds(0);
+          clearInterval(interval);
+        } else {
+          const secondsLeft = Math.floor(timeLeft / 1000);
+          const millisecondsLeft = timeLeft % 1000;
+
+          setRemainingTime(secondsLeft);
+          setRemainingMilliseconds(millisecondsLeft);
+        }
+      }, 10); // 10ms마다 업데이트
+
+      return () => clearInterval(interval);
+    }
+  }, [coolTime])
 
   useEffect(() => {
     console.log(userInfo?.nickName)
@@ -60,6 +85,7 @@ export default function Toudeuk() {
           "/topic/game",
           (message) => {
             const data = JSON.parse(message.body);
+            console.log(data)
             console.log(data);
             setTotalClick(data.totalClick || 0);
             setLatestClicker(data.latestClicker || null);
@@ -100,9 +126,9 @@ export default function Toudeuk() {
     }
   };
 
-  const remainingTime = coolTime
-    ? Math.max(0, Math.floor((coolTime.getTime() - new Date().getTime()) / 1000))
-    : 0;
+  // const remainingTime = coolTime
+  //   ? Math.max(0, Math.floor((coolTime.getTime() - new Date().getTime()) / 1000))
+  //   : 0;
 
   return (
     <div className="items-center relative h-full w-full overflow-hidden font-noto bg-[#031926]">
@@ -161,7 +187,10 @@ export default function Toudeuk() {
           </div>
         </>
       ) : (
-        <p>다음 라운드까지 {remainingTime}초 남았습니다.</p>
+        <p className="text-white">
+          다음 라운드까지 {remainingTime}초 {remainingMilliseconds}ms 남았습니다.
+        </p>
+        // <p className="text-white">다음 라운드까지 {remainingTime}초 남았습니다.</p>
       )}
     </div>
   );
