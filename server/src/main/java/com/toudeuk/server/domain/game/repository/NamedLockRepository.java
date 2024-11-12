@@ -1,17 +1,30 @@
 package com.toudeuk.server.domain.game.repository;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-public interface NamedLockRepository {
+@RequiredArgsConstructor
+public class NamedLockRepository {
 
-    @Modifying
-    @Query(value = "SELECT GET_LOCK(:lockName, 10)", nativeQuery = true)
-    Integer getLock(String lockName);
+    private final EntityManager entityManager;
 
-    @Modifying
-    @Query(value = "SELECT RELEASE_LOCK(:lockName)", nativeQuery = true)
-    Integer releaseLock(String lockName);
+    @Transactional
+    public Long getLock(String lockName) {
+        return (Long) entityManager.createNativeQuery("SELECT GET_LOCK(:lockName, 10)")
+                .setParameter("lockName", lockName)
+                .getSingleResult();
+    }
+
+    @Transactional
+    public Long releaseLock(String lockName) {
+        return (Long) entityManager.createNativeQuery("SELECT RELEASE_LOCK(:lockName)")
+                .setParameter("lockName", lockName)
+                .getSingleResult();
+    }
 }

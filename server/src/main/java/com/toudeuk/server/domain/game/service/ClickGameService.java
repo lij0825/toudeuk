@@ -118,12 +118,12 @@ public class ClickGameService {
     public GameData.DisplayInfoForClicker click(Long userId) throws JsonProcessingException {
 
         try {
-            Integer lockResult = namedLockRepository.getLock(LOCK_NAME);
+            Long lockResult = namedLockRepository.getLock(LOCK_NAME);
             if (lockResult == 0) {
                 throw new RuntimeException("네임드 락 획득 실패");
             }
 
-            log.info("==========================================Only-MySQL==========================================");
+            log.info("==========================================Only-MySQL-NamedLock 버전==========================================");
             // 쿨타임이면?
             if (clickCacheRepository.isGameCoolTime()) {
 
