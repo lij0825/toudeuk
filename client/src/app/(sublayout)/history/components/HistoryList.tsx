@@ -1,5 +1,5 @@
 "use client";
-
+import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { useInfiniteQuery, QueryFunctionContext } from "@tanstack/react-query";
 import { fetchHistories } from "@/apis/history/historyApi";
@@ -87,13 +87,16 @@ export default function HistoryList() {
   }, [hasNextPage, fetchNextPage, isFetchingNextPage]);
 
   return (
-    <div>
+    <div className="h-full">
       {contents.length === 0 ? (
-        <div className="text-center text-gray-500 p-4">
-          <p>게임 기록이 없습니다.</p>
-          <button className="mt-2 text-blue-500 hover:underline">
-            게임하러가기
-          </button>
+        <div className="flex flex-col items-center rounded-lg shadow-inner justify-center text-gray-600 font-noto h-full bg-gray-200">
+          <div className="mb-4 text-lg">게임 기록이 없습니다.</div>
+          <Link
+            href="/toudeuk"
+            className="px-6 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition-colors duration-200"
+          >
+            게임하러 가기
+          </Link>
         </div>
       ) : (
         <section>

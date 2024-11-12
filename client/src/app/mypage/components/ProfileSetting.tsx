@@ -78,10 +78,12 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
     onSuccess: async () => {
       toast.success("유저 정보 변경이 완료되었습니다.");
       await cache.invalidateQueries({ queryKey: ["user"] });
-      // 최신 데이터 가져와 Zustand 스토어에 저장
+      // 최신 데이터 가져와 Zustand 스토어에 저장]
+
       const updatedUserInfo = await cache.fetchQuery<UserInfo>({
         queryKey: ["user"],
       });
+      console.log(updatedUserInfo);
       setUserInfo({
         nickName: updatedUserInfo.nickName,
         profileImg: updatedUserInfo.profileImg,
