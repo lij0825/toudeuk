@@ -14,7 +14,6 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,8 +48,8 @@ public class S3Service {
 	@Value("${cloud.aws.s3.cloudFrontDomain}")
 	private String cloudFrontDomain;
 
-	@Async("imageExecutor")
-	@TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
+	// @Async("imageExecutor")
+	@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void upload(S3UploadEvent event) {
 
