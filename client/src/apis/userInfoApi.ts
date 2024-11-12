@@ -1,11 +1,6 @@
 import { BaseResponse } from "@/types/Base";
 import instance from "./clientApi";
-import { UserInfo, UserPartialInfo } from "@/types";
-
-interface UpdateInfo {
-  nickname: string;
-  profileImage: string;
-}
+import { UserInfo } from "@/types";
 
 //사용자 정보 가져오기
 export const fetchUserInfo = async (): Promise<UserInfo> => {
@@ -19,20 +14,14 @@ export const fetchUserInfo = async (): Promise<UserInfo> => {
 };
 
 // 사용자 정보 업데이트
-export const patchUserInfo = async (
-  formData: FormData
-): Promise<UpdateInfo> => {
-  const response = await instance.patch<BaseResponse<UpdateInfo>>(
-    "/user",
-    formData,
-    {
-      headers: { "Content-Type": "multipart/form-data" },
-    }
-  );
+export const patchUserInfo = async (formData: FormData): Promise<void> => {
+  const response = await instance.patch<BaseResponse<void>>("/user", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
 
   const data = response.data;
+  console.log(data);
 
-  if (!data.success || !data.data)
-    throw new Error(data.message || "업데이트 실패");
+  if (!data.success) throw new Error(data.message || "업데이트 실패");
   return data.data;
 };

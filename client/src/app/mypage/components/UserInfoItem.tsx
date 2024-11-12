@@ -46,18 +46,23 @@ export default function UserInfoItem() {
       </section>
       <>
         <Link href={"/point"}>
-          <div className="bg-primary px-5 py-4 rounded-lg text-white flex items-center">
-            <div>
+          <div className="bg-primary px-5 py-4 rounded-lg text-white flex items-center justify-between">
+            <div className="flex items-center">
               <Image
                 src={"/icons/coin.png"}
                 alt="coin Image"
                 width={34}
                 height={34}
               />
+              <div className="ml-2 typo-sub-title">
+                {userInfo ? userInfo.cash : 0}pt
+              </div>
             </div>
-            <div className="ml-2 typo-sub-title">
-              {userInfo ? userInfo.cash : 0}pt
-            </div>
+            <Link href="/kapay">
+              <button className="p-2 bg-blue-500 font-noto text-white rounded-md text-sm hover:bg-blue-600 transition duration-150">
+                충전하기
+              </button>
+            </Link>
           </div>
         </Link>
       </>

@@ -58,10 +58,30 @@ export default function RecentHistoriesCarousel() {
         <div className="text-gray-500 mb-1">최근 진행된 게임이 없어요</div>
         <Link
           href="/toudeuk"
-          className="px-2 text-sm py-1 bg-blue-500 text-white rounded-md  hover:bg-blue-600 transition-colors duration-200"
+          className="px-2 text-sm py-1 text-white rounded-md hover:bg-blue-600 transition-colors duration-200 hover:animate-shake"
         >
           게임하러 가기
         </Link>
+        <style jsx>{`
+          @keyframes shake {
+            0%,
+            100% {
+              transform: translateX(0);
+            }
+            20%,
+            60% {
+              transform: translateX(-2px);
+            }
+            40%,
+            80% {
+              transform: translateX(2px);
+            }
+          }
+
+          .hover\:animate-shake:hover {
+            animation: shake 0.5s ease-in-out;
+          }
+        `}</style>
       </div>
     );
   }

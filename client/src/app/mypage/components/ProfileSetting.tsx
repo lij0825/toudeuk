@@ -75,19 +75,17 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
   // 닉네임 변경 요청 Mutation
   const mutation = useMutation({
     mutationFn: (formData: FormData) => patchUserInfo(formData),
-    onSuccess: (data) => {
-      console.log("mutate 반환", data);
+    onSuccess: async () => {
       toast.success("유저 정보 변경이 완료되었습니다.");
-      cache.invalidateQueries({ queryKey: ["user"] });
-      const userData = {
-        nickName: data.nickname, // 변경된 속성명
-        profileImg: data.profileImage,
-      };
-      setUserInfo(userData);
-      console.log(
-        "세션스토리지에 저장된 userInfo",
-        sessionStorage.getItem("userInfo")
-      );
+      await cache.invalidateQueries({ queryKey: ["user"] });
+      // 최신 데이터 가져와 Zustand 스토어에 저장
+      const updatedUserInfo = await cache.fetchQuery<UserInfo>({
+        queryKey: ["user"],
+      });
+      setUserInfo({
+        nickName: updatedUserInfo.nickName,
+        profileImg: updatedUserInfo.profileImg,
+      });
     },
     onError: () => {
       toast.error("유저 정보 변경 중 에러가 발생했습니다.");
