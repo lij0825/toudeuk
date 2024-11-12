@@ -7,8 +7,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import ProfileSetting from "./ProfileSetting";
+import { useUserInfoStore } from "@/store/userInfoStore";
 
 export default function UserInfoItem() {
+  const userProfile = useUserInfoStore((state) => state.userInfo);
+
   const { data: userInfo, isError } = useQuery<UserInfo>({
     queryKey: ["user"], // 캐싱 키 설정
     queryFn: fetchUserInfo,
@@ -23,9 +26,9 @@ export default function UserInfoItem() {
     <div>
       <section className="flex align-center pb-4 justify-between">
         <div className="flex items-center">
-          <div className="relative w-12 h-12 rounded-xl overflow-hidden mr-2">
+          <div className="relative w-12 h-12 rounded-full overflow-hidden mr-2">
             <Image
-              src={userInfo?.profileImg || "/default_profile.jpg"}
+              src={userProfile?.profileImg || "/default_profile.jpg"}
               alt="Profile Image"
               fill
               className="object-cover"
@@ -34,7 +37,7 @@ export default function UserInfoItem() {
             />
           </div>
           <span className="font-noto text-lg font-extrabold  ml-2">
-            {userInfo?.nickName}
+            {userProfile?.nickName}
           </span>
         </div>
         <div>
@@ -43,18 +46,23 @@ export default function UserInfoItem() {
       </section>
       <>
         <Link href={"/point"}>
-          <div className="bg-primary px-5 py-4 rounded-md text-white flex items-center">
-            <div>
+          <div className="bg-primary px-5 py-4 rounded-lg text-white flex items-center justify-between">
+            <div className="flex items-center">
               <Image
                 src={"/icons/coin.png"}
                 alt="coin Image"
                 width={34}
                 height={34}
               />
+              <div className="ml-2 typo-sub-title">
+                {userInfo ? userInfo.cash : 0}pt
+              </div>
             </div>
-            <div className="ml-2 typo-sub-title">
-              {userInfo ? userInfo.cash : 0}pt
-            </div>
+            <Link href="/kapay">
+              <button className="p-2 bg-blue-500 font-noto text-white rounded-md text-sm hover:bg-blue-600 transition duration-150">
+                충전하기
+              </button>
+            </Link>
           </div>
         </Link>
       </>

@@ -111,24 +111,6 @@ export default function HistoryPage() {
         />
       </section>
 
-      {/* 아이콘 설명 (게임 기록 탭 선택 시에만 표시) */}
-      {selected === SelectType.HISTORY && (
-        <div className="icon-description flex justify-center mb-4">
-          <div className="flex items-center mr-4">
-            <span role="img" aria-label="Trophy" className="text-lg mr-1">
-              🏆
-            </span>
-            <span className="text-gray-600">우승자</span>
-          </div>
-          <div className="flex items-center">
-            <span role="img" aria-label="Fire" className="text-lg mr-1">
-              🔥
-            </span>
-            <span className="text-gray-600">최다 클릭자</span>
-          </div>
-        </div>
-      )}
-
       {/* 탭 내용 */}
       <section
         className="relative flex-1 overflow-y-auto scrollbar-hidden"
