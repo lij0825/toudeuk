@@ -9,7 +9,13 @@ import SockJS from "sockjs-client";
 import Image from "next/image";
 import { HiInformationCircle } from "react-icons/hi";
 import { useUserInfoStore } from "@/store/userInfoStore";
-import { CurrentRank, GameButton, GameEnd, GameStart, Ranking } from "./components";
+import {
+  CurrentRank,
+  GameButton,
+  GameEnd,
+  GameStart,
+  Ranking,
+} from "./components";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -36,13 +42,12 @@ export default function Toudeuk() {
   });
 
   useEffect(() => {
-    console.log(userInfo?.nickName)
-    if(stompClientRef.current) return;
-    
+    console.log(userInfo?.nickName);
+    if (stompClientRef.current) return;
+
     const socket = new SockJS(`${BASE_URL}/ws`);
     const stompClient = Stomp.over(() => socket);
     stompClientRef.current = stompClient;
-    
 
     const accessToken = sessionStorage.getItem("accessToken");
     const headers = {
@@ -69,7 +74,7 @@ export default function Toudeuk() {
             const myRankIndex = data.rank.findIndex(
               (rankInfo: RankInfo) => rankInfo.nickname === userInfo?.nickName
             );
-        
+
             // 순위는 배열 인덱스가 0부터 시작하므로, myRank는 +1을 해야 합니다.
             setMyRank(myRankIndex >= 0 ? myRankIndex + 1 : 0);
 
@@ -101,7 +106,10 @@ export default function Toudeuk() {
   };
 
   const remainingTime = coolTime
-    ? Math.max(0, Math.floor((coolTime.getTime() - new Date().getTime()) / 1000))
+    ? Math.max(
+        0,
+        Math.floor((coolTime.getTime() - new Date().getTime()) / 1000)
+      )
     : 0;
 
   return (
@@ -112,7 +120,7 @@ export default function Toudeuk() {
           <section className="w-full flex justify-center items-center bg-black p-5">
             <div className="flex-grow flex text-white">
               <div>
-                {userInfo ? (
+                {userInfo?.profileImg ? (
                   <div className="w-6 h-6 overflow-hidden rounded-full mr-2">
                     <Image
                       src={userInfo.profileImg}
