@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import useGetRecentHistories from "@/apis/history/useRecentHistory";
-import { useRouter } from "next/navigation";
 
 export default function RecentHistoriesCarousel() {
   const router = useRouter();
@@ -37,14 +38,52 @@ export default function RecentHistoriesCarousel() {
 
       return () => clearInterval(interval);
     }
-  }, [recentHistories?.content?.length]);
+  }, [recentHistories?.content?.length, recentHistories?.content]);
 
   if (isLoading) {
     return <p>Loading...</p>;
   }
 
   if (!recentHistories?.content || recentHistories.content.length === 0) {
-    return <div className="text-gray-500">No recent games found.</div>;
+    return (
+      <div
+        className="carousel-card w-full font-noto bg-blue-300 rounded-lg flex flex-col items-center justify-center p-2"
+        style={{
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div className="text-gray-500 mb-1">최근 진행된 게임이 없어요</div>
+        <Link
+          href="/toudeuk"
+          className="px-2 text-sm py-1 text-white rounded-md hover:bg-blue-600 transition-colors duration-200 hover:animate-shake"
+        >
+          게임하러 가기
+        </Link>
+        <style jsx>{`
+          @keyframes shake {
+            0%,
+            100% {
+              transform: translateX(0);
+            }
+            20%,
+            60% {
+              transform: translateX(-2px);
+            }
+            40%,
+            80% {
+              transform: translateX(2px);
+            }
+          }
+
+          .hover\:animate-shake:hover {
+            animation: shake 0.5s ease-in-out;
+          }
+        `}</style>
+      </div>
+    );
   }
 
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -95,7 +134,7 @@ export default function RecentHistoriesCarousel() {
     >
       <div
         key={currentIndex} // currentIndex가 변경될 때마다 컴포넌트 재렌더링
-        className="carousel-card w-full bg-[#BBF2C4] rounded-lg flex flex-col items-center justify-center p-2 transition-transform duration-500 transform"
+        className="carousel-card w-full bg-[#d3ffdee5] rounded-lg flex flex-col items-center justify-center p-2 transition-transform duration-500 transform"
         style={{
           animation: "flipUp 1s ease-in-out",
         }}
@@ -104,12 +143,12 @@ export default function RecentHistoriesCarousel() {
         }}
       >
         <section className="flex items-center font-semibold space-x-2">
-          <div className="text-lg">{currentGame.clickGameId}회차</div>
+          <div className="text-md">{currentGame.clickGameId}회차</div>
           <div className="text-sm">
             {new Date(currentGame.createdAt).toLocaleDateString()}
           </div>
         </section>
-        <div className="text-sm mb-1">
+        <div className="text-sm">
           ✨ 우승자: {currentGame.winner?.nickname || "정보 없음"}
         </div>
         <div className="text-sm">

@@ -7,7 +7,8 @@ import { useQuery } from "@tanstack/react-query";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import { useState } from "react";
+import SkeletonGifticon from "@/app/components/SkeletonGifticon";
 
 const LottieAnimation = dynamic(
   () => import("@/app/components/LottieAnimation"),
@@ -40,6 +41,7 @@ export default function Gifticon() {
           <p>Shop</p>
         </div>
       </section>
+      {/* < SkeletonGifticon/> //스켈레톤 적용?테스트 라이브러리 안쓰고 해보기 */}
       <section className="pb-3 font-noto text-sm">
         <div className="grid grid-cols-5 gap-2 items-end">
           <button
