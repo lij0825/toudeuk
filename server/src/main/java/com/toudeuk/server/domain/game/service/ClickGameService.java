@@ -117,6 +117,7 @@ public class ClickGameService {
     @Transactional
     public GameData.DisplayInfoForClicker click(Long userId) throws JsonProcessingException {
 
+        log.info("==========================================Only-MySQL==========================================");
         // 쿨타임이면?
         if (clickCacheRepository.isGameCoolTime()) {
 
