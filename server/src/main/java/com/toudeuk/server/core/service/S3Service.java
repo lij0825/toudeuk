@@ -50,7 +50,7 @@ public class S3Service {
 	private String cloudFrontDomain;
 
 	@Async("imageExecutor")
-	@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+	@TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void upload(S3UploadEvent event) {
 

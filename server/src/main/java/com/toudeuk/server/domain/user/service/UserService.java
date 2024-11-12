@@ -141,7 +141,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public void updateUserInfo(Long userId, UserData.UpdateInfo updateInfo) {
+	public UserData.ChangeInfo updateUserInfo(Long userId, UserData.UpdateInfo updateInfo) {
 		User user = userRepository.findById(userId)
 			.orElseThrow(() -> new BaseException(USER_NOT_FOUND));
 
@@ -163,6 +163,8 @@ public class UserService {
 		eventPublisher.publishEvent(new S3UploadEvent(user, updateInfo.getProfileImage()));
 
 		userRepository.save(user);
+
+		return UserData.ChangeInfo.of(newNickname, user.getProfileImg());
 	}
 
 	private void updateRedisNicknameMapping(Long userId, String oldNickname, String newNickname) {
