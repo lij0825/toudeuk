@@ -147,7 +147,7 @@ const KapayPage = () => {
             </div>
           ))}
 
-          <div className="flex items-center justify-between">
+          {/* <div className="flex items-center justify-between">
             <label className="flex items-center space-x-2">
               <Image
                 src={"/icons/coin.png"} // 동전 이미지
@@ -170,7 +170,7 @@ const KapayPage = () => {
           >
             충전하기
           </button>
-          </div>
+          </div> */}
         </div>
 
 

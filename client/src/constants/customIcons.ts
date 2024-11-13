@@ -28,6 +28,7 @@ import MainLogin from "../../public/icons/CircleTransition.json";
 import littleLoading from "../../public/icons/circle-loading-balls.json";
 import mainCircle from "../../public/icons/circle.json";
 import downArrow from "../../public/icons/down-arrow.json";
+import snowframe from "../../public/icons/snowframe.json"
 
 // SVG 파일 Import
 import settingSVG from "../../public/icons/setting.svg";
@@ -58,5 +59,6 @@ export const CUSTOM_ICON = {
   MainLogin,
   littleLoading,
   mainCircle,
-  downArrow
+  downArrow,
+  snowframe
 };
