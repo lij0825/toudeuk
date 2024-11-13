@@ -238,7 +238,7 @@ export default function Toudeuk() {
                   <p>{gameId}라운드</p>
                   <p>최다 클릭자 : {reward?.maxClicker?.nickname}</p>
                   <p>마지막 클릭자 : {reward?.winner?.nickname}</p>
-                  {/* <p>중간 보상자</p>
+                  <p>중간 보상자</p>
                   <ul>
                     <li>첫번째 클릭자 : {reward?.firstClicker?.nickname}</li>
                     {reward?.middleRewardUsers?.map((user, index) => (
@@ -246,7 +246,7 @@ export default function Toudeuk() {
                         {user.clickCount}번째 클릭자 : {user.nickname}
                       </li>
                     ))}
-                  </ul> */}
+                  </ul>
                 </>
               )}
             </div>
