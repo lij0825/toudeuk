@@ -163,6 +163,7 @@ public class UserService {
 		eventPublisher.publishEvent(new S3UploadEvent(user, updateInfo.getProfileImage()));
 
 		userRepository.save(user);
+
 	}
 
 	private void updateRedisNicknameMapping(Long userId, String oldNickname, String newNickname) {

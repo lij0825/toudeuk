@@ -87,7 +87,7 @@ export default function HistoryList() {
   }, [hasNextPage, fetchNextPage, isFetchingNextPage]);
 
   return (
-    <div >
+    <div>
       {contents.length === 0 ? (
         <div className="text-center text-gray-500 p-4">
           <p>게임 기록이 없습니다.</p>
@@ -96,23 +96,40 @@ export default function HistoryList() {
           </button>
         </div>
       ) : (
-        <div className="grid gap-y-4">
-          {contents.map((content: ContentInfo, index: number) => {
-            const isLastItem = index === contents.length - 1;
-            const id = content.clickGameId.toString();
-            return (
-              <div
-                key={content.clickGameId}
-                ref={isLastItem ? observerRef : null}
-                onClick={() => {
-                  router.push(`/history/${id}`);
-                }}
-              >
-                <HistoryItem content={content} />
-              </div>
-            );
-          })}
-        </div>
+        <section>
+          <div className="icon-description flex justify-center mb-4">
+            <div className="flex items-center mr-4">
+              <span role="img" aria-label="Trophy" className="text-lg mr-1">
+                🏆
+              </span>
+              <span className="text-gray-600">우승자</span>
+            </div>
+            <div className="flex items-center">
+              <span role="img" aria-label="Fire" className="text-lg mr-1">
+                🔥
+              </span>
+              <span className="text-gray-600">최다 클릭자</span>
+            </div>
+          </div>
+
+          <div className="grid gap-y-4">
+            {contents.map((content: ContentInfo, index: number) => {
+              const isLastItem = index === contents.length - 1;
+              const id = content.clickGameId.toString();
+              return (
+                <div
+                  key={content.clickGameId}
+                  ref={isLastItem ? observerRef : null}
+                  onClick={() => {
+                    router.push(`/history/${id}`);
+                  }}
+                >
+                  <HistoryItem content={content} />
+                </div>
+              );
+            })}
+          </div>
+        </section>
       )}
       {isFetchingNextPage && (
         <div className="text-center text-gray-500">로딩 중...</div>

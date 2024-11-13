@@ -1,7 +1,6 @@
 import dynamic from "next/dynamic";
-import GifticonSwipe from "./components/GifticonSwipe";
-import MypageList from "./components/MypageList";
-import UserInfoItem from "./components/UserInfoItem";
+import { MypageList, GifticonSwipe } from "./components";
+import  UserInfoItem from "./components/UserInfoItem" //svg 파일 임포트문으로 인한 에러 방지를 위해 별도 import
 
 const RecentHistoriesCarousel = dynamic(
   () => import("./components/RecentHistorySwipe"),
@@ -16,10 +15,8 @@ export default function Mypage() {
       </section>
       <section className="p-1 flex-shrink-0"></section>
       <section className="bg-white h-full flex-grow pb-8 pt-2 flex flex-col">
-        <section className="py-2 flex-shrink-0">
-          <div>
-            <GifticonSwipe />
-          </div>
+        <section className="flex-shrink-0">
+          <GifticonSwipe />
           <div className="px-8">
             <RecentHistoriesCarousel />
           </div>
@@ -30,4 +27,5 @@ export default function Mypage() {
       </section>
     </div>
   );
+  
 }
