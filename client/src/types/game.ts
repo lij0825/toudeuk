@@ -1,11 +1,11 @@
 import { Client } from "@stomp/stompjs";
 
 export interface GameInfo {
-  myRank: number;
+  coolTime: string;
   myClickCount: number;
-  prevUserId: number;
-  prevClickCount: number;
-  totalClick: number;
+  myRank: number;
+  rewardType: "NONE" | "SECTION" | "WINNER" | "FIRST"
+  status: string;
 }
 
 export interface WebSocketStore {

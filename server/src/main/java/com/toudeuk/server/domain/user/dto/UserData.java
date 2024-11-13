@@ -32,6 +32,19 @@ public class UserData {
 	}
 
 	@Data
+	public static class ChangeInfo {
+		private String nickname;
+		private String profileImage;
+
+		public static ChangeInfo of(String nickname, String profileImage) {
+			ChangeInfo changeInfo = new ChangeInfo();
+			changeInfo.nickname = nickname;
+			changeInfo.profileImage = profileImage;
+			return changeInfo;
+		}
+	}
+
+	@Data
 	public static class UpdateInfo {
 		private String nickname;
 		private MultipartFile profileImage;
