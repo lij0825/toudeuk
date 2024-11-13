@@ -34,6 +34,9 @@ export default function Toudeuk() {
 
   const [showGameStart, setShowGameStart] = useState<boolean>(false);
 
+  const [showRewardGif, setShowRewardGif] = useState<boolean>(false);
+  const [rewardGifSrc, setRewardGifSrc] = useState<string>("");
+
   //상단바 렌더링을 위한 정보
   const userInfo = useUserInfoStore((state) => state.userInfo);
 
@@ -47,26 +50,35 @@ export default function Toudeuk() {
       console.log(currentGameId);
       // rewardType이 "SECTION"일 경우 toast 띄우기
       if (data.rewardType === "SECTION") {
+        setShowRewardGif(true);
+        setRewardGifSrc("/icons/Firecracker.gif");
         toast.success(`당첨되었습니다! 🎉`, {
           position: "top-center",
           autoClose: 3000, // 3초 후 자동으로 사라짐
           hideProgressBar: true, // 진행 바 숨김
           closeOnClick: true, // 클릭 시 닫기
         });
+        setTimeout(() => setShowRewardGif(false), 3000);
       } else if (data.rewardType === "FIRST") {
+        setShowRewardGif(true);
+        setRewardGifSrc("/icons/Firecracker1.gif");
         toast.success(`첫번째 클릭자로 당첨되었습니다! 🎉`, {
           position: "top-center",
           autoClose: 3000, // 3초 후 자동으로 사라짐
           hideProgressBar: true, // 진행 바 숨김
           closeOnClick: true, // 클릭 시 닫기
         });
+        setTimeout(() => setShowRewardGif(false), 3000);
       } else if (data.rewardType === "WINNER") {
+        setShowRewardGif(true);
+        setRewardGifSrc("/icons/Firecracker2.gif");
         toast.success(`마지막 클릭자로 당첨되었습니다!`, {
           position: "top-center",
           autoClose: 3000, // 3초 후 자동으로 사라짐
           hideProgressBar: true, // 진행 바 숨김
           closeOnClick: true, // 클릭 시 닫기
         });
+        setTimeout(() => setShowRewardGif(false), 3000);
       }
     },
     onError: (err) => {
@@ -90,26 +102,27 @@ export default function Toudeuk() {
       const interval = setInterval(() => {
         const now = new Date();
         const timeLeft = coolTime.getTime() - now.getTime();
-
-        if (timeLeft > 0 && timeLeft <= 1) {
-          if (!showGameStart) {
-            setShowGameStart(true);
-            setTimeout(() => setShowGameStart(false), 1000);
-          }
-        }
-
         if (timeLeft <= 0) {
           setRemainingTime(0);
           setRemainingMilliseconds(0);
           setShowPopup(false);
+          setShowGameStart(false);
           clearInterval(interval);
+        } else if (timeLeft > 0 && timeLeft <= 10000) {
+          // if (!showGameStart) {
+          const secondsLeft = Math.floor(timeLeft / 1000);
+          setRemainingTime(secondsLeft);
+          setShowPopup(false);
+          setShowGameStart(true);
+          setTimeout(() => setShowGameStart(false), 10000);
+          // }
         } else {
           const secondsLeft = Math.floor(timeLeft / 1000);
           const millisecondsLeft = timeLeft % 1000;
-
           setRemainingTime(secondsLeft);
           setRemainingMilliseconds(millisecondsLeft);
           setShowPopup(true);
+          setShowGameStart(false);
         }
       }, 10); // 10ms마다 업데이트
 
@@ -184,11 +197,11 @@ export default function Toudeuk() {
     }
   };
 
-  useEffect(() => {
-    if (reward) {
-      setShowPopup(true);
-    }
-  }, [reward]);
+  // useEffect(() => {
+  //   if (reward) {
+  //     setShowPopup(true);
+  //   }
+  // }, [reward]);
 
   // const remainingTime = coolTime
   //   ? Math.max(0, Math.floor((coolTime.getTime() - new Date().getTime()) / 1000))
@@ -196,7 +209,6 @@ export default function Toudeuk() {
 
   return (
     <div className="items-center relative h-full w-full overflow-hidden font-noto bg-[#031926]">
-      {showGameStart && <StartGame />}
       {/* {status === "RUNNING" ? ( */}
       <>
         {/* 최상단 섹션 */}
@@ -248,10 +260,20 @@ export default function Toudeuk() {
           </section>
           {/* 버튼 */}
           <section
-            className="w-40 h-40 z-50 flex items-center justify-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+            className="w-60 h-60 z-50 flex items-center justify-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
             onClick={handleClick}
             style={{ zIndex: 10 }}
           >
+            {showRewardGif && (
+              <Image
+                src={rewardGifSrc} // Add the GIF file in the `public` folder
+                alt="Congratulations"
+                className="absolute w-full h-full object-cover"
+                width={60}
+                height={60}
+                style={{ zIndex: 9 }}
+              />
+            )}
             <GameButton totalClick={totalClick} />
           </section>
         </div>
@@ -263,6 +285,7 @@ export default function Toudeuk() {
             gameId={gameId}
           />
         )}
+        {showGameStart && <StartGame remainingTime={remainingTime} />}
       </>
     </div>
   );
