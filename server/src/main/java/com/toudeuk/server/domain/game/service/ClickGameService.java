@@ -94,10 +94,12 @@ public class ClickGameService {
 		String latestClicker = clickCacheRepository.getUsername(userId);
 		List<RankData.UserScore> rankingList = clickCacheRepository.getRankingList();
 
+		Long gameId = clickCacheRepository.getGameId();
+
 		log.info("게임 실행 중이기 떄문에 관련정보들을 발행해야합니다.");
 
 		GameData.DisplayInfoForEvery displayInfoEvery = GameData.DisplayInfoForEvery.getDisplayInfoForEveryAtRunning(
-			totalClick, latestClicker, rankingList);
+			totalClick, latestClicker, rankingList, gameId);
 
 		GameData.DisplayInfoForClicker displayInfoForClicker = GameData.DisplayInfoForClicker.getDisplayInfoForClickerAtRunning(
 			displayInfoEvery, myRank, myClickCount, NONE);
@@ -159,6 +161,7 @@ public class ClickGameService {
 		RewardType rewardType = RewardType.from(totalClick);
 
 		Long gameId = clickCacheRepository.getGameId();
+
 		//!  여기서 보상을 결정하고 레디스에 넣는 작업을 끝내야함, 이휴 컨슈머에서는 오로지 MYSQL만 건들도록
 		KafkaClickDto clickDto = new KafkaClickDto(
 			userId,
@@ -181,7 +184,7 @@ public class ClickGameService {
 		producer.occurClickUserId(clickDto);
 
 		GameData.DisplayInfoForEvery displayInfoForEvery = GameData.DisplayInfoForEvery.getDisplayInfoForEveryAtRunning(
-			totalClick, latestClicker, rankingList);
+			totalClick, latestClicker, rankingList, gameId);
 
 		GameData.DisplayInfoForClicker displayInfoForClicker = GameData.DisplayInfoForClicker.getDisplayInfoForClickerAtRunning(
 			displayInfoForEvery, userRank, userClick, rewardType);
@@ -219,12 +222,16 @@ public class ClickGameService {
 			log.info("clickCacheRepository.deleteAllClickInfo() 실행 전");
 			clickCacheRepository.deleteAllClickInfo();
 			log.info("clickCacheRepository.deleteAllClickInfo() 실행 후");
+
+			// * 보상자들 리턴
+
 			// * 다음 게임 생성
 			Long lastRound = clickGameRepository.findLastRound().orElse(0L);
 			ClickGame newGame = ClickGame.create(lastRound + 1);
 			ClickGame savedGame = clickGameRepository.save(newGame);
 			clickCacheRepository.setTotalClick();
 			clickCacheRepository.setGameId(savedGame.getId());
+
 		}
 
 		return displayInfoForClicker;
@@ -264,10 +271,11 @@ public class ClickGameService {
 		// 첫번째 클릭자 보상
 		if (rewardType.equals(FIRST)) {
 			ClickGameRewardLog clickGameRewardLog = ClickGameRewardLog.create(user, clickGame, FIRST_CLICK_REWARD,
-				totalClick, SECTION);
+				totalClick, FIRST);
 			clickGameRewardLogRepository.save(clickGameRewardLog);
 			cashLogRepository.save(
-				CashLog.create(user, FIRST_CLICK_REWARD, user.getCash() + FIRST_CLICK_REWARD, clickGame.getRound() + "회차 게임 " + totalClick +  "번째 클릭자", CashLogType.REWARD)
+				CashLog.create(user, FIRST_CLICK_REWARD, user.getCash() + FIRST_CLICK_REWARD,
+					clickGame.getRound() + "회차 게임 " + totalClick + "번째 클릭자", CashLogType.REWARD)
 			);
 		}
 
@@ -278,7 +286,8 @@ public class ClickGameService {
 				clickDto.getRewardType());
 			clickGameRewardLogRepository.save(clickGameRewardLog);
 			cashLogRepository.save(
-				CashLog.create(user, reward, user.getCash() + reward, clickGame.getRound() + "회차 게임 " + totalClick +  "번째 클릭자", CashLogType.REWARD)
+				CashLog.create(user, reward, user.getCash() + reward,
+					clickGame.getRound() + "회차 게임 " + totalClick + "번째 클릭자", CashLogType.REWARD)
 			);
 		}
 	}
@@ -311,8 +320,10 @@ public class ClickGameService {
 		clickCacheRepository.setGameId(savedGame.getId());
 		RewardType rewardType = from(totalClick);
 
+		Long gameId = clickCacheRepository.getGameId();
+
 		GameData.DisplayInfoForEvery displayInfoForEvery = GameData.DisplayInfoForEvery.getDisplayInfoForEveryAtRunning(
-			totalClick, latestClicker, rankingList);
+			totalClick, latestClicker, rankingList, gameId);
 
 		GameData.DisplayInfoForClicker displayInfoForClicker = GameData.DisplayInfoForClicker.getDisplayInfoForClickerAtRunning(
 			displayInfoForEvery, 1, 1, rewardType);
@@ -356,7 +367,7 @@ public class ClickGameService {
 			() -> new BaseException(GAME_NOT_FOUND)
 		);
 
-		HistoryData.WinnerAndMaxClickerData winnerAndMaxClickerData = clickGameRewardLogRepository.findWinnerAndMaxClickerByClickGameId(
+		HistoryData.WinnerAndMaxClickerAndFirstClickerData winnerAndMaxClickerAndFirstClicker = clickGameRewardLogRepository.findWinnerAndMaxClickerByClickGameId(
 			clickGame.getId()).orElseThrow(
 			() -> new BaseException(REWARD_USER_NOT_FOUND)
 		);
@@ -365,7 +376,7 @@ public class ClickGameService {
 			.orElseThrow(() -> new BaseException(REWARD_USER_NOT_FOUND));
 
 		return HistoryData.RewardInfo.of(
-			winnerAndMaxClickerData,
+			winnerAndMaxClickerAndFirstClicker,
 			middleRewardUsers
 		);
 	}

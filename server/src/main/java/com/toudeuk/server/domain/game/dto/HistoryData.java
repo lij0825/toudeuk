@@ -13,27 +13,30 @@ import lombok.EqualsAndHashCode;
 public class HistoryData {
 
 	@Data
-	public static class WinnerAndMaxClickerData {
+	public static class WinnerAndMaxClickerAndFirstClickerData {
 		private RewardUser winner;
 		private RewardUser maxClicker;
+		private RewardUser firstClicker;
 
-		public static WinnerAndMaxClickerData of(RewardUser winner, RewardUser maxClicker) {
-			WinnerAndMaxClickerData winnerAndMaxClicker = new WinnerAndMaxClickerData();
-			winnerAndMaxClicker.winner = winner;
-			winnerAndMaxClicker.maxClicker = maxClicker;
-			return winnerAndMaxClicker;
+		public static WinnerAndMaxClickerAndFirstClickerData of(RewardUser winner, RewardUser maxClicker,
+			RewardUser firstClicker) {
+			WinnerAndMaxClickerAndFirstClickerData winnerAndMaxClickerAndFirstClicker = new WinnerAndMaxClickerAndFirstClickerData();
+			winnerAndMaxClickerAndFirstClicker.winner = winner;
+			winnerAndMaxClickerAndFirstClicker.maxClicker = maxClicker;
+			winnerAndMaxClickerAndFirstClicker.firstClicker = firstClicker;
+			return winnerAndMaxClickerAndFirstClicker;
 		}
 	}
 
 	@Data
-	public static class DetailLog{
+	public static class DetailLog {
 		private Long clickGameId;
 		private String nickname;
 		private String profileImg;
 		private Integer clickOrder;
 		private String createdAt;
 
-		public static DetailLog of(ClickGameLog clickGameLog,User user) {
+		public static DetailLog of(ClickGameLog clickGameLog, User user) {
 			DetailLog detailLog = new DetailLog();
 			detailLog.clickGameId = clickGameLog.getId();
 			detailLog.nickname = user.getName();
@@ -82,7 +85,7 @@ public class HistoryData {
 		private RewardUser maxClicker;
 
 		public static AllInfo of(ClickGame clickGame,
-			WinnerAndMaxClickerData winnerAndMaxClicker) {
+			WinnerAndMaxClickerAndFirstClickerData winnerAndMaxClicker) {
 			AllInfo allInfo = new AllInfo();
 			allInfo.setCommonFields(clickGame);
 			allInfo.winner = winnerAndMaxClicker.winner;
@@ -95,14 +98,16 @@ public class HistoryData {
 	public static class RewardInfo {
 		private RewardUser winner;
 		private RewardUser maxClicker;
+		private RewardUser FirstClicker;
 		private List<RewardUser> middleRewardUsers;
 
 		public static RewardInfo of(
-			WinnerAndMaxClickerData winnerAndMaxClicker,
+			WinnerAndMaxClickerAndFirstClickerData winnerAndMaxClicker,
 			List<RewardUser> middleRewardUsers) {
 			RewardInfo rewardInfo = new RewardInfo();
 			rewardInfo.winner = winnerAndMaxClicker.winner;
 			rewardInfo.maxClicker = winnerAndMaxClicker.maxClicker;
+			rewardInfo.FirstClicker = winnerAndMaxClicker.firstClicker;
 			rewardInfo.middleRewardUsers = middleRewardUsers;
 			return rewardInfo;
 		}

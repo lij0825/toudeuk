@@ -48,9 +48,10 @@ public class ClickGameRewardLogQueryRepositoryImpl implements ClickGameRewardLog
 	}
 
 	@Override
-	public Optional<HistoryData.WinnerAndMaxClickerData> findWinnerAndMaxClickerByClickGameId(Long clickGameId) {
+	public Optional<HistoryData.WinnerAndMaxClickerAndFirstClickerData> findWinnerAndMaxClickerByClickGameId(
+		Long clickGameId) {
 
-		List<HistoryData.RewardUser> winnersAndMaxClickers = queryFactory
+		List<HistoryData.RewardUser> winnerAndMaxClickerAndFirstClicker = queryFactory
 			.select(Projections.fields(
 				HistoryData.RewardUser.class,
 				clickGameRewardLog.user.name.as("nickname"),
@@ -61,17 +62,22 @@ public class ClickGameRewardLogQueryRepositoryImpl implements ClickGameRewardLog
 			.from(clickGameRewardLog)
 			.where(clickGameRewardLog.clickGame.id.eq(clickGameId))
 			.where(clickGameRewardLog.rewardType.eq(WINNER)
-				.or(clickGameRewardLog.rewardType.eq(MAX_CLICKER)))
+				.or(clickGameRewardLog.rewardType.eq(MAX_CLICKER))
+				.or(clickGameRewardLog.rewardType.eq(FIRST))
+			)
 			.fetch();
 
-		return Optional.of(HistoryData.WinnerAndMaxClickerData.of(
-			winnersAndMaxClickers.stream()
-				.filter(winner -> winner.getRewardType() != null && winner.getRewardType().equals(WINNER)) // null 체크 추가
+		return Optional.of(HistoryData.WinnerAndMaxClickerAndFirstClickerData.of(
+			winnerAndMaxClickerAndFirstClicker.stream()
+				.filter(rewardUser -> rewardUser.getRewardType().equals(WINNER))
 				.findFirst()
 				.orElse(null),
-			winnersAndMaxClickers.stream()
-				.filter(maxClicker -> maxClicker.getRewardType() != null && maxClicker.getRewardType()
-					.equals(MAX_CLICKER)) // null 체크 추가
+			winnerAndMaxClickerAndFirstClicker.stream()
+				.filter(rewardUser -> rewardUser.getRewardType().equals(MAX_CLICKER))
+				.findFirst()
+				.orElse(null),
+			winnerAndMaxClickerAndFirstClicker.stream()
+				.filter(rewardUser -> rewardUser.getRewardType().equals(FIRST))
 				.findFirst()
 				.orElse(null)
 		));
