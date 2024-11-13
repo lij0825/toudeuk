@@ -9,7 +9,7 @@ import SockJS from "sockjs-client";
 import Image from "next/image";
 import { HiInformationCircle } from "react-icons/hi";
 import { useUserInfoStore } from "@/store/userInfoStore";
-import { CurrentRank, GameButton, GameEnd, GameStart, Ranking } from "./components";
+import { GameButton, Ranking } from "./components";
 import { toast } from "react-toastify";
 import { fetchGameRewardHistory } from "@/apis/history/rewardhistory";
 import StartGame from "./components/StartGame";
@@ -37,49 +37,53 @@ export default function Toudeuk() {
   //상단바 렌더링을 위한 정보
   const userInfo = useUserInfoStore((state) => state.userInfo);
 
-  const gameId = Number(sessionStorage.getItem("gameId"))
+  const gameId = Number(sessionStorage.getItem("gameId"));
 
   const mutation = useMutation({
     mutationFn: () => gameClick(),
     onSuccess: (data) => {
       setMyRank(data.myRank);
       console.log(data);
-      console.log(currentGameId)
+      console.log(currentGameId);
       // rewardType이 "SECTION"일 경우 toast 띄우기
       if (data.rewardType === "SECTION") {
         toast.success(`당첨되었습니다! 🎉`, {
           position: "top-center",
-          autoClose: 3000,  // 3초 후 자동으로 사라짐
-          hideProgressBar: true,  // 진행 바 숨김
-          closeOnClick: true,  // 클릭 시 닫기
+          autoClose: 3000, // 3초 후 자동으로 사라짐
+          hideProgressBar: true, // 진행 바 숨김
+          closeOnClick: true, // 클릭 시 닫기
         });
       } else if (data.rewardType === "FIRST") {
         toast.success(`첫번째 클릭자로 당첨되었습니다! 🎉`, {
           position: "top-center",
-          autoClose: 3000,  // 3초 후 자동으로 사라짐
-          hideProgressBar: true,  // 진행 바 숨김
-          closeOnClick: true,  // 클릭 시 닫기
+          autoClose: 3000, // 3초 후 자동으로 사라짐
+          hideProgressBar: true, // 진행 바 숨김
+          closeOnClick: true, // 클릭 시 닫기
         });
       } else if (data.rewardType === "WINNER") {
         toast.success(`마지막 클릭자로 당첨되었습니다!`, {
           position: "top-center",
-          autoClose: 3000,  // 3초 후 자동으로 사라짐
-          hideProgressBar: true,  // 진행 바 숨김
-          closeOnClick: true,  // 클릭 시 닫기
-        })
+          autoClose: 3000, // 3초 후 자동으로 사라짐
+          hideProgressBar: true, // 진행 바 숨김
+          closeOnClick: true, // 클릭 시 닫기
+        });
       }
     },
     onError: (err) => {
-      toast.error(err.message)
-      console.log(err)
-    }
+      toast.error(err.message);
+      console.log(err);
+    },
   });
 
-  const { data: reward, isLoading, error } = useQuery<HistoryRewardInfo>({
-    queryKey: ['reward', gameId],
+  const {
+    data: reward,
+    isLoading,
+    error,
+  } = useQuery<HistoryRewardInfo>({
+    queryKey: ["reward", gameId],
     queryFn: () => fetchGameRewardHistory(gameId),
-    enabled: status === 'COOLTIME',
-  })
+    enabled: status === "COOLTIME",
+  });
 
   useEffect(() => {
     if (coolTime) {
@@ -87,7 +91,7 @@ export default function Toudeuk() {
         const now = new Date();
         const timeLeft = coolTime.getTime() - now.getTime();
 
-        if(timeLeft > 0 && timeLeft <= 1) {
+        if (timeLeft > 0 && timeLeft <= 1) {
           if (!showGameStart) {
             setShowGameStart(true);
             setTimeout(() => setShowGameStart(false), 1000);
@@ -111,17 +115,16 @@ export default function Toudeuk() {
 
       return () => clearInterval(interval);
     }
-  }, [coolTime])
+  }, [coolTime]);
 
   useEffect(() => {
-    console.log('현재라운드', currentGameId)
-    console.log(userInfo?.nickName)
+    console.log("현재라운드", currentGameId);
+    console.log(userInfo?.nickName);
     if (stompClientRef.current) return;
 
     const socket = new SockJS(`${BASE_URL}/ws`);
     const stompClient = Stomp.over(() => socket);
     stompClientRef.current = stompClient;
-
 
     const accessToken = sessionStorage.getItem("accessToken");
     const headers = {
@@ -133,19 +136,19 @@ export default function Toudeuk() {
       (frame: IFrame) => {
         console.log("Connected: " + frame);
 
-        stompClient.subscribe("/topic/health", (message) => { }, headers);
+        stompClient.subscribe("/topic/health", (message) => {}, headers);
 
         stompClient.subscribe(
           "/topic/game",
           (message) => {
             const data = JSON.parse(message.body);
-            console.log(data)
+            console.log(data);
             setTotalClick(data.totalClick || 0);
             setLatestClicker(data.latestClicker || null);
             setStatus(data.status || null);
             setRanking(data.rank || []);
             if (data.gameId !== null && data.gameId != 0) {
-              sessionStorage.setItem("gameId", data.gameId)
+              sessionStorage.setItem("gameId", data.gameId);
               setCurrentGameId(data.gameId);
             }
             const myRankIndex = data.rank.findIndex(
@@ -224,7 +227,11 @@ export default function Toudeuk() {
           </div>
           <div className="flex-grow flex text-white">
             <div className="font-semibold mr-2">마지막 클릭자</div>
-            <div>{latestClicker === "NONE" ? "-" : latestClicker || "클릭자가 없습니다"}</div>
+            <div>
+              {latestClicker === "NONE"
+                ? "-"
+                : latestClicker || "클릭자가 없습니다"}
+            </div>
           </div>
         </section>
         {/* 내용 섹션 */}
@@ -249,7 +256,12 @@ export default function Toudeuk() {
           </section>
         </div>
         {showPopup && reward && (
-          <EndGame remainingTime={remainingTime} remainingMilliseconds={remainingMilliseconds} reward={reward} gameId={gameId}/>
+          <EndGame
+            remainingTime={remainingTime}
+            remainingMilliseconds={remainingMilliseconds}
+            reward={reward}
+            gameId={gameId}
+          />
         )}
       </>
     </div>
