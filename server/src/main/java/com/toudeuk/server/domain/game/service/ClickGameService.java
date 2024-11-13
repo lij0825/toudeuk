@@ -189,8 +189,7 @@ public class ClickGameService {
 		GameData.DisplayInfoForClicker displayInfoForClicker = GameData.DisplayInfoForClicker.getDisplayInfoForClickerAtRunning(
 			displayInfoForEvery, userRank, userClick, rewardType);
 
-		// 모든 구독자에게 메시지 전송
-		messagingTemplate.convertAndSend("/topic/game", displayInfoForEvery);
+
 
 		// ! 특정 구독자에게 메시지 전송 -> Http방식으로 변경
 		// messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
@@ -233,6 +232,9 @@ public class ClickGameService {
 			clickCacheRepository.setGameId(savedGame.getId());
 
 		}
+
+		// 모든 구독자에게 메시지 전송
+		messagingTemplate.convertAndSend("/topic/game", displayInfoForEvery);
 
 		return displayInfoForClicker;
 	}
