@@ -8,11 +8,11 @@ import { useRouter } from "next/navigation";
 import { UserInfo } from "@/types";
 import { fetchUserInfo } from "@/apis/userInfoApi";
 import Image from "next/image";
+import BackButton from "../components/Backbutton";
 
 const KapayPage = () => {
   const router = useRouter();
   const [currentPoints, setCurrentPoints] = useState<number | null>(null);
-
   const [deviceType, setDeviceType] = useState<string | undefined>();
   const [openType, setOpenType] = useState<string | undefined>();
   const [totalAmount, setTotalAmount] = useState<number>(0);
@@ -26,7 +26,6 @@ const KapayPage = () => {
 
   useEffect(() => {
     const userAgent = navigator.userAgent.toLowerCase();
-
     const mobileDevices = [
       /android/i,
       /webos/i,
@@ -36,23 +35,25 @@ const KapayPage = () => {
       /blackberry/i,
       /windows phone/i,
     ];
-
-    const detectedDeviceType = mobileDevices.some((device) => userAgent.match(device))
+    const detectedDeviceType = mobileDevices.some((device) =>
+      userAgent.match(device)
+    )
       ? "mobile"
       : "pc";
 
     setDeviceType(detectedDeviceType);
     setOpenType(detectedDeviceType === "mobile" ? "redirect" : "popup");
-
   }, []);
-
-  const setAmount = (amount: number) => {
-    setTotalAmount(amount);
-  };
 
   const mutation = useMutation({
     mutationKey: ["kapay", "charge"],
-    mutationFn: () => chargeKapay(deviceType as string, openType as string, "POINT", totalAmount),
+    mutationFn: () =>
+      chargeKapay(
+        deviceType as string,
+        openType as string,
+        "POINT",
+        totalAmount
+      ),
     onSuccess: (redirectUrl) => {
       if (deviceType === "pc") {
         const width = 426;
@@ -85,58 +86,37 @@ const KapayPage = () => {
     mutation.mutate(); // 결제 준비 API 호출
   };
 
-  // const handleChargeClick = () => {
-  //   if (totalAmount === 0) {
-  //     console.error("충전할 금액이 선택되지 않았습니다.");
-  //     return;
-  //   }
-
-  //   mutation.mutate(); // 결제 준비 API 호출
-  // };
-
-  const handleOptionChange = (amount: number | "custom") => {
-    if (amount === "custom") {
-      setSelectedOption("custom");
-      setTotalAmount(customAmount ? customAmount : 0);
-    } else {
-      setSelectedOption(amount.toString());
-      setTotalAmount(amount);
-      setCustomAmount("");
-    }
-  };
-
-  const handleCustomAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number(e.target.value);
-    setTotalAmount(value);
-    setCustomAmount(value);
-  };
-
   return (
-    <div className="bg-gray-50 min-h-screen flex flex-col p-6">
-      <p className="text-3xl font-bold text-gray-800 my-6">포인트 충전</p>
-      <p className="mb-4">내 포인트 <span className="text-primary">{userInfo?.cash} 포인트</span></p>
-      <div className="w-full max-w-md bg-white rounded-lg shadow-md p-3">
-        <h2 className="text-lg font-semibold text-gray-700 mb-6">충전 금액 선택</h2>
-
-        <div className="space-y-4 mb-6">
-          {[1000, 2000, 3000, 5000, 10000, 20000, 30000, 50000, 100000, 200000].map((amount) => (
-            <div key={amount} className="flex justify-between items-center">
-              <label className="flex items-center space-x-2">
+    <div className="bg-white h-full flex flex-col p-8">
+      <div className="absolute top-10 right-10">
+        <BackButton />
+      </div>
+      <p className="text-3xl font-bold font-noto pb-1">포인트 충전</p>
+      <span className="text-primary mb-6 text-xl font-noto break-words whitespace-normal">
+        현재 {userInfo?.cash} 포인트
+      </span>
+      <h2 className="text-xl font-noto font-semibold text-gray-700 mb-2">
+        충전 금액 선택
+      </h2>
+      <div className="w-full max-w-md bg-white rounded-lg space-y-4 overflow-y-auto scrollbar-hidden">
+        <div className="divide-y divide-gray-300">
+          {[
+            1000, 2000, 3000, 5000, 10000, 20000, 30000, 50000, 100000, 200000,
+          ].map((amount) => (
+            <div
+              key={amount}
+              className="flex justify-between items-center py-3"
+            >
+              <label className="flex items-center space-x-4">
                 <Image
-                  src={"/icons/coin.png"} // 동전 이미지
+                  src={"/icons/coin.png"}
                   alt="coin Image"
                   width={23}
                   height={23}
                 />
-                {/* <input
-                  type="radio"
-                  name="amount"
-                  value={amount}
-                  checked={selectedOption === amount.toString()}
-                  onChange={() => handleOptionChange(amount)}
-                  className="text-blue-600 focus:ring-blue-500 h-4 w-4"
-                /> */}
-                <span className="text-gray-700 font-semibold">{amount.toLocaleString()} 포인트</span>
+                <span className="text-gray-700 font-semibold font-noto">
+                  {amount.toLocaleString()} 포인트
+                </span>
               </label>
               <button
                 onClick={() => handleChargeClick(amount)}
@@ -146,36 +126,12 @@ const KapayPage = () => {
               </button>
             </div>
           ))}
-
-          {/* <div className="flex items-center justify-between">
-            <label className="flex items-center space-x-2">
-              <Image
-                src={"/icons/coin.png"} // 동전 이미지
-                alt="coin Image"
-                width={23}
-                height={23}
-              />
-              <input
-                type="number"
-                placeholder="직접 입력"
-                value={customAmount || ""}
-                onChange={handleCustomAmountChange}
-                className="w-2/4 px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500 transition"
-                disabled={selectedOption !== "custom"}
-              />
-            </label>
-          <button
-            onClick={() => handleChargeClick(customAmount ? Number(customAmount) : 0)}
-            className="bg-blue-500 text-white rounded-md px-4 py-2 w-[100px] hover:bg-blue-600"
-          >
-            충전하기
-          </button>
-          </div> */}
         </div>
 
-
         {mutation.isError && (
-          <p className="text-red-500 text-center mt-4">결제 준비 중 오류가 발생했습니다.</p>
+          <p className="text-red-500 text-center mt-4">
+            결제 준비 중 오류가 발생했습니다.
+          </p>
         )}
       </div>
     </div>

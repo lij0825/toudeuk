@@ -212,8 +212,8 @@ export default function Toudeuk() {
       {/* {status === "RUNNING" ? ( */}
       <>
         {/* 최상단 섹션 */}
-        <section className="w-full flex justify-center items-center bg-black p-5">
-          <div className="flex-grow flex text-white">
+        <section className="w-full flex bg-black p-5">
+          <div className="flex-grow flex text-white items-center justify-center">
             <div>
               {userInfo?.profileImg ? (
                 <div className="w-6 h-6 overflow-hidden rounded-full mr-2">
@@ -237,7 +237,7 @@ export default function Toudeuk() {
             </div>
             <div className="font-bold">내 현재 랭킹 {myRank}</div>
           </div>
-          <div className="flex-grow flex text-white">
+          <div className="flex-grow flex text-white items-center justify-center">
             <div className="font-semibold mr-2">마지막 클릭자</div>
             <div>
               {latestClicker === "NONE"
@@ -247,15 +247,12 @@ export default function Toudeuk() {
           </div>
         </section>
         {/* 내용 섹션 */}
-        <div className="flex flex-col items-center justify-center h-full relative">
+        <div className="flex flex-col flex-grow items-center justify-center h-full relative">
           <div className="text-gray-400 absolute left-4 top-4">
             <HiInformationCircle className="w-[32px] h-[32px]" />
           </div>
           {/* 랭킹 */}
           <section className="absolute right-4 top-4 h-full z-0 overflow-y-auto scrollbar-hidden">
-            <h3 className="text-md font-extrabold font-noto text-white mb-2 w-full text-center">
-              실시간 랭킹
-            </h3>
             <Ranking ranking={ranking} />
           </section>
           {/* 버튼 */}

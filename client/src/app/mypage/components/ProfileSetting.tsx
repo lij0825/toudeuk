@@ -162,6 +162,7 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm font-noto"
       onClick={handleModalOpen}
+      style={{ zIndex: 995 }}
     >
       <div
         className="relative w-80 bg-white border border-white border-opacity-30 shadow-lg rounded-xl p-6"

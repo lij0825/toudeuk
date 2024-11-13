@@ -39,7 +39,7 @@ export default function Navbar() {
     pathname === ROUTE_URL.GAME ? "bg-white" : "bg-gray-800"
   }`;
 
-  const navClasses = `pb-2 font-noto z-100 absolute bottom-0 inset-x-0 w-full mx-auto flex gap-10 items-end justify-center border-t border-gray-200 gap-1 shadow-xl transition-transform transition-opacity duration-300 ${
+  const navClasses = `pb-2 font-noto absolute bottom-0 inset-x-0 w-full mx-auto flex gap-10 items-end justify-center border-t border-gray-200 gap-1 shadow-xl transition-transform transition-opacity duration-300 ${
     isVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
   } ${
     pathname === ROUTE_URL.GAME
@@ -111,7 +111,7 @@ export default function Navbar() {
       <nav
         ref={navRef}
         className={navClasses}
-        style={{ willChange: "transform, opacity" }}
+        style={{ willChange: "transform, opacity", zIndex: 100 }}
       >
         <div className="flex flex-col items-end justify-center text-center ">
           <a
