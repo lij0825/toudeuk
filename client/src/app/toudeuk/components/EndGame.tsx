@@ -16,16 +16,18 @@ export default function EndGame({
   gameId,
 }: EndGameProps) {
   return (
-    // 최상단 div
     <div
-      className="relative w-full h-full flex flex-col justify-center items-center bg-black bg-opacity-40 backdrop-blur-md"
-      style={{ zIndex: 100 }}
+      className="-mt-[64px] absolute inset-0 w-full h-full bg-black bg-opacity-40 backdrop-blur-lg flex flex-col justify-center items-center select-none pointer-events-none"
+      style={{ zIndex: 999 }}
     >
-      {/* 남은 시간 표시 섹션 */}
       <motion.div
-        className="absolute top-20 flex flex-col justify-center items-center text-white font-bold  text-center text-2xl mb-2 blue-glow-text bg-white bg-opacity-20 backdrop-blur-md p-4 pb-2 rounded-xl shadow-lg border border-opacity-30 border-white"
-        animate={
-          remainingTime <= 30
+        className="flex flex-col justify-center items-center text-white font-bold text-center text-2xl blue-glow-text bg-white bg-opacity-20 backdrop-blur-md p-4 pb-4 rounded-xl shadow-lg border border-opacity-30 border-white"
+        style={{ zIndex: 101 }}
+        initial={{ y: 100, opacity: 0 }} // 화면 아래에 시작 위치
+        animate={{
+          y: 0,
+          opacity: 1,
+          ...(remainingTime <= 30
             ? remainingTime <= 20
               ? {
                   x: [0, -8, 8, -8, 8, 0],
@@ -45,8 +47,13 @@ export default function EndGame({
                     repeat: Infinity,
                   },
                 }
-            : {}
-        }
+            : {}),
+        }}
+        transition={{
+          type: "spring",
+          stiffness: 150, // 탄성 정도
+          damping: 12, // 반동의 감쇠 정도
+        }}
       >
         <div className="typo-sub-title">NEXT GAME</div>
         <div
@@ -60,7 +67,7 @@ export default function EndGame({
         >
           {remainingTime <= 20 ? (
             <>
-              <div>
+              <div className="mt-1">
                 {remainingTime}초 {remainingMilliseconds}ms
               </div>
               <div>서두르세요!</div>
@@ -70,7 +77,7 @@ export default function EndGame({
               <div>
                 {remainingTime}초 {remainingMilliseconds}ms
               </div>
-              <div>곧 시작합니다!</div>
+              <div className="mt-1">곧 시작합니다!</div>
             </>
           ) : (
             `${remainingTime}초`
@@ -78,14 +85,10 @@ export default function EndGame({
         </div>
       </motion.div>
 
-      {/* 게임 결과 보여주는 section */}
-
-      <section className="flex flex-col justify-center text-center">
-        {/* 게임 내역 표시 섹션 */}
+      <section className="flex flex-col justify-center text-center w-full mt-5 font-noto">
         <AnimatePresence>
-          {/* 애니메이션이 들어간 실제 div */}
           <motion.div
-            className="relative z-10 flex flex-col items-center bg-white bg-opacity-20 backdrop-blur-lg shadow-lg text-center border border-opacity-20 border-white w-full w-full font-noto"
+            className="flex flex-col items-center bg-white bg-opacity-20 backdrop-blur-lg shadow-lg text-center border border-opacity-20 border-white w-full pb-4"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
@@ -95,119 +98,149 @@ export default function EndGame({
               damping: 10,
             }}
           >
-            {/* 동전 이미지 - 라운드 결과 뒤로 배치 */}
-            <div className="absolute z-5 top-0">
-              <Image
-                src={"/icons/maincoin.png"}
-                width={200}
-                height={200}
-                alt="CoinIcon"
-                className="opacity-80"
-                style={{
-                  position: "absolute",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                }}
-              />
-            </div>
-
-            {/* 라운드 결과 헤드 */}
             <motion.div
-              className="w-full text-white p-4 rounded-lg relative overflow-hidden"
+              className="typo-title font-bold p-4 bg-black-900 bg-opacity-70 text-white w-full relative overflow-hidden shadow-2xl"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
+              style={{
+                color: "#FFFFFF",
+                textShadow:
+                  "0 0 10px rgba(255, 215, 0, 0.7), 0 0 20px rgba(255, 215, 0, 0.5)",
+              }}
             >
-              <p className="typo-title font-bold relative z-10">
-                {gameId} ROUND
-              </p>
+              ROUND SET !!
             </motion.div>
 
-            {/* 보상자 섹션 */}
             {reward && (
               <>
-                <div className="flex grid-1 gap-3">
-                  {/* 우승자 */}
-                  <div className="flex flex-col items-center">
-                    <span className="text-white font-bold">우승자</span>
-                    <div className="relative w-16 h-16 rounded-full overflow-hidden">
-                      <Image
-                        src={reward.winner.profileImg}
-                        width={100}
-                        height={100}
-                        alt="WinnerProfile"
-                        className="object-cover"
-                      />
+                <div className="flex grid-1 gap-5 my-4">
+                  {/* 최다 클릭자 */}
+                  <div className="flex flex-col items-center justify-center gap-1 relative">
+                    <div className="text-white font-bold">최다 클릭자</div>
+                    <div className="relative w-24 h-24">
+                      <div className="absolute top-4 left-5 w-14 h-14 rounded-full overflow-hidden z-0">
+                        <Image
+                          src={reward.maxClicker.profileImg}
+                          width={100}
+                          height={100}
+                          alt="CoinIcon"
+                          className="object-cover cursor-default"
+                        />
+                      </div>
+                      <div className="absolute top-0 left-0 w-24 h-24 rounded-full overflow-hidden z-10">
+                        <Image
+                          src={"/user/maxclicker.png"}
+                          width={100}
+                          height={100}
+                          alt="CoinIcon"
+                          className="object-cover cursor-default"
+                        />
+                      </div>
                     </div>
-                    <span className="text-white">{reward.winner.nickname}</span>
+                    <div className="text-white">
+                      {reward.maxClicker.nickname}
+                    </div>
+                  </div>
+
+                  {/* 우승자 */}
+                  <div className="flex flex-col items-center justify-center gap-1 relative">
+                    <span className="text-white font-extrabold text-xl">
+                      우승자
+                    </span>
+                    <div className="relative w-24 h-24">
+                      <div className="absolute top-4 left-5 w-14 h-14 rounded-full overflow-hidden z-0">
+                        <Image
+                          src={reward.winner.profileImg}
+                          width={100}
+                          height={100}
+                          alt="WinnerProfileBackground"
+                          className="object-cover cursor-default"
+                        />
+                      </div>
+                      <div className="absolute top-0 left-0 w-24 h-24 rounded-full overflow-hidden z-10">
+                        <Image
+                          src={"/user/winner.png"}
+                          width={150}
+                          height={150}
+                          alt="WinnerProfile"
+                          className="object-cover cursor-default"
+                        />
+                      </div>
+                    </div>
+                    <span className="text-white font-xl">
+                      {reward.winner.nickname}
+                    </span>
                   </div>
 
                   {/* 첫 클릭자 */}
-                  <div className="flex flex-col items-center">
+                  <div className="flex flex-col items-center justify-center gap-1">
                     <span className="text-white font-bold">첫 클릭자</span>
-                    <div className="relative w-16 h-16 rounded-full overflow-hidden">
-                      <Image
-                        src={reward.firstClicker.profileImg}
-                        width={100}
-                        height={100}
-                        alt="FirstClickerProfile"
-                        className="object-cover"
-                      />
+                    <div className="relative w-[94px] h-[94px]">
+                      <div className="absolute top-3 left-4 w-14 h-14 rounded-full overflow-hidden z-0">
+                        <Image
+                          src={reward.firstClicker.profileImg}
+                          width={100}
+                          height={100}
+                          alt="FirstClickerProfile"
+                          className="object-cover cursor-default"
+                        />
+                      </div>
+                      <div className="absolute -top-1 -left-1 w-24 h-24 rounded-full overflow-hidden z-10">
+                        <Image
+                          src={"/user/first.png"}
+                          width={150}
+                          height={150}
+                          alt="FirstClickerBackground"
+                          className="object-cover cursor-default"
+                        />
+                      </div>
                     </div>
                     <span className="text-white">
                       {reward.firstClicker.nickname}
                     </span>
                   </div>
+                </div>
 
-                  {/* 최다 클릭자 */}
-                  <div className="flex flex-col items-center">
-                    <span className="text-white font-bold">최다 클릭자</span>
-                    <div className="relative w-16 h-16 rounded-full overflow-hidden">
-                      <Image
-                        src={reward.maxClicker.profileImg}
-                        width={100}
-                        height={100}
-                        alt="CoinIcon"
-                        className="object-cover"
-                      />
-                    </div>
-                    <span className="text-white">
-                      {reward.maxClicker.nickname}
-                    </span>
+                <section>
+                  <div className="text-white text-xl font-semibold mb-4">
+                    중간 보상
                   </div>
-                </div>
-                {/* 중간 보상자 */}
-                <div className="text-white text-lg font-semibold mt-4 mb-2 blue-glow-text">
-                  중간 보상자
-                </div>
-                <motion.ul
-                  className="text-white text-sm grid grid-cols-5 gap-2 blue-glow-text text-center"
-                  initial={{ x: 100, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  exit={{ x: 100, opacity: 0 }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 100,
-                    damping: 10,
-                  }}
-                >
-                  {reward.middleRewardUsers.map((user, index) => (
-                    <li key={index} className="flex flex-col items-center">
-                      <div className="relative w-12 h-12 rounded-full overflow-hidden mr-2">
-                        <Image
-                          src={user.profileImg}
-                          width={50}
-                          height={50}
-                          alt="MiddleRewardUserProfile"
-                          className="object-cover"
-                        />
-                      </div>
-                      <span className="font-semibold">
-                        {user.clickCount}번째
-                      </span>
-                    </li>
-                  ))}
-                </motion.ul>
+                  <motion.ul
+                    className={`text-white text-sm ${
+                      reward.middleRewardUsers.length > 4
+                        ? "grid grid-cols-4 gap-3"
+                        : "flex justify-center items-center gap-5 flex-wrap"
+                    } blue-glow-text text-center`}
+                    initial={{ x: 100, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    exit={{ x: 100, opacity: 0 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 100,
+                      damping: 10,
+                    }}
+                  >
+                    {reward.middleRewardUsers.map((user, index) => (
+                      <li
+                        key={index}
+                        className="flex flex-col items-center gap-1"
+                      >
+                        <div className="relative w-12 h-12 rounded-2xl overflow-hidden">
+                          <Image
+                            src={user.profileImg}
+                            width={50}
+                            height={50}
+                            alt="MiddleRewardUserProfile"
+                            className="object-cover"
+                            style={{ cursor: "default" }}
+                          />
+                        </div>
+                        <span className="font-semibold">{user.nickname}</span>
+                      </li>
+                    ))}
+                  </motion.ul>
+                </section>
               </>
             )}
           </motion.div>

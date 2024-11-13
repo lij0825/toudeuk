@@ -9,7 +9,7 @@ interface EndGameProps {
 }
 
 export const dummyData: EndGameProps = {
-  remainingTime: 30, //초
+  remainingTime: 59, //초
   remainingMilliseconds: 0,
   reward: {
     winner: {
