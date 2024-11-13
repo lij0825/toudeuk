@@ -1,15 +1,17 @@
 "use client";
+
+import dynamic from "next/dynamic";
+import Image from "next/image";
+import Link from "next/link";
 import { fetchGifticonList } from "@/apis/gifticonApi";
 import { CUSTOM_ICON } from "@/constants/customIcons";
 import { GifticonInfo, ItemType } from "@/types/gifticon";
 import getFilterClass from "@/utils/getFilterClass";
 import { useQuery } from "@tanstack/react-query";
-import dynamic from "next/dynamic";
-import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
 import { FaSearch } from "react-icons/fa";
-import { motion } from "framer-motion";
+import PageTransition from "@/app/components/PageTransition";
+import SearchGifticon from "./SearchGifticon";
 
 const LottieAnimation = dynamic(
   () => import("@/app/components/LottieAnimation"),
@@ -18,13 +20,8 @@ const LottieAnimation = dynamic(
 
 export default function Gifticon() {
   const [filter, setFilter] = useState<ItemType>(ItemType.ALL);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-  const {
-    data: gifticons = [],
-    isLoading,
-    error,
-  } = useQuery<GifticonInfo[]>({
+  const { data: gifticons = [], error } = useQuery<GifticonInfo[]>({
     queryKey: ["gifticons"],
     queryFn: fetchGifticonList,
   });
@@ -37,27 +34,16 @@ export default function Gifticon() {
 
   return (
     <div className="flex flex-col h-full">
-      <section className="typo-title mb-2 items-end justify-between flex-shrink-0">
-        <p>Gifticon</p>
-        <div className="flex items-end">
-          <p className="mr-2">Shop</p>
-          <div
-            className="flex items-center cursor-pointer pb-2.5"
-            onClick={() => setIsSearchOpen((prev) => !prev)}
-          >
-            {isSearchOpen && (
-              <motion.input
-                type="text"
-                placeholder="검색어 입력"
-                initial={{ width: 0, opacity: 0 }}
-                animate={{ width: 140, opacity: 1 }}
-                exit={{ width: 0, opacity: 0 }}
-                transition={{ duration: 0.3, ease: "easeInOut" }}
-                style={{ transformOrigin: "left" }}
-                className="h-6 text-base border border-gray-300 rounded-md p-2 mr-2 outline-none"
-                autoFocus
-              />
-            )}
+      <section className=" mb-2 items-end justify-between flex-shrink-0">
+        <p className="typo-title">Gifticon</p>
+        <div className="flex items-end ">
+          <p className="mr-2 typo-title">Shop</p>
+          <div className="flex items-center cursor-pointer pb-1.5">
+            <input
+              type="text"
+              placeholder="검색어를 입력하세요"
+              className="text-md mr-2 placeholder-gray-300 font-noto bg-[#F5F5F5] rounded-full pl-2.5"
+            ></input>
             <FaSearch size={24} />
           </div>
         </div>

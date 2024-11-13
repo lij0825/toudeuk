@@ -1,14 +1,10 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { useRef, useState } from "react";
 import Login from "./components/Login";
 import { CUSTOM_ICON } from "@/constants/customIcons";
+import LottieAnimation from "@/app/components/LottieAnimation";
 
-const LottieAnimation = dynamic(
-  () => import("@/app/components/LottieAnimation"),
-  { ssr: false }
-);
 
 export default function Home() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
