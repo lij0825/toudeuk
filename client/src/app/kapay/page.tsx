@@ -122,7 +122,7 @@ const KapayPage = () => {
                 onClick={() => handleChargeClick(amount)}
                 className="bg-blue-500 text-white rounded-md px-4 py-2 w-[100px] hover:bg-blue-600"
               >
-                \{amount}
+                ₩{amount}
               </button>
             </div>
           ))}
