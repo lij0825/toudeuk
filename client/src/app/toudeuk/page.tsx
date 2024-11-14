@@ -12,8 +12,6 @@ import { useUserInfoStore } from "@/store/userInfoStore";
 import { HistoryRewardInfo, RankInfo } from "@/types";
 import { GameButton, Ranking, StartGame, EndGame } from "./components";
 import { fetchGameRewardHistory } from "@/apis/history/rewardhistory";
-import Reindeer from "./components/Reindeer";
-import { dummyData } from "@/constants/dummyReward";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -44,6 +42,7 @@ export default function Toudeuk() {
   const mutation = useMutation({
     mutationFn: () => gameClick(),
     onSuccess: (data) => {
+      console.log(data.myClickCount);
       setMyRank(data.myRank);
       // rewardType이 "SECTION"일 경우 toast 띄우기
       if (data.rewardType === "SECTION") {
@@ -226,26 +225,32 @@ export default function Toudeuk() {
             </div>
           </div>
         </section>
-
         <style jsx>{`
           @keyframes shine {
             0% {
-              background-position: -150%;
+              background-position: -300%;
             }
             50% {
-              background-position: 150%;
+              background-position: 300%;
             }
             100% {
-              background-position: -150%;
+              background-position: -300%;
             }
           }
 
           .sparkling-metal-background {
-            background: linear-gradient(135deg, #333, #555, #333);
-            background-size: 300% 300%;
-            animation: shine 5s linear infinite;
+            background: radial-gradient(
+              circle,
+              rgba(30, 40, 30, 0.6),
+              #1f352b,
+              #4a2f2b,
+              #241c1a
+            );
+            background-size: 600% 600%;
+            animation: shine 30s ease-in-out infinite;
           }
         `}</style>
+
         <section className="flex flex-col flex-grow items-center justify-center h-full relative">
           <div className="text-gray-400 absolute left-4 top-4">
             <HiInformationCircle className="w-[32px] h-[32px]" />
@@ -273,7 +278,7 @@ export default function Toudeuk() {
             <GameButton totalClick={totalClick} />
           </section>
         </section>
-        <Reindeer />
+
         {showPopup && reward && (
           <EndGame
             remainingTime={remainingTime}
@@ -281,7 +286,6 @@ export default function Toudeuk() {
             reward={reward}
           />
         )}
-        {/* <EndGame {...dummyData} /> */}
         {showGameStart && <StartGame remainingTime={remainingTime} />}
       </>
     </div>

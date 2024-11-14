@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { CUSTOM_ICON } from "@/constants/customIcons";
 import dynamic from "next/dynamic";
+import Reindeer from "./Reindeer";
 
 const LottieAnimation = dynamic(
   () => import("@/app/components/LottieAnimation"),
@@ -113,6 +114,10 @@ export default function Navbar() {
         className={navClasses}
         style={{ willChange: "transform, opacity", zIndex: 50 }}
       >
+        {/* 산타할아버지 */}
+        <div className="absolute top-[-90px] w-full">
+          <Reindeer />
+        </div>
         <div className="flex flex-col items-end justify-center text-center ">
           <a
             href={ROUTE_URL.GAME}
@@ -133,7 +138,7 @@ export default function Navbar() {
           <a
             href={ROUTE_URL.HISTORY}
             className="flex flex-col items-center"
-            style={{ textDecoration: "none" , zIndex: 50 }}
+            style={{ textDecoration: "none", zIndex: 50 }}
           >
             <LottieAnimation
               animationData={CUSTOM_ICON.history}
@@ -148,7 +153,7 @@ export default function Navbar() {
           <a
             href={ROUTE_URL.GIFTICON_SHOP}
             className="flex flex-col items-center"
-            style={{ textDecoration: "none" ,  zIndex: 50 }}
+            style={{ textDecoration: "none", zIndex: 50 }}
           >
             <LottieAnimation
               animationData={CUSTOM_ICON.ticket1}
@@ -163,7 +168,7 @@ export default function Navbar() {
           <a
             href={ROUTE_URL.MYPAGE}
             className="flex flex-col items-center"
-            style={{ textDecoration: "none" ,  zIndex: 50}}
+            style={{ textDecoration: "none", zIndex: 50 }}
           >
             <LottieAnimation
               animationData={CUSTOM_ICON.profile}

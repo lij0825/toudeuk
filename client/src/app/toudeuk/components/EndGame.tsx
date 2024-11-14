@@ -25,8 +25,8 @@ export default function EndGame({
         animate={{
           y: 0,
           opacity: 1,
-          ...(remainingTime <= 30
-            ? remainingTime <= 20
+          ...(remainingTime <= 20
+            ? remainingTime <= 10
               ? {
                   x: [0, -8, 8, -8, 8, 0],
                   rotate: [0, -5, 5, -5, 5, 0],
@@ -63,14 +63,14 @@ export default function EndGame({
               : "text-white"
           }
         >
-          {remainingTime <= 20 ? (
+          {remainingTime <= 15 ? (
             <>
               <div className="mt-1">
                 {remainingTime}초 {remainingMilliseconds}ms
               </div>
               <div>서두르세요!</div>
             </>
-          ) : remainingTime <= 30 ? (
+          ) : remainingTime <= 20 ? (
             <>
               <div>
                 {remainingTime}초 {remainingMilliseconds}ms
@@ -119,7 +119,10 @@ export default function EndGame({
                     <div className="relative w-24 h-24">
                       <div className="absolute top-4 left-5 w-14 h-14 rounded-full overflow-hidden z-0">
                         <Image
-                          src={reward.maxClicker.profileImg}
+                          src={
+                            reward.maxClicker?.profileImg ||
+                            "/default_profile.jpg"
+                          }
                           width={100}
                           height={100}
                           alt="CoinIcon"
@@ -137,7 +140,7 @@ export default function EndGame({
                       </div>
                     </div>
                     <div className="text-white">
-                      {reward.maxClicker.nickname}
+                      {reward.maxClicker?.nickname}
                     </div>
                   </div>
 
@@ -149,7 +152,9 @@ export default function EndGame({
                     <div className="relative w-24 h-24">
                       <div className="absolute top-4 left-5 w-14 h-14 rounded-full overflow-hidden z-0">
                         <Image
-                          src={reward.winner.profileImg}
+                          src={
+                            reward.winner?.profileImg || "/default_profile.jpg"
+                          }
                           width={100}
                           height={100}
                           alt="WinnerProfileBackground"
@@ -167,7 +172,7 @@ export default function EndGame({
                       </div>
                     </div>
                     <span className="text-white font-xl">
-                      {reward.winner.nickname}
+                      {reward.winner?.nickname}
                     </span>
                   </div>
 
@@ -177,7 +182,10 @@ export default function EndGame({
                     <div className="relative w-[94px] h-[94px]">
                       <div className="absolute top-3 left-4 w-14 h-14 rounded-full overflow-hidden z-0">
                         <Image
-                          src={reward.firstClicker.profileImg}
+                          src={
+                            reward.firstClicker?.profileImg ||
+                            "/default_profile.jpg"
+                          }
                           width={100}
                           height={100}
                           alt="FirstClickerProfile"
@@ -195,7 +203,7 @@ export default function EndGame({
                       </div>
                     </div>
                     <span className="text-white">
-                      {reward.firstClicker.nickname}
+                      {reward.firstClicker?.nickname}
                     </span>
                   </div>
                 </div>
@@ -206,8 +214,8 @@ export default function EndGame({
                   </div>
                   <motion.ul
                     className={`text-white text-sm ${
-                      reward.middleRewardUsers.length > 4
-                        ? "grid grid-cols-4 gap-3"
+                      reward.middleRewardUsers.length > 5
+                        ? "grid grid-cols-5 gap-3"
                         : "flex justify-center items-center gap-5 flex-wrap"
                     } blue-glow-text text-center`}
                     initial={{ x: 100, opacity: 0 }}
@@ -226,7 +234,7 @@ export default function EndGame({
                       >
                         <div className="relative w-12 h-12 rounded-2xl overflow-hidden">
                           <Image
-                            src={user.profileImg}
+                            src={user.profileImg || "/default_profile.jpg"}
                             width={50}
                             height={50}
                             alt="MiddleRewardUserProfile"
