@@ -3,19 +3,46 @@ name: toudeuk-docker-compose
 
 
 services:
-  database:
-    image: mysql:8.0
-    container_name: toudeuk-database
+
+  db-write:
+    container_name: db-write
+    build: 
+      context: ./
+      dockerfile: master/Dockerfile
+    restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: toudeuk
-      MYSQL_DATABASE: toudeuk
-      MYSQL_USER: toudeuk
-      MYSQL_PASSWORD: toudeuk
-      TZ: Asia/Seoul
+      MYSQL_DATABASE: 'toudeuk'
+      MYSQL_USER: 'toudeuk'
+      MYSQL_PASSWORD: 'toudeuk'
+      MYSQL_ROOT_PASSWORD: 'toudeuk'
     ports:
-      - "3306:3306"
+      - '3306:3306'
+    # Where our data will be persisted
     volumes:
-      - toudeuk-db:/var/lib/mysql
+      - master:/var/lib/mysql
+      - master:/var/lib/mysql-files
+    networks:
+      - net-mysql
+  
+  db-read:
+    container_name: db-read
+    build: 
+      context: ./
+      dockerfile: slave/Dockerfile
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'toudeuk'
+      MYSQL_USER: 'toudeuk'
+      MYSQL_PASSWORD: 'toudeuk'
+      MYSQL_ROOT_PASSWORD: 'toudeuk'
+    ports:
+      - '3307:3306'
+    # Where our data will be persisted
+    volumes:
+      - slave:/var/lib/mysql
+      - slave:/var/lib/mysql-files
+    networks:
+      - net-mysql
 
   db-admin:
     container_name: db-admin
@@ -23,8 +50,10 @@ services:
     ports:
       - "5000:80"
     environment:
-      PMA_HOST: database
+      PMA_HOST: db-write
       MYSQL_ROOT_PASSWORD: toudeuk
+    networks:
+    - net-mysql
     restart: always
 
   cache-database:
@@ -110,6 +139,12 @@ services:
       - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka-1:29092
       - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper-1:32181
 volumes:
-  toudeuk-db:
   grafana-data:
   prometheus-data:
+  master:
+  slave: 
+
+networks: 
+  net-mysql:
+    driver: bridge
+    
