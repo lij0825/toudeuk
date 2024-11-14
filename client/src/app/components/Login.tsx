@@ -1,7 +1,3 @@
-"use client";
-
-import { useEffect, useState } from "react";
-
 export default function Login() {
   const handleKakaoLogin = () => {
     window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/oauth2/authorization/kakao?redirect_uri=${process.env.NEXT_PUBLIC_BASE_URL}`;

@@ -25,7 +25,6 @@ export const fetchHistories = async (
   );
   const data = response.data;
 
-  console.log("API Response Data:", response.data);
   if (!data.success) {
     throw new Error(response.data.message);
   }
@@ -35,9 +34,3 @@ export const fetchHistories = async (
   }
   return data.data || [];
 };
-
-// UseQueryResult<History[], AxiosError<ErrorResponse>, number>
-// onError:(error)=>
-//   console.error(error.response.data)
-//  switch error:
-

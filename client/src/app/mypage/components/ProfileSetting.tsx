@@ -78,10 +78,12 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
     onSuccess: async () => {
       toast.success("유저 정보 변경이 완료되었습니다.");
       await cache.invalidateQueries({ queryKey: ["user"] });
-      // 최신 데이터 가져와 Zustand 스토어에 저장
+      // 최신 데이터 가져와 Zustand 스토어에 저장]
+
       const updatedUserInfo = await cache.fetchQuery<UserInfo>({
         queryKey: ["user"],
       });
+      console.log(updatedUserInfo);
       setUserInfo({
         nickName: updatedUserInfo.nickName,
         profileImg: updatedUserInfo.profileImg,
@@ -160,6 +162,7 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm font-noto"
       onClick={handleModalOpen}
+      style={{ zIndex: 995 }}
     >
       <div
         className="relative w-80 bg-white border border-white border-opacity-30 shadow-lg rounded-xl p-6"
