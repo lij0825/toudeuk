@@ -117,7 +117,7 @@ export default function Navbar() {
           <a
             href={ROUTE_URL.GAME}
             className="flex flex-col items-center"
-            style={{ textDecoration: "none" }}
+            style={{ textDecoration: "none", zIndex: 50 }}
           >
             <LottieAnimation
               animationData={CUSTOM_ICON.gamecontroller}
@@ -133,7 +133,7 @@ export default function Navbar() {
           <a
             href={ROUTE_URL.HISTORY}
             className="flex flex-col items-center"
-            style={{ textDecoration: "none" }}
+            style={{ textDecoration: "none" , zIndex: 50 }}
           >
             <LottieAnimation
               animationData={CUSTOM_ICON.history}
@@ -148,7 +148,7 @@ export default function Navbar() {
           <a
             href={ROUTE_URL.GIFTICON_SHOP}
             className="flex flex-col items-center"
-            style={{ textDecoration: "none" }}
+            style={{ textDecoration: "none" ,  zIndex: 50 }}
           >
             <LottieAnimation
               animationData={CUSTOM_ICON.ticket1}
@@ -163,7 +163,7 @@ export default function Navbar() {
           <a
             href={ROUTE_URL.MYPAGE}
             className="flex flex-col items-center"
-            style={{ textDecoration: "none" }}
+            style={{ textDecoration: "none" ,  zIndex: 50}}
           >
             <LottieAnimation
               animationData={CUSTOM_ICON.profile}

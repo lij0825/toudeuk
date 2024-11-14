@@ -13,6 +13,7 @@ import { HistoryRewardInfo, RankInfo } from "@/types";
 import { GameButton, Ranking, StartGame, EndGame } from "./components";
 import { fetchGameRewardHistory } from "@/apis/history/rewardhistory";
 import Reindeer from "./components/Reindeer";
+import { dummyData } from "@/constants/dummyReward";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -280,6 +281,7 @@ export default function Toudeuk() {
             reward={reward}
           />
         )}
+        {/* <EndGame {...dummyData} /> */}
         {showGameStart && <StartGame remainingTime={remainingTime} />}
       </>
     </div>

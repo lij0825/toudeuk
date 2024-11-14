@@ -15,7 +15,7 @@ export default function EndGame({
 }: EndGameProps) {
   return (
     <div
-      className="-mt-[64px] absolute inset-0 w-full h-full bg-black bg-opacity-40 backdrop-blur-lg flex flex-col justify-center items-center select-none pointer-events-none"
+      className="absolute inset-0 w-full h-full bg-black bg-opacity-40 backdrop-blur-lg flex flex-col justify-center items-center select-none pointer-events-none"
       style={{ zIndex: 999 }}
     >
       <motion.div
