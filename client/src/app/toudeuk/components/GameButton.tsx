@@ -44,7 +44,7 @@ export default function GameButton({ totalClick }: GameProps) {
         {/* 수신된 count가 있을 때만 표시 */}
         {totalClick !== null && (
           <span
-            className="absolute top-1/2 transform -translate-y-1/2 z-10 text-4xl text-[#00ff88] hover:text-[#ff00ff] transition-colors duration-300"
+            className="absolute typo-title top-1/2 transform -translate-y-1/2 z-10 text-4xl text-[#00ff88] hover:text-[#ff00ff] transition-colors duration-300"
             style={{ pointerEvents: "none" }}
           >
             {totalClick}

@@ -20,7 +20,6 @@ export const patchUserInfo = async (formData: FormData): Promise<void> => {
   });
 
   const data = response.data;
-  console.log(data);
 
   if (!data.success) throw new Error(data.message || "업데이트 실패");
   return data.data;

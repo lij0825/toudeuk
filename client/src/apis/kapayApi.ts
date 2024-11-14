@@ -24,7 +24,6 @@ export const chargeKapay = async (
 
     return data;
   } catch (error) {
-    console.error("카카오 페이 에러", error);
     throw new Error("카카오페이 결제 준비 실패");
   }
 };

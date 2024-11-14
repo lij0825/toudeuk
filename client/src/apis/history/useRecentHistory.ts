@@ -11,8 +11,6 @@ const fetchRecentHistories = async (): Promise<HistoriesInfo> => {
 
   const data = response.data;
 
-  console.log("API Response Data:", response.data);
-
   // 요청 실패일때
   if (!data.success || !data) {
     throw new Error(data.message || "요청에 실패했습니다.");
