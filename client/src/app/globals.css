@@ -225,3 +225,25 @@ body {
     background-position: 0% 50%;
   }
 }
+
+@layer utilities {
+  @keyframes wobble {
+    0%,
+    100% {
+      transform: scale(1) translateX(0);
+    }
+    25% {
+      transform: scale(1.05) translateX(-5px);
+    }
+    50% {
+      transform: scale(1.1) translateX(5px);
+    }
+    75% {
+      transform: scale(1.05) translateX(-5px);
+    }
+  }
+
+  .animate-wobble {
+    animation: wobble 1.5s ease-in-out infinite;
+  }
+}
