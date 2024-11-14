@@ -4,11 +4,10 @@ export default function Login() {
   };
 
   return (
-    <div className="flex justify-center items-center min-w-[150px] min-h-[150px]  rounded-full bg-[#FEE500]">
+    <div className="flex justify-center items-center min-w-[150px] min-h-[150px] rounded-full bg-[#FEE500] ">
       <button
         onClick={handleKakaoLogin}
-        className={`typo-title font-bold h-full w-full p-2
-      `}
+        className="typo-title font-bold h-full w-full p-2"
       >
         <p>Game</p>
         <p>Start</p>

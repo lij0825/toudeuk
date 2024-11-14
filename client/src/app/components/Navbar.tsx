@@ -111,7 +111,7 @@ export default function Navbar() {
       <nav
         ref={navRef}
         className={navClasses}
-        style={{ willChange: "transform, opacity", zIndex: 100 }}
+        style={{ willChange: "transform, opacity", zIndex: 50 }}
       >
         <div className="flex flex-col items-end justify-center text-center ">
           <a
