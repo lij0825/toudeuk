@@ -7,7 +7,6 @@ export async function checkUserNickName(
   nickname: string
 ): Promise<BaseResponse<boolean>> {
   try {
-    console.log(nickname);
     const response = await instance.get<BaseResponse<boolean>>(
       `user/nickname/check?nickname=${nickname}`
     );
@@ -41,9 +40,7 @@ export function useNicknameCheck(nickname: string) {
   const checkNickname = async () => {
     try {
       const { data } = await refetch();
-      console.log(data);
       if (data?.success) {
-        console.log(data);
         toast[data.data ? "success" : "error"](
           data.data ? "사용 가능한 닉네임입니다" : "이미 사용 중인 닉네임입니다"
         );

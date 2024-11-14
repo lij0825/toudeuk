@@ -40,9 +40,7 @@ export const buyGifticon = async (id: string): Promise<void> => {
   const response = await instance.post<BaseResponse<void>>(`/item/buy`, {
     itemId: id,
   });
-  console.log(response);
   if (!response.data.success || !response.data.data) {
-    console.log("", response.data);
     throw new Error(response.data.message);
   }
   return response.data.data;
