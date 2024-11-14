@@ -1,11 +1,13 @@
 import LottieAnimation from "@/app/components/LottieAnimation";
 import { CUSTOM_ICON } from "@/constants/customIcons";
-import { motion } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 
 export default function Reindeer() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const reindeerRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState(0);
+  const [movingRight, setMovingRight] = useState(true);
+  const animationDuration = 5;
 
   useEffect(() => {
     if (containerRef.current) {
@@ -20,41 +22,66 @@ export default function Reindeer() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  useEffect(() => {
+    if (!reindeerRef.current || !containerWidth) return;
+
+    reindeerRef.current.style.animation = movingRight
+      ? `move-right ${animationDuration}s linear forwards`
+      : `move-left ${animationDuration}s linear forwards`;
+
+    const timer = setInterval(() => {
+      setMovingRight((prev) => !prev);
+    }, animationDuration * 1000);
+
+    return () => clearInterval(timer);
+  }, [movingRight, containerWidth]);
+
+  const keyframes = `
+    @keyframes move-right {
+      0% {
+        transform: translateX(-100px) scaleX(-1);
+      }
+      100% {
+        transform: translateX(${containerWidth + 100}px) scaleX(-1);
+      }
+    }
+
+    @keyframes move-left {
+      0% {
+        transform: translateX(${containerWidth + 100}px) scaleX(1);
+      }
+      100% {
+        transform: translateX(-100px) scaleX(1);
+      }
+    }
+  `;
+
   return (
     <div
       ref={containerRef}
-      style={{
-        overflow: "hidden",
-        position: "relative",
-        width: "100%", // 부모 컨테이너 크기 설정
-        height: 120, // Lottie 애니메이션 크기보다 약간 크게 설정
-      }}
+      className="relative w-full h-[120px] overflow-hidden"
     >
       {containerWidth > 0 && (
-        <motion.div
-          initial={{ x: -100, rotateY: 180 }} // 애니메이션 시작 위치 조정
-          animate={{
-            x: [containerWidth + 100, -100], // LottieAnimation이 좌우 바깥으로 이동
-            rotateY: [0, 180, 0], // 양 끝에서만 방향 전환
-          }}
-          transition={{
-            duration: containerWidth / 20,
-            ease: "easeInOut",
-            repeat: Infinity,
-            times: [0, 0.5, 1], // 양 끝에서만 rotateY 전환
-          }}
-          style={{
-            position: "absolute", // 내부 애니메이션 요소가 부모 내에서 절대 위치 이동
-          }}
-        >
-          <LottieAnimation
-            animationData={CUSTOM_ICON.reindeer}
-            loop={true}
-            width={100}
-            height={100}
-            autoplay={true}
-          />
-        </motion.div>
+        <>
+          <style>{keyframes}</style>
+          <div
+            ref={reindeerRef}
+            className="absolute w-[100px] h-[100px]"
+            style={{
+              animation: `${
+                movingRight ? "move-right" : "move-left"
+              } ${animationDuration}s linear forwards`,
+            }}
+          >
+            <LottieAnimation
+              animationData={CUSTOM_ICON.reindeer}
+              loop={true}
+              width={100}
+              height={100}
+              autoplay={true}
+            />
+          </div>
+        </>
       )}
     </div>
   );

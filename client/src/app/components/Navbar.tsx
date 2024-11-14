@@ -41,7 +41,7 @@ export default function Navbar() {
     isVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
   } ${
     pathname === ROUTE_URL.GAME
-      ? "bg-gray-500/90 backdrop-blur-md text-white border-gray-400"
+      ? "bg-gradient-to-b from-[rgba(180,185,200,0.4)] via-[rgba(99, 83, 80, 0.35)] to-[rgba(140,140,140,0.3)] backdrop-blur-md text-white border-white/20"
       : "bg-white text-gray-800"
   }`;
 

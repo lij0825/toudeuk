@@ -1,12 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 import Loading from "@/app/loading";
 import { UserPartialInfo } from "@/types";
 import useGetUserInfo from "@/apis/user/useGetchUserInfo";
 import { useUserInfoStore } from "@/store/userInfoStore";
-
 
 export default function OauthPage() {
   const router = useRouter(); //캐시 소실 방지

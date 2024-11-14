@@ -7,11 +7,11 @@ import Image from "next/image";
 import { Client, Frame, IFrame, Stomp } from "@stomp/stompjs";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { gameClick } from "@/apis/gameApi";
-import { HiInformationCircle } from "react-icons/hi";
 import { useUserInfoStore } from "@/store/userInfoStore";
 import { HistoryRewardInfo, RankInfo } from "@/types";
 import { GameButton, Ranking, StartGame, EndGame } from "./components";
 import { fetchGameRewardHistory } from "@/apis/history/rewardhistory";
+import ChristmasHeader from "./components/Header";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -39,6 +39,7 @@ export default function Toudeuk() {
 
   const gameId = Number(sessionStorage.getItem("gameId"));
 
+  //클릭시 당첨 로직
   const mutation = useMutation({
     mutationFn: () => gameClick(),
     onSuccess: (data) => {
@@ -70,11 +71,11 @@ export default function Toudeuk() {
         setRewardGifSrc("/icons/Firecracker2.gif");
         toast.success(`마지막 클릭자로 당첨되었습니다!`, {
           position: "top-center",
-          autoClose: 3000, // 3초 후 자동으로 사라짐
+          autoClose: 5000, // 5초 후 자동으로 사라짐
           hideProgressBar: true, // 진행 바 숨김
           closeOnClick: true, // 클릭 시 닫기
         });
-        setTimeout(() => setShowRewardGif(false), 3000);
+        setTimeout(() => setShowRewardGif(false), 5000);
       }
     },
     onError: (err) => {
@@ -187,107 +188,47 @@ export default function Toudeuk() {
   };
 
   return (
-    <div className="items-centerflex flex-col relative h-full w-full overflow-hidden font-noto bg-[#031926]">
-      <>
-        <section className="w-full flex p-5 sparkling-metal-background">
-          <div className="flex-grow flex text-white items-center justify-center">
-            <div>
-              {userInfo?.profileImg ? (
-                <div className="w-6 h-6 overflow-hidden rounded-full mr-2">
-                  <Image
-                    src={userInfo.profileImg}
-                    width={30}
-                    height={30}
-                    alt="Profile"
-                    className="object-cover w-full h-full"
-                  />
-                </div>
-              ) : (
-                <Image
-                  src="/default_profile.jpg"
-                  width={50}
-                  height={50}
-                  alt="Profile"
-                  className="rounded-full"
-                />
-              )}
-            </div>
-            <div className="font-bold text-sm">
-              내 현재 랭킹 {myRank === 0 ? "" : myRank}
-            </div>
-          </div>
-          <div className="flex-grow flex text-white items-center justify-center">
-            <div className="font-semibold text-sm mr-2">마지막 클릭자</div>
-            <div>
-              {latestClicker === "NONE"
-                ? "-"
-                : latestClicker || "클릭자가 없습니다"}
-            </div>
-          </div>
+    <div className="items-center flex flex-col relative h-full w-full overflow-hidden font-noto">
+      <ChristmasHeader
+        userInfo={userInfo}
+        myRank={myRank}
+        latestClicker={latestClicker}
+      />
+
+      <section className="relative flex flex-col flex-grow items-center justify-center h-full w-full bg-gradient-to-b from-[#131f3c] via-[#091f3e] to-[#070e1d]">
+        <div className="absolute top-2 left-4 text-gray-400 flex">게임소개</div>
+        {/* 랭킹 */}
+        <section className="absolute right-2 top-2 h-full z-0 overflow-y-auto scrollbar-hidden">
+          <Ranking ranking={ranking} />
         </section>
-        <style jsx>{`
-          @keyframes shine {
-            0% {
-              background-position: -300%;
-            }
-            50% {
-              background-position: 300%;
-            }
-            100% {
-              background-position: -300%;
-            }
-          }
-
-          .sparkling-metal-background {
-            background: radial-gradient(
-              circle,
-              rgba(30, 40, 30, 0.6),
-              #1f352b,
-              #4a2f2b,
-              #241c1a
-            );
-            background-size: 600% 600%;
-            animation: shine 30s ease-in-out infinite;
-          }
-        `}</style>
-
-        <section className="flex flex-col flex-grow items-center justify-center h-full relative">
-          <div className="text-gray-400 absolute left-4 top-4">
-            <HiInformationCircle className="w-[32px] h-[32px]" />
-          </div>
-          {/* 랭킹 */}
-          <section className="absolute right-4 top-4 h-full z-0 overflow-y-auto scrollbar-hidden">
-            <Ranking ranking={ranking} />
-          </section>
-          {/* 버튼 */}
-          <section
-            className="w-80 h-80 z-50 flex items-center justify-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-            onClick={handleClick}
-            style={{ zIndex: 10 }}
-          >
-            {showRewardGif && (
-              <Image
-                src={rewardGifSrc} // Add the GIF file in the `public` folder
-                alt="Congratulations"
-                className="absolute w-full h-full object-cover"
-                width={80}
-                height={80}
-                style={{ zIndex: 9 }}
-              />
-            )}
-            <GameButton totalClick={totalClick} />
-          </section>
+        {/* 버튼 */}
+        <section
+          className="w-96 h-96 z-50 flex items-center justify-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+          onClick={handleClick}
+          style={{ zIndex: 10 }}
+        >
+          {showRewardGif && (
+            <Image
+              src={rewardGifSrc}
+              alt="Congratulations"
+              className="absolute w-full h-full object-cover"
+              width={100}
+              height={100}
+              style={{ zIndex: 9 }}
+            />
+          )}
+          <GameButton totalClick={totalClick} />
         </section>
+      </section>
 
-        {showPopup && reward && (
-          <EndGame
-            remainingTime={remainingTime}
-            remainingMilliseconds={remainingMilliseconds}
-            reward={reward}
-          />
-        )}
-        {showGameStart && <StartGame remainingTime={remainingTime} />}
-      </>
+      {showPopup && reward && (
+        <EndGame
+          remainingTime={remainingTime}
+          remainingMilliseconds={remainingMilliseconds}
+          reward={reward}
+        />
+      )}
+      {showGameStart && <StartGame remainingTime={remainingTime} />}
     </div>
   );
 }
