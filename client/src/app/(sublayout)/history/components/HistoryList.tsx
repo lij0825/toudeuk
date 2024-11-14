@@ -1,9 +1,9 @@
 "use client";
-
-import { useEffect, useRef } from "react";
-import { useInfiniteQuery, QueryFunctionContext } from "@tanstack/react-query";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { fetchHistories } from "@/apis/history/historyApi";
-import { ContentInfo, HistoriesInfo, Page } from "@/types";
+import { ContentInfo, HistoriesInfo } from "@/types";
 import { toast } from "react-toastify";
 import HistoryItem from "./HistoryItem";
 import { useRouter } from "next/navigation";
@@ -14,12 +14,26 @@ export enum SortType {
   GAME_DESC = "round,DESC",
 }
 
+// 무한 스크롤 데이터 fetching
+const size = 7;
+const queryKey = "histories";
+
 export default function HistoryList() {
   const router = useRouter();
+  const [scrollPos, setScrollPos] = useState(0);
 
-  // 무한 스크롤 데이터 fetching
-  const size = 7;
-  const queryKey = "histories";
+  function onScroll() {
+    setScrollPos(window.scrollY);
+  }
+
+  useEffect(() => {
+    window.addEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
+
+  console.log("현재 위치", scrollPos);
 
   const {
     data,
@@ -45,12 +59,6 @@ export default function HistoryList() {
       return currentPage < totalPages - 1 ? currentPage + 1 : undefined;
     },
   });
-
-  if (isFetchingNextPage) {
-    console.log("Loading...");
-  } else if (data) {
-    console.log("Data Loaded:", data);
-  }
 
   if (isError) {
     toast.error(`에러가 발생했습니다: ${(error as Error).message}`);
@@ -87,13 +95,16 @@ export default function HistoryList() {
   }, [hasNextPage, fetchNextPage, isFetchingNextPage]);
 
   return (
-    <div>
+    <div className="h-full">
       {contents.length === 0 ? (
-        <div className="text-center text-gray-500 p-4">
-          <p>게임 기록이 없습니다.</p>
-          <button className="mt-2 text-blue-500 hover:underline">
-            게임하러가기
-          </button>
+        <div className="flex flex-col items-center rounded-lg shadow-inner justify-center text-gray-600 font-noto h-full bg-gray-200">
+          <div className="mb-4 text-lg">게임 기록이 없습니다.</div>
+          <Link
+            href="/toudeuk"
+            className="px-6 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition-colors duration-200"
+          >
+            게임하러 가기
+          </Link>
         </div>
       ) : (
         <section>
@@ -111,7 +122,7 @@ export default function HistoryList() {
               <span className="text-gray-600">최다 클릭자</span>
             </div>
           </div>
-
+          {/* 가상화 처리 필요 */}
           <div className="grid gap-y-4">
             {contents.map((content: ContentInfo, index: number) => {
               const isLastItem = index === contents.length - 1;

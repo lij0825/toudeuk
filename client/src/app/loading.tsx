@@ -1,12 +1,7 @@
 "use client";
 
 import { CUSTOM_ICON } from "@/constants/customIcons";
-import dynamic from "next/dynamic";
-
-const LottieAnimation = dynamic(
-  () => import("@/app/components/LottieAnimation"),
-  { ssr: false }
-);
+import LottieAnimation from "@/app/components/LottieAnimation";
 
 const Loading = () => {
   return (
