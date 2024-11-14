@@ -41,9 +41,26 @@ export default function RecentHistoriesCarousel() {
   }, [recentHistories?.content?.length, recentHistories?.content]);
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return (
+      <div
+        className="carousel-card w-full font-noto bg-blue-300 rounded-lg flex flex-col items-center justify-center p-2"
+        style={{
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div className="text-gray-500 mb-1">최신 게임 정보 불러오는 중...</div>
+        <Link
+          href="/toudeuk"
+          className="px-2 text-sm py-1 text-white rounded-md hover:bg-blue-600 transition-colors duration-200 hover:animate-shake"
+        >
+          게임하러 가기
+        </Link>
+      </div>
+    );
   }
-
   if (!recentHistories?.content || recentHistories.content.length === 0) {
     return (
       <div

@@ -106,16 +106,16 @@ export default function MyGifticonDetail({
             {/* 하단 버튼들 */}
             <section>
               <div className="flex justify-between w-full max-w-md space-x-2 py-4 px-4  bg-white">
-                <button
+                {/* <button
                   className="bg-[#FBBD05] text-white font-semibold px-4 py-2 rounded-lg w-1/2 hover:bg-yellow-600"
                   onClick={() =>
                     toast.success(`${usergifticon.itemName}이 저장되었습니다.`)
                   }
                 >
                   교환권 저장
-                </button>
+                </button> */}
                 <button
-                  className="bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg w-1/2 hover:bg-blue-600"
+                  className="bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg w-full hover:bg-blue-600"
                   onClick={() => mutation.mutate()}
                   disabled={usergifticon.used}
                 >
