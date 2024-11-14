@@ -8,15 +8,17 @@ export default function PrizeList() {
   const getTypeInKorean = (type: RewardType) => {
     switch (type) {
       case RewardType.MAX_CLICKER:
-        return { text: "최다 클릭", color: "text-green-500" };
+        return { text: "최다 클릭", color: "text-red-500" };
       case RewardType.WINNER:
         return { text: "최종 우승", color: "text-blue-500" };
       case RewardType.SECTION:
         return { text: "중간 보상", color: "text-orange-400" };
       case RewardType.NON:
-        return { text: "보상없음", color: "text-gray-500" };
+        return { text: "보상 없음", color: "text-gray-500" };
+      case RewardType.FIRST:
+        return { text: "최초 클릭", color: "text-green-500" };
       default:
-        return { text: "보상없음", color: "text-black" };
+        return { text: "보상 없음", color: "text-black" };
     }
   };
 
