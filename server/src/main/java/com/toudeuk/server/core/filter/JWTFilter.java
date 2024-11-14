@@ -40,7 +40,7 @@ public class JWTFilter extends OncePerRequestFilter {
                 validateToken(request, authentication.getName());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } else {
-                throw new BaseException(ErrorCode.INVALID_ACCESS_TOKEN);
+                throw BaseException.INVALID_ACCESS_TOKEN;
             }
         } catch (Exception e) {
             log.error("errors: {}", e.getMessage());

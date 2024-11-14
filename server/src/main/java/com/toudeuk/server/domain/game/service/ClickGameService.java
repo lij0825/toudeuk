@@ -1,6 +1,5 @@
 package com.toudeuk.server.domain.game.service;
 
-import static com.toudeuk.server.core.exception.ErrorCode.*;
 import static com.toudeuk.server.domain.game.entity.RewardType.*;
 
 import java.time.LocalDateTime;
@@ -64,7 +63,7 @@ public class ClickGameService {
 	@Transactional
 	public GameData.DisplayInfoForClicker checkGame(Long userId) {
 
-		User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+		User user = userRepository.findById(userId).orElseThrow(() -> BaseException.USER_NOT_FOUND);
 		Integer userCash = clickCacheRepository.getUserCash(userId);
 		user.setCash(userCash);
 		userRepository.save(user);
@@ -140,7 +139,7 @@ public class ClickGameService {
 		int result = userCash + CLICK_CASH;
 		// 돈없으면 끝
 		if (result < 0) {
-			throw new BaseException(NOT_ENOUGH_CASH);
+			throw BaseException.NOT_ENOUGH_CASH;
 		}
 
 		clickCacheRepository.updateUserCash(userId, CLICK_CASH);
@@ -148,7 +147,7 @@ public class ClickGameService {
 		Integer userClick = clickCacheRepository.addUserClick(userId);
 		// 최초 클릭자라면 => username이라는 키값을 가지고 있지 않으므로 설정해줘야한다.
 		if (userClick == -1) {
-			User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+			User user = userRepository.findById(userId).orElseThrow(() -> BaseException.USER_NOT_FOUND);
 			String nickname = user.getNickname();
 			clickCacheRepository.setUsername(userId, nickname);
 			userClick = clickCacheRepository.addUserClick(userId);
@@ -209,7 +208,7 @@ public class ClickGameService {
 			List<String> maxClickerList = clickCacheRepository.getMaxClickerList(maxClick);
 			User maxClicker = clickGameLogRepository.findFirstMaxClicker(maxClickerList).get(0);
 			ClickGame clickGame = clickGameRepository.findById(gameId)
-				.orElseThrow(() -> new BaseException(SAVING_GAME_ERROR));
+				.orElseThrow(() -> BaseException.SAVING_GAME_ERROR);
 			ClickGameRewardLog clickGameRewardLog = ClickGameRewardLog.create(maxClicker, clickGame, MAX_CLICK_REWARD,
 				maxClick.intValue(), MAX_CLICKER);
 			clickGameRewardLogRepository.save(clickGameRewardLog);
@@ -245,7 +244,7 @@ public class ClickGameService {
 			.map(gameCashLogDto ->
 				CashLog.create(
 					userRepository.findById(gameCashLogDto.getUserId())
-						.orElseThrow(() -> new BaseException(USER_NOT_FOUND)),
+						.orElseThrow(() -> BaseException.USER_NOT_FOUND),
 					gameCashLogDto.getChangeCash(),
 					gameCashLogDto.getResultCash(),
 					"게임 " + gameCashLogDto.getGameId() + "회차",
@@ -258,10 +257,10 @@ public class ClickGameService {
 	@Transactional
 	public void saveGameData(KafkaClickDto clickDto) {
 		Long userId = clickDto.getUserId();
-		User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+		User user = userRepository.findById(userId).orElseThrow(() -> BaseException.USER_NOT_FOUND);
 
 		ClickGame clickGame = clickGameRepository.findById(clickDto.getGameId())
-			.orElseThrow(() -> new BaseException(GAME_NOT_FOUND));
+			.orElseThrow(() -> BaseException.GAME_NOT_FOUND);
 		Integer totalClick = clickDto.getTotalClickCount();
 		RewardType rewardType = RewardType.from(totalClick);
 
@@ -300,7 +299,7 @@ public class ClickGameService {
 			clickGame -> HistoryData.AllInfo.of(
 				clickGame,
 				clickGameRewardLogRepository.findWinnerAndMaxClickerByClickGameId(clickGame.getId()).orElseThrow(
-					() -> new BaseException(REWARD_USER_NOT_FOUND)
+					() -> BaseException.REWARD_USER_NOT_FOUND
 				)
 			)
 		);
@@ -310,7 +309,7 @@ public class ClickGameService {
 	@Transactional
 	public void startGame(Long userId) {
 		if (clickCacheRepository.existGame()) {
-			throw new BaseException(GAME_ALREADY_EXIST);
+			throw BaseException.GAME_ALREADY_EXIST;
 		}
 
 		Long lastRound = clickGameRepository.findLastRound().orElse(0L);
@@ -366,16 +365,16 @@ public class ClickGameService {
 	public HistoryData.RewardInfo getHistoryReward(Long gameId) {
 
 		ClickGame clickGame = clickGameRepository.findById(gameId).orElseThrow(
-			() -> new BaseException(GAME_NOT_FOUND)
+			() -> BaseException.GAME_NOT_FOUND
 		);
 
 		HistoryData.WinnerAndMaxClickerAndFirstClickerData winnerAndMaxClickerAndFirstClicker = clickGameRewardLogRepository.findWinnerAndMaxClickerByClickGameId(
 			clickGame.getId()).orElseThrow(
-			() -> new BaseException(REWARD_USER_NOT_FOUND)
+			() -> BaseException.REWARD_USER_NOT_FOUND
 		);
 
 		List<HistoryData.RewardUser> middleRewardUsers = clickGameRewardLogRepository.findMiddleByClickGameId(gameId)
-			.orElseThrow(() -> new BaseException(REWARD_USER_NOT_FOUND));
+			.orElseThrow(() -> BaseException.REWARD_USER_NOT_FOUND);
 
 		return HistoryData.RewardInfo.of(
 			winnerAndMaxClickerAndFirstClicker,

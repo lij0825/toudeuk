@@ -1,19 +1,18 @@
 package com.toudeuk.server.domain.user.service;
 
-import com.toudeuk.server.core.exception.BaseException;
-import com.toudeuk.server.core.exception.ErrorCode;
-import com.toudeuk.server.domain.user.entity.User;
-import com.toudeuk.server.domain.user.repository.UserRepository;
-import com.toudeuk.server.domain.user.response.CustomOAuth2User;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.function.Function;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.function.Function;
+import com.toudeuk.server.domain.user.entity.User;
+import com.toudeuk.server.domain.user.repository.UserRepository;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor

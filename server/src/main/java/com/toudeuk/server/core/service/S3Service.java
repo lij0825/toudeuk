@@ -27,7 +27,6 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.util.IOUtils;
 import com.toudeuk.server.core.exception.BaseException;
-import com.toudeuk.server.core.exception.ErrorCode;
 import com.toudeuk.server.domain.user.entity.User;
 import com.toudeuk.server.domain.user.event.S3UploadEvent;
 import com.toudeuk.server.domain.user.repository.UserRepository;
@@ -59,7 +58,7 @@ public class S3Service {
 		}
 
 		if (event.getFile().isEmpty() || Objects.isNull(event.getFile().getOriginalFilename())) {
-			throw new BaseException(ErrorCode.EMPTY_FILE);
+			throw BaseException.EMPTY_FILE;
 		}
 
 		User user = event.getUser();
@@ -74,21 +73,21 @@ public class S3Service {
 		try {
 			s3.deleteObject(new DeleteObjectRequest(bucketName, key));
 		} catch (Exception e) {
-			throw new BaseException(ErrorCode.FAIL_TO_DELETE_FILE);
+			throw BaseException.FAIL_TO_DELETE_FILE;
 		}
 	}
 
 	private void validateImageFileExtention(String filename) {
 		int lastDotIndex = filename.lastIndexOf(".");
 		if (lastDotIndex == -1) {
-			throw new BaseException(ErrorCode.NOT_SUPPORTED_EXTENTION);
+			throw BaseException.NOT_SUPPORTED_EXTENTION;
 		}
 
 		String extention = filename.substring(lastDotIndex + 1).toLowerCase();
 		List<String> allowedExtentionList = Arrays.asList("jpg", "jpeg", "png", "gif");
 
 		if (!allowedExtentionList.contains(extention)) {
-			throw new BaseException(ErrorCode.NOT_SUPPORTED_EXTENTION);
+			throw BaseException.NOT_SUPPORTED_EXTENTION;
 		}
 	}
 
@@ -97,7 +96,7 @@ public class S3Service {
 		try {
 			return this.uploadToS3(image);
 		} catch (IOException e) {
-			throw new BaseException(ErrorCode.FAIL_TO_CREATE_FILE);
+			throw BaseException.FAIL_TO_CREATE_FILE;
 		}
 	}
 
@@ -119,7 +118,7 @@ public class S3Service {
 			PutObjectRequest putRequest = new PutObjectRequest(bucketName, s3FileName, byteArrayInputStream, metadata);
 			s3.putObject(putRequest);
 		} catch (Exception e) {
-			throw new BaseException(ErrorCode.FAIL_TO_CREATE_FILE);
+			throw BaseException.FAIL_TO_CREATE_FILE;
 		} finally {
 			byteArrayInputStream.close();
 			is.close();
@@ -139,7 +138,7 @@ public class S3Service {
 			String decodingKey = URLDecoder.decode(url.getPath(), StandardCharsets.UTF_8);
 			return decodingKey.substring(1);
 		} catch (MalformedURLException e) {
-			throw new BaseException(ErrorCode.FAIL_TO_DELETE_FILE);
+			throw BaseException.FAIL_TO_DELETE_FILE;
 		}
 	}
 }

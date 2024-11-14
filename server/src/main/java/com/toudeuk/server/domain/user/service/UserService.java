@@ -1,7 +1,5 @@
 package com.toudeuk.server.domain.user.service;
 
-import static com.toudeuk.server.core.exception.ErrorCode.*;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,7 +15,6 @@ import org.springframework.transaction.event.TransactionalEventListener;
 
 import com.toudeuk.server.core.constants.AuthConst;
 import com.toudeuk.server.core.exception.BaseException;
-import com.toudeuk.server.core.exception.ErrorCode;
 import com.toudeuk.server.domain.game.repository.ClickGameCacheRepository;
 import com.toudeuk.server.domain.game.repository.ClickGameRewardLogRepository;
 import com.toudeuk.server.domain.user.dto.UserData;
@@ -66,14 +63,14 @@ public class UserService {
 	}
 
 	public UserData.Info getUserInfo(Long userId) {
-		User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+		User user = userRepository.findById(userId).orElseThrow(() -> BaseException.USER_NOT_FOUND);
 		Integer userCash = clickGameCacheRepository.getUserCash(userId);
 		return UserData.Info.of(user, userCash);
 	}
 
 	public List<UserData.UserCashLog> getUserCashLogs(Long userId) {
 		return cashLogRepository.findByUserId(userId).orElseThrow(
-				() -> new BaseException(USER_CASH_LOG_NOT_FOUND)
+				() -> BaseException.USER_CASH_LOG_NOT_FOUND
 			).stream()
 			.map(UserData.UserCashLog::of)
 			.collect(Collectors.toList());
@@ -81,7 +78,7 @@ public class UserService {
 
 	public List<UserData.UserItemInfo> getUserItems(Long userId) {
 		return userItemRepository.findByUserId(userId).orElseThrow(
-				() -> new BaseException(USER_ITEM_NOT_FOUND)
+				() -> BaseException.USER_ITEM_NOT_FOUND
 			).stream()
 			.map(userItem -> UserData.UserItemInfo.of(
 				userItem.getId(),
@@ -96,10 +93,10 @@ public class UserService {
 
 		UserItem userItem = userItemRepository.findById(userItemId)
 			.filter(item -> item.getUser().getId().equals(userId))
-			.orElseThrow(() -> new BaseException(USER_ITEM_NOT_FOUND));
+			.orElseThrow(() -> BaseException.USER_ITEM_NOT_FOUND);
 
 		if (userItem.isUsed()) {
-			throw new BaseException(USER_ITEM_ALREADY_USED);
+			throw BaseException.USER_ITEM_ALREADY_USED;
 		}
 
 		userItem.useItem();
@@ -111,12 +108,12 @@ public class UserService {
 			String username = jwtService.getUsername(refreshToken);
 
 			if (authCacheRepository.existsByUsername(getSignOutKey(username))) {
-				throw new BaseException(ErrorCode.EXPIRED_REFRESH_TOKEN);
+				throw BaseException.EXPIRED_REFRESH_TOKEN;
 			}
 
 			return jwtService.refreshToken(refreshToken);
 		} catch (Exception e) {
-			throw new BaseException(ErrorCode.EXPIRED_TOKEN, e);
+			throw BaseException.EXPIRED_TOKEN;
 		}
 	}
 
@@ -128,7 +125,7 @@ public class UserService {
 		Integer cash = event.getCash();
 
 		User findUser = userRepository.findById(user.getId())
-			.orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+			.orElseThrow(() -> BaseException.USER_NOT_FOUND);
 		Integer userCash = clickGameCacheRepository.getUserCash(user.getId());
 
 		clickGameCacheRepository.updateUserCash(user.getId(), cash);
@@ -143,14 +140,14 @@ public class UserService {
 	@Transactional
 	public void updateUserInfo(Long userId, UserData.UpdateInfo updateInfo) {
 		User user = userRepository.findById(userId)
-			.orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+			.orElseThrow(() -> BaseException.USER_NOT_FOUND);
 
 		// 닉네임 중복 체크
 		String oldNickname = user.getNickname();
 		String newNickname = updateInfo.getNickname();
 
 		if (!oldNickname.equals(newNickname) && userRepository.findByNickname(newNickname).isPresent()) {
-			throw new BaseException(USER_NICKNAME_DUPLICATION);
+			throw BaseException.USER_NICKNAME_DUPLICATION;
 		}
 
 		// 닉네임 업데이트
@@ -192,7 +189,7 @@ public class UserService {
 
 		Integer userCash = clickGameCacheRepository.getUserCash(userId);
 
-		User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+		User user = userRepository.findById(userId).orElseThrow(() -> BaseException.USER_NOT_FOUND);
 
 		user.updateCash(userCash);
 
@@ -205,7 +202,7 @@ public class UserService {
 	public Boolean checkNickname(Long userId, String nickname) {
 
 		// 현재 닉네임이랑 중복되는 닉네임이 없으면 true
-		User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+		User user = userRepository.findById(userId).orElseThrow(() -> BaseException.USER_NOT_FOUND);
 
 		if (userRepository.findByNickname(nickname).isEmpty()) {
 			return true;
@@ -217,7 +214,7 @@ public class UserService {
 	public List<UserData.UserRewardLog> getUserRewardLogs(Long userId) {
 
 		return clickGameRewardLogRepository.findAllByUserId(userId).orElseThrow(
-				() -> new BaseException(USER_REWARD_LOG_NOT_FOUND)
+				() -> BaseException.USER_REWARD_LOG_NOT_FOUND
 			).stream()
 			.map(UserData.UserRewardLog::of)
 			.collect(Collectors.toList());

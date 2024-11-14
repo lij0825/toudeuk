@@ -158,7 +158,7 @@ public class KapayService {
 	public void saveChargeCash(KafkaChargingDto kafkaChargingDto) {
 
 		User user = userRepository.findById(kafkaChargingDto.getUserId()).orElseThrow(
-			() -> new BaseException(ErrorCode.USER_NOT_FOUND)
+			() -> BaseException.USER_NOT_FOUND
 		);
 
 		eventPublisher.publishEvent(new UserPaymentEvent(user, kafkaChargingDto.getTotalAmount()));

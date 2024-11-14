@@ -46,8 +46,7 @@ public class KapayController {
 		@RequestParam("totalAmount") Integer totalAmount
 	) {
 
-		User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(
-			USER_NOT_FOUND));
+		User user = userRepository.findById(userId).orElseThrow(() -> BaseException.USER_NOT_FOUND);
 
 		ReadyResponse readyResponse = kapayService.ready(user, agent, openType, itemName, totalAmount);
 		String redirectUrl = getRedirectUrl(agent, openType, readyResponse);

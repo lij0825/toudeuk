@@ -14,6 +14,7 @@ import com.toudeuk.server.domain.game.dto.HistoryData;
 import com.toudeuk.server.domain.game.entity.ClickGame;
 import com.toudeuk.server.domain.game.repository.ClickGameCacheRepository;
 import com.toudeuk.server.domain.user.dto.UserItemData;
+
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -48,7 +49,6 @@ public class ItemService {
 	private final ClickGameCacheRepository clickGameCacheRepository;
 	private final Producer producer;
 
-
 	public List<ItemData.ItemInfo> getItemList() {
 		return itemRepository.findAll().stream()
 			.map(ItemData.ItemInfo::of)
@@ -56,24 +56,22 @@ public class ItemService {
 	}
 
 	public ItemData.ItemInfo getItemDetail(Long itemId) {
-		Item item = itemRepository.findById(itemId).orElseThrow(() -> new BaseException(ITEM_NOT_FOUND));
+		Item item = itemRepository.findById(itemId).orElseThrow(() -> BaseException.ITEM_NOT_FOUND);
 		return ItemData.ItemInfo.of(item);
 	}
 
-
-
 	public List<UserItemData.UserItemInfo> getUserItemList(Long userId) {
 		List<UserItem> userItems = userItemRepository.findAllByUserId(userId)
-				.orElseThrow(() -> new BaseException(USER_ITEM_NOT_FOUND));
+			.orElseThrow(() -> BaseException.USER_ITEM_NOT_FOUND);
 
 		return userItems.stream()
-				.map(UserItemData.UserItemInfo::of)
-				.collect(Collectors.toList());
+			.map(UserItemData.UserItemInfo::of)
+			.collect(Collectors.toList());
 	}
 
 	public UserItemData.UserItemDetail getUserItemDetail(Long userId, Long userItemId) {
 		UserItem userItem = userItemRepository.findById(userItemId)
-				.orElseThrow(() -> new BaseException(USER_ITEM_NOT_FOUND));
+			.orElseThrow(() -> BaseException.USER_ITEM_NOT_FOUND);
 
 		return UserItemData.UserItemDetail.of(userItem);
 	}
@@ -81,22 +79,21 @@ public class ItemService {
 	@Transactional
 	public void useItem(Long userId, Long userItemId) {
 		UserItem userItem = userItemRepository.findById(userItemId)
-				.orElseThrow(() -> new BaseException(USER_ITEM_NOT_FOUND));
+			.orElseThrow(() -> BaseException.USER_ITEM_NOT_FOUND);
 		userItem.useItem();
 	}
 
-
 	@Transactional
 	public void buyItem(Long userId, Long itemId) {
-		User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
-		Item item = itemRepository.findById(itemId).orElseThrow(() -> new BaseException(ITEM_NOT_FOUND));
+		User user = userRepository.findById(userId).orElseThrow(() -> BaseException.USER_NOT_FOUND);
+		Item item = itemRepository.findById(itemId).orElseThrow(() -> BaseException.ITEM_NOT_FOUND);
 		Integer userCash = clickGameCacheRepository.getUserCash(userId);
 
 		int changeCash = -item.getPrice();
 		int resultCash = userCash - item.getPrice();
 
 		if (resultCash < 0) {
-			throw new BaseException(NOT_ENOUGH_CASH);
+			throw BaseException.NOT_ENOUGH_CASH;
 		}
 
 		clickGameCacheRepository.updateUserCash(userId, changeCash);
@@ -110,7 +107,6 @@ public class ItemService {
 		// 카프카로 보내기
 		producer.occurItemBuy(kafkaItemBuyDto);
 
-
 		//! 이 부분들이 컨슈머에서 작업 되도록
 		// UserItem userItem = UserItem.create(user, item);
 		// userItemRepository.save(userItem);
@@ -119,15 +115,14 @@ public class ItemService {
 		// 	new CashLogEvent(user, changeCash, resultCash, item.getName(), CashLogType.ITEM));
 	}
 
-
 	// 컨슘 된다
 	@Transactional
 	public void saveItemBuyData(KafkaItemBuyDto kafkaItemBuyDto) {
 		User user = userRepository.findById(kafkaItemBuyDto.getUserId())
-			.orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+			.orElseThrow(() -> BaseException.USER_NOT_FOUND);
 
 		Item item = itemRepository.findById(kafkaItemBuyDto.getItemId())
-			.orElseThrow(() -> new BaseException(ITEM_NOT_FOUND));
+			.orElseThrow(() -> BaseException.ITEM_NOT_FOUND);
 
 		UserItem userItem = UserItem.create(user, item);
 		userItemRepository.save(userItem);

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.toudeuk.server.core.annotation.CurrentUser;
 import com.toudeuk.server.core.constants.AuthConst;
 import com.toudeuk.server.core.exception.BaseException;
-import com.toudeuk.server.core.exception.ErrorCode;
 import com.toudeuk.server.core.properties.JwtProperties;
 import com.toudeuk.server.core.response.SuccessResponse;
 import com.toudeuk.server.core.util.CookieUtils;
@@ -125,7 +124,7 @@ public class UserController {
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public SuccessResponse<JwtToken> refresh(HttpServletRequest request, HttpServletResponse response) {
 		Cookie cookie = CookieUtils.getCookie(request, AuthConst.REFRESH_TOKEN).orElseThrow(
-			() -> new BaseException(ErrorCode.UNAUTHORIZED)
+			() -> BaseException.UNAUTHORIZED
 		);
 
 		JwtToken refreshedToken = userService.refresh(cookie.getValue());

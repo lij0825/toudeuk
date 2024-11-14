@@ -1,22 +1,19 @@
 package com.toudeuk.server.domain.game.listener;
 
-import com.toudeuk.server.core.exception.BaseException;
-import com.toudeuk.server.core.exception.ErrorCode;
-import com.toudeuk.server.domain.game.service.ClickGameService;
-import com.toudeuk.server.domain.user.service.JWTService;
-import io.jsonwebtoken.Claims;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.springframework.context.event.EventListener;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
-import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 
-import java.util.List;
+import com.toudeuk.server.core.exception.BaseException;
+import com.toudeuk.server.domain.game.service.ClickGameService;
+import com.toudeuk.server.domain.user.service.JWTService;
+
+import io.jsonwebtoken.Claims;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,7 +39,7 @@ public class WebSocketEventListener {
 
             clickGameService.checkGame(userId);
         } else {
-            throw new BaseException(ErrorCode.INVALID_ACCESS_TOKEN);
+            throw BaseException.INVALID_ACCESS_TOKEN;
         }
     }
 
