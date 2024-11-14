@@ -15,7 +15,6 @@ import com.toudeuk.server.domain.game.dto.GameData;
 import com.toudeuk.server.domain.game.dto.HistoryData;
 import com.toudeuk.server.domain.game.service.ClickGameService;
 import com.toudeuk.server.domain.user.service.JWTService;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
