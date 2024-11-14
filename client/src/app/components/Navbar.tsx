@@ -14,23 +14,20 @@ const LottieAnimation = dynamic(
 
 export default function Navbar() {
   const pathname = usePathname();
-  const [isVisible, setIsVisible] = useState(false); // 네비게이션 바 표시 상태
-  const navRef = useRef<HTMLDivElement | null>(null); // 네비게이션 바 참조
-  const buttonRef = useRef<HTMLButtonElement | null>(null); // 햄버거 버튼 참조
+  const [isVisible, setIsVisible] = useState(false);
+  const navRef = useRef<HTMLDivElement | null>(null);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
 
-  // '/mygifticon' 및 '/gifticon' 자체는 제외하고, 하위 경로가 있는 경우 항상 고정
   const isFixedVisible = /^(\/mygifticon\/.+|\/gifticon\/.+|\/toudeuk)$/.test(
     pathname || ""
   );
 
   useEffect(() => {
-    // 특정 경로일 때 Navbar를 항상 표시 상태로 유지
     if (isFixedVisible) {
       setIsVisible(true);
     }
   }, [isFixedVisible]);
 
-  // 햄버거 버튼 및 네비게이션 바 스타일 상수
   const buttonPositionClasses =
     pathname === ROUTE_URL.GAME
       ? "left-1/2 transform -translate-x-1/2 bg-gray-800 text-white shadow-lg"
@@ -48,15 +45,12 @@ export default function Navbar() {
       : "bg-white text-gray-800"
   }`;
 
-  // 햄버거 버튼 클릭 시 네비게이션 바 표시/숨기기 토글
   const toggleNavbar = () => {
-    // 특정 경로일 때는 toggle 기능이 작동하지 않도록
     if (!isFixedVisible) {
       setIsVisible((prev) => !prev);
     }
   };
 
-  // 네비게이션 바 외부 클릭 시 숨기기
   const handleClickOutside = useCallback(
     (event: MouseEvent) => {
       if (
@@ -80,14 +74,12 @@ export default function Navbar() {
     };
   }, [handleClickOutside]);
 
-  // 특정 경로에서 네비게이션 바 숨기기
   if (pathname === ROUTE_URL.HOME || pathname === ROUTE_URL.LOGIN_LOADING) {
     return null;
   }
 
   return (
     <>
-      {/* 햄버거 버튼 */}
       <button
         onClick={toggleNavbar}
         ref={buttonRef}
@@ -108,17 +100,17 @@ export default function Navbar() {
         </div>
       </button>
 
-      {/* 네비게이션 바 */}
       <nav
         ref={navRef}
         className={navClasses}
         style={{ willChange: "transform, opacity", zIndex: 50 }}
       >
-        {/* 산타할아버지 */}
+        {pathname === ROUTE_URL.GAME && (
+          <div className="absolute top-[-90px] w-full">
+            <Reindeer />
+          </div>
+        )}
 
-        <div className="absolute top-[-90px] w-full">
-          <Reindeer />
-        </div>
         <div className="flex flex-col items-end justify-center text-center ">
           <a
             href={ROUTE_URL.GAME}
