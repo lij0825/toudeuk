@@ -257,7 +257,7 @@ export default function Toudeuk() {
           </section>
           {/* 버튼 */}
           <section
-            className="w-60 h-60 z-50 flex items-center justify-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+            className="w-80 h-80 z-50 flex items-center justify-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
             onClick={handleClick}
             style={{ zIndex: 10 }}
           >
@@ -266,8 +266,8 @@ export default function Toudeuk() {
                 src={rewardGifSrc} // Add the GIF file in the `public` folder
                 alt="Congratulations"
                 className="absolute w-full h-full object-cover"
-                width={60}
-                height={60}
+                width={80}
+                height={80}
                 style={{ zIndex: 9 }}
               />
             )}
