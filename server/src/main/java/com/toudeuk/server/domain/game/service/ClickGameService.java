@@ -48,6 +48,7 @@ public class ClickGameService {
 	private static final int CLICK_CASH = -1;
 	private static final int FIRST_CLICK_REWARD = 500;
 	private static final int MAX_CLICK_REWARD = 500;
+	private static final long MAX_CLICK = 1000; // 12000
 
 	private final ClickGameCacheRepository clickCacheRepository;
 	private final ClickGameRepository clickGameRepository;
@@ -155,6 +156,10 @@ public class ClickGameService {
 		}
 
 		Integer totalClick = clickCacheRepository.addTotalClick();
+		if(totalClick > MAX_CLICK){
+			throw new BaseException(GAME_END);
+		}
+
 		Integer userRank = clickCacheRepository.getUserRank(userId);
 		List<RankData.UserScore> rankingList = clickCacheRepository.getRankingList();
 		String latestClicker = clickCacheRepository.getUsername(userId);
