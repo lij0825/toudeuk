@@ -6,14 +6,12 @@ interface EndGameProps {
   remainingTime: number; // 초 단위
   remainingMilliseconds: number; // 밀리초 단위
   reward: HistoryRewardInfo;
-  gameId: number;
 }
 
 export default function EndGame({
   remainingTime,
   remainingMilliseconds,
   reward,
-  gameId,
 }: EndGameProps) {
   return (
     <div

@@ -19,7 +19,6 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function Toudeuk() {
   const [totalClick, setTotalClick] = useState<number>(0);
-  // const [stompClient, setStompClient] = useState<Client | null>(null);
   const stompClientRef = useRef<Client | null>(null);
 
   const [latestClicker, setLatestClicker] = useState<string>("");
@@ -46,8 +45,6 @@ export default function Toudeuk() {
     mutationFn: () => gameClick(),
     onSuccess: (data) => {
       setMyRank(data.myRank);
-      console.log(data);
-      console.log(currentGameId);
       // rewardType이 "SECTION"일 경우 toast 띄우기
       if (data.rewardType === "SECTION") {
         setShowRewardGif(true);
@@ -83,7 +80,6 @@ export default function Toudeuk() {
     },
     onError: (err) => {
       toast.error(err.message);
-      console.log(err);
     },
   });
 
@@ -109,13 +105,11 @@ export default function Toudeuk() {
           setShowGameStart(false);
           clearInterval(interval);
         } else if (timeLeft > 0 && timeLeft <= 10000) {
-          // if (!showGameStart) {
           const secondsLeft = Math.floor(timeLeft / 1000);
           setRemainingTime(secondsLeft);
           setShowPopup(false);
           setShowGameStart(true);
           setTimeout(() => setShowGameStart(false), 10000);
-          // }
         } else {
           const secondsLeft = Math.floor(timeLeft / 1000);
           const millisecondsLeft = timeLeft % 1000;
@@ -131,8 +125,6 @@ export default function Toudeuk() {
   }, [coolTime]);
 
   useEffect(() => {
-    console.log("현재라운드", currentGameId);
-    console.log(userInfo?.nickName);
     if (stompClientRef.current) return;
 
     const socket = new SockJS(`${BASE_URL}/ws`);
@@ -147,7 +139,7 @@ export default function Toudeuk() {
     stompClient.connect(
       headers,
       (frame: IFrame) => {
-        console.log("Connected: " + frame);
+        // console.log("Connected: " + frame);
 
         stompClient.subscribe("/topic/health", (message) => {}, headers);
 
@@ -155,7 +147,7 @@ export default function Toudeuk() {
           "/topic/game",
           (message) => {
             const data = JSON.parse(message.body);
-            console.log(data);
+            // console.log(data);
             setTotalClick(data.totalClick || 0);
             setLatestClicker(data.latestClicker || null);
             setStatus(data.status || null);
@@ -181,8 +173,6 @@ export default function Toudeuk() {
       }
     );
 
-    // setStompClient(stompClient);
-
     return () => {
       if (stompClientRef.current) {
         stompClientRef.current.deactivate();
@@ -197,19 +187,9 @@ export default function Toudeuk() {
     }
   };
 
-  // useEffect(() => {
-  //   if (reward) {
-  //     setShowPopup(true);
-  //   }
-  // }, [reward]);
-
-  // const remainingTime = coolTime
-  //   ? Math.max(0, Math.floor((coolTime.getTime() - new Date().getTime()) / 1000))
-  //   : 0;
 
   return (
     <div className="items-center relative h-full w-full overflow-hidden font-noto bg-[#031926]">
-      {/* {status === "RUNNING" ? ( */}
       <>
         {/* 최상단 섹션 */}
         <section className="w-full flex bg-black p-5">
@@ -235,7 +215,7 @@ export default function Toudeuk() {
                 />
               )}
             </div>
-            <div className="font-bold">내 현재 랭킹 {myRank}</div>
+            <div className="font-bold">내 현재 랭킹 {myRank === 0 ? "" : myRank}</div>
           </div>
           <div className="flex-grow flex text-white items-center justify-center">
             <div className="font-semibold mr-2">마지막 클릭자</div>
@@ -257,7 +237,7 @@ export default function Toudeuk() {
           </section>
           {/* 버튼 */}
           <section
-            className="w-60 h-60 z-50 flex items-center justify-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+            className="w-80 h-80 z-50 flex items-center justify-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
             onClick={handleClick}
             style={{ zIndex: 10 }}
           >
@@ -266,8 +246,8 @@ export default function Toudeuk() {
                 src={rewardGifSrc} // Add the GIF file in the `public` folder
                 alt="Congratulations"
                 className="absolute w-full h-full object-cover"
-                width={60}
-                height={60}
+                width={80}
+                height={80}
                 style={{ zIndex: 9 }}
               />
             )}
@@ -279,7 +259,6 @@ export default function Toudeuk() {
             remainingTime={remainingTime}
             remainingMilliseconds={remainingMilliseconds}
             reward={reward}
-            gameId={gameId}
           />
         )}
         {showGameStart && <StartGame remainingTime={remainingTime} />}

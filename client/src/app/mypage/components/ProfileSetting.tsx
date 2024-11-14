@@ -83,7 +83,6 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
       const updatedUserInfo = await cache.fetchQuery<UserInfo>({
         queryKey: ["user"],
       });
-      console.log(updatedUserInfo);
       setUserInfo({
         nickName: updatedUserInfo.nickName,
         profileImg: updatedUserInfo.profileImg,
