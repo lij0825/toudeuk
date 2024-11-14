@@ -26,9 +26,9 @@ export default function ReactQueryProvider({
   );
   // toastMessage
   const toastConfig: ToastContainerProps = {
-    position: "bottom-left",
+    position: "top-center",
     autoClose: 3000,
-    hideProgressBar: false,
+    hideProgressBar: true, //진행바 숨김
     newestOnTop: false,
     closeOnClick: true,
     rtl: false,
