@@ -39,12 +39,12 @@ export default function Gifticon() {
         <div className="flex items-end ">
           <p className="mr-2 typo-title">Shop</p>
           <div className="flex items-center cursor-pointer pb-1.5">
-            <input
+            {/* <input
               type="text"
               placeholder="검색어를 입력하세요"
               className="text-md mr-2 placeholder-gray-300 font-noto bg-[#F5F5F5] rounded-full pl-2.5"
             ></input>
-            <FaSearch size={24} />
+            <FaSearch size={24} /> */}
           </div>
         </div>
       </section>

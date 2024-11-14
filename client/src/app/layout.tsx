@@ -8,8 +8,8 @@ const ClientWrapper = dynamic(() => import("@/providers/ReacQueryProvider"), {
 const Navbar = dynamic(() => import("./components/Navbar"), { ssr: false });
 
 const APP_NAME = "TouDeuk";
-const APP_DEFAULT_TITLE = "TouDeuk App";
-const APP_TITLE_TEMPLATE = "TouDeuk App-PWA App";
+const APP_DEFAULT_TITLE = "TouDeuk";
+const APP_TITLE_TEMPLATE = "TouDeuk App";
 const APP_DESCRIPTION = "터치를 통해 보상을 획득하세요";
 
 export const metadata: Metadata = {
