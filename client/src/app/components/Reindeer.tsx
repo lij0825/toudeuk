@@ -29,10 +29,10 @@ export default function Reindeer() {
     >
       {containerWidth > 0 && (
         <motion.div
-          initial={{ x: containerWidth, rotateY: 180 }} // 오른쪽 끝에서 시작
+          initial={{ x: containerWidth, rotateY: 0 }} // 오른쪽 끝에서 시작
           animate={{
             x: [containerWidth, -containerWidth, containerWidth], // 좌우 끝으로 반복
-            rotateY: [180, 180, 0, 0, 180], // 양 끝에서만 방향 전환
+            rotateY: [180, 0, 0, 0, 0], // 양 끝에서만 방향 전환
           }}
           transition={{
             duration: 10,

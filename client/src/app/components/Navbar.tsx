@@ -115,6 +115,7 @@ export default function Navbar() {
         style={{ willChange: "transform, opacity", zIndex: 50 }}
       >
         {/* 산타할아버지 */}
+
         <div className="absolute top-[-90px] w-full">
           <Reindeer />
         </div>
