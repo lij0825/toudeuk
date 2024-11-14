@@ -7,10 +7,17 @@ import Image from "next/image";
 import Title from "./mypage/components/Title";
 
 export default function Home() {
+  function handleClick() {
+    console.log("d");
+  }
+
   return (
     <div className="relative flex flex-col items-center justify-center w-full h-full bg-white overflow-hidden">
       <div className="absolute w-full h-full flex items-center justify-center">
-        <div className="absolute top-16 flex flex-col items-center">
+        <div
+          className="absolute top-16 flex flex-col items-center "
+          style={{ pointerEvents: "none" }}
+        >
           <Title />
         </div>
         <div className="relative flex items-center justify-center">
@@ -24,18 +31,39 @@ export default function Home() {
           />
 
           {/* Login 버튼 - 왼쪽 하단에 배치 */}
-          <div className="absolute top-[50px] left-[20px] transform translate-x-1/4 translate-y-1/4">
-            <Login />
+
+          <div className="absolute top-[30px] left-[8px] transform translate-x-1/4 translate-y-1/4">
+            <div className="relative">
+              <LottieAnimation
+                animationData={CUSTOM_ICON.yellowCircle}
+                loop={true}
+                width={185}
+                height={185}
+                autoplay={true}
+              />
+              <div className="absolute top-[-7px] inset-0 flex items-center justify-center">
+                <Login />
+              </div>
+            </div>
           </div>
 
           {/* 이미지 - 오른쪽 상단에 배치 */}
-          <div className="absolute top-[-40px] right-[-20px]">
+          <div
+            className="absolute top-[-40px] right-[-20px]"
+            style={{ pointerEvents: "none" }}
+          >
             <Image
               src={"/icons/santa.png"}
               width={200}
               height={200}
               alt="santa"
             />
+          </div>
+          <div
+            className="typo-body  text-gray-300 absolute bottom-[-40px] cursor-pointer hover:font-bold hover:text-black"
+            onClick={handleClick}
+          >
+            Toudeuk?
           </div>
         </div>
       </div>

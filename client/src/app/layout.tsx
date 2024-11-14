@@ -23,9 +23,6 @@ export const metadata: Metadata = {
   formatDetection: {
     telephone: true,
   },
-  icons: {
-    icon: "/favicon.ico",
-  },
   //웹페이지가 소셜 미디어 플랫폼에서 어떻게 표시될지 정의
   openGraph: {
     type: "website",

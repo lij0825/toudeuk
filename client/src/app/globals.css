@@ -20,7 +20,6 @@ body {
 html,
 body {
   height: 100%;
-  touch-action: manipulation;
 }
 
 /* Gilroy Light 폰트 */
