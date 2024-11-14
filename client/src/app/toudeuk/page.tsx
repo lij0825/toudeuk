@@ -1,19 +1,18 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Client, Frame, IFrame, Stomp } from "@stomp/stompjs";
-import { HistoryRewardInfo, RankInfo } from "@/types";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { gameClick } from "@/apis/gameApi";
+import { toast } from "react-toastify";
 import SockJS from "sockjs-client";
 import Image from "next/image";
+import { Client, Frame, IFrame, Stomp } from "@stomp/stompjs";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { gameClick } from "@/apis/gameApi";
 import { HiInformationCircle } from "react-icons/hi";
 import { useUserInfoStore } from "@/store/userInfoStore";
-import { GameButton, Ranking } from "./components";
-import { toast } from "react-toastify";
+import { HistoryRewardInfo, RankInfo } from "@/types";
+import { GameButton, Ranking, StartGame, EndGame } from "./components";
 import { fetchGameRewardHistory } from "@/apis/history/rewardhistory";
-import StartGame from "./components/StartGame";
-import EndGame from "./components/EndGame";
+import Reindeer from "./components/Reindeer";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -187,12 +186,10 @@ export default function Toudeuk() {
     }
   };
 
-
   return (
-    <div className="items-center relative h-full w-full overflow-hidden font-noto bg-[#031926]">
+    <div className="items-centerflex flex-col relative h-full w-full overflow-hidden font-noto bg-[#031926]">
       <>
-        {/* 최상단 섹션 */}
-        <section className="w-full flex bg-black p-5">
+        <section className="w-full flex p-5 sparkling-metal-background">
           <div className="flex-grow flex text-white items-center justify-center">
             <div>
               {userInfo?.profileImg ? (
@@ -215,10 +212,12 @@ export default function Toudeuk() {
                 />
               )}
             </div>
-            <div className="font-bold">내 현재 랭킹 {myRank === 0 ? "" : myRank}</div>
+            <div className="font-bold text-sm">
+              내 현재 랭킹 {myRank === 0 ? "" : myRank}
+            </div>
           </div>
           <div className="flex-grow flex text-white items-center justify-center">
-            <div className="font-semibold mr-2">마지막 클릭자</div>
+            <div className="font-semibold text-sm mr-2">마지막 클릭자</div>
             <div>
               {latestClicker === "NONE"
                 ? "-"
@@ -226,8 +225,27 @@ export default function Toudeuk() {
             </div>
           </div>
         </section>
-        {/* 내용 섹션 */}
-        <div className="flex flex-col flex-grow items-center justify-center h-full relative">
+
+        <style jsx>{`
+          @keyframes shine {
+            0% {
+              background-position: -150%;
+            }
+            50% {
+              background-position: 150%;
+            }
+            100% {
+              background-position: -150%;
+            }
+          }
+
+          .sparkling-metal-background {
+            background: linear-gradient(135deg, #333, #555, #333);
+            background-size: 300% 300%;
+            animation: shine 5s linear infinite;
+          }
+        `}</style>
+        <section className="flex flex-col flex-grow items-center justify-center h-full relative">
           <div className="text-gray-400 absolute left-4 top-4">
             <HiInformationCircle className="w-[32px] h-[32px]" />
           </div>
@@ -253,7 +271,8 @@ export default function Toudeuk() {
             )}
             <GameButton totalClick={totalClick} />
           </section>
-        </div>
+        </section>
+        <Reindeer />
         {showPopup && reward && (
           <EndGame
             remainingTime={remainingTime}

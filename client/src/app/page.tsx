@@ -24,8 +24,20 @@ export default function Home() {
           />
 
           {/* Login 버튼 - 왼쪽 하단에 배치 */}
-          <div className="absolute top-[50px] left-[20px] transform translate-x-1/4 translate-y-1/4">
-            <Login />
+
+          <div className="absolute top-[30px] left-[8px] transform translate-x-1/4 translate-y-1/4">
+            <div className="relative">
+              <LottieAnimation
+                animationData={CUSTOM_ICON.yellowCircle}
+                loop={true}
+                width={185}
+                height={185}
+                autoplay={true}
+              />
+              <div className="absolute top-[-7px] inset-0 flex items-center justify-center">
+                <Login />
+              </div>
+            </div>
           </div>
 
           {/* 이미지 - 오른쪽 상단에 배치 */}

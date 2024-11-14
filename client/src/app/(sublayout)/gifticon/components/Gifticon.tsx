@@ -38,14 +38,6 @@ export default function Gifticon() {
         <p className="typo-title">Gifticon</p>
         <div className="flex items-end ">
           <p className="mr-2 typo-title">Shop</p>
-          <div className="flex items-center cursor-pointer pb-1.5">
-            {/* <input
-              type="text"
-              placeholder="검색어를 입력하세요"
-              className="text-md mr-2 placeholder-gray-300 font-noto bg-[#F5F5F5] rounded-full pl-2.5"
-            ></input>
-            <FaSearch size={24} /> */}
-          </div>
         </div>
       </section>
       {/* < SkeletonGifticon/> //스켈레톤 적용?테스트 라이브러리 안쓰고 해보기 */}
