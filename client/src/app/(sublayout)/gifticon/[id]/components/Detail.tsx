@@ -1,13 +1,14 @@
 "use client";
-import { useParams } from "next/navigation";
-import React from "react";
+import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { toast, ToastContainer } from "react-toastify";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { GifticonInfo } from "@/types/gifticon";
 import { buyGifticon, fetchGifticonDetail } from "@/apis/gifticonApi";
+import Loading from "@/app/loading";
 
 export default function Detail() {
+  const router = useRouter();
   const params = useParams();
   const id = Array.isArray(params?.id) ? params?.id[0] : params?.id;
 
@@ -23,31 +24,31 @@ export default function Detail() {
   const mutation = useMutation({
     mutationFn: () => buyGifticon(id),
     onSuccess: () => {
+      console.log("성공");
       toast.success(`${gifticon?.itemName} 구매가 완료되었습니다.`);
     },
     onError: (error) => {
+      console.log("실패");
       const errorMessage =
         error instanceof Error ? error.message : "구매 중 오류가 발생했습니다.";
       toast.error(errorMessage);
     },
   });
 
-  if (isLoading)
-    return (
-      <div className="flex items-center justify-center h-screen">
-        로딩 중...
-      </div>
-    );
-  if (error)
-    return (
-      <div className="flex items-center justify-center h-screen">
-        데이터를 불러오는 중 오류가 발생했습니다.
-      </div>
-    );
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    router.push("/mypage");
+    toast.error("데이터를 불러오는 중 오류가 발생했습니다.");
+
+    return <Loading />;
+  }
 
   return (
-    <div className="h-full overflow-y-auto">
-      <div className="flex flex-col items-center justify-center text-center font-noto scrollbar-hidden">
+    <div className="relative inset h-full w-full overflow-y-auto scrollbar-hidden -mt-8">
+      <div className="flex flex-col items-center justify-center text-center font-noto scrollbar-hidden pt-8">
         {gifticon ? (
           <div className="space-y-6 -mt-6">
             {/* 기프티콘 이미지 */}
@@ -57,8 +58,7 @@ export default function Detail() {
                 alt={gifticon.itemName}
                 width={450}
                 height={450}
-                objectFit="contain"
-                className="rounded-lg"
+                className="rounded-lg object-cover"
               />
             </div>
 
@@ -81,8 +81,8 @@ export default function Detail() {
             </button>
 
             {/* 유의사항 */}
-            <div className="text-left font-noto p-4 w-full bg-amber-50 rounded-lg ">
-              <p className="font-semibold ">▶ 유의사항</p>
+            <div className="text-left font-noto p-4 w-full bg-amber-50 rounded-lg">
+              <p className="font-semibold">▶ 유의사항</p>
               <p className="text-sm text-gray-600">
                 - 상기 이미지는 연출된 것으로 실제와 다를 수 있습니다. <br />
                 - 본 상품은 매장 재고 상황에 따라 동일 상품으로 교환이 불가능할
@@ -91,8 +91,7 @@ export default function Detail() {
                 가능합니다. (차액 발생 시 차액 지불)
               </p>
             </div>
-            <div className="h-[65px]"></div>
-            <ToastContainer />
+            <div className="h-[74px]"></div>
           </div>
         ) : (
           <div className="text-center">기프티콘 정보를 불러올 수 없습니다.</div>
