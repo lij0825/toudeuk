@@ -40,6 +40,7 @@ export default function Detail() {
                 width={450}
                 height={450}
                 className="rounded-lg object-cover"
+                priority
               />
             </div>
 
