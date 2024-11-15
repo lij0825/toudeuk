@@ -8,7 +8,8 @@ interface MusicControlState {
   isBgmMuted: boolean;
   isSfxMuted: boolean;
   selectedSfxSound: number;
-  isPlaying: boolean; // 추가된 상태
+  isPlaying: boolean;
+  wasPlayingBeforeMute: boolean; // 새로 추가
   setSelectedSfxSound: (soundId: number) => void;
   setBgmVolume: (volume: number) => void;
   setSfxVolume: (volume: number) => void;
@@ -17,7 +18,7 @@ interface MusicControlState {
   toggleSfxMute: () => void;
   playBgm: () => void;
   stopBgm: () => void;
-  setIsPlaying: (playing: boolean) => void; // 추가된 메서드
+  setIsPlaying: (playing: boolean) => void;
 }
 
 export const useMusicControlStore = create<MusicControlState>()(
@@ -29,70 +30,195 @@ export const useMusicControlStore = create<MusicControlState>()(
       isBgmMuted: false,
       isSfxMuted: false,
       selectedSfxSound: 4,
-      isPlaying: false, // 초기값 설정
+      isPlaying: false,
+      wasPlayingBeforeMute: false, // 새로 추가
 
-      setBgmVolume: (volume: number) => set({ bgmVolume: volume }),
-      setSfxVolume: (volume: number) => set({ sfxVolume: volume }),
-
-      // 전체 음소거 토글
-      toggleMute: () =>
-        set((state) => ({
-          isMuted: !state.isMuted,
-          isBgmMuted: !state.isMuted,
-          isSfxMuted: !state.isMuted,
-          bgmVolume: state.isMuted ? 50 : 0,
-          sfxVolume: state.isMuted ? 50 : 0,
-          isPlaying: state.isMuted ? state.isPlaying : false, // 음소거 시 재생 상태 업데이트
-        })),
-
-      // 배경음 음소거 토글
-      toggleBgmMute: () =>
-        set((state) => ({
-          isBgmMuted: !state.isBgmMuted,
-          isPlaying: state.isBgmMuted ? state.isPlaying : false, // BGM 음소거 해제 시 이전 재생 상태 유지
-        })),
-
-      // 효과음 음소거 토글
-      toggleSfxMute: () =>
-        set((state) => ({
-          isSfxMuted: !state.isSfxMuted,
-        })),
-
-      setSelectedSfxSound: (soundId: number) =>
-        set({ selectedSfxSound: soundId }),
-
-      // 배경음 재생 함수 수정
-      playBgm: () => {
+      setBgmVolume: (volume: number) => {
+        console.log("Setting BGM volume:", volume);
+        set({ bgmVolume: volume });
+        // 볼륨 변경 시 오디오 엘리먼트 볼륨도 업데이트
         const audioElement = document.getElementById(
           "audioPlayer"
         ) as HTMLAudioElement;
         if (audioElement) {
-          audioElement.volume = get().bgmVolume / 100;
-          audioElement
-            .play()
-            .then(() => {
-              set({ isPlaying: true });
-            })
-            .catch((err) => {
-              console.error("Failed to play BGM:", err);
-              set({ isPlaying: false });
-            });
+          audioElement.volume = volume / 100;
         }
       },
 
-      // 배경음 정지 함수 수정
+      setSfxVolume: (volume: number) => {
+        console.log("Setting SFX volume:", volume);
+        set({ sfxVolume: volume });
+      },
+
+      toggleMute: () =>
+        set((state) => {
+          const isNowMuted = !state.isMuted;
+
+          console.log("toggleMute - Before:", {
+            isMuted: state.isMuted,
+            isBgmMuted: state.isBgmMuted,
+            isPlaying: state.isPlaying,
+            bgmVolume: state.bgmVolume,
+          });
+
+          if (isNowMuted) {
+            // 음소거 활성화 시
+            console.log("Enabling mute - Saving current state");
+            if (state.isPlaying) {
+              get().stopBgm(); // 현재 재생 중이면 중지
+            }
+            return {
+              isMuted: true,
+              isBgmMuted: true,
+              isSfxMuted: true,
+              wasPlayingBeforeMute: state.isPlaying, // 현재 재생 상태 저장
+              isPlaying: false,
+            };
+          } else {
+            // 음소거 해제 시
+            console.log("Disabling mute - Restoring previous state");
+            const currentState = get();
+
+            setTimeout(() => {
+              const latestState = get();
+              console.log("Unmute setTimeout - State check:", {
+                isMuted: latestState.isMuted,
+                isBgmMuted: latestState.isBgmMuted,
+                wasPlayingBeforeMute: latestState.wasPlayingBeforeMute,
+                bgmVolume: latestState.bgmVolume,
+              });
+
+              if (
+                !latestState.isMuted &&
+                !latestState.isBgmMuted &&
+                currentState.wasPlayingBeforeMute
+              ) {
+                console.log("Attempting to restore BGM playback");
+                get().playBgm();
+              }
+            }, 100);
+
+            return {
+              isMuted: false,
+              isBgmMuted: false,
+              isSfxMuted: false,
+              bgmVolume: state.bgmVolume || 50,
+              sfxVolume: state.sfxVolume || 50,
+            };
+          }
+        }),
+
+      toggleBgmMute: () =>
+        set((state) => {
+          const isNowBgmMuted = !state.isBgmMuted;
+          console.log("toggleBgmMute:", {
+            isNowBgmMuted,
+            isMuted: state.isMuted,
+            currentlyPlaying: state.isPlaying,
+            wasPlayingBeforeMute: state.wasPlayingBeforeMute,
+          });
+
+          if (isNowBgmMuted) {
+            // BGM 음소거 시
+            if (state.isPlaying) {
+              get().stopBgm();
+            }
+            return {
+              isBgmMuted: true,
+              wasPlayingBeforeMute: state.isPlaying,
+              isPlaying: false,
+            };
+          } else {
+            // BGM 음소거 해제 시
+            if (!state.isMuted && state.wasPlayingBeforeMute) {
+              setTimeout(() => {
+                const currentState = get();
+                if (!currentState.isMuted && !currentState.isBgmMuted) {
+                  get().playBgm();
+                }
+              }, 100);
+            }
+            return {
+              isBgmMuted: false,
+              wasPlayingBeforeMute: false,
+            };
+          }
+        }),
+
+      toggleSfxMute: () =>
+        set((state) => {
+          console.log("Toggling SFX mute");
+          return { isSfxMuted: !state.isSfxMuted };
+        }),
+
+      setSelectedSfxSound: (soundId: number) =>
+        set({ selectedSfxSound: soundId }),
+
+      playBgm: () => {
+        const state = get();
+        console.log("playBgm - Current State:", {
+          isMuted: state.isMuted,
+          isBgmMuted: state.isBgmMuted,
+          bgmVolume: state.bgmVolume,
+          isPlaying: state.isPlaying,
+        });
+
+        if (state.isMuted || state.isBgmMuted) {
+          console.log("Cannot play BGM while muted");
+          return;
+        }
+
+        let audioElement = document.getElementById(
+          "audioPlayer"
+        ) as HTMLAudioElement;
+
+        if (!audioElement) {
+          console.log("Creating new audio element");
+          audioElement = document.createElement("audio");
+          audioElement.id = "audioPlayer";
+          audioElement.src = "/path/to/your/audio/file.mp3";
+          audioElement.loop = true;
+          document.body.appendChild(audioElement);
+        }
+
+        audioElement.volume = state.bgmVolume / 100;
+        console.log("Setting audio volume to:", audioElement.volume);
+
+        if (!audioElement.paused) {
+          console.log("BGM already playing");
+          return;
+        }
+
+        audioElement
+          .play()
+          .then(() => {
+            console.log("BGM started playing successfully");
+            set({ isPlaying: true });
+          })
+          .catch((err) => {
+            console.error("Failed to play BGM:", err);
+            set({ isPlaying: false });
+          });
+      },
+
       stopBgm: () => {
+        console.log("Stopping BGM");
         const audioElement = document.getElementById(
           "audioPlayer"
         ) as HTMLAudioElement;
         if (audioElement) {
           audioElement.pause();
           set({ isPlaying: false });
+        } else {
+          console.warn("Audio element not found");
+          set({ isPlaying: false });
         }
       },
 
-      // 재생 상태 설정 메서드 추가
-      setIsPlaying: (playing: boolean) => set({ isPlaying: playing }),
+      setIsPlaying: (playing: boolean) => {
+        console.log("Setting isPlaying:", playing);
+        set({ isPlaying: playing });
+      },
     }),
     {
       name: "music-control",
