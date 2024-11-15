@@ -10,6 +10,12 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      brightness: {
+        25: "0.25", // 25% 밝기
+        35: "0.35", // 35% 밝기
+        40: "0.40", // 35% 밝기
+        10: "0.1", // 10% 밝기
+      },
       keyframes: {
         floating: {
           "0%, 100%": { transform: "translateY(0)" },
@@ -97,7 +103,7 @@ const config: Config = {
           width: "100%",
           height: "100%",
           background: "white",
-          position : "relative"
+          position: "relative",
         },
         ".common-link": {
           backgroundImage:

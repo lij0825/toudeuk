@@ -15,12 +15,13 @@ body {
   background-color: #c6daf9;
   touch-action: pan-x pan-y;
   overscroll-behavior: none;
+  user-select: none; /* 텍스트 선택 방지 */
+  -webkit-user-drag: none; /* 이미지 드래그 방지 (웹킷 브라우저) */
 }
 
 html,
 body {
   height: 100%;
-  touch-action: manipulation;
 }
 
 /* Gilroy Light 폰트 */
@@ -245,5 +246,27 @@ body {
 
   .animate-wobble {
     animation: wobble 1.5s ease-in-out infinite;
+  }
+}
+
+/* 눈송이 */
+@layer utilities {
+  .snowflake-container {
+    @apply relative inset-0 overflow-hidden bg-gradient-to-b from-gray-900 to-gray-800;
+  }
+
+  .snowflake {
+    @apply absolute bg-white rounded-full;
+    animation: fall linear infinite;
+  }
+
+  /* 애니메이션 */
+  @keyframes fall {
+    0% {
+      transform: translateY(-10px) scale(0.5);
+    }
+    100% {
+      transform: translateY(100vh) scale(1);
+    }
   }
 }
