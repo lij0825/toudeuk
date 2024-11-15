@@ -39,21 +39,21 @@ public class Consumer {
 
 
 		while (true) {
-			ConsumerRecords<String, String> records = consumer.poll(100);
+			ConsumerRecords<String, String> records = consumer.poll(500);
 			for (ConsumerRecord<String, String> record : records) {
 				String input = record.topic();
 
 				switch (input) {
+					case "click":
+						KafkaClickDto clickDto = objectMapper.readValue(record.value(), KafkaClickDto.class);
+						System.out.println(clickDto);
+						consumerService.click(clickDto);
+						break;
 					case "game-cash-log":
 						JavaType type = objectMapper.getTypeFactory().constructCollectionType(List.class, KafkaGameCashLogDto.class);
 						List<KafkaGameCashLogDto> gameCashLogs = objectMapper.readValue(record.value(), type);
 						System.out.println(gameCashLogs);
 						consumerService.gameCashLog(gameCashLogs);
-						break;
-					case "click":
-						KafkaClickDto clickDto = objectMapper.readValue(record.value(), KafkaClickDto.class);
-						System.out.println(clickDto);
-						consumerService.click(clickDto);
 						break;
 					case "item-buy":
 						KafkaItemBuyDto itemBuyDto = objectMapper.readValue(record.value(), KafkaItemBuyDto.class);
