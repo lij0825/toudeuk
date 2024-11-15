@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
+import { HiSpeakerWave } from "react-icons/hi2";
+import { RiSoundModuleFill } from "react-icons/ri";
 import SockJS from "sockjs-client";
 import Image from "next/image";
 import { Client, Frame, IFrame, Stomp } from "@stomp/stompjs";
@@ -9,9 +11,16 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { gameClick } from "@/apis/gameApi";
 import { useUserInfoStore } from "@/store/userInfoStore";
 import { HistoryRewardInfo, RankInfo } from "@/types";
-import { GameButton, Ranking, StartGame, EndGame } from "./components";
+import {
+  GameButton,
+  Ranking,
+  StartGame,
+  EndGame,
+  ChristmasHeader,
+  SnowFlakes,
+  BackGround,
+} from "./components";
 import { fetchGameRewardHistory } from "@/apis/history/rewardhistory";
-import ChristmasHeader from "./components/Header";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -43,7 +52,6 @@ export default function Toudeuk() {
   const mutation = useMutation({
     mutationFn: () => gameClick(),
     onSuccess: (data) => {
-      console.log(data.myClickCount);
       setMyRank(data.myRank);
       // rewardType이 "SECTION"일 경우 toast 띄우기
       if (data.rewardType === "SECTION") {
@@ -83,15 +91,20 @@ export default function Toudeuk() {
     },
   });
 
+  // 게임 히스토리 로직
   const {
     data: reward,
     isLoading,
-    error,
+    isError,
   } = useQuery<HistoryRewardInfo>({
     queryKey: ["reward", gameId],
     queryFn: () => fetchGameRewardHistory(gameId),
     enabled: status === "COOLTIME",
   });
+
+  if (isError) {
+    toast.error("게임 결과를 불러올수 없습니다");
+  }
 
   useEffect(() => {
     if (coolTime) {
@@ -139,15 +152,11 @@ export default function Toudeuk() {
     stompClient.connect(
       headers,
       (frame: IFrame) => {
-        // console.log("Connected: " + frame);
-
         stompClient.subscribe("/topic/health", (message) => {}, headers);
-
         stompClient.subscribe(
           "/topic/game",
           (message) => {
             const data = JSON.parse(message.body);
-            // console.log(data);
             setTotalClick(data.totalClick || 0);
             setLatestClicker(data.latestClicker || null);
             setStatus(data.status || null);
@@ -196,15 +205,20 @@ export default function Toudeuk() {
       />
 
       <section className="relative flex flex-col flex-grow items-center justify-center h-full w-full bg-gradient-to-b from-[#131f3c] via-[#091f3e] to-[#070e1d]">
-        <div className="absolute top-2 left-4 text-gray-400 flex">게임소개</div>
+        {/* 배경 눈 */}
+        <SnowFlakes className="w-full h-full absolute brightness-90 top-0" />
+        {/* 배경이미지 */}
+        <BackGround className="w-full absolute brightness-40 bottom-0" />
+        <div className="absolute top-2 left-4 w-24 text-gray-400 flex text-white text-[24px]">
+          <RiSoundModuleFill />
+        </div>
         {/* 랭킹 */}
-        <section className="absolute right-2 top-2 h-full z-0 overflow-y-auto scrollbar-hidden">
+        <section className="absolute right-2 top-3 h-full z-0 overflow-y-auto scrollbar-hidden">
           <Ranking ranking={ranking} />
         </section>
         {/* 버튼 */}
         <section
           className="w-96 h-96 z-50 flex items-center justify-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-          onClick={handleClick}
           style={{ zIndex: 10 }}
         >
           {showRewardGif && (
@@ -217,7 +231,9 @@ export default function Toudeuk() {
               style={{ zIndex: 9 }}
             />
           )}
-          <GameButton totalClick={totalClick} />
+          <div onClick={handleClick}>
+            <GameButton totalClick={totalClick} />
+          </div>
         </section>
       </section>
 
