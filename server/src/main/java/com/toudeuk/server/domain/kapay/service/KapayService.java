@@ -19,6 +19,7 @@ import com.toudeuk.server.core.exception.ErrorCode;
 import com.toudeuk.server.core.kafka.Producer;
 import com.toudeuk.server.core.kafka.dto.KafkaChargingDto;
 import com.toudeuk.server.core.response.ErrorResponse;
+import com.toudeuk.server.domain.game.repository.ClickGameCacheRepository;
 import com.toudeuk.server.domain.kapay.dto.ApproveRequest;
 import com.toudeuk.server.domain.kapay.dto.ApproveResponse;
 import com.toudeuk.server.domain.kapay.dto.ReadyRequest;
@@ -38,6 +39,7 @@ public class KapayService {
 
 	private final Producer producer;
 	private final UserRepository userRepository;
+	private final ClickGameCacheRepository clickGameCacheRepository;
 	@Value("${kakaopay.api.secret.key}")
 	private String kakaopaySecretKey;
 
@@ -85,7 +87,6 @@ public class KapayService {
 			ReadyResponse.class
 		);
 
-
 		// TID 저장 (승인 요청 시 사용)
 		this.tid = response.getBody().getTid();
 		return response.getBody();
@@ -94,7 +95,6 @@ public class KapayService {
 	@Transactional
 	public ResponseEntity<?> approve(String pgToken) {
 		try {
-
 
 			// 요청 헤더 설정
 			HttpHeaders headers = new HttpHeaders();
@@ -118,16 +118,15 @@ public class KapayService {
 				String.class
 			);
 
-
 			ObjectMapper objectMapper = new ObjectMapper();
 			ApproveResponse approveResponse = objectMapper.readValue(response.getBody(), ApproveResponse.class);
-
 
 			if (approveResponse != null) {
 				Integer totalAmount = approveResponse.getAmount().getTotal(); // 결제 금액
 
 				//! 충전하는부분 이제 이벤트로 처리 못하지 않을까? 싶슴당? 컨슈머에서 처리하기 때문에
 				producer.occurChargeCash(new KafkaChargingDto(user.getId(), totalAmount, user.getCash() + totalAmount));
+				clickGameCacheRepository.updateUserCash(user.getId(), totalAmount);
 				// eventPublisher.publishEvent(new UserPaymentEvent(user, totalAmount));
 			}
 
