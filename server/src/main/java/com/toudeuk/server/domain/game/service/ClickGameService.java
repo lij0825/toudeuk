@@ -231,7 +231,7 @@ public class ClickGameService {
 				maxClick.intValue(), MAX_CLICKER);
 			clickGameRewardLogRepository.save(clickGameRewardLog);
 			clickCacheRepository.reward(maxClicker.getId(), MAX_CLICK_REWARD);
-
+			clickCacheRepository.setMaxClicker(maxClicker.getId());
 			//! 게임 종료시 유저 캐시로그들 저장하기
 
 			// * 완료 게임 삭제
