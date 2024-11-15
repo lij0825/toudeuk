@@ -16,8 +16,8 @@ const Header = ({ userInfo, myRank, latestClicker }: HeaderProps) => (
           <div className="w-6 h-6 overflow-hidden rounded-full mr-2 border border-green-200/40">
             <Image
               src={userInfo.profileImg}
-              width={30}
-              height={30}
+              width={40}
+              height={40}
               alt="Profile"
               className="object-cover w-full h-full"
             />
@@ -32,13 +32,14 @@ const Header = ({ userInfo, myRank, latestClicker }: HeaderProps) => (
           />
         )}
       </div>
-      <div className="font-bold text-sm text-green-50">
-        내 현재 랭킹 {myRank === 0 ? "" : myRank}
+      <div className="font-bold text-sm text-green-50 flex items-center">
+        <span className="mr-2">내 현재 랭킹</span>
+        <div className="w-12 text-center">{myRank === 0 ? "" : myRank}</div>
       </div>
     </div>
     <div className="flex-grow flex text-green-50 items-center justify-center">
-      <div className="font-semibold text-sm mr-2">마지막 클릭자</div>
-      <div>
+      <div className="font-bold text-sm">마지막 클릭자</div>
+      <div className="w-24 text-center overflow-hidden whitespace-nowrap text-ellipsis">
         {latestClicker === "NONE" ? "-" : latestClicker || "클릭자가 없습니다"}
       </div>
     </div>

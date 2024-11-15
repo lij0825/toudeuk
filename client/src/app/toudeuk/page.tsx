@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
-import { HiSpeakerWave } from "react-icons/hi2";
 import { RiSoundModuleFill } from "react-icons/ri";
 import SockJS from "sockjs-client";
 import Image from "next/image";
@@ -21,6 +20,8 @@ import {
   BackGround,
 } from "./components";
 import { fetchGameRewardHistory } from "@/apis/history/rewardhistory";
+import SoundSettingsModal from "./components/SoundSetting";
+import { useMusicControlStore } from "@/store/MusicControlStore";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -28,6 +29,12 @@ export default function Toudeuk() {
   const [totalClick, setTotalClick] = useState<number>(0);
   const stompClientRef = useRef<Client | null>(null);
 
+  // 모달
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
+  //게임 로직
   const [latestClicker, setLatestClicker] = useState<string>("");
   const [myRank, setMyRank] = useState<number>(0);
   const [ranking, setRanking] = useState<RankInfo[]>([]);
@@ -103,7 +110,7 @@ export default function Toudeuk() {
   });
 
   if (isError) {
-    toast.error("게임 결과를 불러올수 없습니다");
+    toast.error("현재 진행중인 게임이 없습니다.");
   }
 
   useEffect(() => {
@@ -209,9 +216,13 @@ export default function Toudeuk() {
         <SnowFlakes className="w-full h-full absolute brightness-90 top-0" />
         {/* 배경이미지 */}
         <BackGround className="w-full absolute brightness-40 bottom-0" />
-        <div className="absolute top-2 left-4 w-24 text-gray-400 flex text-white text-[24px]">
+        <div
+          className="absolute top-3 left-4 w-24 text-gray-400 flex items-center text-white text-[24px] cursor-pointer"
+          onClick={openModal}
+        >
           <RiSoundModuleFill />
         </div>
+
         {/* 랭킹 */}
         <section className="absolute right-2 top-3 h-full z-0 overflow-y-auto scrollbar-hidden">
           <Ranking ranking={ranking} />
@@ -245,6 +256,7 @@ export default function Toudeuk() {
         />
       )}
       {showGameStart && <StartGame remainingTime={remainingTime} />}
+      <SoundSettingsModal isOpen={isModalOpen} onClose={closeModal} />
     </div>
   );
 }

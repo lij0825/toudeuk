@@ -4,6 +4,7 @@ import LottieAnimation from "@/app/components/LottieAnimation";
 import { CUSTOM_ICON } from "@/constants/customIcons";
 // 소켓 연결 또는 SSE 방식으로 touch값 fetch
 import { useState } from "react";
+import { useSound } from '@/hooks/useSound';
 
 interface GameProps {
   totalClick: number;
@@ -12,12 +13,13 @@ interface GameProps {
 export default function GameButton({ totalClick }: GameProps) {
   // 상태 변수 설정: 크기 상태, 클릭 상태 관리
   const [size, setSize] = useState(250);
-
+  //버튼 클릭음
+  const { playClickSound } = useSound();
   // 클릭 시 크기 변경 함수
   const handleClick = () => {
+    playClickSound ()
     // 클릭 시 크기 증가
     setSize((prevSize) => prevSize + 5);
-
     // 클릭 후 일정 시간이 지나면 크기를 원래대로 되돌리기
     setTimeout(() => {
       setSize(250); // 250으로 원래 크기로 복원
