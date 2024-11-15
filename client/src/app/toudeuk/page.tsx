@@ -16,7 +16,7 @@ import {
   EndGame,
   ChristmasHeader,
   SnowFlakes,
-  BackGround
+  BackGround,
 } from "./components";
 import { fetchGameRewardHistory } from "@/apis/history/rewardhistory";
 
@@ -50,7 +50,6 @@ export default function Toudeuk() {
   const mutation = useMutation({
     mutationFn: () => gameClick(),
     onSuccess: (data) => {
-      console.log(data.myClickCount);
       setMyRank(data.myRank);
       // rewardType이 "SECTION"일 경우 toast 띄우기
       if (data.rewardType === "SECTION") {
@@ -151,15 +150,11 @@ export default function Toudeuk() {
     stompClient.connect(
       headers,
       (frame: IFrame) => {
-        // console.log("Connected: " + frame);
-
         stompClient.subscribe("/topic/health", (message) => {}, headers);
-
         stompClient.subscribe(
           "/topic/game",
           (message) => {
             const data = JSON.parse(message.body);
-            // console.log(data);
             setTotalClick(data.totalClick || 0);
             setLatestClicker(data.latestClicker || null);
             setStatus(data.status || null);
@@ -211,7 +206,7 @@ export default function Toudeuk() {
         {/* 배경 눈 */}
         <SnowFlakes className="w-full h-full absolute brightness-90 top-0" />
         {/* 배경이미지 */}
-        <BackGround className="w-full absolute brightness-40 bottom-0"/>
+        <BackGround className="w-full absolute brightness-40 bottom-0" />
         <div className="absolute top-2 left-4 text-gray-400 flex">게임소개</div>
         {/* 랭킹 */}
         <section className="absolute right-2 top-2 h-full z-0 overflow-y-auto scrollbar-hidden">
@@ -220,7 +215,6 @@ export default function Toudeuk() {
         {/* 버튼 */}
         <section
           className="w-96 h-96 z-50 flex items-center justify-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-          onClick={handleClick}
           style={{ zIndex: 10 }}
         >
           {showRewardGif && (
@@ -233,7 +227,9 @@ export default function Toudeuk() {
               style={{ zIndex: 9 }}
             />
           )}
-          <GameButton totalClick={totalClick} />
+          <div onClick={handleClick}>
+            <GameButton totalClick={totalClick} />
+          </div>
         </section>
       </section>
 
