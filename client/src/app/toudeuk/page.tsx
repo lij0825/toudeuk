@@ -9,9 +9,16 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { gameClick } from "@/apis/gameApi";
 import { useUserInfoStore } from "@/store/userInfoStore";
 import { HistoryRewardInfo, RankInfo } from "@/types";
-import { GameButton, Ranking, StartGame, EndGame } from "./components";
+import {
+  GameButton,
+  Ranking,
+  StartGame,
+  EndGame,
+  ChristmasHeader,
+  SnowFlakes,
+  BackGround
+} from "./components";
 import { fetchGameRewardHistory } from "@/apis/history/rewardhistory";
-import ChristmasHeader from "./components/Header";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -83,15 +90,20 @@ export default function Toudeuk() {
     },
   });
 
+  // 게임 히스토리 로직
   const {
     data: reward,
     isLoading,
-    error,
+    isError,
   } = useQuery<HistoryRewardInfo>({
     queryKey: ["reward", gameId],
     queryFn: () => fetchGameRewardHistory(gameId),
     enabled: status === "COOLTIME",
   });
+
+  if (isError) {
+    toast.error("게임 결과를 불러올수 없습니다");
+  }
 
   useEffect(() => {
     if (coolTime) {
@@ -196,6 +208,10 @@ export default function Toudeuk() {
       />
 
       <section className="relative flex flex-col flex-grow items-center justify-center h-full w-full bg-gradient-to-b from-[#131f3c] via-[#091f3e] to-[#070e1d]">
+        {/* 배경 눈 */}
+        <SnowFlakes className="w-full h-full absolute brightness-90 top-0" />
+        {/* 배경이미지 */}
+        <BackGround className="w-full absolute brightness-40 bottom-0"/>
         <div className="absolute top-2 left-4 text-gray-400 flex">게임소개</div>
         {/* 랭킹 */}
         <section className="absolute right-2 top-2 h-full z-0 overflow-y-auto scrollbar-hidden">
