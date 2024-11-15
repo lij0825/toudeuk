@@ -111,67 +111,60 @@ export default function Navbar() {
           </div>
         )}
 
-        <div className="flex flex-col items-end justify-center text-center ">
-          <a
-            href={ROUTE_URL.GAME}
-            className="flex flex-col items-center"
-            style={{ textDecoration: "none", zIndex: 50 }}
+        {[
+          ROUTE_URL.GAME,
+          ROUTE_URL.HISTORY,
+          ROUTE_URL.GIFTICON_SHOP,
+          ROUTE_URL.MYPAGE,
+        ].map((route, index) => (
+          <div
+            key={index}
+            className={`flex flex-col items-end justify-center text-center ${
+              pathname === route ? "" : ""
+            }`}
           >
-            <LottieAnimation
-              animationData={CUSTOM_ICON.gamecontroller}
-              loop={1}
-              width={45}
-              height={45}
-              cursor="pointer"
-            />
-            <span className="text-xs mt-1">게임</span>
-          </a>
-        </div>
-        <div className="flex flex-col items-end justify-center text-center ">
-          <a
-            href={ROUTE_URL.HISTORY}
-            className="flex flex-col items-center"
-            style={{ textDecoration: "none", zIndex: 50 }}
-          >
-            <LottieAnimation
-              animationData={CUSTOM_ICON.history}
-              loop={1}
-              width={40}
-              height={40}
-            />
-            <span className="text-xs">기록</span>
-          </a>
-        </div>
-        <div className="flex flex-col items-end justify-center text-center">
-          <a
-            href={ROUTE_URL.GIFTICON_SHOP}
-            className="flex flex-col items-center"
-            style={{ textDecoration: "none", zIndex: 50 }}
-          >
-            <LottieAnimation
-              animationData={CUSTOM_ICON.ticket1}
-              loop={1}
-              width={45}
-              height={45}
-            />
-            <span className="text-xs">기프티콘</span>
-          </a>
-        </div>
-        <div className="flex flex-col items-end justify-center text-center">
-          <a
-            href={ROUTE_URL.MYPAGE}
-            className="flex flex-col items-center"
-            style={{ textDecoration: "none", zIndex: 50 }}
-          >
-            <LottieAnimation
-              animationData={CUSTOM_ICON.profile}
-              loop={1}
-              width={45}
-              height={45}
-            />
-            <span className="text-xs">마이</span>
-          </a>
-        </div>
+            <a
+              href={route}
+              onClick={(e) => {
+                if (pathname === route) {
+                  e.preventDefault(); // 현재 경로에서는 클릭 방지
+                }
+              }}
+              className={`flex flex-col items-center ${
+                pathname === route ? "pointer-events-none" : ""
+              }`}
+              style={{
+                textDecoration: "none",
+                zIndex: 50,
+                cursor: pathname === route ? "not-allowed" : "pointer",
+              }}
+            >
+              <LottieAnimation
+                animationData={
+                  route === ROUTE_URL.GAME
+                    ? CUSTOM_ICON.gamecontroller
+                    : route === ROUTE_URL.HISTORY
+                    ? CUSTOM_ICON.history
+                    : route === ROUTE_URL.GIFTICON_SHOP
+                    ? CUSTOM_ICON.ticket1
+                    : CUSTOM_ICON.profile
+                }
+                loop={1}
+                width={45}
+                height={45}
+              />
+              <span className="text-xs mt-1">
+                {route === ROUTE_URL.GAME
+                  ? "게임"
+                  : route === ROUTE_URL.HISTORY
+                  ? "기록"
+                  : route === ROUTE_URL.GIFTICON_SHOP
+                  ? "기프티콘"
+                  : "마이"}
+              </span>
+            </a>
+          </div>
+        ))}
       </nav>
     </>
   );

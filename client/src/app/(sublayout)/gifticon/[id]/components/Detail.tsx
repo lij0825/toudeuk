@@ -1,48 +1,29 @@
 "use client";
+
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { toast, ToastContainer } from "react-toastify";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { GifticonInfo } from "@/types/gifticon";
-import { buyGifticon, fetchGifticonDetail } from "@/apis/gifticonApi";
+import { fetchGifticonDetail } from "@/apis/gifticonApi";
 import Loading from "@/app/loading";
+import useBuyGifticon from "@/apis/gifticon/useBuyGifticon";
 
 export default function Detail() {
-  const router = useRouter();
   const params = useParams();
   const id = Array.isArray(params?.id) ? params?.id[0] : params?.id;
 
-  const {
-    data: gifticon,
-    isLoading,
-    error,
-  } = useQuery<GifticonInfo>({
+  const { data: gifticon, isLoading } = useQuery<GifticonInfo>({
     queryKey: ["gifticon", id],
     queryFn: () => fetchGifticonDetail(id),
   });
 
-  const mutation = useMutation({
-    mutationFn: () => buyGifticon(id),
-    onSuccess: () => {
-      console.log("성공");
-      toast.success(`${gifticon?.itemName} 구매가 완료되었습니다.`);
-    },
-    onError: (error) => {
-      console.log("실패");
-      const errorMessage =
-        error instanceof Error ? error.message : "구매 중 오류가 발생했습니다.";
-      toast.error(errorMessage);
-    },
-  });
+  const { mutate: buyGifticon, status: buyStatus } = useBuyGifticon(id);
+
+  // 'status'를 사용하여 구매 중인지 확인
+  const isBuying = buyStatus === "pending";
 
   if (isLoading) {
-    return <Loading />;
-  }
-
-  if (error) {
-    router.push("/mypage");
-    toast.error("데이터를 불러오는 중 오류가 발생했습니다.");
-
     return <Loading />;
   }
 
@@ -69,15 +50,16 @@ export default function Detail() {
 
             {/* 기프티콘 가격 */}
             <h2 className="text-xl font-semibold text-gray-700">
-              {gifticon.itemPrice} P
+              {gifticon.itemPrice.toLocaleString()} P
             </h2>
 
             {/* 구매하기 버튼 */}
             <button
-              className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors"
-              onClick={() => mutation.mutate()}
+              className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+              onClick={() => buyGifticon()}
+              disabled={isBuying}
             >
-              구매하기
+              {isBuying ? "구매 중..." : "구매하기"}
             </button>
 
             {/* 유의사항 */}
@@ -97,6 +79,9 @@ export default function Detail() {
           <div className="text-center">기프티콘 정보를 불러올 수 없습니다.</div>
         )}
       </div>
+
+      {/* ToastContainer 추가 */}
+      <ToastContainer />
     </div>
   );
 }
