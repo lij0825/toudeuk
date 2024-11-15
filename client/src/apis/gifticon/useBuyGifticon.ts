@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import instance from "../clientApi";
 import { BaseResponse } from "@/types";
@@ -15,10 +15,12 @@ const buyGifticon = async (id: string): Promise<void> => {
 };
 
 const useBuyGifticon = (id: string) => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: () => buyGifticon(id),
     onSuccess: () => {
       // success가 true일 경우만 실행
+      queryClient.invalidateQueries({ queryKey: ["usergifticons"] });
       toast.success(`구매가 완료되었습니다.`);
     },
     onError: (error: unknown) => {
