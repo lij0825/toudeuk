@@ -10,14 +10,18 @@ interface BackgroundProps {
 function Background({ className }: BackgroundProps): ReactElement {
   const backgroundImage = useMemo(
     () => (
-      <Image
-        src="/countryside.svg"
-        alt="Background Image"
-        width={500}
-        height={200}
+      <div
         className={`w-full absolute brightness-40 bottom-0 ${className ?? ""}`}
-        priority
-      />
+        draggable="false"
+      >
+        <Image
+          src="/countryside.svg"
+          alt="Background Image"
+          width={500}
+          height={200}
+          priority
+        />
+      </div>
     ),
     [className]
   );

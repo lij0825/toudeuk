@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
+import { HiSpeakerWave } from "react-icons/hi2";
+import { RiSoundModuleFill } from "react-icons/ri";
 import SockJS from "sockjs-client";
 import Image from "next/image";
 import { Client, Frame, IFrame, Stomp } from "@stomp/stompjs";
@@ -207,9 +209,11 @@ export default function Toudeuk() {
         <SnowFlakes className="w-full h-full absolute brightness-90 top-0" />
         {/* 배경이미지 */}
         <BackGround className="w-full absolute brightness-40 bottom-0" />
-        <div className="absolute top-2 left-4 text-gray-400 flex">게임소개</div>
+        <div className="absolute top-2 left-4 w-24 text-gray-400 flex text-white text-[24px]">
+          <RiSoundModuleFill />
+        </div>
         {/* 랭킹 */}
-        <section className="absolute right-2 top-2 h-full z-0 overflow-y-auto scrollbar-hidden">
+        <section className="absolute right-2 top-3 h-full z-0 overflow-y-auto scrollbar-hidden">
           <Ranking ranking={ranking} />
         </section>
         {/* 버튼 */}
