@@ -156,9 +156,9 @@ public class ClickGameService {
 		}
 
 		Integer totalClick = clickCacheRepository.addTotalClick();
-//		if(totalClick > MAX_CLICK){
-//			throw new BaseException(GAME_END);
-//		}
+		if(totalClick > MAX_CLICK){
+			throw new BaseException(GAME_END);
+		}
 
 		Integer userRank = clickCacheRepository.getUserRank(userId);
 		List<RankData.UserScore> rankingList = clickCacheRepository.getRankingList();

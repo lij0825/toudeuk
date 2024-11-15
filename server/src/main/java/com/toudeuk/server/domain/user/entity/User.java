@@ -67,7 +67,7 @@ public class User extends BaseEntity {
 
 	@Column(name = "cash", nullable = false)
 	@ColumnDefault("0")
-	private int cash = 0;
+	private int cash = 1000;
 
 	@Column(name = "role_type", nullable = false)
 	@Enumerated(EnumType.STRING)

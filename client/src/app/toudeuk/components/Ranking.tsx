@@ -11,7 +11,7 @@ export default function Ranking({ ranking }: RankingProps) {
   return (
     <AnimatePresence>
       {ranking.length > 0 ? (
-        <div className="w-[150px]">
+        <div className="w-[150px]" draggable="false">
           <h3 className="text-sm font-extrabold font-noto text-white mb-2 w-full text-center">
             실시간 순위
           </h3>
