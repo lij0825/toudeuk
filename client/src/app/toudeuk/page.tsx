@@ -21,6 +21,7 @@ import {
 } from "./components";
 import { fetchGameRewardHistory } from "@/apis/history/rewardhistory";
 import SoundSettingsModal from "./components/SoundSetting";
+import { AudioPlayer } from "./components/AudioPlayer";
 import { useMusicControlStore } from "@/store/MusicControlStore";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -28,6 +29,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 export default function Toudeuk() {
   const [totalClick, setTotalClick] = useState<number>(0);
   const stompClientRef = useRef<Client | null>(null);
+  const [isFirstClick, setIsFirstClick] = useState<boolean>(false);
 
   // 모달
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -54,6 +56,23 @@ export default function Toudeuk() {
   const userInfo = useUserInfoStore((state) => state.userInfo);
 
   const gameId = Number(sessionStorage.getItem("gameId"));
+
+  const { setIsPlaying } = useMusicControlStore();
+
+  useEffect(() => {
+    // 페이지 첫 상호작용 이벤트 등록
+    const handleInteraction = () => {
+      setIsPlaying(true); // 사용자 상호작용 후 재생 가능
+      setIsFirstClick(true); //첫클릭인지 감지
+      document.removeEventListener("click", handleInteraction);
+    };
+
+    document.addEventListener("click", handleInteraction);
+
+    return () => {
+      document.removeEventListener("click", handleInteraction);
+    };
+  }, [setIsPlaying]);
 
   //클릭시 당첨 로직
   const mutation = useMutation({
@@ -129,6 +148,7 @@ export default function Toudeuk() {
           setRemainingTime(secondsLeft);
           setShowPopup(false);
           setShowGameStart(true);
+
           setTimeout(() => setShowGameStart(false), 10000);
         } else {
           const secondsLeft = Math.floor(timeLeft / 1000);
@@ -210,7 +230,7 @@ export default function Toudeuk() {
         myRank={myRank}
         latestClicker={latestClicker}
       />
-
+      <AudioPlayer />
       <section className="relative flex flex-col flex-grow items-center justify-center h-full w-full bg-gradient-to-b from-[#131f3c] via-[#091f3e] to-[#070e1d]">
         {/* 배경 눈 */}
         <SnowFlakes className="w-full h-full absolute brightness-90 top-0" />
@@ -227,6 +247,13 @@ export default function Toudeuk() {
         <section className="absolute right-2 top-3 h-full z-0 overflow-y-auto scrollbar-hidden">
           <Ranking ranking={ranking} />
         </section>
+        {/* {isFirstClick && (
+        <section className="absolute bottom-10 flex justify-center w-full">
+          <span className="text-white text-3xl animate-bounce">
+            ↓
+          </span>
+        </section>
+      )} */}
         {/* 버튼 */}
         <section
           className="w-96 h-96 z-50 flex items-center justify-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"

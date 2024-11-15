@@ -26,7 +26,7 @@ export default function EndGame({
           y: 0,
           opacity: 1,
           ...(remainingTime <= 20
-            ? remainingTime <= 10
+            ? remainingTime <= 15
               ? {
                   x: [0, -8, 8, -8, 8, 0],
                   rotate: [0, -5, 5, -5, 5, 0],
@@ -56,9 +56,9 @@ export default function EndGame({
         <div className="typo-sub-title">NEXT GAME</div>
         <div
           className={
-            remainingTime <= 20
+            remainingTime <= 15
               ? "text-red-500 font-bold"
-              : remainingTime <= 30
+              : remainingTime <= 20
               ? "text-yellow-500 font-semibold"
               : "text-white"
           }
