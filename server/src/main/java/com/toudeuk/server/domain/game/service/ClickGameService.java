@@ -5,6 +5,7 @@ import static com.toudeuk.server.domain.game.entity.RewardType.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -60,6 +61,7 @@ public class ClickGameService {
 	private final SimpMessagingTemplate messagingTemplate;
 	private final KafkaTemplate kafkaTemplate;
 	private final CashLogRepository cashLogRepository;
+	private final ClickGameCacheRepository clickGameCacheRepository;
 
 	// 게임 시작
 	@Transactional
@@ -178,12 +180,22 @@ public class ClickGameService {
 		// 첫번째 클릭자 보상
 		if (rewardType.equals(FIRST)) {
 			clickCacheRepository.reward(userId, FIRST_CLICK_REWARD);
+			clickGameCacheRepository.deleteRewardInfo();
+			clickGameCacheRepository.setFirstClicker(userId);
 		}
 
-		// 중간 클릭자, 우승자
-		if (rewardType.equals(SECTION) || rewardType.equals(WINNER)) {
+		// 중간 클릭자
+		if (rewardType.equals(SECTION)) {
 			int reward = totalClick.intValue();
 			clickCacheRepository.reward(userId, reward);
+			clickCacheRepository.addMiddleReward(userId, totalClick.longValue());
+		}
+
+		// 우승자
+		if (rewardType.equals(WINNER)) {
+			int reward = totalClick.intValue();
+			clickCacheRepository.reward(userId, reward);
+			clickGameCacheRepository.setWinner(userId);
 		}
 
 		producer.occurClickUserId(clickDto);
@@ -381,6 +393,58 @@ public class ClickGameService {
 
 		List<HistoryData.RewardUser> middleRewardUsers = clickGameRewardLogRepository.findMiddleByClickGameId(gameId)
 			.orElseThrow(() -> new BaseException(REWARD_USER_NOT_FOUND));
+
+		return HistoryData.RewardInfo.of(
+			winnerAndMaxClickerAndFirstClicker,
+			middleRewardUsers
+		);
+	}
+
+	public HistoryData.RewardInfo getRecentHistoryReward() {
+
+		HistoryData.RewardUser winner = HistoryData.RewardUser.of(
+			userRepository.findById(clickGameCacheRepository.getWinner()).orElseThrow(
+				() -> new BaseException(USER_NOT_FOUND)
+			),
+			1000,
+			WINNER
+		);
+
+		HistoryData.RewardUser firstClicker = HistoryData.RewardUser.of(
+			userRepository.findById(clickGameCacheRepository.getFirstClicker()).orElseThrow(
+				() -> new BaseException(USER_NOT_FOUND)
+			),
+			500,
+			FIRST
+		);
+
+		HistoryData.RewardUser maxClicker = HistoryData.RewardUser.of(
+			userRepository.findById(clickGameCacheRepository.getMaxClicker()).orElseThrow(
+				() -> new BaseException(USER_NOT_FOUND)
+			),
+			500,
+			MAX_CLICKER
+		);
+
+		HistoryData.WinnerAndMaxClickerAndFirstClickerData winnerAndMaxClickerAndFirstClicker = HistoryData.WinnerAndMaxClickerAndFirstClickerData.of(
+			winner,
+			maxClicker,
+			firstClicker
+		);
+
+		Map<Long, Long> middleReward = clickGameCacheRepository.getMiddleReward();
+
+		List<HistoryData.RewardUser> middleRewardUsers = middleReward.entrySet().stream()
+			.map(entry -> {
+				Long clickCount = entry.getKey();
+				Long userId = entry.getValue();
+				return HistoryData.RewardUser.of(
+					userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND)),
+					clickCount.intValue(),
+					SECTION
+				);
+			})
+			.toList();
 
 		return HistoryData.RewardInfo.of(
 			winnerAndMaxClickerAndFirstClicker,

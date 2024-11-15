@@ -3,6 +3,7 @@ package com.toudeuk.server.domain.game.repository;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,6 +33,11 @@ public class ClickGameCacheRepository {
 	private static final String GAME_COOLTIME_KEY = "game:cooltime";
 	private static final String NICKNAME_KEY = "nickname:";
 	private static final String USER_CASH_KEY = "cash:";
+
+	private static final String MIDDLE_REWARD_KEY = "middle_reward:";
+	private static final String WINNER = "winner";
+	private static final String MAX_CLICKER = "max_clicker";
+	private static final String FIRST_CLICKER = "first_clicker";
 
 	private static final long MAX_CLICK = 1000; // 12000
 	private static final long COOLTIME_MINUTES = 1; // 5분
@@ -177,6 +183,54 @@ public class ClickGameCacheRepository {
 		return redisTemplate.opsForValue().get(NICKNAME_KEY + userId.toString());
 	}
 
+	public void deleteRewardInfo(){
+		redisTemplate.delete(WINNER);
+		redisTemplate.delete(MAX_CLICKER);
+		redisTemplate.delete(FIRST_CLICKER);
+		deleteByPattern(MIDDLE_REWARD_KEY + "*");
+	}
+
+	public void addMiddleReward(Long userId, Long clickCount) {
+		redisTemplate.opsForValue().set(MIDDLE_REWARD_KEY + clickCount, userId.toString());
+	}
+
+	public Map<Long, Long> getMiddleReward() {
+		Set<String> keys = redisTemplate.keys(MIDDLE_REWARD_KEY + "*");
+
+		return keys.stream()
+			.collect(Collectors.toMap(
+				key -> Long.parseLong(key.replace(MIDDLE_REWARD_KEY, "")),
+				key -> {
+					String value = redisTemplate.opsForValue().get(key);
+					return value != null ? Long.parseLong(value) : null;
+				}
+			));
+	}
+
+	public void setWinner(Long userId) {
+		redisTemplate.opsForValue().set(WINNER, userId.toString());
+	}
+
+	public Long getWinner() {
+		return Long.parseLong(redisTemplate.opsForValue().get(WINNER));
+	}
+
+	public void setMaxClicker(Long userId) {
+		redisTemplate.opsForValue().set(MAX_CLICKER, userId.toString());
+	}
+
+	public Long getMaxClicker() {
+		return Long.parseLong(redisTemplate.opsForValue().get(MAX_CLICKER));
+	}
+
+	public void setFirstClicker(Long userId) {
+		redisTemplate.opsForValue().set(FIRST_CLICKER, userId.toString());
+	}
+
+	public Long getFirstClicker() {
+		return Long.parseLong(redisTemplate.opsForValue().get(FIRST_CLICKER));
+	}
+
 	private void deleteByPattern(String pattern) {
 		// 패턴에 맞는 모든 키 조회
 		Set<String> keys = redisTemplate.keys(pattern);
@@ -185,6 +239,8 @@ public class ClickGameCacheRepository {
 			redisTemplate.delete(keys);
 		}
 	}
+
+
 
 	public List<KafkaGameCashLogDto> getAllClickCounts(Long gameId) {
 		Set<ZSetOperations.TypedTuple<String>> userCountTuple = redisTemplate.opsForZSet()

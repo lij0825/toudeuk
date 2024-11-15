@@ -82,6 +82,18 @@ public class ClickGameController {
 	}
 
 	/**
+	 * 현재 게임 보상 정보
+	 * @param userId
+	 * @return
+	 */
+	@GetMapping("/recent/reward")
+	@Operation(summary = "현재 게임 상세 보상 정보", description = "현재 게임 상세 보상 정보")
+	public SuccessResponse<HistoryData.RewardInfo> getHistoryReward(@CurrentUser Long userId) {
+		return SuccessResponse.of(clickGameService.getRecentHistoryReward());
+	}
+
+
+	/**
 	 * 게임 상세 정보 조회
 	 *
 	 * @param userId, gameId
