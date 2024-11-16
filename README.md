@@ -1,5 +1,5 @@
 
-# [터득 🖱️](https://www.najackdo.kro.kr/)
+# [터득 🖱️](https://toudeuk.kr/)
 
 
 ## Index
