@@ -13,6 +13,7 @@ import {
 import { GetServerSideProps } from "next";
 import { UserGifticonDetailInfo } from "@/types/gifticon";
 import dayjs from "dayjs";
+import { useRouter } from "next/navigation";
 
 export default function MyGifticonDetail({
   params,
@@ -20,7 +21,8 @@ export default function MyGifticonDetail({
   params: { id: string };
 }) {
   const { id } = params;
-
+  const router = useRouter();
+  
   const getServerSideProps: GetServerSideProps = async () => {
     const queryClient = new QueryClient();
     await queryClient.prefetchQuery({
@@ -60,6 +62,7 @@ export default function MyGifticonDetail({
           : "사용 처리 중 오류가 발생했습니다.";
       if (errorMessage === "success") {
         toast.success(`${usergifticon?.itemName} 사용이 완료되었습니다.`);
+        router.push("/mygifticon");
       } else {
         toast.error(errorMessage);
       }

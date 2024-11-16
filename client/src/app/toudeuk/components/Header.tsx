@@ -33,13 +33,25 @@ const Header = ({ userInfo, myRank, latestClicker }: HeaderProps) => (
         )}
       </div>
       <div className="font-bold text-sm text-green-50 flex items-center">
-        <span className="mr-2">내 현재 랭킹</span>
-        <div className="w-12 text-center">{myRank === 0 ? "" : myRank}</div>
+        <span className="mr-2 whitespace-nowrap">내 현재 랭킹</span>
+        <div className="w-12 text-center flex-shrink-0">
+          {myRank === 0 ? "" : myRank}
+        </div>
       </div>
     </div>
     <div className="flex-grow flex text-green-50 items-center justify-center">
-      <div className="font-bold text-sm">마지막 클릭자</div>
-      <div className="w-24 text-center overflow-hidden whitespace-nowrap text-ellipsis">
+      {/* 라벨 */}
+      <div className="font-bold text-sm whitespace-nowrap mr-2">
+        마지막 클릭자
+      </div>
+      {/* 클릭자 이름 */}
+      <div
+        className="w-24 text-center overflow-hidden whitespace-nowrap text-ellipsis"
+        title={
+          latestClicker === "NONE" ? "-" : latestClicker || "클릭자가 없습니다"
+        }
+        /* title 속성으로 전체 텍스트 표시 */
+      >
         {latestClicker === "NONE" ? "-" : latestClicker || "클릭자가 없습니다"}
       </div>
     </div>

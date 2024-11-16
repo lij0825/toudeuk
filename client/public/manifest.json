@@ -9,12 +9,6 @@
       "purpose": "any"
     },
     {
-      "src": "/appicon/toudeuk_144.png",
-      "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
       "src": "/appicon/toudeuk_192.png",
       "sizes": "192x192",
       "type": "image/png",
