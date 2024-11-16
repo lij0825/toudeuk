@@ -9,9 +9,6 @@ import { GifticonInfo, ItemType } from "@/types/gifticon";
 import getFilterClass from "@/utils/getFilterClass";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { FaSearch } from "react-icons/fa";
-import PageTransition from "@/app/components/PageTransition";
-import SearchGifticon from "./SearchGifticon";
 
 const LottieAnimation = dynamic(
   () => import("@/app/components/LottieAnimation"),
@@ -26,114 +23,88 @@ export default function Gifticon() {
     queryFn: fetchGifticonList,
   });
 
-  const filterHandler = (selectedFilter: ItemType) => {
-    setFilter(selectedFilter);
-  };
+  const filters = [
+    { type: ItemType.ALL, label: "전체보기", icon: CUSTOM_ICON.shop, size: 40 },
+    {
+      type: ItemType.CHICKEN,
+      label: "치킨",
+      icon: CUSTOM_ICON.chicken,
+      size: 50,
+    },
+    {
+      type: ItemType.COFFEE,
+      label: "커피",
+      icon: CUSTOM_ICON.coffee,
+      size: 50,
+    },
+    {
+      type: ItemType.VOUCHER,
+      label: "바우처",
+      icon: CUSTOM_ICON.voucher,
+      size: 50,
+    },
+    { type: ItemType.ETC, label: "기타", icon: CUSTOM_ICON.dataset, size: 30 },
+  ];
 
-  if (error) return <div>데이터를 불러오는 중 오류가 발생했습니다.</div>;
+  const truncateText = (text: string, length: number) =>
+    text.length > length ? `${text.slice(0, length)}...` : text;
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full">
+        <p className="text-red-500">
+          데이터를 불러오는 중 오류가 발생했습니다.
+        </p>
+        <button
+          onClick={() => location.reload()}
+          className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-lg"
+        >
+          다시 시도
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-full">
-      <section className=" mb-2 items-end justify-between flex-shrink-0">
+      <section className="mb-2 items-end justify-between flex-shrink-0">
         <p className="typo-title">Gifticon</p>
-        <div className="flex items-end ">
+        <div className="flex items-end">
           <p className="mr-2 typo-title">Shop</p>
         </div>
       </section>
-      {/* < SkeletonGifticon/> //스켈레톤 적용?테스트 라이브러리 안쓰고 해보기 */}
+
       <section className="pb-3 font-noto text-sm">
         <div className="grid grid-cols-5 gap-2 items-end">
-          <button
-            type="button"
-            onClick={() => filterHandler(ItemType.ALL)}
-            className="flex flex-col items-center"
-          >
-            <LottieAnimation
-              animationData={CUSTOM_ICON.shop}
-              loop={true}
-              width={40}
-              height={40}
-              isSelected={filter === ItemType.ALL}
-            />
-            <span className={`font-xs ${getFilterClass(filter, ItemType.ALL)}`}>
-              전체보기
-            </span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => filterHandler(ItemType.CHICKEN)}
-            className="flex flex-col items-center"
-          >
-            <LottieAnimation
-              animationData={CUSTOM_ICON.chicken}
-              loop={true}
-              width={50}
-              height={50}
-              isSelected={filter === ItemType.CHICKEN}
-            />
-            <span
-              className={`font-xs ${getFilterClass(filter, ItemType.CHICKEN)}`}
+          {filters.map((filterOption) => (
+            <button
+              key={filterOption.type}
+              type="button"
+              onClick={() => setFilter(filterOption.type)}
+              className="flex flex-col items-center"
             >
-              치킨
-            </span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => filterHandler(ItemType.COFFEE)}
-            className="flex flex-col items-center"
-          >
-            <LottieAnimation
-              animationData={CUSTOM_ICON.coffee}
-              loop={true}
-              width={50}
-              height={50}
-              isSelected={filter === ItemType.COFFEE}
-            />
-            <span className={`${getFilterClass(filter, ItemType.COFFEE)}`}>
-              커피
-            </span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => filterHandler(ItemType.VOUCHER)}
-            className="flex flex-col items-center"
-          >
-            <LottieAnimation
-              animationData={CUSTOM_ICON.voucher}
-              loop={true}
-              width={50}
-              height={50}
-              isSelected={filter === ItemType.VOUCHER}
-            />
-            <span className={`${getFilterClass(filter, ItemType.VOUCHER)}`}>
-              바우처
-            </span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => filterHandler(ItemType.ETC)}
-            className="flex flex-col items-center"
-          >
-            <LottieAnimation
-              animationData={CUSTOM_ICON.dataset}
-              loop={true}
-              width={30}
-              height={30}
-              isSelected={filter === ItemType.ETC}
-            />
-            <span className={`${getFilterClass(filter, ItemType.ETC)} mt-2`}>
-              기타
-            </span>
-          </button>
+              <LottieAnimation
+                animationData={filterOption.icon}
+                loop={true}
+                width={filterOption.size}
+                height={filterOption.size}
+                isSelected={filter === filterOption.type}
+              />
+              <span
+                className={`font-xs ${getFilterClass(
+                  filter,
+                  filterOption.type
+                )}`}
+              >
+                {filterOption.label}
+              </span>
+            </button>
+          ))}
         </div>
       </section>
 
       {/* 판매 목록 */}
-      <section className="flex-grow h-full rounded-xl overflow-y-auto scrollbar-hidden -mx-8 px-8 pb-[42px] font-noto">
+      <section className="flex-grow h-full rounded-xl overflow-y-auto scrollbar-hidden -mx-8 -mb-8 px-8 pb-[42px] font-noto">
         {gifticons.length > 0 ? (
           <div className="grid grid-cols-2 gap-4">
             {gifticons
@@ -150,18 +121,18 @@ export default function Gifticon() {
                       "linear-gradient(to top left, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0) 70%), linear-gradient(to bottom right, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0) 70%)",
                   }}
                 >
-                  <div className="relative w-full h-32">
+                  <div className="relative w-full h-[60%]">
                     <Image
                       src={gifticon.itemImage}
                       alt={gifticon.itemName}
                       fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      priority
                       className="object-cover rounded-lg"
                     />
                   </div>
                   <p className="text-center mt-4 font-semibold text-sm">
-                    {gifticon.itemName.length > 9
-                      ? `${gifticon.itemName.slice(0, 9)}...`
-                      : gifticon.itemName}
+                    {truncateText(gifticon.itemName, 9)}
                   </p>
                   <p className="text-center text-gray-500 text-sm mt-1">
                     {`${gifticon.itemPrice.toLocaleString()} P`}

@@ -31,11 +31,7 @@ const StorageCard = () => (
 );
 
 export default function GifticonSwipe() {
-  const {
-    data: usergifticons = [],
-    isError,
-    isLoading,
-  } = useFetchUserGifticon();
+  const { data: usergifticons = [], isError } = useFetchUserGifticon();
 
   if (isError) {
     return (

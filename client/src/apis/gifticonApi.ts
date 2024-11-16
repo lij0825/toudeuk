@@ -36,16 +36,6 @@ export const fetchGifticonDetail = async (
   // return response.data.data as GifticonInfo;
 };
 
-export const buyGifticon = async (id: string): Promise<void> => {
-  const response = await instance.post<BaseResponse<void>>(`/item/buy`, {
-    itemId: id,
-  });
-  if (!response.data.success || !response.data.data) {
-    throw new Error(response.data.message);
-  }
-  return response.data.data;
-};
-
 //기프티콘 사용처리
 export const usedGifticon = async (id: string): Promise<void> => {
   const response = await instance.post<BaseResponse<void>>(`/user/items/use`, {

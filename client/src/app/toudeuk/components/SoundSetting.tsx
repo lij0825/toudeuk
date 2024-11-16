@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useMusicControlStore } from "@/store/MusicControlStore";
 import { motion, AnimatePresence } from "framer-motion";
 import { HiMiniSpeakerWave, HiMiniSpeakerXMark } from "react-icons/hi2";
@@ -43,11 +43,31 @@ export default function SoundSettingsModal({
     { id: 5, label: "5" },
   ];
 
-  const playSound = (soundId: number) => {
-    if (isMuted || isSfxMuted) return; // 음소거 시 소리 재생 중단
-    const audio = new Audio(soundFiles[soundId]);
-    audio.volume = sfxVolume / 100; // 현재 효과음 볼륨 반영
-    audio.play();
+  const playSound = useCallback(
+    (soundId: number, volume?: number) => {
+      if (isMuted || isSfxMuted) return;
+      const audio = new Audio(soundFiles[soundId]);
+      audio.volume = (volume ?? sfxVolume) / 100;
+      audio.play();
+    },
+    [isMuted, isSfxMuted, sfxVolume, soundFiles]
+  );
+
+  // 볼륨 조절 디바운스를 위한 타이머
+  let volumeChangeTimer: NodeJS.Timeout;
+
+  const handleSfxVolumeChange = (newVolume: number) => {
+    setSfxVolume(newVolume);
+
+    // 이전 타이머 취소
+    if (volumeChangeTimer) {
+      clearTimeout(volumeChangeTimer);
+    }
+
+    // 100ms 디바운스로 소리 재생
+    volumeChangeTimer = setTimeout(() => {
+      playSound(selectedSfxSound, newVolume);
+    }, 100);
   };
 
   return (
@@ -120,7 +140,7 @@ export default function SoundSettingsModal({
                 min="0"
                 max="100"
                 value={isMuted || isSfxMuted ? 0 : sfxVolume}
-                onChange={(e) => setSfxVolume(Number(e.target.value))}
+                onChange={(e) => handleSfxVolumeChange(Number(e.target.value))}
                 disabled={isMuted || isSfxMuted}
                 className="w-full h-2 bg-gray-300 rounded-lg appearance-none"
               />
@@ -140,7 +160,7 @@ export default function SoundSettingsModal({
                     key={sound.id}
                     onClick={() => {
                       setSelectedSfxSound(sound.id);
-                      playSound(sound.id); // 선택과 동시에 소리 재생
+                      playSound(sound.id);
                     }}
                     className={`py-2 px-4 rounded-lg flex-grow ${
                       selectedSfxSound === sound.id

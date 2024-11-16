@@ -22,6 +22,7 @@ export default function MypageList() {
 
   return (
     <div className="flex flex-col h-full font-noto text-xl relative z-10 mt-1">
+      {/* 첫 번째 카드 */}
       <div
         className="flex-1 h-1/2 bg-[#F5EFFF] p-4 rounded-lg flex cursor-pointer relative overflow-hidden mb-4"
         onClick={() => handleClick(navItems[0].href)}
@@ -35,11 +36,14 @@ export default function MypageList() {
             src={"/icons/clock.png"}
             alt={"history icon"}
             fill
+            sizes="(max-width: 768px) 50vw, 20vw" // 화면 크기에 따른 이미지 크기 설정
             className="rounded-sm object-contain"
             priority
           />
         </div>
       </div>
+
+      {/* 두 번째 카드 */}
       <div
         className="flex-1 h-1/2 bg-[#FF8A8A] p-4 rounded-lg flex cursor-pointer relative overflow-hidden"
         onClick={() => handleClick(navItems[1].href)}
@@ -53,6 +57,7 @@ export default function MypageList() {
             src={"/icons/party-popper-with-confetti.png"}
             alt={"gifticon icon"}
             fill
+            sizes="(max-width: 768px) 50vw, 20vw" // 화면 크기에 따른 이미지 크기 설정
             className="rounded-sm object-contain"
             priority
           />
