@@ -103,7 +103,7 @@ export default function Navbar() {
       <nav
         ref={navRef}
         className={navClasses}
-        style={{ willChange: "transform, opacity", zIndex: 50 }}
+        style={{ willChange: "transform, opacity", zIndex: 122 }}
       >
         {pathname === ROUTE_URL.GAME && (
           <div className="absolute top-[-90px] w-full">
