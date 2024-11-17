@@ -39,6 +39,7 @@ export default function Detail() {
                 alt={gifticon.itemName}
                 width={450}
                 height={450}
+                layout="responsive"
                 className="rounded-lg object-cover"
                 priority
               />
@@ -80,9 +81,6 @@ export default function Detail() {
           <div className="text-center">기프티콘 정보를 불러올 수 없습니다.</div>
         )}
       </div>
-
-      {/* ToastContainer 추가 */}
-      <ToastContainer />
     </div>
   );
 }
