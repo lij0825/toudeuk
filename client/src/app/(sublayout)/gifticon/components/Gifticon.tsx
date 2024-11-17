@@ -104,7 +104,7 @@ export default function Gifticon() {
       </section>
 
       {/* 판매 목록 */}
-      <section className="flex-grow h-full rounded-xl overflow-y-auto scrollbar-hidden -mx-8 -mb-8 px-8 pb-[42px] font-noto">
+      <section className="flex-grow h-full rounded-xl overflow-y-auto scrollbar-hidden -mx-8 -mb-8 px-8 pb-[90px] font-noto">
         {gifticons.length > 0 ? (
           <div className="grid grid-cols-2 gap-4">
             {gifticons
@@ -127,8 +127,8 @@ export default function Gifticon() {
                       alt={gifticon.itemName}
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      priority
                       className="object-cover rounded-lg"
+                      priority
                     />
                   </div>
                   <p className="text-center mt-4 font-semibold text-sm">

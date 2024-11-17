@@ -27,7 +27,7 @@ export default function ReactQueryProvider({
   // toastMessage
   const toastConfig: ToastContainerProps = {
     position: "top-center",
-    autoClose: 3000,
+    autoClose: 1000,
     hideProgressBar: true, //진행바 숨김
     newestOnTop: false,
     closeOnClick: true,
