@@ -178,7 +178,9 @@
     
 <br><br>
 
-# 🖱️ 백엔드 구축 과정
+# 🖱️ 백엔드 구축 과정 및 성능 테스트
+
+## 테스트 조건
 
 ```java
 server.tomcat.threads.max=200
@@ -187,165 +189,107 @@ spring.datasource.hikari.maximum-pool-size=10
 spring.datasource.hikari.minimum-idle=10
 ```
 
-### **1단계&nbsp; MySQL + Pessimistic Lock(비관락)**
+# Vuser
+
+total : 100
+
+init : 25 (100초 마다 25명씩 증가)
+
+<img src="./README-IMG/ngrinder_test/Vuser.png">
+
+<br><br><br><br>
+
+### **1-1단계&nbsp; DB 격리 수준 Serializable**
 
 ```
-설명
+Mysql의 DB 트랜젝션 격리 수준을 Serializable로 하여 동시성 문제를 해결합니다.
+
+TPS : 190.6
+Peak TPS :  220
+MTT : 436.50 ms
 ```
 
-#### 1.1 200 / 10 / 10 / 10</p>
+### TPS
 
-&emsp; 설명  
- <img alt='result1.1' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-<img alt='result1.1' src='./readme-image/UI/' height=300px>
-<img alt='result1.1' src='./readme-image/UI/' height=300px>
-<br>
+<img src="./README-IMG/ngrinder_test/Only MySQL-serializable-connection10_TPS.png">
 
-#### 1.2 200 / 10 / 50 / 50</p>
+### MTT
 
-&emsp; 설명  
- <img alt='result1.2' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-<img alt='result1.2' src='./readme-image/UI/' height=300px>
-<img alt='result1.2' src='./readme-image/UI/' height=300px>
-<br>
+<img src="./README-IMG/ngrinder_test/Only MySQL-serializable-connection10_MTT.png">
 
-#### 1.3 400 / 50 / 50 / 50</p>
+<br><br><br><br>
 
-&emsp; 설명  
- <img alt='result1.3' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-<img alt='result1.3' src='./readme-image/UI/' height=300px>
-<img alt='result1.3' src='./readme-image/UI/' height=300px>
-<br>
+### **1-2단계&nbsp; MySQL + Pessimistic Lock(비관락)**
 
-  <br>
+```
+클릭이 동시에 일어나는 게임행의 클릭 카운트에 비관적 락을 걸어 동시성 문제를 해결합니다.
+TPS : 78.4
+Peak TPS :  96
+MTT : 1,061.24 ms
+```
+
+### TPS
+
+<img src="./README-IMG/ngrinder_test/Only MySQL + 비관락_TPS.png">
+
+### MTT
+
+<img src="./README-IMG/ngrinder_test/Only MySQL + 비관락_MTT.png">
 
 ### **2단계&nbsp; Redis + MySQL**
 
 ```
-설명
+싱글 스레드로 작동하는 레디스를 이용하여 동시성 문제를 해결합니다.
+TPS : 328.0
+Peak TPS :  381
+MTT : 253.95 ms
 ```
 
-#### 2.1 200 / 10 / 10 / 10</p>
+### TPS
 
-&emsp; 설명  
- <img alt='result2.1' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-<img alt='result2.1' src='./readme-image/UI/' height=300px>
-<img alt='result2.1' src='./readme-image/UI/' height=300px>
-<br>
+<img src="./README-IMG/ngrinder_test/Redis + MySQL + No Lock_TPS.png">
 
-#### 2.2 200 / 10 / 50 / 50</p>
+### MTT
 
-&emsp; 설명  
- <img alt='result2.2' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-<img alt='result2.2' src='./readme-image/UI/' height=300px>
-<img alt='result2.2' src='./readme-image/UI/' height=300px>
-<br>
+<img src="./README-IMG/ngrinder_test/Redis + MySQL + No Lock_MTT.png">
 
-#### 2.3 400 / 50 / 50 / 50</p>
-
-&emsp; 설명  
- <img alt='result2.3' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-<img alt='result2.3' src='./readme-image/UI/' height=300px>
-<img alt='result2.3' src='./readme-image/UI/' height=300px>
-<br>
-
-<br>
+<br><br><br><br>
 
 ### **3단계&nbsp; Redis + 내부 Kafka + MySQL (Kafka 파티션: 1개)**
 
 ```
-설명
+짧은 시간에 몰리는 DB 쓰기 요청에 대해 안정성을 확보하기 위해 Kafka 메시징 큐를 이용하였습니다.
 ```
 
-#### 3.1 200 / 10 / 10 / 10</p>
+### TPS
 
-&emsp; 설명  
- <img alt='result3.1' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-<img alt='result3.1' src='./readme-image/UI/' height=300px>
-<img alt='result3.1' src='./readme-image/UI/' height=300px>
+<img src="./README-IMG/ngrinder_test/Redis + 내부 Kafka_TPS.png">
+
+### MTT
+
+<img src="./README-IMG/ngrinder_test/Redis + 내부 Kafka_MTT.png">
+
 <br>
 
 <br>
 
-### **4단계&nbsp; Redis + 내부 Kafka + MySQL (Kafka 파티션: 4개)**
-
-```
-설명
-```
-
-#### 4.1 200 / 10 / 10 / 10</p>
-
-&emsp; 설명  
- <img alt='result4.1' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-<img alt='result4.1' src='./readme-image/UI/' height=300px>
-<img alt='result4.1' src='./readme-image/UI/' height=300px>
-<br>
-
-#### 4.2 200 / 10 / 50 / 50</p>
-
-&emsp; 설명  
- <img alt='result4.2' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-<img alt='result4.2' src='./readme-image/UI/' height=300px>
-<img alt='result4.2' src='./readme-image/UI/' height=300px>
-<br>
-
-#### 4.3 400 / 50 / 50 / 50</p>
-
-&emsp; 설명  
- <img alt='result4.3' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-<img alt='result4.3' src='./readme-image/UI/' height=300px>
-<img alt='result4.3' src='./readme-image/UI/' height=300px>
-
-#### 4.4 400 / 50 / 80 / 80</p>
-
-&emsp; 설명  
- <img alt='result4.4' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-<img alt='result4.4' src='./readme-image/UI/' height=300px>
-<img alt='result4.4' src='./readme-image/UI/' height=300px>
-<br>
 <br><br>
 
 <br>
 
-### **5단계&nbsp; Redis + 외부 Kafka + MySQL (Kafka 파티션: 4개)**
+### **5단계&nbsp; Redis + 외부 Kafka + MySQL**
 
 ```
-설명
+카프카의 컨슈머를 별도 외부의 서버로 옮겨 주 서버의 부하를 분산 시킵니다.
 ```
 
-#### 5.1 200 / 10 / 10 / 10</p>
+### TPS
 
-&emsp; 설명  
- <img alt='result5.1' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-<img alt='result5.1' src='./readme-image/UI/' height=300px>
-<img alt='result5.1' src='./readme-image/UI/' height=300px>
-<br>
+<img src="./README-IMG/ngrinder_test/Redis + 외부 Kafka_TPS.png">
 
-#### 5.2 200 / 10 / 50 / 50</p>
+### MTT
 
-&emsp; 설명  
- <img alt='result5.2' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-<img alt='result5.2' src='./readme-image/UI/' height=300px>
-<img alt='result5.2' src='./readme-image/UI/' height=300px>
-<br>
-
-#### 5.3 400 / 50 / 50 / 50</p>
-
-&emsp; 설명  
- <img alt='result5.3' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-<img alt='result5.3' src='./readme-image/UI/' height=300px>
-<img alt='result5.3' src='./readme-image/UI/' height=300px>
-<br>
-
-#### 5.4 400 / 50 / 80 / 80</p>
-
-&emsp; 설명  
- <img alt='result5.4' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-<img alt='result5.4' src='./readme-image/UI/' height=300px>
-<img alt='result5.4' src='./readme-image/UI/' height=300px>
-<br>
-
-<br>
+<img src="./README-IMG/ngrinder_test/Redis + 외부 Kafka_MTT.png">
 
 # 🖱️ 산출물
 
