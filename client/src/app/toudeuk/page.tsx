@@ -52,6 +52,7 @@ export default function Toudeuk() {
   const [showRewardGif, setShowRewardGif] = useState<boolean>(false);
   const [rewardGifSrc, setRewardGifSrc] = useState<string>("");
 
+  const [hasShownError, setHasShownError] = useState(false);
   //상단바 렌더링을 위한 정보
   const userInfo = useUserInfoStore((state) => state.userInfo);
 
@@ -128,9 +129,12 @@ export default function Toudeuk() {
     enabled: status === "COOLTIME",
   });
 
-  if (isError) {
-    toast.error("현재 진행중인 게임이 없습니다.");
-  }
+  useEffect(() => {
+    if (isError && !hasShownError) {
+      toast.error("현재 진행중인 게임이 없습니다.");
+      setHasShownError(true); // 에러 메시지를 한 번만 표시
+    }
+  }, [isError, hasShownError]);
 
   useEffect(() => {
     if (coolTime) {
