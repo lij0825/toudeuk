@@ -245,6 +245,8 @@ MTT : 1,061.24 ms
 
 <img src="./README-IMG/ngrinder_test/Only MySQL + 비관락_MTT.png">
 
+<br><br><br><br><br>
+
 ### **2단계&nbsp; Redis + MySQL**
 
 ```
