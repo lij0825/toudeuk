@@ -2,15 +2,11 @@
 
 ## Index
 
-#### &emsp; [➤ 프로젝트 소개](#-프로젝트-소개)<br>
-
-#### &emsp; [➤ 프로젝트 설계](#-프로젝트-설계)<br>
-
-#### &emsp; [➤ 기능 소개](#-기능-소개)<br>
-
-#### &emsp; [➤ 백엔드 구축 과정](#-백엔드-구축-과정)<br>
-
-#### &emsp; [➤ 산출물](#-산출물)<br>
+#### &emsp; [➤ 프로젝트 소개](#-🖱️-프로젝트-소개)<br>
+#### &emsp; [➤ 프로젝트 설계](#-🖱️-프로젝트-설계)<br>
+#### &emsp; [➤ 기능 소개](#-🖱️-기능-소개)<br>
+#### &emsp; [➤ 백엔드 구축 과정](#-🖱️-백엔드-구축-과정)<br>
+#### &emsp; [➤ 산출물](#-🖱️-산출물)<br>
 
 <br>
 
@@ -49,7 +45,7 @@
   | ------------ | ---- | -------------------------------------------- |
   | 박보람       | 팀장 | - UI/UX디자인<br> - 퍼블리싱<br>- 프론트엔드 |
   | 　김연지     | 팀원 | - UI/UX디자인<br> - 퍼블리싱<br>- 프론트엔드 |
-  | 　양준영     | 팀원 | - 백엔드                                     |
+  | 　양준영     | 팀원 | - 백엔드 리더                                 |
   | 　이인준     | 팀원 | - 백엔드                                     |
   | 　정하림     | 팀원 | - 백엔드                                     |
   | 　황성민     | 팀원 | - Infra<br> - 백엔드                         |
@@ -131,52 +127,63 @@
   
   3. 적립한 포인트를 통해 다양한 기프티콘을 구매 -->
 
-- ### **1.&nbsp; 특정 조건에 따라 선정된 회원에게 보상을 지급**
+- ### **1.&nbsp; 클릭 게임**
 
-  <p style='font-size:16px; font-weight:bold;'>1.1 목록1.1</p>
-  <p style='font-size:16px;'>&emsp;1.1.2 목록1.1.1</p>
-  <p style='font-size:16px;'>&emsp; 설명</p>
-  <img alt='func1.1.1' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-  <img alt='func1.1.1' src='./readme-image/UI/' height=300px>
-  <img alt='func1.1.1' src='./readme-image/UI/' height=300px>
-  <p style='font-size:16px; '>&emsp;1.1.2 목록1.1.2</p>
-  <p style='font-size:16px;'>&emsp; 설명</p>
-  <img alt='func1.1.2' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-  <img alt='func1.1.2' src='./readme-image/UI/' height=300px>
+  <p style='font-size:16px; font-weight:bold;'>1.1 게임 몰입감 강화 요소</p>
+  <p style='font-size:16px;'>&emsp;1.1.1 당첨 이펙트</p>
+  <p style='font-size:16px;'>&emsp; 당첨자에게 이펙트 효과를 제공함으로써 흥미와 만족감을 느끼게 하고 보상 심리 강화를 통해 게임에 대한 지속적인 참여를 유도합니다.</p>
+  <img alt='func1.1.1' src='./README-IMG/UI/2.3.gamereward.jpg' height=300px style="padding-left: 20px;">
+  <img alt='func1.1.1' src='./README-IMG/UI/2.4.gamereward.jpg' height=300px>
   <br><br>
 
-  <p style='font-size:16px; font-weight:bold;'>1.2 목록1.2</p>
-  <img alt='func1.2' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-  <img alt='func1.2' src='./readme-image/UI/' height=300px>
+  <p style='font-size:16px; '>&emsp;1.1.2 실시간 랭킹</p>
+  <p style='font-size:16px;'>&emsp; 랭킹을 통해 경쟁심을 유발하고 실시간으로 변화하는 순위를 통해 역동적인 사용자 경험을 제공합니다.</p>
+  <img alt='func1.1.2' src='./README-IMG/UI/2.1.gamepage.jpg' height=300px style="padding-left: 20px;">
+  <br><br>
+
+  <p style='font-size:16px; '>&emsp;1.1.3 배경음과 클릭 효과음</p>
+  <p style='font-size:16px;'>&emsp; 클릭 효과음을 통해 몰입감을 높이고, 독창적인 배경음을 활용하여 사용자가 게임을 기억하게 함으로써 브랜드 아이덴티티를 강화합니다.</p>
+  <img alt='func1.1.3' src='./README-IMG/UI/2.2.gamepage.jpg' height=300px style="padding-left: 20px;">
+  <br><br>
 
 <br>
   
-* ### **2.&nbsp; 실시간 랭킹 및 보상 확인**
-  <p style='font-size:16px; font-weight:bold;'>2.1 목록2.1</p>
-  <p style='font-size:16px;'>&emsp; 설명</p>
-  <img alt='func2.1' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-  <img alt='func2.1' src='./readme-image/UI/' height=300px>
-  <img alt='func2.1' src='./readme-image/UI/' height=300px>
+* ### **2.&nbsp; 게임 히스토리**
+  <p style='font-size:16px; font-weight:bold;'>2.1 게임 기록 </p>
+  <p style='font-size:16px;'>&emsp; 모든 라운드의 게임의 우승자를 확인할 수 있습니다.</p>
+  <p style='font-size:16px;'>&emsp; 디테일 페이지를 통해 한 라운드에 대해 첫번째부터 1000번째까지 누가 눌렀는지 모든 기록을 확인 할 수 있습니다.</p>
+  <p style='font-size:16px;'>&emsp;Rendering 시간을 최적화 하기 위해 무한 스크롤로 구현했습니다 😀</p>
+  <img alt='func2.1' src='./README-IMG/UI/4.1.gamelog.jpg' height=300px style="padding-left: 20px;">
+  <img alt='func2.1' src='./README-IMG/UI/4.2.gamelogdetail.jpg' height=300px>
   <br><br>
 
-  <p style='font-size:16px; font-weight:bold;'>2.2 목록2.2</p>
-  <p style='font-size:16px;'>&emsp; 설명</p>
-  <img alt='func2.2' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-  <img alt='func2.2' src='./readme-image/UI/' height=300px>
-  <img alt='func2.2' src='./readme-image/UI/' height=300px>
+  <p style='font-size:16px; font-weight:bold;'>2.2 당첨 내역 </p>
+  <p style='font-size:16px;'>&emsp; 내가 참여한 게임의 당첨 내역을 확인할 수 있습니다.</p>
+  <img alt='func2.2' src='./README-IMG/UI/4.3.gamelogmy.jpg' height=300px style="padding-left: 20px;">
   <br><br>
-  
 <br>
   
 * ### **3.&nbsp; 기프티콘 구매 및 사용**
-  <p style='font-size:16px; font-weight:bold;'>3.1 <del>얻은 리워드로 기프티콘 구매 어쩌고...<del></p>
-  <p style='font-size:16px;'>&emsp; 설명</p>
-  <img alt='func3.1' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-  <img alt='func3.1' src='./readme-image/UI/' height=300px>
-  <img alt='func3.1' src='./readme-image/UI/' height=300px>
+
+  <p style='font-size:16px;'>&emsp; 특정 브랜드와의 기프티콘 제휴를 통해 광고 수익과 공동 마케팅 기회를 확보하여 수익성을 더욱 강화하는 비즈니스 모델을 구현했습니다.</p>
+
+  <p style='font-size:16px; font-weight:bold;'>3.1 기프티콘 샵</p>
+  <p style='font-size:16px;'>&emsp; 사용자가 원하는 기프티콘을 쉽게 찾을 수 있도록 카테고리 필터를 제공합니다.</p>
+  <img alt='func3.1' src='./README-IMG/UI/5.1gift.jpg' height=300px style="padding-left: 20px;">
+  <img alt='func3.1' src='./README-IMG/UI/5.1giftfilter1.jpg' height=300px>
+  <img alt='func3.1' src='./README-IMG/UI/5.1giftdetail.jpg' height=300px>
+  <br><br>
+
+  <p style='font-size:16px; font-weight:bold;'>3.2 나의 기프티콘</p>
+  <p style='font-size:16px;'>&emsp; 사용자가 구매한 기프티콘을 확인할 수 있습니다.</p>
+  <p style='font-size:16px;'>&emsp; 사용자는 구매한 기프티콘을 카테고리 필터를 통해 쉽게 찾을 수 있고, 교환권 사용하기 버튼을 통해 사용 여부를 쉽게 기록할 수 있습니다.</p>
+  <img alt='func3.1' src='./README-IMG/UI/5.2mygift2.jpg' height=300px style="padding-left: 20px;">
+  <img alt='func3.1' src='./README-IMG/UI/5.2mygiftfilter2.jpg' height=300px>
+  <img alt='func3.1' src='./README-IMG/UI/5.2mygift.jpg' height=300px>
   <br><br>
     
-<br><br>
+<br>
+
 
 # 🖱️ 백엔드 구축 과정
 
@@ -196,25 +203,25 @@ spring.datasource.hikari.minimum-idle=10
 #### 1.1 200 / 10 / 10 / 10</p>
 
 &emsp; 설명  
- <img alt='result1.1' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-<img alt='result1.1' src='./readme-image/UI/' height=300px>
-<img alt='result1.1' src='./readme-image/UI/' height=300px>
+ <img alt='result1.1' src='./README_IMG/UI/' height=300px style="padding-left: 20px;">
+<img alt='result1.1' src='./README_IMG/UI/' height=300px>
+<img alt='result1.1' src='./README_IMG/UI/' height=300px>
 <br>
 
 #### 1.2 200 / 10 / 50 / 50</p>
 
 &emsp; 설명  
- <img alt='result1.2' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-<img alt='result1.2' src='./readme-image/UI/' height=300px>
-<img alt='result1.2' src='./readme-image/UI/' height=300px>
+ <img alt='result1.2' src='./README_IMG/UI/' height=300px style="padding-left: 20px;">
+<img alt='result1.2' src='./README_IMG/UI/' height=300px>
+<img alt='result1.2' src='./README_IMG/UI/' height=300px>
 <br>
 
 #### 1.3 400 / 50 / 50 / 50</p>
 
 &emsp; 설명  
- <img alt='result1.3' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-<img alt='result1.3' src='./readme-image/UI/' height=300px>
-<img alt='result1.3' src='./readme-image/UI/' height=300px>
+ <img alt='result1.3' src='./README_IMG/UI/' height=300px style="padding-left: 20px;">
+<img alt='result1.3' src='./README_IMG/UI/' height=300px>
+<img alt='result1.3' src='./README_IMG/UI/' height=300px>
 <br>
 
   <br>
@@ -228,25 +235,25 @@ spring.datasource.hikari.minimum-idle=10
 #### 2.1 200 / 10 / 10 / 10</p>
 
 &emsp; 설명  
- <img alt='result2.1' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-<img alt='result2.1' src='./readme-image/UI/' height=300px>
-<img alt='result2.1' src='./readme-image/UI/' height=300px>
+ <img alt='result2.1' src='./README_IMG/UI/' height=300px style="padding-left: 20px;">
+<img alt='result2.1' src='./README_IMG/UI/' height=300px>
+<img alt='result2.1' src='./README_IMG/UI/' height=300px>
 <br>
 
 #### 2.2 200 / 10 / 50 / 50</p>
 
 &emsp; 설명  
- <img alt='result2.2' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-<img alt='result2.2' src='./readme-image/UI/' height=300px>
-<img alt='result2.2' src='./readme-image/UI/' height=300px>
+ <img alt='result2.2' src='./README_IMG/UI/' height=300px style="padding-left: 20px;">
+<img alt='result2.2' src='./README_IMG/UI/' height=300px>
+<img alt='result2.2' src='./README_IMG/UI/' height=300px>
 <br>
 
 #### 2.3 400 / 50 / 50 / 50</p>
 
 &emsp; 설명  
- <img alt='result2.3' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-<img alt='result2.3' src='./readme-image/UI/' height=300px>
-<img alt='result2.3' src='./readme-image/UI/' height=300px>
+ <img alt='result2.3' src='./README_IMG/UI/' height=300px style="padding-left: 20px;">
+<img alt='result2.3' src='./README_IMG/UI/' height=300px>
+<img alt='result2.3' src='./README_IMG/UI/' height=300px>
 <br>
 
 <br>
@@ -260,9 +267,9 @@ spring.datasource.hikari.minimum-idle=10
 #### 3.1 200 / 10 / 10 / 10</p>
 
 &emsp; 설명  
- <img alt='result3.1' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-<img alt='result3.1' src='./readme-image/UI/' height=300px>
-<img alt='result3.1' src='./readme-image/UI/' height=300px>
+ <img alt='result3.1' src='./README_IMG/UI/' height=300px style="padding-left: 20px;">
+<img alt='result3.1' src='./README_IMG/UI/' height=300px>
+<img alt='result3.1' src='./README_IMG/UI/' height=300px>
 <br>
 
 <br>
@@ -276,32 +283,32 @@ spring.datasource.hikari.minimum-idle=10
 #### 4.1 200 / 10 / 10 / 10</p>
 
 &emsp; 설명  
- <img alt='result4.1' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-<img alt='result4.1' src='./readme-image/UI/' height=300px>
-<img alt='result4.1' src='./readme-image/UI/' height=300px>
+ <img alt='result4.1' src='./README_IMG/UI/' height=300px style="padding-left: 20px;">
+<img alt='result4.1' src='./README_IMG/UI/' height=300px>
+<img alt='result4.1' src='./README_IMG/UI/' height=300px>
 <br>
 
 #### 4.2 200 / 10 / 50 / 50</p>
 
 &emsp; 설명  
- <img alt='result4.2' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-<img alt='result4.2' src='./readme-image/UI/' height=300px>
-<img alt='result4.2' src='./readme-image/UI/' height=300px>
+ <img alt='result4.2' src='./README_IMG/UI/' height=300px style="padding-left: 20px;">
+<img alt='result4.2' src='./README_IMG/UI/' height=300px>
+<img alt='result4.2' src='./README_IMG/UI/' height=300px>
 <br>
 
 #### 4.3 400 / 50 / 50 / 50</p>
 
 &emsp; 설명  
- <img alt='result4.3' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-<img alt='result4.3' src='./readme-image/UI/' height=300px>
-<img alt='result4.3' src='./readme-image/UI/' height=300px>
+ <img alt='result4.3' src='./README_IMG/UI/' height=300px style="padding-left: 20px;">
+<img alt='result4.3' src='./README_IMG/UI/' height=300px>
+<img alt='result4.3' src='./README_IMG/UI/' height=300px>
 
 #### 4.4 400 / 50 / 80 / 80</p>
 
 &emsp; 설명  
- <img alt='result4.4' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-<img alt='result4.4' src='./readme-image/UI/' height=300px>
-<img alt='result4.4' src='./readme-image/UI/' height=300px>
+ <img alt='result4.4' src='./README_IMG/UI/' height=300px style="padding-left: 20px;">
+<img alt='result4.4' src='./README_IMG/UI/' height=300px>
+<img alt='result4.4' src='./README_IMG/UI/' height=300px>
 <br>
 <br><br>
 
@@ -316,46 +323,46 @@ spring.datasource.hikari.minimum-idle=10
 #### 5.1 200 / 10 / 10 / 10</p>
 
 &emsp; 설명  
- <img alt='result5.1' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-<img alt='result5.1' src='./readme-image/UI/' height=300px>
-<img alt='result5.1' src='./readme-image/UI/' height=300px>
+ <img alt='result5.1' src='./README_IMG/UI/' height=300px style="padding-left: 20px;">
+<img alt='result5.1' src='./README_IMG/UI/' height=300px>
+<img alt='result5.1' src='./README_IMG/UI/' height=300px>
 <br>
 
 #### 5.2 200 / 10 / 50 / 50</p>
 
 &emsp; 설명  
- <img alt='result5.2' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-<img alt='result5.2' src='./readme-image/UI/' height=300px>
-<img alt='result5.2' src='./readme-image/UI/' height=300px>
+ <img alt='result5.2' src='./README_IMG/UI/' height=300px style="padding-left: 20px;">
+<img alt='result5.2' src='./README_IMG/UI/' height=300px>
+<img alt='result5.2' src='./README_IMG/UI/' height=300px>
 <br>
 
 #### 5.3 400 / 50 / 50 / 50</p>
 
 &emsp; 설명  
- <img alt='result5.3' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-<img alt='result5.3' src='./readme-image/UI/' height=300px>
-<img alt='result5.3' src='./readme-image/UI/' height=300px>
+ <img alt='result5.3' src='./README_IMG/UI/' height=300px style="padding-left: 20px;">
+<img alt='result5.3' src='./README_IMG/UI/' height=300px>
+<img alt='result5.3' src='./README_IMG/UI/' height=300px>
 <br>
 
 #### 5.4 400 / 50 / 80 / 80</p>
 
 &emsp; 설명  
- <img alt='result5.4' src='./readme-image/UI/' height=300px style="padding-left: 20px;">
-<img alt='result5.4' src='./readme-image/UI/' height=300px>
-<img alt='result5.4' src='./readme-image/UI/' height=300px>
+ <img alt='result5.4' src='./README_IMG/UI/' height=300px style="padding-left: 20px;">
+<img alt='result5.4' src='./README_IMG/UI/' height=300px>
+<img alt='result5.4' src='./README_IMG/UI/' height=300px>
 <br>
 
-<br>
+<br><br>
 
 # 🖱️ 산출물
 
-#### [⚙️ Architecture](./readme-image/Architecture.png)
+#### [⚙️ Architecture](./README_IMG/Architecture.png)
 
-#### [⚙️ ERD](./readme-image/ERD.png)
+#### [⚙️ ERD](./README_IMG/ERD.png)
 
 #### [📑 요구사항 명세서]()
 
-#### [📑 API 명세서](./readme-image/Swagger)
+#### [📑 API 명세서](./README_IMG/Swagger)
 
 <br><br>
 
