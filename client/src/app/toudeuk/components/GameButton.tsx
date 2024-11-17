@@ -25,13 +25,14 @@ export default function GameButton({ totalClick }: GameProps) {
     <div
       className="relative flex justify-center items-center"
       style={{
-        width: `${size-60}px`,
-        height: `${size-60}px`,
+        width: `${size - 60}px`,
+        height: `${size - 60}px`,
         borderRadius: "50%", // 원형 영역
         overflow: "hidden", // 원 밖으로 초과되는 클릭 영역 제거
         WebkitClipPath: "circle(50%)", // Safari 지원
         clipPath: "circle(50%)", // 클릭 가능한 영역을 원형으로 제한
         cursor: "pointer",
+        zIndex: 50,
       }}
       onClick={handleClick} // 클릭 이벤트
     >
