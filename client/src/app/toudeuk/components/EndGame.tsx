@@ -16,7 +16,7 @@ export default function EndGame({
   return (
     <div
       className="absolute inset-0 w-full h-full bg-black bg-opacity-40 backdrop-blur-lg flex flex-col justify-center items-center select-none pointer-events-none"
-      style={{ zIndex: 999 }}
+      style={{ zIndex: 100 }}
     >
       <motion.div
         className="flex flex-col justify-center items-center text-white font-bold text-center text-2xl blue-glow-text bg-white bg-opacity-20 backdrop-blur-md p-4 pb-4 rounded-xl shadow-lg border border-opacity-30 border-white"
