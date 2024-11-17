@@ -1,21 +1,32 @@
 "use client";
 
+import { useState } from "react";
 import Login from "./components/Login";
 import { CUSTOM_ICON } from "@/constants/customIcons";
 import LottieAnimation from "@/app/components/LottieAnimation";
 import Image from "next/image";
 import Title from "./mypage/components/Title";
+import ServiceInfo from "./components/ServiceInfo";
 
 export default function Home() {
-  function handleClick() {
-    console.log("d");
-  }
+  const [showServiceInfo, setShowServiceInfo] = useState(false); // 상태 추가
+
+  const handleClick = () => {
+    setShowServiceInfo(true); // ServiceInfo 열기
+  };
+
+  const handleClose = () => {
+    setShowServiceInfo(false); // ServiceInfo 닫기
+  };
 
   return (
     <div className="relative flex flex-col items-center justify-center w-full h-full bg-white overflow-hidden">
+      {/* ServiceInfo 컴포넌트 렌더링 */}
+      {showServiceInfo && <ServiceInfo onClose={handleClose} />}
+
       <div className="absolute w-full h-full flex items-center justify-center">
         <div
-          className="absolute top-16 flex flex-col items-center "
+          className="absolute top-16 flex flex-col items-center"
           style={{ pointerEvents: "none" }}
         >
           <Title />
@@ -31,7 +42,6 @@ export default function Home() {
           />
 
           {/* Login 버튼 - 왼쪽 하단에 배치 */}
-
           <div className="absolute top-[30px] left-[8px] transform translate-x-1/4 translate-y-1/4">
             <div className="relative">
               <LottieAnimation
@@ -59,8 +69,10 @@ export default function Home() {
               alt="santa"
             />
           </div>
+
+          {/* "Toudeuk?" 버튼 */}
           <div
-            className="typo-body  text-gray-300 absolute bottom-[-40px] cursor-pointer hover:font-bold hover:text-black"
+            className="typo-body font-extrabold absolute bottom-[-40px] cursor-pointer hover:font-bold hover:text-black"
             onClick={handleClick}
           >
             Toudeuk?
