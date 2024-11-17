@@ -129,6 +129,7 @@ export default function ServiceInfo({ onClose }: { onClose: () => void }) {
                 className="mt-4 rounded-lg shadow-lg w-[80%] max-w-md"
                 width={400}
                 height={300}
+                priority
               />
             </motion.div>
           </AnimatePresence>
