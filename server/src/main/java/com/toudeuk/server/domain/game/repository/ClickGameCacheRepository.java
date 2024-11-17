@@ -103,7 +103,7 @@ public class ClickGameCacheRepository {
 			return -1;
 		}
 		Number score = zSetOperations.incrementScore(CLICK_COUNT_KEY, getUsername(userId), 1);
-		log.info("score : {}", score);
+//		log.info("score : {}", score);
 
 		return score == null ? 1 : score.intValue();
 	}
