@@ -13,7 +13,7 @@ const slides = [
     textColor: "text-blue-600",
   },
   {
-    title: "다양한 포인트 보상!",
+    title: "다양한 보상\n포인트를 획득하세요!",
     description: "1000번째 최종 클릭자\n최다 클릭자\n구간별 중간 보상자까지!",
     imgSrc: "/toudeuk/reward.png",
     textColor: "text-green-600",
@@ -91,26 +91,20 @@ export default function ServiceInfo({ onClose }: { onClose: () => void }) {
       onTouchEnd={handleTouchEnd}
     >
       <div className="relative w-full h-full flex flex-col pt-8">
-        {/* 현재 슬라이드 번호 표시 */}
         <div className="absolute top-4 left-0 right-0 flex justify-center z-10">
           <p className="text-gray-600 text-lg font-semibold">
             {currentSlide + 1} / {slides.length}
           </p>
         </div>
 
-        {/* 닫기 버튼 */}
         <button
           className="absolute top-4 right-4 text-gray-600 hover:text-black text-2xl z-10"
-          onClick={() => {
-            console.log("닫기 버튼 클릭됨");
-            onClose();
-          }}
+          onClick={onClose}
         >
           <FaTimes />
         </button>
 
-        {/* 슬라이드 콘텐츠 */}
-        <div className="relative flex justify-center items-start h-full overflow-hidden">
+        <div className="relative flex justify-center items-center h-full overflow-hidden px-4">
           <AnimatePresence custom={direction}>
             <motion.div
               key={currentSlide}
@@ -119,18 +113,14 @@ export default function ServiceInfo({ onClose }: { onClose: () => void }) {
               initial="enter"
               animate="center"
               exit="exit"
-              className="absolute flex flex-col items-center justify-start h-full text-center pt-16 p-4"
+              className="absolute flex flex-col items-center justify-start h-full text-center pt-8 p-4 max-w-2xl mx-auto"
             >
               <h2
-                className={`text-4xl font-bold mb-4 ${slides[currentSlide].textColor} whitespace-pre-line`}
-                style={{ maxWidth: "100%" }}
+                className={`text-2xl md:text-4xl font-bold mb-4 ${slides[currentSlide].textColor} whitespace-pre-line`}
               >
                 {slides[currentSlide].title}
               </h2>
-              <p
-                className="text-xl text-gray-700 mb-2 whitespace-pre-line"
-                style={{ maxWidth: "80%" }}
-              >
+              <p className="text-sm md:text-lg text-gray-700 mb-4 whitespace-pre-line">
                 {slides[currentSlide].description}
               </p>
               <Image
@@ -144,31 +134,26 @@ export default function ServiceInfo({ onClose }: { onClose: () => void }) {
           </AnimatePresence>
         </div>
 
-        {/* 슬라이드 좌우 컨트롤 */}
         <button
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-500 px-4 py-2 text-3xl z-10"
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-500 text-3xl z-10"
           onClick={prevSlide}
         >
           <FaArrowCircleLeft />
         </button>
         <button
-          className="absolute right-4 top-1/2 transform -translate-y-1/2 text-blue-500 px-4 py-2 text-3xl z-10"
+          className="absolute right-4 top-1/2 transform -translate-y-1/2 text-blue-500 text-3xl z-10"
           onClick={nextSlide}
         >
           <FaArrowCircleRight />
         </button>
 
-        {/* "지금 시작하기" 버튼 */}
         <div className="absolute bottom-4 left-0 right-0 flex flex-col justify-center w-full px-4 pb-4 z-10 font-noto">
-          <div className="text-center pb-2">
+          <div className="text-center pb-2 text-sm md:text-base">
             지금 가입하면 무료 1000pt 지급!
           </div>
           <button
             className="text-black font-extrabold px-6 py-3 rounded-md shadow w-full bg-[#FEE500] transition"
-            onClick={() => {
-              console.log("지금 시작하기 버튼 클릭됨");
-              handleKakaoLogin();
-            }}
+            onClick={handleKakaoLogin}
           >
             지금 시작하기
           </button>

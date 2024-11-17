@@ -72,7 +72,7 @@ export default function Home() {
 
           {/* "Toudeuk?" 버튼 */}
           <div
-            className="typo-body text-gray-300 absolute bottom-[-40px] cursor-pointer hover:font-bold hover:text-black"
+            className="typo-body font-extrabold absolute bottom-[-40px] cursor-pointer hover:font-bold hover:text-black"
             onClick={handleClick}
           >
             Toudeuk?
