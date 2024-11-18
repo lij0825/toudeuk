@@ -33,7 +33,10 @@ export default function ServiceInfo({ onClose }: { onClose: () => void }) {
 
   const handleKakaoLogin = () => {
     console.log("카카오 로그인 버튼 클릭됨");
-    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/oauth2/authorization/kakao?redirect_uri=${process.env.NEXT_PUBLIC_BASE_URL}`;
+
+    // window.location.href = `http://toudeuk.kr:8080/oauth2/authorization/kakao?redirect_uri=https://toudeuk.kr`;
+    window.location.href = `http://toudeuk.kr:8080/oauth2/authorization/kakao?redirect_uri=https://toudeuk.kr`;
+    // window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/oauth2/authorization/kakao?redirect_uri=${process.env.NEXT_PUBLIC_BASE_URL}`;
   };
 
   const nextSlide = () => {
