@@ -2,15 +2,17 @@
 
 ## Index
 
-#### &emsp; [➤ 프로젝트 소개](#-프로젝트-소개)<br>
+#### &emsp; [➤ 프로젝트 소개](#프로젝트-소개)<br>
 
-#### &emsp; [➤ 프로젝트 설계](#-프로젝트-설계)<br>
+#### &emsp; [➤ 프로젝트 설계](#프로젝트-설계)<br>
 
-#### &emsp; [➤ 기능 소개](#-기능-소개)<br>
+#### &emsp; [➤ 기능 소개](#기능-소개)<br>
 
-#### &emsp; [➤ 백엔드 구축 과정](#-백엔드-구축-과정)<br>
+#### &emsp; [➤ 프론트엔드 구현 과정](#프론트엔드-구현-과정)<br>
 
-#### &emsp; [➤ 산출물](#-산출물)<br>
+#### &emsp; [➤ 백엔드 구축 과정](#백엔드-구축-과정)<br>
+
+#### &emsp; [➤ 산출물](#산출물)<br>
 
 <br>
 
@@ -109,7 +111,8 @@
 
   <h3>협업 툴</h3>
   <p>
-  <img alt='jira' src="https://img.shields.io/badge/Jira-0052CC?style=for-the-badge&logo=Jira&logoColor=white">
+  <a href="">
+  <img alt='notion' src="https://img.shields.io/badge/Jira-0052CC?style=for-the-badge&logo=Jira&logoColor=white">
   <a href="https://www.notion.so/C202-11f9285c91d880829416f709f4432732">
   <img alt='notion' src="https://img.shields.io/badge/Notion-black?style=for-the-badge&logo=Notion&logoColor=white">
   </a>
