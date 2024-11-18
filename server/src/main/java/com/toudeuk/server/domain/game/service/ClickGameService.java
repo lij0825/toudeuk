@@ -146,9 +146,10 @@ public class ClickGameService {
 		}
 
 		Integer totalClick = clickCacheRepository.addTotalClick();
-		if(totalClick > MAX_CLICK){
-			throw new BaseException(GAME_END);
-		}
+		// ! 테스트 용
+		// if(totalClick > MAX_CLICK){
+		// 	throw new BaseException(GAME_END);
+		// }
 
 		clickCacheRepository.updateUserCash(userId, CLICK_CASH);
 
@@ -160,8 +161,6 @@ public class ClickGameService {
 			clickCacheRepository.setUsername(userId, nickname);
 			userClick = clickCacheRepository.addUserClick(userId);
 		}
-
-
 
 		Integer userRank = clickCacheRepository.getUserRank(userId);
 		List<RankData.UserScore> rankingList = clickCacheRepository.getRankingList();
@@ -206,8 +205,6 @@ public class ClickGameService {
 
 		GameData.DisplayInfoForClicker displayInfoForClicker = GameData.DisplayInfoForClicker.getDisplayInfoForClickerAtRunning(
 			displayInfoForEvery, userRank, userClick, rewardType);
-
-
 
 		// ! 특정 구독자에게 메시지 전송 -> Http방식으로 변경
 		// messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
