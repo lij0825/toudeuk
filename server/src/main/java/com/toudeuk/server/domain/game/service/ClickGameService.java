@@ -120,18 +120,6 @@ public class ClickGameService {
 	@Transactional
 	public GameData.DisplayInfoForClicker click(Long userId) throws JsonProcessingException {
 
-		Integer userCash = clickCacheRepository.getUserCash(userId);
-		int result = userCash + CLICK_CASH;
-		// 돈없으면 끝
-		if (result < 0) {
-			throw new BaseException(NOT_ENOUGH_CASH);
-		}
-
-		Integer totalClick = clickCacheRepository.addTotalClick();
-		if(totalClick > MAX_CLICK){
-			throw new BaseException(GAME_END);
-		}
-
 		// 쿨타임이면?
 		if (clickCacheRepository.isGameCoolTime()) {
 
@@ -148,6 +136,18 @@ public class ClickGameService {
 			// messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
 
 			return displayInfoForClicker;
+		}
+
+		Integer userCash = clickCacheRepository.getUserCash(userId);
+		int result = userCash + CLICK_CASH;
+		// 돈없으면 끝
+		if (result < 0) {
+			throw new BaseException(NOT_ENOUGH_CASH);
+		}
+
+		Integer totalClick = clickCacheRepository.addTotalClick();
+		if(totalClick > MAX_CLICK){
+			throw new BaseException(GAME_END);
 		}
 
 		clickCacheRepository.updateUserCash(userId, CLICK_CASH);
