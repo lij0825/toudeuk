@@ -250,6 +250,7 @@ export default function EndGame({
           </motion.div>
         </AnimatePresence>
       </section>
+      <section className="p-1 flex-shrink-0 h-[62px]"></section>
     </div>
   );
 }
