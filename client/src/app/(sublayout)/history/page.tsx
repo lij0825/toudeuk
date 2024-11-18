@@ -134,6 +134,7 @@ export default function HistoryPage() {
           </Suspense>
         )}
       </section>
+      <section className="p-1 flex-shrink-0 h-[60px]"></section>
     </div>
   );
 }
