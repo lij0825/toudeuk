@@ -71,7 +71,7 @@ public class ClickGameCacheRepository {
 	public void setGameCoolTime() {
 		log.info("setGameCoolTime");
 		LocalDateTime expiredAt = LocalDateTime.now().plusSeconds(COOLTIME_SECOND);
-		valueOperations.set(GAME_COOLTIME_KEY, expiredAt.toString(), Duration.ofMinutes(COOLTIME_SECOND));
+		valueOperations.set(GAME_COOLTIME_KEY, expiredAt.toString(), Duration.ofSeconds(COOLTIME_SECOND));
 	}
 
 	public boolean isGameCoolTime() {
