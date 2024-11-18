@@ -147,9 +147,9 @@ public class ClickGameService {
 
 		Integer totalClick = clickCacheRepository.addTotalClick();
 		// ! 테스트 용
-		// if(totalClick > MAX_CLICK){
-		// 	throw new BaseException(GAME_END);
-		// }
+		if (totalClick > MAX_CLICK) {
+			throw new BaseException(GAME_END);
+		}
 
 		clickCacheRepository.updateUserCash(userId, CLICK_CASH);
 
