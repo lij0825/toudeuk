@@ -66,16 +66,16 @@ export default function PointList() {
   };
 
   return (
-    <div className="mx-auto w-full font-noto">
-      <h1 className="text-xl pt-4 font-bold mb-4">포인트 내역</h1>
+    <div className="mx-auto w-full h-screen flex flex-col font-noto">
+      <h1 className="flex flex-col text-xl pt-4 font-bold mb-4">포인트 내역</h1>
 
       {/* Filter buttons */}
-      <div className="mb-4 flex w-full overflow-hidden font-noto">
+      <div className="mb-4 flex-shrink-0 flex w-full overflow-hidden font-noto ">
         {["all", "CHARGING", "REWARD", "ITEM"].map((type) => (
           <button
             key={type}
             onClick={() => setFilter(type as typeof filter)}
-            className={`px-3 py-2 flex-1 border-b-2 ${
+            className={`w-full px-3 py-2 flex-1 border-b-2 ${
               filter === type
                 ? "text-black border-black font-bold"
                 : "text-gray-500 border-gray-300"
@@ -87,7 +87,7 @@ export default function PointList() {
       </div>
 
       {/* Point history list */}
-      <div className="max-h-[460px] overflow-y-auto flex-grow relative w-full scrollbar-hidden box-border">
+      <div className="flex-grow overflow-y-auto relative w-full box-border scrollbar-hidden">
         <ul className="space-y-4 w-full">
           {filteredHistory.length > 0 ? (
             filteredHistory.map((transaction) => {
@@ -120,6 +120,7 @@ export default function PointList() {
             </div>
           )}
         </ul>
+        <section className="p-1 flex-shrink-0 h-[62px]"></section>
       </div>
     </div>
   );

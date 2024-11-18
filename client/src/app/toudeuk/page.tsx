@@ -26,6 +26,7 @@ import {
 import SoundSettingsModal from "./components/SoundSetting";
 import { AudioPlayer } from "./components/AudioPlayer";
 import { useMusicControlStore } from "@/store/MusicControlStore";
+import { dummyData } from "@/constants/dummyReward";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
