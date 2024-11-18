@@ -27,18 +27,20 @@ export default function RecentHistoriesCarousel() {
     }
   }, [isError, error]);
 
+  const filteredHistories = recentHistories?.content.slice(1) || [];
+
   // 자동 넘기기
   useEffect(() => {
-    if (recentHistories?.content) {
+    if (filteredHistories.length > 0) {
       const interval = setInterval(() => {
         setCurrentIndex((prevIndex) =>
-          prevIndex === recentHistories.content.length - 1 ? 0 : prevIndex + 1
+          prevIndex === filteredHistories.length - 1 ? 0 : prevIndex + 1
         );
       }, 3000);
 
       return () => clearInterval(interval);
     }
-  }, [recentHistories?.content?.length, recentHistories?.content]);
+  }, [filteredHistories?.length]);
 
   if (isLoading) {
     return (
@@ -61,7 +63,7 @@ export default function RecentHistoriesCarousel() {
       </div>
     );
   }
-  if (!recentHistories?.content || recentHistories.content.length === 0) {
+  if (!filteredHistories || filteredHistories.length === 0) {
     return (
       <div
         className="carousel-card w-full font-noto bg-blue-300 rounded-lg flex flex-col items-center justify-center p-2"
@@ -126,17 +128,17 @@ export default function RecentHistoriesCarousel() {
 
   const nextItem = () => {
     setCurrentIndex((prevIndex) =>
-      prevIndex === recentHistories!.content.length - 1 ? 0 : prevIndex + 1
+      prevIndex === filteredHistories.length - 1 ? 0 : prevIndex + 1
     );
   };
 
   const prevItem = () => {
     setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? recentHistories!.content.length - 1 : prevIndex - 1
+      prevIndex === 0 ? filteredHistories.length - 1 : prevIndex - 1
     );
   };
 
-  const currentGame = recentHistories!.content[currentIndex];
+  const currentGame = filteredHistories[currentIndex];
 
   if (!currentGame) return null;
 
