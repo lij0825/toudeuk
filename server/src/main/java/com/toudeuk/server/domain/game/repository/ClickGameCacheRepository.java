@@ -40,7 +40,9 @@ public class ClickGameCacheRepository {
 	private static final String FIRST_CLICKER = "first_clicker";
 
 	private static final long MAX_CLICK = 1000; // 12000
-	private static final long COOLTIME_MINUTES = 1; // 5분
+	// private static final long COOLTIME_MINUTES = 1; // 5분
+
+	private static final long COOLTIME_SECOND = 20; // 20초
 
 	@Resource(name = "redisTemplate")
 	private ZSetOperations<String, Object> zSetOperations;
@@ -68,8 +70,8 @@ public class ClickGameCacheRepository {
 
 	public void setGameCoolTime() {
 		log.info("setGameCoolTime");
-		LocalDateTime expiredAt = LocalDateTime.now().plusMinutes(COOLTIME_MINUTES);
-		valueOperations.set(GAME_COOLTIME_KEY, expiredAt.toString(), Duration.ofMinutes(COOLTIME_MINUTES));
+		LocalDateTime expiredAt = LocalDateTime.now().plusSeconds(COOLTIME_SECOND);
+		valueOperations.set(GAME_COOLTIME_KEY, expiredAt.toString(), Duration.ofMinutes(COOLTIME_SECOND));
 	}
 
 	public boolean isGameCoolTime() {
