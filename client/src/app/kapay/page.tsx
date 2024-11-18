@@ -133,6 +133,8 @@ const KapayPage = () => {
             결제 준비 중 오류가 발생했습니다.
           </p>
         )}
+
+        <section className="p-1 flex-shrink-0 h-[62px]"></section>
       </div>
     </div>
   );

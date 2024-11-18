@@ -34,7 +34,6 @@ export const useMusicControlStore = create<MusicControlState>()(
       wasPlayingBeforeMute: false, // 새로 추가
 
       setBgmVolume: (volume: number) => {
-        console.log("Setting BGM volume:", volume);
         set({ bgmVolume: volume });
         // 볼륨 변경 시 오디오 엘리먼트 볼륨도 업데이트
         const audioElement = document.getElementById(
@@ -46,20 +45,12 @@ export const useMusicControlStore = create<MusicControlState>()(
       },
 
       setSfxVolume: (volume: number) => {
-        console.log("Setting SFX volume:", volume);
         set({ sfxVolume: volume });
       },
 
       toggleMute: () =>
         set((state) => {
           const isNowMuted = !state.isMuted;
-
-          console.log("toggleMute - Before:", {
-            isMuted: state.isMuted,
-            isBgmMuted: state.isBgmMuted,
-            isPlaying: state.isPlaying,
-            bgmVolume: state.bgmVolume,
-          });
 
           if (isNowMuted) {
             // 음소거 활성화 시
@@ -164,7 +155,6 @@ export const useMusicControlStore = create<MusicControlState>()(
         });
 
         if (state.isMuted || state.isBgmMuted) {
-          console.log("Cannot play BGM while muted");
           return;
         }
 
@@ -182,27 +172,22 @@ export const useMusicControlStore = create<MusicControlState>()(
         }
 
         audioElement.volume = state.bgmVolume / 100;
-        console.log("Setting audio volume to:", audioElement.volume);
 
         if (!audioElement.paused) {
-          console.log("BGM already playing");
           return;
         }
 
         audioElement
           .play()
           .then(() => {
-            console.log("BGM started playing successfully");
             set({ isPlaying: true });
           })
           .catch((err) => {
-            console.error("Failed to play BGM:", err);
             set({ isPlaying: false });
           });
       },
 
       stopBgm: () => {
-        console.log("Stopping BGM");
         const audioElement = document.getElementById(
           "audioPlayer"
         ) as HTMLAudioElement;
@@ -216,7 +201,6 @@ export const useMusicControlStore = create<MusicControlState>()(
       },
 
       setIsPlaying: (playing: boolean) => {
-        console.log("Setting isPlaying:", playing);
         set({ isPlaying: playing });
       },
     }),
