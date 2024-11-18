@@ -89,10 +89,9 @@ public class ClickGameCacheRepository {
 	}
 
 	public Integer addTotalClick() {
-		Long totalClick = ((Number)valueOperations.increment(CLICK_TOTAL_KEY)).longValue();
-		return totalClick.intValue();
+		return ((Number)valueOperations.increment(CLICK_TOTAL_KEY)).intValue();
 	}
-
+	
 	public Integer getTotalClick() {
 		return ((Number)valueOperations.get(CLICK_TOTAL_KEY)).intValue();
 	}
