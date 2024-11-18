@@ -35,36 +35,31 @@ export default function HistoryList() {
 
   console.log("현재 위치", scrollPos);
 
-  const {
-    data,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isError,
-  } = useInfiniteQuery({
-    queryKey: [queryKey],
-    queryFn: ({ pageParam }) =>
-      fetchHistories({
-        page: pageParam as number,
-        size,
-        sort: SortType.DEFAULT,
-      }),
-    initialPageParam: 0,
-    getNextPageParam: (lastPage: HistoriesInfo) => {
-      const currentPage = lastPage.page.number;
-      const totalPages = lastPage.page.totalPages;
+  const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage, isError } = useInfiniteQuery(
+    {
+      queryKey: [queryKey],
+      queryFn: ({ pageParam }) =>
+        fetchHistories({
+          page: pageParam as number,
+          size,
+          sort: SortType.DEFAULT,
+        }),
+      initialPageParam: 0,
+      getNextPageParam: (lastPage: HistoriesInfo) => {
+        const currentPage = lastPage.page.number;
+        const totalPages = lastPage.page.totalPages;
 
-      // 0-based 인덱스일 경우, totalPages - 1과 비교
-      return currentPage < totalPages - 1 ? currentPage + 1 : undefined;
-    },
-  });
+        // 0-based 인덱스일 경우, totalPages - 1과 비교
+        return currentPage < totalPages - 1 ? currentPage + 1 : undefined;
+      },
+    }
+  );
 
   if (isError) {
     toast.error(`에러가 발생했습니다: ${(error as Error).message}`);
   }
 
-  const contents = data?.pages.flatMap((page) => page.content) || [];
+  const contents = data?.pages.flatMap((page) => page.content).slice(1) || [];
   // !옵저버 분리하기..
   const observerRef = useRef<HTMLDivElement | null>(null);
 
@@ -142,9 +137,7 @@ export default function HistoryList() {
           </div>
         </section>
       )}
-      {isFetchingNextPage && (
-        <div className="text-center text-gray-500">로딩 중...</div>
-      )}
+      {isFetchingNextPage && <div className="text-center text-gray-500">로딩 중...</div>}
     </div>
   );
 }
