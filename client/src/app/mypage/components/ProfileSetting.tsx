@@ -142,8 +142,6 @@ function SettingModal({ isOpen, handleModalOpen }: ModalProps) {
       formData.append("profileImage", profileImage);
     }
 
-    console.log("요청보내는 data ", formData);
-
     mutation.mutate(formData);
     setIsEditing(false);
     handleModalOpen();
