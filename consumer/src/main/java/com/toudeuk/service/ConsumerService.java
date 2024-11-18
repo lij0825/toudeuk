@@ -46,9 +46,11 @@ public class ConsumerService {
 			// 첫번째 보상
 			if (clickDto.getRewardType().equals(RewardType.FIRST)) {
 				toudeukDao.insertRewardLog(conn, clickDto.getUserId(), clickDto.getGameId(), 500, clickDto.getTotalClickCount(), RewardType.FIRST.toString());
+				toudeukDao.insertCashLog(conn, clickDto.getUserId(), 500, 0, "첫번째 보상", CashLogType.REWARD.toString());
 			} else {
 				// 나머지 보상 마지막 또는 중간중간 보상 어차피 계산값 동일
 				toudeukDao.insertRewardLog(conn, clickDto.getUserId(), clickDto.getGameId(), clickDto.getTotalClickCount() / 2, clickDto.getTotalClickCount(), clickDto.getRewardType().toString());
+				toudeukDao.insertCashLog(conn, clickDto.getUserId(), clickDto.getTotalClickCount() / 2, 0, "첫번째 보상", CashLogType.REWARD.toString());
 			}
 		});
 	}
