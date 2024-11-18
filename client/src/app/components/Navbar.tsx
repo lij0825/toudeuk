@@ -14,19 +14,8 @@ const LottieAnimation = dynamic(
 
 export default function Navbar() {
   const pathname = usePathname();
-  const [isVisible, setIsVisible] = useState(false);
-  const navRef = useRef<HTMLDivElement | null>(null);
-  const buttonRef = useRef<HTMLButtonElement | null>(null);
 
-  const isFixedVisible = /^(\/mygifticon\/.+|\/gifticon\/.+|\/toudeuk)$/.test(
-    pathname || ""
-  );
-
-  useEffect(() => {
-    if (isFixedVisible) {
-      setIsVisible(true);
-    }
-  }, [isFixedVisible]);
+  
 
   const buttonPositionClasses =
     pathname === ROUTE_URL.GAME
@@ -37,42 +26,12 @@ export default function Navbar() {
     pathname === ROUTE_URL.GAME ? "bg-white" : "bg-gray-800"
   }`;
 
-  const navClasses = `pb-4 font-noto absolute bottom-0 inset-x-0 w-full mx-auto flex gap-10 items-end justify-center border-t border-gray-200 gap-1 shadow-xl transition-transform transition-opacity duration-300 ${
-    isVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
-  } ${
-    pathname === ROUTE_URL.GAME
+  const navClasses = `pb-4  text-gray-800 font-noto absolute bottom-0 inset-x-0 w-full mx-auto flex gap-10 items-end justify-center border-t border-gray-200 gap-1 shadow-xl"
+    ${ pathname === ROUTE_URL.GAME
       ? "bg-gradient-to-b from-[rgba(180,185,200,0.4)] via-[rgba(99, 83, 80, 0.35)] to-[rgba(140,140,140,0.3)] backdrop-blur-md text-white border-white/20"
-      : "bg-white text-gray-800"
-  }`;
+      : "bg-white text-gray-800" }`;
+    
 
-  const toggleNavbar = () => {
-    if (!isFixedVisible) {
-      setIsVisible((prev) => !prev);
-    }
-  };
-
-  const handleClickOutside = useCallback(
-    (event: MouseEvent) => {
-      if (
-        navRef.current &&
-        !navRef.current.contains(event.target as Node) &&
-        buttonRef.current &&
-        !buttonRef.current.contains(event.target as Node)
-      ) {
-        if (!isFixedVisible) {
-          setIsVisible(false);
-        }
-      }
-    },
-    [isFixedVisible]
-  );
-
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [handleClickOutside]);
 
   if (pathname === ROUTE_URL.HOME || pathname === ROUTE_URL.LOGIN_LOADING) {
     return null;
@@ -80,28 +39,8 @@ export default function Navbar() {
 
   return (
     <>
-      <button
-        onClick={toggleNavbar}
-        ref={buttonRef}
-        className={`absolute bottom-4 p-3 rounded-xl z-50 transition-opacity duration-300 ${buttonPositionClasses} ${
-          isVisible ? "hidden" : "block"
-        }`}
-        style={{
-          boxShadow:
-            pathname === ROUTE_URL.GAME
-              ? "0px 4px 12px rgba(0, 0, 0, 0.3)"
-              : "0px 4px 12px rgba(0, 0, 0, 0.15)",
-        }}
-      >
-        <div className="flex flex-col justify-between h-5">
-          <span className={hamburgerLineClasses}></span>
-          <span className={hamburgerLineClasses}></span>
-          <span className={hamburgerLineClasses}></span>
-        </div>
-      </button>
 
       <nav
-        ref={navRef}
         className={navClasses}
         style={{ willChange: "transform, opacity", zIndex: 122 }}
       >

@@ -27,7 +27,7 @@ export default function MyPoint() {
 
   return (
     <div className="flex flex-col items-center justify-center font-noto">
-      <div className="p-4 rounded-xl w-full bg-primary">
+      <div className="p-6 rounded-xl w-full bg-primary">
         <div className="flex items-center mb-6">
           <h2 className="text-lg text-white font-bold">내 포인트</h2>
           <button onClick={handleInfoClick} className="ml-2">
