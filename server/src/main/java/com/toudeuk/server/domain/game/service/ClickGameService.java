@@ -139,11 +139,15 @@ public class ClickGameService {
 		}
 
 		Integer userCash = clickCacheRepository.getUserCash(userId);
-
 		int result = userCash + CLICK_CASH;
 		// 돈없으면 끝
 		if (result < 0) {
 			throw new BaseException(NOT_ENOUGH_CASH);
+		}
+
+		Integer totalClick = clickCacheRepository.addTotalClick();
+		if(totalClick > MAX_CLICK){
+			throw new BaseException(GAME_END);
 		}
 
 		clickCacheRepository.updateUserCash(userId, CLICK_CASH);
@@ -157,10 +161,7 @@ public class ClickGameService {
 			userClick = clickCacheRepository.addUserClick(userId);
 		}
 
-		Integer totalClick = clickCacheRepository.addTotalClick();
-//		if(totalClick > MAX_CLICK){
-//			throw new BaseException(GAME_END);
-//		}
+
 
 		Integer userRank = clickCacheRepository.getUserRank(userId);
 		List<RankData.UserScore> rankingList = clickCacheRepository.getRankingList();
