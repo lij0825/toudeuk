@@ -118,7 +118,6 @@
   </a>
   </p>
 
-
 <br>
 
 <br>
@@ -134,6 +133,7 @@
   3. 적립한 포인트를 통해 다양한 기프티콘을 구매 -->
 
 - ### **1.&nbsp; 클릭 게임**
+
   <p style='font-size:16px; font-weight:bold;'>1.1 게임 몰입감 강화 요소</p>
   <p style='font-size:16px;'>&emsp;1.1.1 당첨 이펙트</p>
   <p style='font-size:16px;'>&emsp; 당첨자에게 이펙트 효과를 제공함으로써 흥미와 만족감을 느끼게 하고 보상 심리 강화를 통해 게임에 대한 지속적인 참여를 유도했습니다.</p>
@@ -186,20 +186,25 @@
   <img alt='func3.1' src='./README-IMG/UI/5.2mygiftfilter2.jpg' height=300px>
   <img alt='func3.1' src='./README-IMG/UI/5.2mygift.jpg' height=300px>
 
-<br><br><br> 
+<br><br><br>
 
 # 프론트엔드 구현 과정
+
 ### **1.&nbsp; 애니메이션 및 제스쳐**
+
   <p style='font-size:16px;'>&emsp; Framer Motion 사용하여 애니메이션 및 제스쳐를 구현했습니다.</p>
 
 ### **2.&nbsp; Music Contol**
+
   <p style='font-size:16px;'>&emsp; Zustand를 활용하여 배경음, 버튼 클릭음 전역상태 관리 하여 musicContol 기능을 구현했습니다.</p>
 
 ### **3.&nbsp; 캐싱 처리**
+
   <p style='font-size:16px;'>&emsp; react-query를 활용하여 서버 데이터의 캐싱을 처리하고, API 호출 횟수를 최소화하여 성능을 최적화하였습니다.</p>
   <p style='font-size:16px;'>&emsp; 데이터를 효율적으로 관리함으로써 클라이언트와 서버 간 통신 비용을 감소시켰습니다.</p>
 
 ### **4.&nbsp; Next image 최적화**
+
   <p style='font-size:16px;'>&emsp; 각 페이지의 LCP(Large Contentful Paint) 요소로 판단되는 주요 이미지에 priority 속성을 적용하였습니다.</p>
   <p style='font-size:16px;'>&emsp; 이미지 로딩 속도 최적화를 통해 사용자 경험 및 SEO 성능을 개선하였습니다.</p>
   <img src="./README-IMG/frontend_image.png" width=500px style="padding-left: 20px;">
@@ -300,18 +305,16 @@ MTT : 253.95 ms
 
 <img src="./README-IMG/ngrinder_test/Redis + 내부 Kafka_MTT.png">
 
-
 <br><br>
 
 # 산출물
 
 #### [⚙️ Architecture](./README-IMG/Architecture.png)
 
-#### [⚙️ ERD](./README_IMG/ERD.png)
+#### [⚙️ ERD](./README-IMG/ERD.png)
 
 #### [📑 요구사항 명세서](https://www.notion.so/11f9285c91d881988b8df4d7152b1611)
 
 #### [📑 API 명세서](./README-IMG/API_DOCS.pdf)
 
 <br><br>
-
