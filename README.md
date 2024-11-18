@@ -2,15 +2,17 @@
 
 ## Index
 
-#### &emsp; [➤ 프로젝트 소개](#-프로젝트-소개)<br>
+#### &emsp; [➤ 프로젝트 소개](#프로젝트-소개)<br>
 
-#### &emsp; [➤ 프로젝트 설계](#-프로젝트-설계)<br>
+#### &emsp; [➤ 프로젝트 설계](#프로젝트-설계)<br>
 
-#### &emsp; [➤ 기능 소개](#-기능-소개)<br>
+#### &emsp; [➤ 기능 소개](#기능-소개)<br>
 
-#### &emsp; [➤ 백엔드 구축 과정](#-백엔드-구축-과정)<br>
+#### &emsp; [➤ 프론트엔드 구현 과정](#프론트엔드-구현-과정)<br>
 
-#### &emsp; [➤ 산출물](#-산출물)<br>
+#### &emsp; [➤ 백엔드 구축 과정](#백엔드-구축-과정)<br>
+
+#### &emsp; [➤ 산출물](#산출물)<br>
 
 <br>
 
@@ -60,7 +62,7 @@
 
 - ## 개발 환경
 
-  FE: Next.js 14.2, TypeScript, Zustand
+  FE: Next.js 14.2, TypeScript, Zustand  
   BE: Java 17, SpringBoot 3.3.3, Apache Kafka  
   DB: Redis 7.4 MySQL 8.0  
   Infra: Ubuntu 20.04, Docker
@@ -103,19 +105,19 @@
   </p>
 
     <h3>ETC</h3>
-  <p>
-  <img alt="ngrinder"src="https://img.shields.io/badge/socket-blue?style=for-the-badge&logo=socket.io&logoColor=white">
-  <img alt="grafana"src="https://img.shields.io/badge/stomp-orange?style=for-the-badge&logo=stomp&logoColor=white">
-  <img src="https://img.shields.io/badge/socket-010101?style=for-the-badge&logo=socket.io&logoColor=white">
+  <img alt="WebSocket"src="https://img.shields.io/badge/Socket-black?style=for-the-badge&logo=socketdotio&logoColor=white">
+  <img alt="STOMP"src="https://img.shields.io/badge/stomp-black?style=for-the-badge&logo=StopStalk&logoColor=white">
   </p>
 
   <h3>협업 툴</h3>
   <p>
-  <img alt='jira' src="https://img.shields.io/badge/Jira-0052CC?style=for-the-badge&logo=Jira&logoColor=white">
+  <a href="">
+  <img alt='notion' src="https://img.shields.io/badge/Jira-0052CC?style=for-the-badge&logo=Jira&logoColor=white">
   <a href="https://www.notion.so/C202-11f9285c91d880829416f709f4432732">
   <img alt='notion' src="https://img.shields.io/badge/Notion-black?style=for-the-badge&logo=Notion&logoColor=white">
   </a>
   </p>
+
 
 <br>
 
@@ -132,10 +134,9 @@
   3. 적립한 포인트를 통해 다양한 기프티콘을 구매 -->
 
 - ### **1.&nbsp; 클릭 게임**
-
   <p style='font-size:16px; font-weight:bold;'>1.1 게임 몰입감 강화 요소</p>
   <p style='font-size:16px;'>&emsp;1.1.1 당첨 이펙트</p>
-  <p style='font-size:16px;'>&emsp; 당첨자에게 이펙트 효과를 제공함으로써 흥미와 만족감을 느끼게 하고 보상 심리 강화를 통해 게임에 대한 지속적인 참여를 유도합니다.</p>
+  <p style='font-size:16px;'>&emsp; 당첨자에게 이펙트 효과를 제공함으로써 흥미와 만족감을 느끼게 하고 보상 심리 강화를 통해 게임에 대한 지속적인 참여를 유도했습니다.</p>
   <img alt='func1.1.1' src='./README-IMG/UI/2.3.gamereward.jpg' height=300px style="padding-left: 20px;">
   <img alt='func1.1.1' src='./README-IMG/UI/2.4.gamereward.jpg' height=300px>
   <br><br>
@@ -145,8 +146,8 @@
   <img alt='func1.1.2' src='./README-IMG/UI/2.1.gamepage.jpg' height=300px style="padding-left: 20px;">
   <br><br>
 
-  <p style='font-size:16px; '>&emsp;1.1.3 배경음과 클릭 효과음</p>
-  <p style='font-size:16px;'>&emsp; 클릭 효과음을 통해 몰입감을 높이고, 독창적인 배경음을 활용하여 사용자가 게임을 기억하게 함으로써 브랜드 아이덴티티를 강화합니다.</p>
+  <p style='font-size:16px; '>&emsp;1.1.3 배경음과 버튼 클릭음</p>
+  <p style='font-size:16px;'>&emsp; 버튼 클릭음을 통해 몰입감을 높이고, 독창적인 배경음을 활용하여 사용자가 게임을 기억하게 함으로써 브랜드 아이덴티티를 강화합니다.</p>
   <img alt='func1.1.3' src='./README-IMG/UI/2.2.gamepage.jpg' height=300px style="padding-left: 20px;">
   <br><br>
 
@@ -185,9 +186,28 @@
   <img alt='func3.1' src='./README-IMG/UI/5.2mygiftfilter2.jpg' height=300px>
   <img alt='func3.1' src='./README-IMG/UI/5.2mygift.jpg' height=300px>
 
-<br><br><br> <br><br>
+<br><br><br> 
 
-# 🖱️ 백엔드 구축 과정 및 성능 테스트
+# 프론트엔드 구현 과정
+### **1.&nbsp; 애니메이션 및 제스쳐**
+  <p style='font-size:16px;'>&emsp; Framer Motion 사용하여 애니메이션 및 제스쳐를 구현했습니다.</p>
+
+### **2.&nbsp; Music Contol**
+  <p style='font-size:16px;'>&emsp; Zustand를 활용하여 배경음, 버튼 클릭음 전역상태 관리 하여 musicContol 기능을 구현했습니다.</p>
+
+### **3.&nbsp; 캐싱 처리**
+  <p style='font-size:16px;'>&emsp; react-query를 활용하여 서버 데이터의 캐싱을 처리하고, API 호출 횟수를 최소화하여 성능을 최적화하였습니다.</p>
+  <p style='font-size:16px;'>&emsp; 데이터를 효율적으로 관리함으로써 클라이언트와 서버 간 통신 비용을 감소시켰습니다.</p>
+
+### **4.&nbsp; Next image 최적화**
+  <p style='font-size:16px;'>&emsp; 각 페이지의 LCP(Large Contentful Paint) 요소로 판단되는 주요 이미지에 priority 속성을 적용하였습니다.</p>
+  <p style='font-size:16px;'>&emsp; 이미지 로딩 속도 최적화를 통해 사용자 경험 및 SEO 성능을 개선하였습니다.</p>
+  <img src="./README-IMG/frontend_image.png" width=500px style="padding-left: 20px;">
+  
+### **5.&nbsp; pwa 환경에서 드래그 구현**
+  <p style='font-size:16px;'>&emsp; MouseEvent와 TouchEvent를 활용하여 데스크톱과 모바일에서 모두 호환되는 드래그 기능을 구현하였습니다.</p>
+
+# 백엔드 구축 과정 및 성능 테스트
 
 ## 테스트 조건
 
@@ -279,3 +299,19 @@ MTT : 253.95 ms
 ### MTT
 
 <img src="./README-IMG/ngrinder_test/Redis + 내부 Kafka_MTT.png">
+
+
+<br><br>
+
+# 산출물
+
+#### [⚙️ Architecture](./README-IMG/Architecture.png)
+
+#### [⚙️ ERD](./README_IMG/ERD.png)
+
+#### [📑 요구사항 명세서](https://www.notion.so/11f9285c91d881988b8df4d7152b1611)
+
+#### [📑 API 명세서](./README-IMG/API_DOCS.pdf)
+
+<br><br>
+
