@@ -15,6 +15,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import com.toudeuk.server.core.annotation.CurrentUser;
 import com.toudeuk.server.core.exception.BaseException;
 import com.toudeuk.server.core.response.SuccessResponse;
+import com.toudeuk.server.domain.item.service.ItemService;
 import com.toudeuk.server.domain.kapay.dto.ReadyResponse;
 import com.toudeuk.server.domain.kapay.service.KapayService;
 import com.toudeuk.server.domain.user.entity.User;
@@ -36,6 +37,7 @@ public class KapayController {
 
 	private final KapayService kapayService;
 	private final UserRepository userRepository;
+	private final ItemService itemService;
 
 	@GetMapping("/ready/{agent}/{openType}")
 	public SuccessResponse<String> ready(
@@ -53,6 +55,42 @@ public class KapayController {
 		String redirectUrl = getRedirectUrl(agent, openType, readyResponse);
 
 		return SuccessResponse.of(redirectUrl);
+	}
+
+	@GetMapping("/approve/{agent}/{openType}")
+	public RedirectView approve(
+		@PathVariable String agent,
+		@PathVariable String openType,
+		@RequestParam("pg_token") String pgToken,
+		@RequestParam(value = "partnerOrderId", required = false) String partnerOrderId // 선택적 파라미터
+	) {
+		ResponseEntity<?> approveResponseEntity = kapayService.approve(pgToken);
+
+		if (approveResponseEntity.getStatusCode() == HttpStatus.OK) {
+			// partnerOrderId가 있으면 아이템 구매 처리
+			if (partnerOrderId != null && !partnerOrderId.isEmpty()) {
+				try {
+					// userId_itemId_timestamp 형식에서 필요한 정보 추출
+					String[] parts = partnerOrderId.split("_");
+					if (parts.length >= 2) {
+						Long userId = Long.parseLong(parts[0]);
+						Long itemId = Long.parseLong(parts[1]);
+
+						// 아이템 지급
+						itemService.giveItemAfterPayment(userId, itemId);
+						log.info("아이템 결제 완료: userId={}, itemId={}", userId, itemId);
+					}
+				} catch (Exception e) {
+					log.error("아이템 지급 중 오류 발생: {}", e.getMessage(), e);
+				}
+			} else {
+				log.info("캐시 충전 완료");
+			}
+
+			return new RedirectView(baseUrl + "/kapay/approve");
+		} else {
+			return new RedirectView(baseUrl + "/kapay/fail");
+		}
 	}
 
 	@GetMapping("/approve/{agent}/{openType}")
@@ -91,7 +129,7 @@ public class KapayController {
 		return new RedirectView(baseUrl + "/kapay/fail");
 	}
 
-	private String getRedirectUrl(String agent, String openType, ReadyResponse readyResponse) {
+	public static String getRedirectUrl(String agent, String openType, ReadyResponse readyResponse) {
 		switch (agent) {
 			case "mobile":
 				return readyResponse.getNext_redirect_mobile_url();

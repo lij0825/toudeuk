@@ -92,6 +92,49 @@ public class KapayService {
 		return response.getBody();
 	}
 
+	/**
+	 * 아이템 구매용 카카오페이 결제 준비 메소드
+	 */
+	public ReadyResponse readyForItem(User user, String agent, String openType, String itemName, Integer totalAmount, Long itemId) {
+	    this.user = user;
+
+	    // 아이템 구매용 파트너 주문 ID 형식: userId_itemId_timestamp
+	    String partnerOrderId = user.getId() + "_" + itemId + "_" + System.currentTimeMillis();
+	    String partnerUserId = String.valueOf(user.getId());
+
+	    // 요청 헤더 설정
+	    HttpHeaders headers = new HttpHeaders();
+	    headers.add("Authorization", "DEV_SECRET_KEY " + kakaopaySecretKey);
+	    headers.setContentType(MediaType.APPLICATION_JSON);
+
+	    // 요청 파라미터 설정 - 아이템 구매용 URL에는 partnerOrderId 추가
+	    ReadyRequest readyRequest = ReadyRequest.builder()
+	        .cid(cid)
+	        .partnerOrderId(partnerOrderId)
+	        .partnerUserId(partnerUserId)
+	        .itemName(itemName)
+	        .quantity(1)
+	        .totalAmount(totalAmount)
+	        .taxFreeAmount(0)
+	        .vatAmount(100)
+	        .approvalUrl(sampleHost + "/api/v1/kapay/approve/" + agent + "/" + openType + "?partnerOrderId=" + partnerOrderId)
+	        .cancelUrl(sampleHost + "/api/v1/kapay/cancel/" + agent + "/" + openType)
+	        .failUrl(sampleHost + "/api/v1/kapay/fail/" + agent + "/" + openType)
+	        .build();
+
+	    // 요청 전송
+	    HttpEntity<ReadyRequest> entityMap = new HttpEntity<>(readyRequest, headers);
+	    ResponseEntity<ReadyResponse> response = new RestTemplate().postForEntity(
+	        "https://open-api.kakaopay.com/online/v1/payment/ready",
+	        entityMap,
+	        ReadyResponse.class
+	    );
+
+	    // TID 저장 (승인 요청 시 사용)
+	    this.tid = response.getBody().getTid();
+	    return response.getBody();
+	}
+
 	@Transactional
 	public ResponseEntity<?> approve(String pgToken) {
 		try {

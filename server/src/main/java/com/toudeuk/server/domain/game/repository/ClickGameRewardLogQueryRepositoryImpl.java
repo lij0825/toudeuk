@@ -32,72 +32,66 @@ public class ClickGameRewardLogQueryRepositoryImpl implements ClickGameRewardLog
 
 	private Optional<HistoryData.RewardUser> getRewardUser(Long clickGameId, RewardType rewardType) {
 		HistoryData.RewardUser rewardUser = queryFactory
-			.select(Projections.fields(
-				HistoryData.RewardUser.class,
-				clickGameRewardLog.user.name.as("nickname"),
-				clickGameRewardLog.user.profileImg.as("profileImg"),
-				clickGameRewardLog.clickCount
-			))
-			.from(clickGameRewardLog)
-			.where(clickGameRewardLog.clickGame.id.eq(clickGameId)
-				.and(clickGameRewardLog.rewardType.eq(rewardType))
-			)
-			.fetchOne();
+				.select(Projections.fields(
+						HistoryData.RewardUser.class,
+						clickGameRewardLog.user.name.as("nickname"),
+						clickGameRewardLog.user.profileImg.as("profileImg"),
+						clickGameRewardLog.clickCount))
+				.from(clickGameRewardLog)
+				.where(clickGameRewardLog.clickGame.id.eq(clickGameId)
+						.and(clickGameRewardLog.rewardType.eq(rewardType)))
+				.fetchOne();
 
 		return Optional.ofNullable(rewardUser);
 	}
 
 	@Override
 	public Optional<HistoryData.WinnerAndMaxClickerAndFirstClickerData> findWinnerAndMaxClickerByClickGameId(
-		Long clickGameId) {
+			Long clickGameId) {
 
 		List<HistoryData.RewardUser> winnerAndMaxClickerAndFirstClicker = queryFactory
-			.select(Projections.fields(
-				HistoryData.RewardUser.class,
-				clickGameRewardLog.user.name.as("nickname"),
-				clickGameRewardLog.user.profileImg.as("profileImg"),
-				clickGameRewardLog.clickCount.as("clickCount"),
-				clickGameRewardLog.rewardType.as("rewardType") // rewardType 추가
-			))
-			.from(clickGameRewardLog)
-			.where(clickGameRewardLog.clickGame.id.eq(clickGameId))
-			.where(clickGameRewardLog.rewardType.eq(WINNER)
-				.or(clickGameRewardLog.rewardType.eq(MAX_CLICKER))
-				.or(clickGameRewardLog.rewardType.eq(FIRST))
-			)
-			.fetch();
+				.select(Projections.fields(
+						HistoryData.RewardUser.class,
+						clickGameRewardLog.user.name.as("nickname"),
+						clickGameRewardLog.user.profileImg.as("profileImg"),
+						clickGameRewardLog.clickCount.as("clickCount"),
+						clickGameRewardLog.rewardType.as("rewardType") // rewardType 추가
+				))
+				.from(clickGameRewardLog)
+				.where(clickGameRewardLog.clickGame.id.eq(clickGameId))
+				.where(clickGameRewardLog.rewardType.eq(WINNER)
+						.or(clickGameRewardLog.rewardType.eq(MAX_CLICKER))
+						.or(clickGameRewardLog.rewardType.eq(FIRST)))
+				.fetch();
 
 		return Optional.of(HistoryData.WinnerAndMaxClickerAndFirstClickerData.of(
-			winnerAndMaxClickerAndFirstClicker.stream()
-				.filter(rewardUser -> rewardUser.getRewardType().equals(WINNER))
-				.findFirst()
-				.orElse(null),
-			winnerAndMaxClickerAndFirstClicker.stream()
-				.filter(rewardUser -> rewardUser.getRewardType().equals(MAX_CLICKER))
-				.findFirst()
-				.orElse(null),
-			winnerAndMaxClickerAndFirstClicker.stream()
-				.filter(rewardUser -> rewardUser.getRewardType().equals(FIRST))
-				.findFirst()
-				.orElse(null)
-		));
+				winnerAndMaxClickerAndFirstClicker.stream()
+						.filter(rewardUser -> rewardUser.getRewardType().equals(WINNER))
+						.findFirst()
+						.orElse(null),
+				winnerAndMaxClickerAndFirstClicker.stream()
+						.filter(rewardUser -> rewardUser.getRewardType().equals(MAX_CLICKER))
+						.findFirst()
+						.orElse(null),
+				winnerAndMaxClickerAndFirstClicker.stream()
+						.filter(rewardUser -> rewardUser.getRewardType().equals(FIRST))
+						.findFirst()
+						.orElse(null)));
 	}
 
 	@Override
 	public Optional<List<HistoryData.RewardUser>> findMiddleByClickGameId(Long clickGameId) {
 		return Optional.ofNullable(queryFactory
-			.select(Projections.fields(
-				HistoryData.RewardUser.class,
-				clickGameRewardLog.user.name.as("nickname"),
-				clickGameRewardLog.user.profileImg.as("profileImg"),
-				clickGameRewardLog.clickCount.as("clickCount"),
-				clickGameRewardLog.rewardType.as("rewardType")
-			))
-			.from(clickGameRewardLog)
-			.where(clickGameRewardLog.clickGame.id.eq(clickGameId)
-				.and(clickGameRewardLog.rewardType.eq(SECTION))
-			)
-			.fetch());
+				.select(Projections.fields(
+						HistoryData.RewardUser.class,
+						clickGameRewardLog.user.name.as("nickname"),
+						clickGameRewardLog.user.profileImg.as("profileImg"),
+						clickGameRewardLog.clickCount.as("clickCount"),
+						clickGameRewardLog.rewardType.as("rewardType")))
+				.from(clickGameRewardLog)
+				.where(clickGameRewardLog.clickGame.id.eq(clickGameId)
+						.and(clickGameRewardLog.rewardType.eq(SECTION)))
+				.fetch());
 	}
 
 }

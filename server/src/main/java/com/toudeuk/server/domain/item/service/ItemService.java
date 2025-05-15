@@ -13,6 +13,8 @@ import com.toudeuk.server.core.kafka.dto.KafkaItemBuyDto;
 import com.toudeuk.server.domain.game.dto.HistoryData;
 import com.toudeuk.server.domain.game.entity.ClickGame;
 import com.toudeuk.server.domain.game.repository.ClickGameCacheRepository;
+import com.toudeuk.server.domain.kapay.dto.ReadyResponse;
+import com.toudeuk.server.domain.kapay.service.KapayService;
 import com.toudeuk.server.domain.user.dto.UserItemData;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -47,6 +49,7 @@ public class ItemService {
 	private final UserRepository userRepository;
 	private final ClickGameCacheRepository clickGameCacheRepository;
 	private final Producer producer;
+	private final KapayService kapayService;
 
 
 	public List<ItemData.ItemInfo> getItemList() {
@@ -136,5 +139,24 @@ public class ItemService {
 		applicationEventPublisher.publishEvent(
 			new CashLogEvent(user, kafkaItemBuyDto.getChangeCash(), kafkaItemBuyDto.getResultCash(), item.getName(),
 				CashLogType.ITEM));
+	}
+
+	@Transactional
+	public ReadyResponse buyItemCash(User user, String agent, String openType, String itemName, Integer totalAmount, Long itemId) {
+		// 아이템 구매용 메서드 호출
+		return kapayService.readyForItem(user, agent, openType, itemName, totalAmount, itemId);
+	}
+
+	// 결제 성공 후 아이템 지급 메서드 추가
+	@Transactional
+	public void giveItemAfterPayment(Long userId, Long itemId) {
+	    User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+	    Item item = itemRepository.findById(itemId).orElseThrow(() -> new BaseException(ITEM_NOT_FOUND));
+
+	    // UserItem 생성 및 저장
+	    UserItem userItem = UserItem.create(user, item);
+	    userItemRepository.save(userItem);
+
+	    // 결제 로그 이벤트 발행 필요시 추가
 	}
 }
