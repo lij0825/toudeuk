@@ -1,6 +1,8 @@
 package com.toudeuk.server.domain.kapay.service;
 
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -31,8 +33,9 @@ import com.toudeuk.server.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Arrays;
+
 @Service
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Slf4j
 public class KapayService {
@@ -40,6 +43,16 @@ public class KapayService {
 	private final Producer producer;
 	private final UserRepository userRepository;
 	private final ClickGameCacheRepository clickGameCacheRepository;
+	private final RestTemplate restTemplate;
+
+	public KapayService(Producer producer, UserRepository userRepository, ClickGameCacheRepository clickGameCacheRepository, RestTemplateBuilder restBuilder, ApplicationEventPublisher eventPublisher) {
+		this.producer = producer;
+		this.userRepository = userRepository;
+		this.clickGameCacheRepository = clickGameCacheRepository;
+		this.restTemplate = restBuilder.build();
+		this.eventPublisher = eventPublisher;
+	}
+
 	@Value("${kakaopay.api.secret.key}")
 	private String kakaopaySecretKey;
 
@@ -81,7 +94,7 @@ public class KapayService {
 
 		// 요청 전송
 		HttpEntity<ReadyRequest> entityMap = new HttpEntity<>(readyRequest, headers);
-		ResponseEntity<ReadyResponse> response = new RestTemplate().postForEntity(
+		ResponseEntity<ReadyResponse> response = restTemplate.postForEntity(
 			"https://open-api.kakaopay.com/online/v1/payment/ready",
 			entityMap,
 			ReadyResponse.class
@@ -124,7 +137,7 @@ public class KapayService {
 
 	    // 요청 전송
 	    HttpEntity<ReadyRequest> entityMap = new HttpEntity<>(readyRequest, headers);
-	    ResponseEntity<ReadyResponse> response = new RestTemplate().postForEntity(
+	    ResponseEntity<ReadyResponse> response = restTemplate.postForEntity(
 	        "https://open-api.kakaopay.com/online/v1/payment/ready",
 	        entityMap,
 	        ReadyResponse.class
@@ -155,26 +168,29 @@ public class KapayService {
 
 			// 요청 전송
 			HttpEntity<ApproveRequest> entityMap = new HttpEntity<>(approveRequest, headers);
-			ResponseEntity<String> response = new RestTemplate().postForEntity(
+			ResponseEntity<String> response = restTemplate.postForEntity(
 				"https://open-api.kakaopay.com/online/v1/payment/approve",
 				entityMap,
 				String.class
 			);
 
-			ObjectMapper objectMapper = new ObjectMapper();
-			ApproveResponse approveResponse = objectMapper.readValue(response.getBody(), ApproveResponse.class);
+			// 상태코드 확인 후 성공 시만 파싱
+			if (response.getStatusCode().is2xxSuccessful()) {
+				ObjectMapper objectMapper = new ObjectMapper();
+				ApproveResponse approveResponse = objectMapper.readValue(response.getBody(), ApproveResponse.class);
 
-			if (approveResponse != null) {
-				Integer totalAmount = approveResponse.getAmount().getTotal(); // 결제 금액
-
-				//! 충전하는부분 이제 이벤트로 처리 못하지 않을까? 싶슴당? 컨슈머에서 처리하기 때문에
+				Integer totalAmount = approveResponse.getAmount().getTotal();
 				producer.occurChargeCash(new KafkaChargingDto(user.getId(), totalAmount, user.getCash() + totalAmount));
 				clickGameCacheRepository.updateUserCash(user.getId(), totalAmount);
-				// eventPublisher.publishEvent(new UserPaymentEvent(user, totalAmount));
+
+				return ResponseEntity.ok(approveResponse);
 			}
 
-			return ResponseEntity.ok(approveResponse);
-
+			// 실패일 경우 error json 그대로 파싱해서 반환
+			JsonNode errorNode = new ObjectMapper().readTree(response.getBody());
+			String errorMessage = errorNode.has("error_message") ? errorNode.get("error_message").asText() : "승인 실패";
+			return ResponseEntity.status(response.getStatusCode())
+					.body(ErrorResponse.of(ErrorCode.KAKAO_PAY_API_ERROR, errorMessage));
 		} catch (HttpStatusCodeException ex) {
 			String responseBody = ex.getResponseBodyAsString();
 			ObjectMapper objectMapper = new ObjectMapper();
