@@ -1,6 +1,7 @@
 package com.toudeuk.server.domain.kapay.service;
 
-import lombok.Setter;
+import com.toudeuk.server.domain.payment.domain.Payment;
+import com.toudeuk.server.domain.payment.service.PaymentService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.ApplicationEventPublisher;
@@ -30,26 +31,25 @@ import com.toudeuk.server.domain.user.entity.User;
 import com.toudeuk.server.domain.user.event.UserPaymentEvent;
 import com.toudeuk.server.domain.user.repository.UserRepository;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Arrays;
-
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @Slf4j
 public class KapayService {
 
 	private final Producer producer;
 	private final UserRepository userRepository;
 	private final ClickGameCacheRepository clickGameCacheRepository;
+	private final PaymentService paymentService;
 	private final RestTemplate restTemplate;
 
-	public KapayService(Producer producer, UserRepository userRepository, ClickGameCacheRepository clickGameCacheRepository, RestTemplateBuilder restBuilder, ApplicationEventPublisher eventPublisher) {
+	public KapayService(Producer producer, UserRepository userRepository, ClickGameCacheRepository clickGameCacheRepository, PaymentService paymentService, RestTemplateBuilder restBuilder, ApplicationEventPublisher eventPublisher) {
 		this.producer = producer;
 		this.userRepository = userRepository;
 		this.clickGameCacheRepository = clickGameCacheRepository;
 		this.restTemplate = restBuilder.build();
+		this.paymentService = paymentService;
 		this.eventPublisher = eventPublisher;
 	}
 
@@ -62,15 +62,9 @@ public class KapayService {
 	@Value("${kakaopay.api.host}")
 	private String sampleHost;
 
-	private String tid;
-
-	private User user;
-
 	private final ApplicationEventPublisher eventPublisher;
 
 	public ReadyResponse ready(User user, String agent, String openType, String itemName, Integer totalAmount) {
-
-		this.user = user;
 
 		// 요청 헤더 설정
 		HttpHeaders headers = new HttpHeaders();
@@ -100,8 +94,8 @@ public class KapayService {
 			ReadyResponse.class
 		);
 
-		// TID 저장 (승인 요청 시 사용)
-		this.tid = response.getBody().getTid();
+		paymentService.createPayment(readyRequest, response.getBody().getTid(), user);
+
 		return response.getBody();
 	}
 
@@ -109,7 +103,6 @@ public class KapayService {
 	 * 아이템 구매용 카카오페이 결제 준비 메소드
 	 */
 	public ReadyResponse readyForItem(User user, String agent, String openType, String itemName, Integer totalAmount, Long itemId) {
-	    this.user = user;
 
 	    // 아이템 구매용 파트너 주문 ID 형식: userId_itemId_timestamp
 	    String partnerOrderId = user.getId() + "_" + itemId + "_" + System.currentTimeMillis();
@@ -143,14 +136,20 @@ public class KapayService {
 	        ReadyResponse.class
 	    );
 
-	    // TID 저장 (승인 요청 시 사용)
-	    this.tid = response.getBody().getTid();
+		paymentService.createPayment(readyRequest, response.getBody().getTid(), user);
 	    return response.getBody();
 	}
 
 	@Transactional
-	public ResponseEntity<?> approve(String pgToken) {
+	public ResponseEntity<?> approve(String pgToken, String partnerOrderId) {
 		try {
+
+			/**
+			 * 사전 결제정보를 찾음
+			 */
+			// 여기서 pgToken이랑 partnerUserId를 받아와야함 내가 알기론
+			Payment findPayment = paymentService.findByPartnerOrderId(partnerOrderId);
+			User user = findPayment.getUser();
 
 			// 요청 헤더 설정
 			HttpHeaders headers = new HttpHeaders();
@@ -160,9 +159,9 @@ public class KapayService {
 			// 요청 파라미터 설정
 			ApproveRequest approveRequest = ApproveRequest.builder()
 				.cid(cid)
-				.tid(tid)
-				.partnerOrderId("1")
-				.partnerUserId("1")
+				.tid(findPayment.getTid())
+				.partnerOrderId(findPayment.getPartnerOrderId())
+				.partnerUserId(findPayment.getPartnerUserId())
 				.pgToken(pgToken)
 				.build();
 

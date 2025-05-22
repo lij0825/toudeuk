@@ -1,18 +1,8 @@
 package com.toudeuk.server.core.kafka;
 
-import java.io.IOException;
-import java.util.List;
-
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.toudeuk.server.core.kafka.dto.KafkaChargingDto;
-import com.toudeuk.server.core.kafka.dto.KafkaClickDto;
-import com.toudeuk.server.core.kafka.dto.KafkaGameCashLogDto;
-import com.toudeuk.server.core.kafka.dto.KafkaItemBuyDto;
 import com.toudeuk.server.domain.game.service.ClickGameService;
 import com.toudeuk.server.domain.item.service.ItemService;
 import com.toudeuk.server.domain.kapay.service.KapayService;
