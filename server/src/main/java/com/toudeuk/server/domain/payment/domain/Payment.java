@@ -61,6 +61,6 @@ public class Payment {
     }
 
     public void approve(){
-        this.status = PaymentStatus.ITEM_FAILED;
+        this.status = PaymentStatus.APPROVE;
     }
 }

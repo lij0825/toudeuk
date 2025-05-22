@@ -175,6 +175,9 @@ public class KapayService {
 
 			// 상태코드 확인 후 성공 시만 파싱
 			if (response.getStatusCode().is2xxSuccessful()) {
+				findPayment.approve();
+				paymentService.save(findPayment);
+
 				ObjectMapper objectMapper = new ObjectMapper();
 				ApproveResponse approveResponse = objectMapper.readValue(response.getBody(), ApproveResponse.class);
 
