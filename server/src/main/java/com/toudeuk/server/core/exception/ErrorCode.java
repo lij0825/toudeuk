@@ -32,6 +32,9 @@ public enum ErrorCode {
 	USER_ITEM_NOT_FOUND(3001, HttpStatus.NOT_FOUND, "사용자의 아이템을 찾을 수 없습니다."),
 	USER_ITEM_ALREADY_USED(3002, HttpStatus.BAD_REQUEST, "이미 사용한 아이템입니다."),
 
+	// Payment
+	PAYMENT_NOT_FOUND(3000, HttpStatus.NOT_FOUND, "결제 내역을 찾을 수 없습니다."),
+
 	// Game
 	GAME_ERROR(4000, HttpStatus.BAD_REQUEST, "게임에 에러가 발생하였습니다."),
 	GAME_NOT_FOUND(4001, HttpStatus.NOT_FOUND, "게임을 찾을 수 없습니다."),

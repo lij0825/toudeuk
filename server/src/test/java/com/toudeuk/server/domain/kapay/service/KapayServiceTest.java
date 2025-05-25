@@ -160,7 +160,7 @@ class KapayServiceTest {
                 .andRespond(withSuccess(objectMapper.writeValueAsString(expected), MediaType.APPLICATION_JSON));
 
         //when
-        ResponseEntity<?> response = kapayService.approve("pg_token");
+        ResponseEntity<?> response = kapayService.approve("pg_token", "partner_order_id_1234");
 
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);

@@ -62,9 +62,9 @@ public class KapayController {
 		@PathVariable String agent,
 		@PathVariable String openType,
 		@RequestParam("pg_token") String pgToken,
-		@RequestParam(value = "partnerOrderId", required = false) String partnerOrderId // 선택적 파라미터
+		@RequestParam(value = "partnerOrderId") String partnerOrderId // 선택적 파라미터
 	) {
-		ResponseEntity<?> approveResponseEntity = kapayService.approve(pgToken);
+		ResponseEntity<?> approveResponseEntity = kapayService.approve(pgToken, partnerOrderId);
 
 		if (approveResponseEntity.getStatusCode() == HttpStatus.OK) {
 			// partnerOrderId가 있으면 아이템 구매 처리
@@ -87,21 +87,6 @@ public class KapayController {
 				log.info("캐시 충전 완료");
 			}
 
-			return new RedirectView(baseUrl + "/kapay/approve");
-		} else {
-			return new RedirectView(baseUrl + "/kapay/fail");
-		}
-	}
-
-	@GetMapping("/approve/{agent}/{openType}")
-	public RedirectView approve(
-		@PathVariable String agent,
-		@PathVariable String openType,
-		@RequestParam("pg_token") String pgToken
-	) {
-		ResponseEntity<?> approveResponseEntity = kapayService.approve(pgToken);
-
-		if (approveResponseEntity.getStatusCode() == HttpStatus.OK) {
 			return new RedirectView(baseUrl + "/kapay/approve");
 		} else {
 			return new RedirectView(baseUrl + "/kapay/fail");

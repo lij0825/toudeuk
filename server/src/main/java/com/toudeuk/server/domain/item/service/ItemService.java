@@ -2,24 +2,16 @@ package com.toudeuk.server.domain.item.service;
 
 import static com.toudeuk.server.core.exception.ErrorCode.*;
 
-import java.awt.print.Pageable;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.toudeuk.server.core.kafka.Producer;
 import com.toudeuk.server.core.kafka.dto.KafkaItemBuyDto;
-import com.toudeuk.server.domain.game.dto.HistoryData;
-import com.toudeuk.server.domain.game.entity.ClickGame;
 import com.toudeuk.server.domain.game.repository.ClickGameCacheRepository;
 import com.toudeuk.server.domain.kapay.dto.ReadyResponse;
 import com.toudeuk.server.domain.kapay.service.KapayService;
 import com.toudeuk.server.domain.user.dto.UserItemData;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
