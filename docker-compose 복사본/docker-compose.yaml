@@ -1,0 +1,115 @@
+name: toudeuk-docker-compose
+
+
+
+services:
+  database:
+    image: mysql:8.0
+    container_name: toudeuk-database
+    environment:
+      MYSQL_ROOT_PASSWORD: toudeuk
+      MYSQL_DATABASE: toudeuk
+      MYSQL_USER: toudeuk
+      MYSQL_PASSWORD: toudeuk
+      TZ: Asia/Seoul
+    ports:
+      - "3306:3306"
+    volumes:
+      - toudeuk-db:/var/lib/mysql
+
+  db-admin:
+    container_name: db-admin
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "5000:80"
+    environment:
+      PMA_HOST: database
+      MYSQL_ROOT_PASSWORD: toudeuk
+    restart: always
+
+  cache-database:
+    image: redis
+    container_name: toudeuk-cache-database
+    ports:
+      - "6379:6379"
+    entrypoint: redis-server --requirepass toudeuk --maxmemory 1gb
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    user: "$UID:$GID"
+    ports:
+      - "3001:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+
+
+  # !! Ngrinder 설정 나중에 서버를 분리하면 스프링 서버가 돌아가지 않는 다른 서버에서 해야함 !!
+  controller:
+    container_name: ngrinder-controller
+    image: ngrinder/controller:3.5.5
+    restart: always
+    ports:
+      - "9091:80"
+      - "16001:16001"
+      - "12000-12009:12000-12009"
+    volumes:
+      - /tmp/ngrinder-controller:/opt/ngrinder-controller
+  agent:
+    container_name: ngrinder-agent
+    image: ngrinder/agent:3.5.5
+    restart: always
+    links:
+      - controller
+
+
+  zookeeper-1:
+    image: confluentinc/cp-zookeeper:latest
+    ports:
+      - '32181:32181'
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 32181
+      ZOOKEEPER_TICK_TIME: 2000
+  kafka-1:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka-msa
+    ports:
+      - '9092:9092'
+    depends_on:
+      - zookeeper-1
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:32181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-1:29092,EXTERNAL://43.203.141.23:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      #      KAFKA_DEFAULT_REPLICATION_FACTOR: 3
+      KAFKA_NUM_PARTITIONS: 1
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui
+    container_name: kafka-ui
+    ports:
+      - "8989:8080"
+    restart: always
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka-1:29092
+      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper-1:32181
+volumes:
+  toudeuk-db:
+  grafana-data:
+  prometheus-data:

@@ -2,7 +2,7 @@ package com.toudeuk.server.domain.payment.service;
 
 import com.toudeuk.server.core.exception.BaseException;
 import com.toudeuk.server.domain.kapay.dto.ReadyRequest;
-import com.toudeuk.server.domain.payment.domain.Payment;
+import com.toudeuk.server.domain.payment.entity.Payment;
 import com.toudeuk.server.domain.payment.repository.PaymentRepository;
 import com.toudeuk.server.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;

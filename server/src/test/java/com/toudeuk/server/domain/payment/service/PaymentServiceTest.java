@@ -1,8 +1,8 @@
 package com.toudeuk.server.domain.payment.service;
 
 import com.toudeuk.server.core.exception.BaseException;
-import com.toudeuk.server.domain.payment.domain.Payment;
-import com.toudeuk.server.domain.payment.domain.PaymentStatus;
+import com.toudeuk.server.domain.payment.entity.Payment;
+import com.toudeuk.server.domain.payment.entity.PaymentStatus;
 import com.toudeuk.server.domain.payment.repository.PaymentRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

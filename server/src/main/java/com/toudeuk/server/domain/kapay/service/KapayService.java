@@ -1,6 +1,6 @@
 package com.toudeuk.server.domain.kapay.service;
 
-import com.toudeuk.server.domain.payment.domain.Payment;
+import com.toudeuk.server.domain.payment.entity.Payment;
 import com.toudeuk.server.domain.payment.service.PaymentService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;

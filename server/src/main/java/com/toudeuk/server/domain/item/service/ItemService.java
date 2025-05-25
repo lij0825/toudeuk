@@ -10,6 +10,7 @@ import com.toudeuk.server.core.kafka.dto.KafkaItemBuyDto;
 import com.toudeuk.server.domain.game.repository.ClickGameCacheRepository;
 import com.toudeuk.server.domain.kapay.dto.ReadyResponse;
 import com.toudeuk.server.domain.kapay.service.KapayService;
+import com.toudeuk.server.domain.payment.service.PaymentService;
 import com.toudeuk.server.domain.user.dto.UserItemData;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -42,7 +43,7 @@ public class ItemService {
 	private final ClickGameCacheRepository clickGameCacheRepository;
 	private final Producer producer;
 	private final KapayService kapayService;
-
+	private final PaymentService paymentService;
 
 	public List<ItemData.ItemInfo> getItemList() {
 		return itemRepository.findAll().stream()
@@ -150,5 +151,7 @@ public class ItemService {
 	    userItemRepository.save(userItem);
 
 	    // 결제 로그 이벤트 발행 필요시 추가
+
+
 	}
 }
