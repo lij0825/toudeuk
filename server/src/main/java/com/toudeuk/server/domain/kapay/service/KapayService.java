@@ -3,7 +3,6 @@ package com.toudeuk.server.domain.kapay.service;
 import com.toudeuk.server.domain.payment.entity.Payment;
 import com.toudeuk.server.domain.payment.service.PaymentService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -44,11 +43,11 @@ public class KapayService {
 	private final PaymentService paymentService;
 	private final RestTemplate restTemplate;
 
-	public KapayService(Producer producer, UserRepository userRepository, ClickGameCacheRepository clickGameCacheRepository, PaymentService paymentService, RestTemplateBuilder restBuilder, ApplicationEventPublisher eventPublisher) {
+	public KapayService(Producer producer, UserRepository userRepository, ClickGameCacheRepository clickGameCacheRepository, PaymentService paymentService, RestTemplate restTemplate, ApplicationEventPublisher eventPublisher) {
 		this.producer = producer;
 		this.userRepository = userRepository;
 		this.clickGameCacheRepository = clickGameCacheRepository;
-		this.restTemplate = restBuilder.build();
+		this.restTemplate = restTemplate;
 		this.paymentService = paymentService;
 		this.eventPublisher = eventPublisher;
 	}
