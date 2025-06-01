@@ -56,13 +56,13 @@ class PaymentRecoveryProcessorTest {
         when(payment.getItemDeliveryRetryCount()).thenReturn(0); // 초기 시도 횟수
 
         // itemService.giveItemAfterPayment가 성공적으로 호출되었다고 가정
-        doNothing().when(itemService).giveItemAfterPayment(DEFAULT_USER_ID, DEFAULT_ITEM_ID);
+        doNothing().when(itemService).giveItemAfterPayment(DEFAULT_USER_ID, DEFAULT_ITEM_ID, validPartnerOrderId);
 
         // when
         paymentRecoveryProcessor.processSinglePaymentRecovery(payment);
 
         // then
-        verify(itemService, times(1)).giveItemAfterPayment(DEFAULT_USER_ID, DEFAULT_ITEM_ID);
+        verify(itemService, times(1)).giveItemAfterPayment(DEFAULT_USER_ID, DEFAULT_ITEM_ID, validPartnerOrderId);
         verify(payment, times(1)).markAsItemSuccess();
         verify(paymentService, times(1)).save(payment); // PaymentService의 save 호출 검증
         verify(payment, never()).increaseItemDeliveryRetryCount();
@@ -79,13 +79,13 @@ class PaymentRecoveryProcessorTest {
 
         // itemService.giveItemAfterPayment가 예외를 발생시킨다고 가정
         doThrow(new RuntimeException("Item 지급 실패 테스트 예외"))
-                .when(itemService).giveItemAfterPayment(DEFAULT_USER_ID, DEFAULT_ITEM_ID);
+                .when(itemService).giveItemAfterPayment(DEFAULT_USER_ID, DEFAULT_ITEM_ID, validPartnerOrderId);
 
         // when
         paymentRecoveryProcessor.processSinglePaymentRecovery(payment);
 
         // then
-        verify(itemService, times(1)).giveItemAfterPayment(DEFAULT_USER_ID, DEFAULT_ITEM_ID);
+        verify(itemService, times(1)).giveItemAfterPayment(DEFAULT_USER_ID, DEFAULT_ITEM_ID, validPartnerOrderId);
         verify(payment, times(1)).increaseItemDeliveryRetryCount();
         verify(payment, times(1)).markAsItemDeliveryFailed();
         verify(paymentService, times(1)).save(payment);
@@ -102,7 +102,7 @@ class PaymentRecoveryProcessorTest {
         when(payment.getItemDeliveryRetryCount()).thenReturn(MAX_RETRY_COUNT -1); // 실패해서 increase하면 MAX_RETRY_COUNT가 됨
 
         doThrow(new RuntimeException("Item 지급 실패 테스트 예외"))
-                .when(itemService).giveItemAfterPayment(DEFAULT_USER_ID, DEFAULT_ITEM_ID);
+                .when(itemService).giveItemAfterPayment(DEFAULT_USER_ID, DEFAULT_ITEM_ID, validPartnerOrderId);
 
         // when
         paymentRecoveryProcessor.processSinglePaymentRecovery(payment);
@@ -128,7 +128,7 @@ class PaymentRecoveryProcessorTest {
 
         // then
         // 아이템 지급 및 상태 변경 로직이 호출되지 않아야 함
-        verify(itemService, never()).giveItemAfterPayment(anyLong(), anyLong());
+        verify(itemService, never()).giveItemAfterPayment(anyLong(), anyLong(), anyString());
         verify(paymentService, never()).save(any(Payment.class));
         verify(payment, never()).increaseItemDeliveryRetryCount();
         verify(payment, never()).markAsItemDeliveryFailed();
@@ -146,7 +146,7 @@ class PaymentRecoveryProcessorTest {
         paymentRecoveryProcessor.processSinglePaymentRecovery(payment);
 
         // then
-        verify(itemService, never()).giveItemAfterPayment(anyLong(), anyLong());
+        verify(itemService, never()).giveItemAfterPayment(anyLong(), anyLong(), anyString());
         verify(paymentService, never()).save(any(Payment.class));
         verify(payment, never()).increaseItemDeliveryRetryCount();
         verify(payment, never()).markAsItemDeliveryFailed();

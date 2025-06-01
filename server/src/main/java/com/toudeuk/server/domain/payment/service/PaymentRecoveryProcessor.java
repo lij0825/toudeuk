@@ -47,7 +47,7 @@ public class PaymentRecoveryProcessor {
 			paymentId, userId, itemId, payment.getItemDeliveryRetryCount());
 
 		try {
-			itemService.giveItemAfterPayment(userId, itemId);
+			itemService.giveItemAfterPayment(userId, itemId, partnerOrderId);
 			payment.markAsItemSuccess();
 			// paymentService.save(payment)는 PaymentService 내부에서 REQUIRES_NEW로 관리되므로,
 			// 이 트랜잭션(processSinglePaymentRecovery)에 포함되어 커밋/롤백됩니다.

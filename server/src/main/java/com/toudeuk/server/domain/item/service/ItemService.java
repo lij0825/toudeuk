@@ -14,6 +14,7 @@ import com.toudeuk.server.domain.payment.service.PaymentService;
 import com.toudeuk.server.domain.user.dto.UserItemData;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.toudeuk.server.core.exception.BaseException;
@@ -141,17 +142,14 @@ public class ItemService {
 	}
 
 	// 결제 성공 후 아이템 지급 메서드 추가
-	@Transactional
-	public void giveItemAfterPayment(Long userId, Long itemId) {
+	@Transactional(propagation = Propagation.REQUIRES_NEW, timeout = 3)
+	public void giveItemAfterPayment(Long userId, Long itemId, String partnerOrderId) {
 	    User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
 	    Item item = itemRepository.findById(itemId).orElseThrow(() -> new BaseException(ITEM_NOT_FOUND));
 
 	    // UserItem 생성 및 저장
 	    UserItem userItem = UserItem.create(user, item);
 	    userItemRepository.save(userItem);
-
-	    // 결제 로그 이벤트 발행 필요시 추가
-
-
+		paymentService.markItemSuccess(partnerOrderId);
 	}
 }

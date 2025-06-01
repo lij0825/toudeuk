@@ -2,6 +2,7 @@ package com.toudeuk.server.domain.kapay.controller;
 
 import static com.toudeuk.server.core.exception.ErrorCode.*;
 
+import com.toudeuk.server.domain.kapay.service.ApproveFacade;
 import com.toudeuk.server.domain.payment.entity.Payment;
 import com.toudeuk.server.domain.payment.service.PaymentService;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,6 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 @Tag(name = "카카오 페이 관련 API ")
 public class KapayController {
 
+	private final ApproveFacade approveFacade;
 	@Value("${kakaopay.redirect.url}")
 	private String baseUrl;
 
@@ -67,54 +69,7 @@ public class KapayController {
 		@RequestParam("pg_token") String pgToken,
 		@RequestParam(value = "partnerOrderId") String partnerOrderId
 	) {
-		// kapayService.approve는 내부적으로 Payment의 상태를 APPROVE로 변경하고 저장합니다.
-		ResponseEntity<?> approveResponseEntity = kapayService.approve(pgToken, partnerOrderId);
-
-		if (approveResponseEntity.getStatusCode() == HttpStatus.OK) {
-			// partnerOrderId가 아이템 구매 패턴(userId_itemId_timestamp)을 따르는지 확인
-			// 캐시 충전의 경우 partnerOrderId가 "1" 등으로 단순할 수 있음
-			boolean isItemPurchase = partnerOrderId != null && partnerOrderId.contains("_");
-
-			if (isItemPurchase) {
-				try {
-					String[] parts = partnerOrderId.split("_");
-					if (parts.length >= 2) { // userId_itemId_timestamp
-						Long userId = Long.parseLong(parts[0]);
-						Long itemId = Long.parseLong(parts[1]);
-
-						// 아이템 즉시 지급 시도
-						try {
-							itemService.giveItemAfterPayment(userId, itemId);
-
-							// 지급 성공 시 Payment 상태를 ITEM_SUCCESS로 변경
-							paymentService.markItemSuccess(partnerOrderId);
-							log.info("아이템 즉시 지급 및 Payment 상태 업데이트 성공: userId={}, itemId={}, partnerOrderId={}", userId, itemId, partnerOrderId);
-						} catch (Exception e) {
-							log.error("아이템 즉시 지급 실패. 이후 스케줄러가 재시도합니다. userId={}, itemId={}, partnerOrderId={}, error: {}", userId, itemId, partnerOrderId, e.getMessage(), e);
-							// PaymentService의 save는 REQUIRES_NEW 트랜잭션
-							try{
-								paymentService.markItemDeliveryFailed(partnerOrderId);
-							}catch(Exception inner){
-								log.error("Payment 상태를 ITEM_FAILED로 변경하는 도중에도 실패했습니다.", inner);
-							}
-						}
-					} else {
-						log.warn("아이템 구매로 추정되나 partnerOrderId 형식 오류: {}", partnerOrderId);
-					}
-				} catch (NumberFormatException e) {
-					log.error("partnerOrderId 파싱 실패 (아이템 구매 처리 중): {}. 오류: {}", partnerOrderId, e.getMessage());
-				} catch (Exception e) {
-					log.error("아이템 구매 후 처리 중 예외 발생: partnerOrderId={}. 오류: {}", partnerOrderId, e.getMessage(), e);
-				}
-			} else {
-				// 아이템 구매가 아닌 경우 (예: 캐시 충전)
-				log.info("캐시 충전 또는 일반 결제 승인 완료: partnerOrderId={}", partnerOrderId);
-			}
-			return new RedirectView(baseUrl + "/kapay/approve");
-		} else {
-			log.warn("카카오페이 승인 실패: partnerOrderId={}, status={}, body={}", partnerOrderId, approveResponseEntity.getStatusCode(), approveResponseEntity.getBody());
-			return new RedirectView(baseUrl + "/kapay/fail");
-		}
+		return approveFacade.handleApprove(agent, openType, pgToken, partnerOrderId);
 	}
 
 	@GetMapping("/cancel/{agent}/{openType}")
