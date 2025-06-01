@@ -85,15 +85,18 @@ public class KapayController {
 						// 아이템 즉시 지급 시도
 						try {
 							itemService.giveItemAfterPayment(userId, itemId);
+
 							// 지급 성공 시 Payment 상태를 ITEM_SUCCESS로 변경
-							Payment payment = paymentService.findByPartnerOrderId(partnerOrderId);
-							payment.markAsItemSuccess();
-							paymentService.save(payment); // PaymentService의 save는 REQUIRES_NEW 트랜잭션
+							paymentService.markItemSuccess(partnerOrderId);
 							log.info("아이템 즉시 지급 및 Payment 상태 업데이트 성공: userId={}, itemId={}, partnerOrderId={}", userId, itemId, partnerOrderId);
 						} catch (Exception e) {
-							// 아이템 즉시 지급 실패. Payment 상태는 'APPROVE'로 유지됨.
-							// 스케줄러가 이 'APPROVE' 상태를 보고 재시도할 것임.
-							log.error("아이템 즉시 지급 실패. 스케줄러가 재시도합니다. userId={}, itemId={}, partnerOrderId={}, error: {}", userId, itemId, partnerOrderId, e.getMessage(), e);
+							log.error("아이템 즉시 지급 실패. 이후 스케줄러가 재시도합니다. userId={}, itemId={}, partnerOrderId={}, error: {}", userId, itemId, partnerOrderId, e.getMessage(), e);
+							// PaymentService의 save는 REQUIRES_NEW 트랜잭션
+							try{
+								paymentService.markItemDeliveryFailed(partnerOrderId);
+							}catch(Exception inner){
+								log.error("Payment 상태를 ITEM_FAILED로 변경하는 도중에도 실패했습니다.", inner);
+							}
 						}
 					} else {
 						log.warn("아이템 구매로 추정되나 partnerOrderId 형식 오류: {}", partnerOrderId);
