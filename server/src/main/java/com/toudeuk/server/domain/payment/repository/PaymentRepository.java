@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
     Optional<Payment> findByPartnerOrderId(String partnerOrderId);
 
-    @Query("SELECT p FROM Payment p WHERE (p.status = :approveStatus OR (p.status = :failedStatus AND p.itemDeliveryRetryCount < :maxRetry)) AND p.partnerOrderId LIKE '%\\_%\\_%'")
+    @Query("SELECT p FROM Payment p WHERE (p.status = :approveStatus OR (p.status = :failedStatus AND p.retryCount < :maxRetry)) AND p.partnerOrderId LIKE '%\\_%\\_%'")
     List<Payment> findPaymentsForItemDeliveryRetry(
         @Param("approveStatus") PaymentStatus approveStatus,
         @Param("failedStatus") PaymentStatus failedStatus,

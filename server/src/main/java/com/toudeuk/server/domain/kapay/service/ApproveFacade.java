@@ -24,6 +24,8 @@ public class ApproveFacade {
     public RedirectView handleApprove(String agent, String openType, String pgToken, String partnerOrderId) {
         ResponseEntity<?> response = kapayService.approve(pgToken, partnerOrderId);
 
+        ItemInfo info = parseItemInfo(partnerOrderId);
+
         if (response.getStatusCode() != HttpStatus.OK) {
             log.warn("카카오페이 승인 실패: partnerOrderId={}, status={}", partnerOrderId, response.getStatusCode());
             return new RedirectView("/kapay/fail");
@@ -35,10 +37,10 @@ public class ApproveFacade {
         }
 
         try {
-            ItemInfo info = parseItemInfo(partnerOrderId);
             itemService.giveItemAfterPayment(info.userId(), info.itemId(), partnerOrderId);
         } catch (Exception e) {
-            log.error("아이템 지급 중 예외 발생: {}", e.getMessage(), e);
+            itemService.handleAsyncItemGrant(info.userId(), info.itemId(), partnerOrderId);
+            log.error("아이템 지급 중 예외 발생: {}, partnerOrderId : {}", e.getMessage(), partnerOrderId);
         }
 
         return new RedirectView("/kapay/approve");

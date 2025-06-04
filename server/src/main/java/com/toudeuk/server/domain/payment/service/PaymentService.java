@@ -47,4 +47,10 @@ public class PaymentService {
         payment.markAsItemDeliveryFailed();
         save(payment);
     }
+
+    @Transactional(propagation = REQUIRES_NEW)
+    public void increaseRetryCount(String partnerOrderId) {
+        Payment findPayment = findByPartnerOrderId(partnerOrderId);
+        findPayment.increaseRetryCount();
+    }
 }

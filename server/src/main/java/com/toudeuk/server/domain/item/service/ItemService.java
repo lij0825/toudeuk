@@ -1,6 +1,7 @@
 package com.toudeuk.server.domain.item.service;
 
 import static com.toudeuk.server.core.exception.ErrorCode.*;
+import static com.toudeuk.server.domain.item.entity.QItem.item;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,11 +9,14 @@ import java.util.stream.Collectors;
 import com.toudeuk.server.core.kafka.Producer;
 import com.toudeuk.server.core.kafka.dto.KafkaItemBuyDto;
 import com.toudeuk.server.domain.game.repository.ClickGameCacheRepository;
+import com.toudeuk.server.domain.item.dto.ItemInfo;
 import com.toudeuk.server.domain.kapay.dto.ReadyResponse;
 import com.toudeuk.server.domain.kapay.service.KapayService;
+import com.toudeuk.server.domain.payment.entity.Payment;
 import com.toudeuk.server.domain.payment.service.PaymentService;
 import com.toudeuk.server.domain.user.dto.UserItemData;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,7 +48,8 @@ public class ItemService {
 	private final ClickGameCacheRepository clickGameCacheRepository;
 	private final Producer producer;
 	private final KapayService kapayService;
-	private final PaymentService paymentService;
+	private final AsyncItemGrantService asyncItemGrantService;
+	private final ItemGrantService itemGrantService;
 
 	public List<ItemData.ItemInfo> getItemList() {
 		return itemRepository.findAll().stream()
@@ -142,14 +147,13 @@ public class ItemService {
 	}
 
 	// 결제 성공 후 아이템 지급 메서드 추가
-	@Transactional(propagation = Propagation.REQUIRES_NEW, timeout = 3)
+	@Transactional
 	public void giveItemAfterPayment(Long userId, Long itemId, String partnerOrderId) {
-	    User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
-	    Item item = itemRepository.findById(itemId).orElseThrow(() -> new BaseException(ITEM_NOT_FOUND));
-
-	    // UserItem 생성 및 저장
-	    UserItem userItem = UserItem.create(user, item);
-	    userItemRepository.save(userItem);
-		paymentService.markItemSuccess(partnerOrderId);
+		itemGrantService.giveItemAfterPayment(userId, itemId, partnerOrderId);
 	}
+
+	public void handleAsyncItemGrant(Long userId, Long itemId, String partnerOrderId) {
+		asyncItemGrantService.retryGrantItem(userId, itemId, partnerOrderId);
+	}
+
 }

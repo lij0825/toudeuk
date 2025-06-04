@@ -44,7 +44,7 @@ public class PaymentRecoveryProcessor {
 		}
 
 		log.info("아이템 지급 재시도 시작 - Payment ID: {}, 사용자 ID: {}, 아이템 ID: {}, 현재 시도 횟수: {}",
-			paymentId, userId, itemId, payment.getItemDeliveryRetryCount());
+			paymentId, userId, itemId, payment.getRetryCount());
 
 		try {
 			itemService.giveItemAfterPayment(userId, itemId, partnerOrderId);
@@ -57,11 +57,11 @@ public class PaymentRecoveryProcessor {
 			log.info("아이템 지급 재시도 성공 - Payment ID: {}", paymentId);
 		} catch (Exception e) {
 			log.error("아이템 지급 재시도 실패 - Payment ID: {}. 오류: {}", paymentId, e.getMessage(), e);
-			payment.increaseItemDeliveryRetryCount();
+			payment.increaseRetryCount();
 			payment.markAsItemDeliveryFailed(); // Payment 엔티티의 상태를 ITEM_FAILED로 변경
 			paymentService.save(payment);
 
-			if (payment.getItemDeliveryRetryCount() != null && payment.getItemDeliveryRetryCount() >= MAX_RETRY_COUNT) {
+			if (payment.getRetryCount() != null && payment.getRetryCount() >= MAX_RETRY_COUNT) {
 				log.warn("최대 재시도 횟수 초과 - Payment ID: {}. 수동 확인 필요.", paymentId);
 				// 여기에 관리자 알림 로직 등을 추가할 수 있습니다.
 			}
