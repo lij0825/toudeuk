@@ -142,7 +142,7 @@ public class KapayService {
 	    return response.getBody();
 	}
 
-	@Transactional(propagation = Propagation.REQUIRES_NEW, timeout = 7)
+	@Transactional(propagation = Propagation.REQUIRES_NEW, timeout = 10)
 	public ResponseEntity<?> approve(String pgToken, String partnerOrderId) {
 		try {
 			Payment payment = getPreApprovedPayment(partnerOrderId);

@@ -1,5 +1,7 @@
 package com.toudeuk.server.domain.payment.service;
 
+import com.toudeuk.server.core.alert.channel.AlertChannel;
+import com.toudeuk.server.core.alert.AsyncAlertManager;
 import com.toudeuk.server.domain.item.service.ItemService;
 import com.toudeuk.server.domain.payment.entity.Payment;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ public class PaymentRecoveryProcessor {
 	private final ItemService itemService;
 	private final PaymentService paymentService; // Payment 엔티티 저장/업데이트용
 	private static final int MAX_RETRY_COUNT = 5; // PaymentRecoveryService와 동일한 값 사용 또는 설정 주입
+	private final AsyncAlertManager asyncAlertManager;
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void processSinglePaymentRecovery(Payment payment) {
@@ -46,25 +49,20 @@ public class PaymentRecoveryProcessor {
 		log.info("아이템 지급 재시도 시작 - Payment ID: {}, 사용자 ID: {}, 아이템 ID: {}, 현재 시도 횟수: {}",
 			paymentId, userId, itemId, payment.getRetryCount());
 
+		giveItemAfterPayment(payment, userId, itemId, partnerOrderId, paymentId);
+	}
+
+	private void giveItemAfterPayment(Payment payment, Long userId, Long itemId, String partnerOrderId, Long paymentId) {
 		try {
 			itemService.giveItemAfterPayment(userId, itemId, partnerOrderId);
 			payment.markAsItemSuccess();
-			// paymentService.save(payment)는 PaymentService 내부에서 REQUIRES_NEW로 관리되므로,
-			// 이 트랜잭션(processSinglePaymentRecovery)에 포함되어 커밋/롤백됩니다.
-			// 만약 PaymentService.save가 REQUIRES_NEW가 아니라면 여기서 직접 paymentRepository.save를 호출해야 합니다.
-			// 현재 PaymentService.save는 REQUIRES_NEW이므로 그대로 사용합니다.
 			paymentService.save(payment);
 			log.info("아이템 지급 재시도 성공 - Payment ID: {}", paymentId);
 		} catch (Exception e) {
 			log.error("아이템 지급 재시도 실패 - Payment ID: {}. 오류: {}", paymentId, e.getMessage(), e);
-			payment.increaseRetryCount();
-			payment.markAsItemDeliveryFailed(); // Payment 엔티티의 상태를 ITEM_FAILED로 변경
-			paymentService.save(payment);
-
-			if (payment.getRetryCount() != null && payment.getRetryCount() >= MAX_RETRY_COUNT) {
-				log.warn("최대 재시도 횟수 초과 - Payment ID: {}. 수동 확인 필요.", paymentId);
-				// 여기에 관리자 알림 로직 등을 추가할 수 있습니다.
-			}
+			String alertMessage = String.format("아이템 지급 재시도 실패 - Payment ID: %s. 오류: %s", paymentId, e.getMessage());
+			asyncAlertManager.sendAsync(AlertChannel.SLACK, alertMessage);
 		}
 	}
+
 }

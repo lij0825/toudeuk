@@ -25,10 +25,6 @@ public class ItemGrantService {
     private final UserItemRepository userItemRepository;
     private final PaymentService paymentService;
 
-    /**
-     * 결제 성공 후 아이템을 지급하는 핵심 로직
-     * - 별도의 트랜잭션으로 처리되며, 실패 시 외부에서 핸들링
-     */
     @Transactional(propagation = Propagation.REQUIRES_NEW, timeout = 3)
     public void giveItemAfterPayment(Long userId, Long itemId, String partnerOrderId) {
         User user = userRepository.findById(userId)

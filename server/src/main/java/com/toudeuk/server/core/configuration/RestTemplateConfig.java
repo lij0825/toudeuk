@@ -24,14 +24,14 @@ public class RestTemplateConfig {
     public RestTemplate restTemplate() {
         // 설정 객체 생성
         RequestConfig requestConfig = RequestConfig.custom()
-                .setConnectTimeout(Timeout.ofSeconds(connectionTimeout))  // TCP 연결 타임아웃
-                .setResponseTimeout(Timeout.ofSeconds(readTimeout))       // 응답 대기 타임아웃
+                .setConnectTimeout(Timeout.ofSeconds(connectionTimeout))
+                .setResponseTimeout(Timeout.ofSeconds(readTimeout))
                 .build();
 
         // HttpClient 생성
         CloseableHttpClient httpClient = HttpClients.custom()
                 .setDefaultRequestConfig(requestConfig)
-                .setConnectionManager(new PoolingHttpClientConnectionManager())                 // 커넥션 풀
+                .setConnectionManager(new PoolingHttpClientConnectionManager())
                 .build();
 
         // RestTemplate에 HttpClient 주입
