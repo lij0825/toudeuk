@@ -42,8 +42,7 @@ class PaymentRecoveryServiceTest {
         when(paymentRepository.findPaymentsForItemDeliveryRetry(
                 eq(PaymentStatus.APPROVE),
                 eq(PaymentStatus.ITEM_FAILED),
-                eq(MAX_RETRY_COUNT),
-                any(LocalDateTime.class) // 시간은 정확한 값보다 타입으로 매칭
+                eq(MAX_RETRY_COUNT)
         )).thenReturn(Collections.emptyList());
 
         // when
@@ -52,7 +51,7 @@ class PaymentRecoveryServiceTest {
         // then
         verify(paymentRecoveryProcessor, never()).processSinglePaymentRecovery(any(Payment.class));
         verify(paymentRepository, times(1)).findPaymentsForItemDeliveryRetry(
-                any(), any(), anyInt(), any(LocalDateTime.class)
+                any(), any(), anyInt()
         );
     }
 
@@ -67,8 +66,7 @@ class PaymentRecoveryServiceTest {
         when(paymentRepository.findPaymentsForItemDeliveryRetry(
                 eq(PaymentStatus.APPROVE),
                 eq(PaymentStatus.ITEM_FAILED),
-                eq(MAX_RETRY_COUNT),
-                any(LocalDateTime.class)
+                eq(MAX_RETRY_COUNT)
         )).thenReturn(paymentsToProcess);
 
         // when
@@ -78,7 +76,7 @@ class PaymentRecoveryServiceTest {
         verify(paymentRecoveryProcessor, times(1)).processSinglePaymentRecovery(payment1);
         verify(paymentRecoveryProcessor, times(1)).processSinglePaymentRecovery(payment2);
         verify(paymentRepository, times(1)).findPaymentsForItemDeliveryRetry(
-                any(), any(), anyInt(), any(LocalDateTime.class)
+                any(), any(), anyInt()
         );
     }
 
@@ -96,7 +94,7 @@ class PaymentRecoveryServiceTest {
         List<Payment> paymentsToProcess = List.of(payment1, payment2);
 
         when(paymentRepository.findPaymentsForItemDeliveryRetry(
-                any(), any(), anyInt(), any(LocalDateTime.class)
+                any(), any(), anyInt()
         )).thenReturn(paymentsToProcess);
 
         // payment1 처리 시 예외 발생하도록 설정

@@ -38,7 +38,7 @@ public class Payment extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;
 
-    private Integer itemDeliveryRetryCount;
+    private Integer retryCount;
 
     private LocalDateTime createdAt;
 
@@ -58,7 +58,7 @@ public class Payment extends BaseEntity {
                 .cancelUrl(request.getCancelUrl())
                 .failUrl(request.getFailUrl())
                 .status(PaymentStatus.READY)
-                .itemDeliveryRetryCount(0) // 초기값은 0으로 설정
+                .retryCount(0) // 초기값은 0으로 설정
                 .user(user)
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -66,7 +66,7 @@ public class Payment extends BaseEntity {
 
     public void approve(){
         this.status = PaymentStatus.APPROVE;
-        this.itemDeliveryRetryCount = 0;
+        this.retryCount = 0;
     }
 
     public void markAsItemSuccess() {
@@ -77,10 +77,14 @@ public class Payment extends BaseEntity {
         this.status = PaymentStatus.ITEM_FAILED;
     }
 
-    public void increaseItemDeliveryRetryCount() {
-        if (this.itemDeliveryRetryCount == null) {
-            this.itemDeliveryRetryCount = 0;
+    public void increaseRetryCount() {
+        if (this.retryCount == null) {
+            this.retryCount = 0;
         }
-        this.itemDeliveryRetryCount += 1;
+        this.retryCount += 1;
+    }
+
+    public boolean isItemGranted() {
+        return this.status == PaymentStatus.ITEM_SUCCESS;
     }
 }

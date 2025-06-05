@@ -29,8 +29,28 @@ public class PaymentService {
     }
 
 
-    @Transactional(propagation = REQUIRES_NEW)
+    @Transactional(propagation = REQUIRES_NEW, timeout = 3)
+    public void markItemSuccess(String partnerOrderId) {
+        Payment payment = findByPartnerOrderId(partnerOrderId);
+        payment.markAsItemSuccess();
+        save(payment);
+    }
+
+    @Transactional(propagation = REQUIRES_NEW, timeout = 3)
     public void save(Payment payment) {
         paymentRepository.save(payment);
+    }
+
+    @Transactional(propagation = REQUIRES_NEW)
+    public void markItemDeliveryFailed(String partnerOrderId) {
+        Payment payment = findByPartnerOrderId(partnerOrderId);
+        payment.markAsItemDeliveryFailed();
+        save(payment);
+    }
+
+    @Transactional(propagation = REQUIRES_NEW)
+    public void increaseRetryCount(String partnerOrderId) {
+        Payment findPayment = findByPartnerOrderId(partnerOrderId);
+        findPayment.increaseRetryCount();
     }
 }

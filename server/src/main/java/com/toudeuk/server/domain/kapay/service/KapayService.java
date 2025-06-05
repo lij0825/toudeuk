@@ -3,13 +3,13 @@ package com.toudeuk.server.domain.kapay.service;
 import com.toudeuk.server.domain.payment.entity.Payment;
 import com.toudeuk.server.domain.payment.service.PaymentService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
@@ -43,14 +43,16 @@ public class KapayService {
 	private final ClickGameCacheRepository clickGameCacheRepository;
 	private final PaymentService paymentService;
 	private final RestTemplate restTemplate;
+	private final ApproveFacade approveFacade;
 
-	public KapayService(Producer producer, UserRepository userRepository, ClickGameCacheRepository clickGameCacheRepository, PaymentService paymentService, RestTemplateBuilder restBuilder, ApplicationEventPublisher eventPublisher) {
+	public KapayService(Producer producer, UserRepository userRepository, ClickGameCacheRepository clickGameCacheRepository, PaymentService paymentService, RestTemplate restTemplate, ApplicationEventPublisher eventPublisher, ApproveFacade approveFacade) {
 		this.producer = producer;
 		this.userRepository = userRepository;
 		this.clickGameCacheRepository = clickGameCacheRepository;
-		this.restTemplate = restBuilder.build();
+		this.restTemplate = restTemplate;
 		this.paymentService = paymentService;
 		this.eventPublisher = eventPublisher;
+		this.approveFacade = approveFacade;
 	}
 
 	@Value("${kakaopay.api.secret.key}")
@@ -140,80 +142,92 @@ public class KapayService {
 	    return response.getBody();
 	}
 
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRES_NEW, timeout = 10)
 	public ResponseEntity<?> approve(String pgToken, String partnerOrderId) {
 		try {
+			Payment payment = getPreApprovedPayment(partnerOrderId);
+			ApproveRequest request = buildApproveRequest(payment, pgToken);
+			ResponseEntity<String> response = sendApproveRequest(request);
 
-			/**
-			 * 사전 결제정보를 찾음
-			 */
-			// 여기서 pgToken이랑 partnerUserId를 받아와야함 내가 알기론
-			Payment findPayment = paymentService.findByPartnerOrderId(partnerOrderId);
-			User user = findPayment.getUser();
-
-			// 요청 헤더 설정
-			HttpHeaders headers = new HttpHeaders();
-			headers.add("Authorization", "SECRET_KEY " + kakaopaySecretKey);
-			headers.setContentType(MediaType.APPLICATION_JSON);
-
-			// 요청 파라미터 설정
-			ApproveRequest approveRequest = ApproveRequest.builder()
-				.cid(cid)
-				.tid(findPayment.getTid())
-				.partnerOrderId(findPayment.getPartnerOrderId())
-				.partnerUserId(findPayment.getPartnerUserId())
-				.pgToken(pgToken)
-				.build();
-
-			// 요청 전송
-			HttpEntity<ApproveRequest> entityMap = new HttpEntity<>(approveRequest, headers);
-			ResponseEntity<String> response = restTemplate.postForEntity(
-				"https://open-api.kakaopay.com/online/v1/payment/approve",
-				entityMap,
-				String.class
-			);
-
-			// 상태코드 확인 후 성공 시만 파싱
 			if (response.getStatusCode().is2xxSuccessful()) {
-				findPayment.approve();
-				paymentService.save(findPayment);
-
-				ObjectMapper objectMapper = new ObjectMapper();
-				ApproveResponse approveResponse = objectMapper.readValue(response.getBody(), ApproveResponse.class);
-
-				Integer totalAmount = approveResponse.getAmount().getTotal();
-				producer.occurChargeCash(new KafkaChargingDto(user.getId(), totalAmount, user.getCash() + totalAmount));
-				clickGameCacheRepository.updateUserCash(user.getId(), totalAmount);
-
-				return ResponseEntity.ok(approveResponse);
+				return handleApproveSuccess(response.getBody(), payment);
+			} else {
+				return handleApproveFailure(response);
 			}
-
-			// 실패일 경우 error json 그대로 파싱해서 반환
-			JsonNode errorNode = new ObjectMapper().readTree(response.getBody());
-			String errorMessage = errorNode.has("error_message") ? errorNode.get("error_message").asText() : "승인 실패";
-			return ResponseEntity.status(response.getStatusCode())
-					.body(ErrorResponse.of(ErrorCode.KAKAO_PAY_API_ERROR, errorMessage));
 		} catch (HttpStatusCodeException ex) {
-			String responseBody = ex.getResponseBodyAsString();
-			ObjectMapper objectMapper = new ObjectMapper();
-			JsonNode jsonNode;
-			try {
-				jsonNode = objectMapper.readTree(responseBody);
-			} catch (JsonProcessingException e) {
-				return ResponseEntity.status(ex.getStatusCode())
-					.body(ErrorResponse.of(ErrorCode.KAKAO_PAY_API_ERROR, "Error processing JSON", null));
-			}
-
-			JsonNode extrasNode = jsonNode.get("extras");
-			String errorMessage =
-				jsonNode.has("error_message") ? jsonNode.get("error_message").asText() : "Unknown error";
-
-			return ResponseEntity.status(ex.getStatusCode())
-				.body(ErrorResponse.of(ErrorCode.KAKAO_PAY_API_ERROR, errorMessage, extrasNode));
+			return handleHttpException(ex);
 		} catch (Exception ex) {
 			return ResponseEntity.status(500).body(ErrorResponse.of(ErrorCode.SERVER_ERROR, ex.getMessage()));
 		}
 	}
+
+	private Payment getPreApprovedPayment(String partnerOrderId) {
+		return paymentService.findByPartnerOrderId(partnerOrderId);
+	}
+
+	private ApproveRequest buildApproveRequest(Payment payment, String pgToken) {
+		return ApproveRequest.builder()
+				.cid(cid)
+				.tid(payment.getTid())
+				.partnerOrderId(payment.getPartnerOrderId())
+				.partnerUserId(payment.getPartnerUserId())
+				.pgToken(pgToken)
+				.build();
+	}
+
+	private ResponseEntity<String> sendApproveRequest(ApproveRequest request) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Authorization", "SECRET_KEY " + kakaopaySecretKey);
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		HttpEntity<ApproveRequest> entity = new HttpEntity<>(request, headers);
+		return restTemplate.postForEntity(
+				"https://open-api.kakaopay.com/online/v1/payment/approve",
+				entity,
+				String.class
+		);
+	}
+
+	private ResponseEntity<?> handleApproveSuccess(String responseBody, Payment payment) throws JsonProcessingException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		ApproveResponse approveResponse = objectMapper.readValue(responseBody, ApproveResponse.class);
+
+		payment.approve();
+		paymentService.save(payment);
+
+		User user = payment.getUser();
+		Integer totalAmount = approveResponse.getAmount().getTotal();
+		producer.occurChargeCash(new KafkaChargingDto(user.getId(), totalAmount, user.getCash() + totalAmount));
+		clickGameCacheRepository.updateUserCash(user.getId(), totalAmount);
+
+		return ResponseEntity.ok(approveResponse);
+	}
+
+	private ResponseEntity<?> handleApproveFailure(ResponseEntity<String> response) throws JsonProcessingException {
+		JsonNode errorNode = new ObjectMapper().readTree(response.getBody());
+		String errorMessage = errorNode.has("error_message")
+				? errorNode.get("error_message").asText()
+				: "승인 실패";
+
+		return ResponseEntity.status(response.getStatusCode())
+				.body(ErrorResponse.of(ErrorCode.KAKAO_PAY_API_ERROR, errorMessage));
+	}
+
+	private ResponseEntity<?> handleHttpException(HttpStatusCodeException ex) {
+		try {
+			JsonNode json = new ObjectMapper().readTree(ex.getResponseBodyAsString());
+			JsonNode extrasNode = json.get("extras");
+			String message = json.has("error_message")
+					? json.get("error_message").asText()
+					: "Unknown error";
+			return ResponseEntity.status(ex.getStatusCode())
+					.body(ErrorResponse.of(ErrorCode.KAKAO_PAY_API_ERROR, message, extrasNode));
+		} catch (JsonProcessingException e) {
+			return ResponseEntity.status(ex.getStatusCode())
+					.body(ErrorResponse.of(ErrorCode.KAKAO_PAY_API_ERROR, "Error processing JSON", null));
+		}
+	}
+
 
 	public void saveChargeCash(KafkaChargingDto kafkaChargingDto) {
 
