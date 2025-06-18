@@ -37,7 +37,7 @@ public class SlackAlertService implements AlertService {
     }
 
     @Override
-    public AlertChannel channel() {
-        return AlertChannel.DISCORD;
+    public boolean supports(AlertChannel channel) {
+        return channel == AlertChannel.DISCORD;
     }
 }

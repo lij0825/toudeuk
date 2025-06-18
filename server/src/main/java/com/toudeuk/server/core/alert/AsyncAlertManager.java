@@ -18,7 +18,18 @@ public class AsyncAlertManager {
 
     @Async
     public void sendAsync(AlertChannel channel, String message) {
-        alertServices.forEach(sender -> sender.send(message));
+        if (channel == null) {
+            log.warn("AlertChannel is null. 메시지를 전송하지 않습니다.");
+            return;
+        }
+
+        alertServices.stream()
+                .filter(sender -> sender.supports(channel))  // 해당 채널만 필터링
+                .findFirst()
+                .ifPresentOrElse(
+                        sender -> sender.send(message),
+                        () -> log.warn("지원하지 않는 AlertChannel: {}", channel)
+                );
     }
 
     @Async
