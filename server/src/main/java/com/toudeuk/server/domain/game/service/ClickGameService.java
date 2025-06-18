@@ -109,7 +109,7 @@ public class ClickGameService {
 
 		messagingTemplate.convertAndSend("/topic/game", displayInfoEvery);
 		log.info("displayInfoEvery : {}", displayInfoEvery);
-		// messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
+//		 messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
 		// log.info("displayInfoForClicker : {}", displayInfoForClicker);
 
 		log.info("======================================게임중이면 실행======================================");
@@ -118,140 +118,104 @@ public class ClickGameService {
 	}
 
 	@Transactional
-	public GameData.DisplayInfoForClicker click(Long userId) throws JsonProcessingException {
-
-		// 쿨타임이면?
+	public GameData.DisplayInfoForClicker click(Long userId){
 		if (clickCacheRepository.isGameCoolTime()) {
-
-			LocalDateTime gameCoolTime = clickCacheRepository.getGameCoolTime();
-			GameData.DisplayInfoForEvery displayInfoEvery = GameData.DisplayInfoForEvery.getDisplayInfoEveryAtCoolTime(
-				gameCoolTime);
-
-			GameData.DisplayInfoForClicker displayInfoForClicker = GameData.DisplayInfoForClicker.getDisplayInfoForClickerAtCoolTime(
-				displayInfoEvery);
-
-			// 모든 구독자에게 메시지 전송
-			messagingTemplate.convertAndSend("/topic/game", displayInfoEvery);
-			// ! 특정 구독자에게 메시지 전송 -> Http방식으로 변경
-			// messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
-
-			return displayInfoForClicker;
+			return handleCoolTime(userId);
 		}
-
-		Integer userCash = clickCacheRepository.getUserCash(userId);
-		int result = userCash + CLICK_CASH;
-		// 돈없으면 끝
-		if (result < 0) {
-			throw new BaseException(NOT_ENOUGH_CASH);
-		}
-
-		Integer totalClick = clickCacheRepository.addTotalClick();
-		// ! 테스트 용
-		if (totalClick > MAX_CLICK) {
-			throw new BaseException(GAME_END);
-		}
-
-		clickCacheRepository.updateUserCash(userId, CLICK_CASH);
-
-		Integer userClick = clickCacheRepository.addUserClick(userId);
-		// 최초 클릭자라면 => username이라는 키값을 가지고 있지 않으므로 설정해줘야한다.
-		if (userClick == -1) {
-			User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
-			String nickname = user.getNickname();
-			clickCacheRepository.setUsername(userId, nickname);
-			userClick = clickCacheRepository.addUserClick(userId);
-		}
-
-		Integer userRank = clickCacheRepository.getUserRank(userId);
-		List<RankData.UserScore> rankingList = clickCacheRepository.getRankingList();
-		String latestClicker = clickCacheRepository.getUsername(userId);
-		RewardType rewardType = RewardType.from(totalClick);
-
+		validateCash(userId);
 		Long gameId = clickCacheRepository.getGameId();
 
-		//!  여기서 보상을 결정하고 레디스에 넣는 작업을 끝내야함, 이휴 컨슈머에서는 오로지 MYSQL만 건들도록
-		KafkaClickDto clickDto = new KafkaClickDto(
-			userId,
-			gameId,
-			totalClick.intValue(),
-			rewardType
-		);
+		int totalClick = clickCacheRepository.addTotalClick();
+		updateUserCash(userId);
+		int userClick = updateUserClick(userId);
 
-		// 첫번째 클릭자 보상
-		if (rewardType.equals(FIRST)) {
-			clickCacheRepository.reward(userId, FIRST_CLICK_REWARD);
-			clickGameCacheRepository.deleteRewardInfo();
-			clickGameCacheRepository.setFirstClicker(userId);
+
+
+		log.info("클릭 메서드 실행 totalClick" + totalClick);
+		RewardType rewardType = RewardType.from(totalClick);
+		handleReward(userId, totalClick, rewardType, gameId);
+
+		producer.occurClickUserId(new KafkaClickDto(userId, gameId, totalClick, rewardType));
+
+		if (rewardType == WINNER) {
+			endGame(gameId);
 		}
 
-		// 중간 클릭자
-		if (rewardType.equals(SECTION)) {
-			int reward = totalClick.intValue();
-			clickCacheRepository.reward(userId, reward);
-			clickCacheRepository.addMiddleReward(userId, totalClick.longValue());
+		int userRank = clickCacheRepository.getUserRank(userId);
+		List<RankData.UserScore> rankingList = clickCacheRepository.getRankingList();
+		String latestClicker = clickCacheRepository.getUsername(userId);
+
+		GameData.DisplayInfoForEvery displayInfoEvery = GameData.DisplayInfoForEvery.getDisplayInfoForEveryAtRunning(totalClick, latestClicker, rankingList, gameId);
+		messagingTemplate.convertAndSend("/topic/game", displayInfoEvery);
+		return GameData.DisplayInfoForClicker.getDisplayInfoForClickerAtRunning(displayInfoEvery, userRank, userClick, rewardType);
+	}
+
+	private void validateCash(Long userId) {
+		int result = clickCacheRepository.getUserCash(userId) + CLICK_CASH;
+		if (result < 0) throw new BaseException(NOT_ENOUGH_CASH);
+	}
+
+	private void updateUserCash(Long userId) {
+		clickCacheRepository.updateUserCash(userId, CLICK_CASH);
+	}
+
+	private int updateUserClick(Long userId) {
+		int click = clickCacheRepository.addUserClick(userId);
+		if (click == -1) {
+			User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+			clickCacheRepository.setUsername(userId, user.getNickname());
+			click = clickCacheRepository.addUserClick(userId);
 		}
+		return click;
+	}
 
-		// 우승자
-		if (rewardType.equals(WINNER)) {
-			int reward = totalClick.intValue();
-			clickCacheRepository.reward(userId, reward);
-			clickGameCacheRepository.setWinner(userId);
+	private void handleReward(Long userId, int totalClick, RewardType rewardType, Long gameId) {
+		switch (rewardType) {
+			case FIRST -> {
+				clickCacheRepository.reward(userId, FIRST_CLICK_REWARD);
+				clickGameCacheRepository.deleteRewardInfo();
+				clickGameCacheRepository.setFirstClicker(userId);
+			}
+			case SECTION -> {
+				clickCacheRepository.reward(userId, totalClick);
+				clickCacheRepository.addMiddleReward(userId, (long) totalClick);
+			}
+			case WINNER -> {
+				clickCacheRepository.reward(userId, totalClick);
+				clickGameCacheRepository.setWinner(userId);
+			}
 		}
+	}
 
-		producer.occurClickUserId(clickDto);
+	private void endGame(Long gameId) {
+		clickCacheRepository.setGameCoolTime();
 
-		GameData.DisplayInfoForEvery displayInfoForEvery = GameData.DisplayInfoForEvery.getDisplayInfoForEveryAtRunning(
-			totalClick, latestClicker, rankingList, gameId);
+		List<KafkaGameCashLogDto> clickLogs = clickCacheRepository.getAllClickCounts(gameId);
+		producer.occurGameCashLog(clickLogs);
 
-		GameData.DisplayInfoForClicker displayInfoForClicker = GameData.DisplayInfoForClicker.getDisplayInfoForClickerAtRunning(
-			displayInfoForEvery, userRank, userClick, rewardType);
+		rewardMaxClicker(gameId);
+		clickCacheRepository.deleteAllClickInfo();
 
-		// ! 특정 구독자에게 메시지 전송 -> Http방식으로 변경
-		// messagingTemplate.convertAndSend("/topic/game/" + userId, displayInfoForClicker);
+		ClickGame newGame = clickGameRepository.save(ClickGame.create(clickGameRepository.findLastRound().orElse(0L) + 1));
+		clickCacheRepository.setGameId(newGame.getId());
+		clickCacheRepository.setTotalClick();
+	}
 
-		if (rewardType.equals(WINNER)) {
-			clickCacheRepository.setGameCoolTime();
-			log.info("게임 종료");
+	private void rewardMaxClicker(Long gameId) {
+		Long maxClick = clickCacheRepository.getRankingList().get(0).getScore();
+		List<String> maxClickerList = clickCacheRepository.getMaxClickerList(maxClick);
+		User maxClicker = clickGameLogRepository.findFirstMaxClicker(maxClickerList).get(0);
+		ClickGame clickGame = clickGameRepository.findById(gameId).orElseThrow(() -> new BaseException(SAVING_GAME_ERROR));
+		ClickGameRewardLog log = ClickGameRewardLog.create(maxClicker, clickGame, MAX_CLICK_REWARD, maxClick.intValue(), MAX_CLICKER);
+		clickGameRewardLogRepository.save(log);
+		clickCacheRepository.reward(maxClicker.getId(), MAX_CLICK_REWARD);
+		clickCacheRepository.setMaxClicker(maxClicker.getId());
+	}
 
-			// * 카프카로 유저들 클릭수 전송
-
-			List<KafkaGameCashLogDto> allClickCounts = clickCacheRepository.getAllClickCounts(gameId);
-
-			producer.occurGameCashLog(allClickCounts);
-
-			// 최대 클릭 보상
-			Long maxClick = rankingList.get(0).getScore();
-			List<String> maxClickerList = clickCacheRepository.getMaxClickerList(maxClick);
-			User maxClicker = clickGameLogRepository.findFirstMaxClicker(maxClickerList).get(0);
-			ClickGame clickGame = clickGameRepository.findById(gameId)
-				.orElseThrow(() -> new BaseException(SAVING_GAME_ERROR));
-			ClickGameRewardLog clickGameRewardLog = ClickGameRewardLog.create(maxClicker, clickGame, MAX_CLICK_REWARD,
-				maxClick.intValue(), MAX_CLICKER);
-			clickGameRewardLogRepository.save(clickGameRewardLog);
-			clickCacheRepository.reward(maxClicker.getId(), MAX_CLICK_REWARD);
-			clickCacheRepository.setMaxClicker(maxClicker.getId());
-			//! 게임 종료시 유저 캐시로그들 저장하기
-
-			// * 완료 게임 삭제
-			log.info("clickCacheRepository.deleteAllClickInfo() 실행 전");
-			clickCacheRepository.deleteAllClickInfo();
-			log.info("clickCacheRepository.deleteAllClickInfo() 실행 후");
-
-			// * 보상자들 리턴
-
-			// * 다음 게임 생성
-			Long lastRound = clickGameRepository.findLastRound().orElse(0L);
-			ClickGame newGame = ClickGame.create(lastRound + 1);
-			ClickGame savedGame = clickGameRepository.save(newGame);
-			clickCacheRepository.setTotalClick();
-			clickCacheRepository.setGameId(savedGame.getId());
-
-		}
-
-		// 모든 구독자에게 메시지 전송
-		messagingTemplate.convertAndSend("/topic/game", displayInfoForEvery);
-
-		return displayInfoForClicker;
+	private GameData.DisplayInfoForClicker handleCoolTime(Long userId) {
+		LocalDateTime gameCoolTime = clickCacheRepository.getGameCoolTime();
+		GameData.DisplayInfoForEvery every = GameData.DisplayInfoForEvery.getDisplayInfoEveryAtCoolTime(gameCoolTime);
+		return GameData.DisplayInfoForClicker.getDisplayInfoForClickerAtCoolTime(every);
 	}
 
 	@Transactional

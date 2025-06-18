@@ -11,21 +11,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.view.RedirectView;
 
+@Component
 @RequiredArgsConstructor
 @Slf4j
-@Component
 public class ApproveFacade {
 
-    private final KapayService kapayService;
     private final ItemService itemService;
     private final PaymentService paymentService;
 
     @Transactional
-    public RedirectView handleApprove(String agent, String openType, String pgToken, String partnerOrderId) {
-        ResponseEntity<?> response = kapayService.approve(pgToken, partnerOrderId);
-
-        ItemInfo info = parseItemInfo(partnerOrderId);
-
+    public RedirectView handleApprove(ResponseEntity<?> response, String partnerOrderId) {
         if (response.getStatusCode() != HttpStatus.OK) {
             log.warn("카카오페이 승인 실패: partnerOrderId={}, status={}", partnerOrderId, response.getStatusCode());
             return new RedirectView("/kapay/fail");
@@ -35,6 +30,8 @@ public class ApproveFacade {
             log.info("일반 결제 승인 완료: partnerOrderId={}", partnerOrderId);
             return new RedirectView("/kapay/approve");
         }
+
+        ItemInfo info = parseItemInfo(partnerOrderId);
 
         try {
             itemService.giveItemAfterPayment(info.userId(), info.itemId(), partnerOrderId);

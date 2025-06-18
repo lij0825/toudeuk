@@ -36,7 +36,8 @@ import lombok.extern.slf4j.Slf4j;
 public class KapayController {
 
 	private final ApproveFacade approveFacade;
-	@Value("${kakaopay.redirect.url}")
+//	@Value("${kakaopay.redirect.url}")
+	@Value("baseUrl")
 	private String baseUrl;
 
 	private final KapayService kapayService;
@@ -69,7 +70,8 @@ public class KapayController {
 		@RequestParam("pg_token") String pgToken,
 		@RequestParam(value = "partnerOrderId") String partnerOrderId
 	) {
-		return approveFacade.handleApprove(agent, openType, pgToken, partnerOrderId);
+		ResponseEntity<?> response = kapayService.approve(pgToken, partnerOrderId);
+		return approveFacade.handleApprove(response, partnerOrderId);
 	}
 
 	@GetMapping("/cancel/{agent}/{openType}")

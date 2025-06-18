@@ -38,8 +38,7 @@ public class ClickGameController {
 	 */
 	@PostMapping(value = "/click")
 	@Operation(summary = "클릭", description = "버튼을 클릭합니다.")
-	public SuccessResponse<GameData.DisplayInfoForClicker> click(@CurrentUser Long userId) throws
-		JsonProcessingException {
+	public SuccessResponse<GameData.DisplayInfoForClicker> click(@CurrentUser Long userId){
 		return SuccessResponse.of(clickGameService.click(userId));
 	}
 

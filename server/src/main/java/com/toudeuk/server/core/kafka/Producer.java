@@ -2,6 +2,11 @@ package com.toudeuk.server.core.kafka;
 
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.toudeuk.server.core.kafka.fallback.entity.FallbackLog;
+import com.toudeuk.server.core.kafka.fallback.entity.Source;
+import com.toudeuk.server.core.kafka.fallback.repository.FallbackLogRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -13,6 +18,8 @@ import com.toudeuk.server.core.kafka.dto.KafkaItemBuyDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import static com.toudeuk.server.core.util.CookieUtils.serialize;
 
 @Service
 @RequiredArgsConstructor
@@ -35,10 +42,25 @@ public class Producer {
 	private final KafkaTemplate<String, KafkaItemBuyDto> itemBuyKafkaTemplate;
 	private final KafkaTemplate<String, KafkaChargingDto> chargingKafkaTemplate;
 	private final KafkaTemplate<String, List<KafkaGameCashLogDto>> gameCashLogKafkaTemplate;
+	private final FallbackLogRepository fallbackLogRepository;
 
 	
 	public void occurClickUserId(KafkaClickDto clickDto)  {
-		clickKafkaTemplate.send(CLICK_TOPIC, clickDto);
+		try {
+			clickKafkaTemplate.send(CLICK_TOPIC, clickDto).get(); // blocking 전송
+		} catch (Exception e) {
+			log.error("Kafka 전송 실패: CLICK_TOPIC", e);
+			fallbackLogRepository.save(FallbackLog.of(CLICK_TOPIC, null, serialize(clickDto), Source.PRODUCER));
+		}
+	}
+
+	private String serialize(Object dto) {
+		try {
+			return new ObjectMapper().writeValueAsString(dto);
+		} catch (JsonProcessingException e) {
+			log.error("Kafka DTO 직렬화 실패", e);
+			return "";
+		}
 	}
 
 	public void occurItemBuy(KafkaItemBuyDto itemBuyDto) {

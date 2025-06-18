@@ -43,28 +43,27 @@ public class KapayService {
 	private final ClickGameCacheRepository clickGameCacheRepository;
 	private final PaymentService paymentService;
 	private final RestTemplate restTemplate;
-	private final ApproveFacade approveFacade;
+	private final ApplicationEventPublisher eventPublisher;
 
-	public KapayService(Producer producer, UserRepository userRepository, ClickGameCacheRepository clickGameCacheRepository, PaymentService paymentService, RestTemplate restTemplate, ApplicationEventPublisher eventPublisher, ApproveFacade approveFacade) {
+	public KapayService(Producer producer, UserRepository userRepository, ClickGameCacheRepository clickGameCacheRepository, PaymentService paymentService, RestTemplate restTemplate, ApplicationEventPublisher eventPublisher) {
 		this.producer = producer;
 		this.userRepository = userRepository;
 		this.clickGameCacheRepository = clickGameCacheRepository;
 		this.restTemplate = restTemplate;
 		this.paymentService = paymentService;
 		this.eventPublisher = eventPublisher;
-		this.approveFacade = approveFacade;
 	}
 
-	@Value("${kakaopay.api.secret.key}")
+//	@Value("${kakaopay.api.secret.key}")
+	@Value("kakaopaySecretKey")
 	private String kakaopaySecretKey;
 
-	@Value("${cid}")
+	@Value("cid")
 	private String cid;
 
-	@Value("${kakaopay.api.host}")
+//	@Value("${kakaopay.api.host}")
+	@Value("sampleHost")
 	private String sampleHost;
-
-	private final ApplicationEventPublisher eventPublisher;
 
 	public ReadyResponse ready(User user, String agent, String openType, String itemName, Integer totalAmount) {
 
